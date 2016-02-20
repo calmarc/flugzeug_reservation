@@ -1,0 +1,30 @@
+.samstag { color: blue; background-color: #ccccff; }
+.sonntag { color: red; background-color: #ffcccc; }
+
+table.calendar		{ border-left:1px solid #999; }
+td.calendar-day-head { background:#ccc; font-weight:bold; text-align:center; width:3em; padding:5px; border-bottom:1px solid #999; border-top:1px solid #999; border-right:1px solid #999; }
+td.calendar-day:hover { background:#eceff5; }
+td.calendar-day-np	{ background:#eee; }  /*leer */
+/* td.calendar-day, td.calendar-day-np { width:5em; padding:5px; border-bottom:1px solid #999; border-right:1px solid #999; } */
+table.calendar div { text-align: center ;}
+table.calendar div a { text-decoration: none ; color: #000099;}
+
+table.calendar a { display: block; }
+
+
+#aktiv { background-color: #33ffff; font-weight: bold; }
+#aktiv a:link { color: black; }
+#aktiv a:link { color: black; }
+#aktiv a:hover { color: black;}
+#aktiv a:visited { color: black;}
+
+.heute a { font-weight: bold; }
+.heute a:link { font-weight: bold; }
+.heute a:hover { font-weight: bold; }
+.heute a:visited { font-weight: bold; }
+
+td#vor, td#nach, td#datum {
+  text-align: center;
+  font-size: 140%;
+  font-weight: bold;
+}
