@@ -29,14 +29,14 @@ if (isset($_POST['username'], $_POST['email'], $_POST['p'])) {
     $email = filter_var($email, FILTER_VALIDATE_EMAIL);
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         // Not a valid email
-        $error_msg .= '<p class="error">The email address you entered is not valid</p>';
+        $error_msg .= '<p class="error">Die eingegebene Email ist nicht gültig</p>';
     }
     
     $password = filter_input(INPUT_POST, 'p', FILTER_SANITIZE_STRING);
     if (strlen($password) != 128) {
         // The hashed pwd should be 128 characters long.
         // If it's not, something really odd has happened
-        $error_msg .= '<p class="error">Invalid password configuration.</p>';
+        $error_msg .= '<p class="error">Ungültige Passwort Konfiguration.</p>';
     }
 
     // Username validity and password validity have been checked client side.
@@ -54,10 +54,10 @@ if (isset($_POST['username'], $_POST['email'], $_POST['p'])) {
         
         if ($stmt->num_rows == 1) {
             // A user with this email address already exists
-            $error_msg .= '<p class="error">A user with this email address already exists.</p>';
+            $error_msg .= '<p class="error">Ein Benutzer mit dieser Email existiert bereits.</p>';
         }
     } else {
-        $error_msg .= '<p class="error">Database error</p>';
+        $error_msg .= '<p class="error">Datenbank Fehler r</p>';
     }
     
     // TODO: 

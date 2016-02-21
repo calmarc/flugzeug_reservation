@@ -25,10 +25,11 @@ sec_session_start(); // Our custom secure way of starting a PHP session.
 if (isset($_POST['email'], $_POST['p'])) {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $password = $_POST['p']; // The hashed password.
-    
+
     if (login($email, $password, $mysqli) == true) {
         // Login success 
-        header("Location: ../protected_page.php");
+        header("Location: ../../index.php");
+        // header("Location: ../protected_page.php");
         exit();
     } else {
         // Login failed 

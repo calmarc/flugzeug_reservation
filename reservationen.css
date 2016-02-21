@@ -1,3 +1,10 @@
+body {
+    color: #333333;
+    background-color: #99eeff; 
+    font-family: sans-serif;
+}
+
+/* Kalender */
 .samstag { color: blue; background-color: #ccccff; }
 .sonntag { color: red; background-color: #ffcccc; }
 
@@ -10,7 +17,6 @@ table.calendar div { text-align: center ;}
 table.calendar div a { text-decoration: none ; color: #000099;}
 
 table.calendar a { display: block; }
-
 
 #aktiv { background-color: #33ffff; font-weight: bold; }
 #aktiv a:link { color: black; }
@@ -28,3 +34,24 @@ td#vor, td#nach, td#datum {
   font-size: 140%;
   font-weight: bold;
 }
+
+table#user_admin, table#user_admin th, table#user_admin td {
+    border: 1px solid black;
+	border-spacing: 15px;
+    border-collapse: collapse;
+}
+
+table#user_admin th { padding: 10px; }
+table#user_admin td { padding: 5px 16px 5px 16px; }
+table#user_admin td:nth-child(1) { padding-left: 2em; }
+
+table#user_admin tr:nth-child(even) {
+    background-color: #eee;
+}
+table#user_admin tr:nth-child(odd) {
+    background-color: #fff;
+}
+table#user_admin th {
+    color: white;
+    background-color: black;
+} 

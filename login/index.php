@@ -27,15 +27,15 @@ include_once 'includes/functions.php';
 sec_session_start();
 
 if (login_check($mysqli) == true) {
-    $logged = 'in';
+    $logged = 'ein';
 } else {
-    $logged = 'out';
+    $logged = 'aus';
 }
 ?>
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Secure Login: Log In</title>
+        <title>Sicheres Einloggen</title>
         <link rel="stylesheet" href="styles/main.css" />
         <script type="text/JavaScript" src="js/sha512.js"></script> 
         <script type="text/JavaScript" src="js/forms.js"></script> 
@@ -47,16 +47,13 @@ if (login_check($mysqli) == true) {
         }
         ?> 
         <form action="includes/process_login.php" method="post" name="login_form"> 			
-            Email: <input type="text" name="email" />
-            Password: <input type="password" 
-                             name="password" 
-                             id="password"/>
-            <input type="button" 
-                   value="Login" 
+            Email: <input required="required" type="email" name="email" />
+            Passwort: <input type="password" name="password" id="password"/>
+            <input type="submit" value="Login" 
                    onclick="formhash(this.form, this.form.password);" /> 
         </form>
-        <p>If you don't have a login, please <a href="register.php">register</a></p>
-        <p>If you are done, please <a href="includes/logout.php">log out</a>.</p>
-        <p>You are currently logged <?php echo $logged ?>.</p>
+        <p> Wenn man kein Konto hat,  <a href="register.php">hier registrieren</a> bitte.</p>
+        <p>Wenn man fertig ist, bitte <a href="includes/logout.php">ausloggen</a>.</p>
+        <p>Du bist momentan  <?php echo $logged ?>geloggt.</p>
     </body>
 </html>

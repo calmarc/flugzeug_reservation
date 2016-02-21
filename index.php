@@ -1,3 +1,14 @@
+<?php
+error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors',1);
+ini_set('html_errors', 1);
+
+include_once ('includes/db_connect.php');
+include_once ('includes/functions.php');
+
+sec_session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,21 +32,39 @@
 <![endif]-->
 
 <body>
+<h1>MFGC Flieger-Reservationen</h1>
+<?php if (login_check($mysqli) == true) : ?>
+<?php
+
+$query = "SELECT * FROM `members` WHERE `members`.`id` = '".$_SESSION["user_id"]."';";
+$res = $mysqli->query($query); 
+$obj = $res->fetch_object();
+$admin = "";
+if (isset($obj->admin) && $obj->admin == TRUE)
+  $admin = "<a href='login/user_admin.php'>admin</a>";
+
+?>
+
+  <p>Willkommen <?php echo htmlentities($_SESSION['username']); ?>! [<?php echo $admin; ?> / <a href="login/includes/logout.php">ausloggen</a>]</p>
+
 <?php 
-
-error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors',1);
-ini_set('html_errors', 1);
-
-require('include.php');
+include_once ('kalender/include.php');
 
 $datum = get_date();
 $tag = $datum[0];
 $monat = $datum[1];
 $jahr = $datum[2];
 
-
-
 echo draw_calendar($tag, $monat, $jahr);
-
 ?>
+
+
+<?php else : ?>
+
+    <p style="font-size: 115%;">
+     Willkommen! <span class="error">Bitte zuerst </span> <a href="login/index.php">einloggen</a>.
+    </p>
+    <p>
+    Wenn man keine Konto hat, bitte <a href="login/register.php">hier registrieren</a>
+  </p>
+<?php endif; ?>

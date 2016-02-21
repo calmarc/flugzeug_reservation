@@ -22,7 +22,7 @@ include_once 'includes/functions.php';
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Secure Login: Registration Form</title>
+        <title>MFGC Reservierung's Registrier-Seite</title>
         <script type="text/JavaScript" src="js/sha512.js"></script> 
         <script type="text/JavaScript" src="js/forms.js"></script>
         <link rel="stylesheet" href="styles/main.css" />
@@ -30,32 +30,30 @@ include_once 'includes/functions.php';
     <body>
         <!-- Registration form to be output if the POST variables are not
         set or if the registration script caused an error. -->
-        <h1>Register with us</h1>
+        <h1>MFGC Reservierung's Registrier-Seite</h1>
         <?php
         if (!empty($error_msg)) {
             echo $error_msg;
         }
         ?>
         <ul>
-            <li>Usernames may contain only digits, upper and lower case letters and underscores</li>
-            <li>Emails must have a valid email format</li>
-            <li>Passwords must be at least 6 characters long</li>
-            <li>Passwords must contain
+            <li>Benutzernamen dürfen nur Buchstaben, Zahlen und "_" enthalten</li>
+            <li>Passwörter müssen mindestens 6 Zeichen lang sein.</li>
+            <li>Ein Passwort muss enthalten:
                 <ul>
-                    <li>At least one upper case letter (A..Z)</li>
-                    <li>At least one lower case letter (a..z)</li>
-                    <li>At least one number (0..9)</li>
+                    <li>Mindestens ein Grossbuchtaben (A..Z)</li>
+                    <li>Mindestens ein Kleinbuchstaben (a..z)</li>
+                    <li>Mindestens eine Nummer (0..9)</li>
                 </ul>
             </li>
-            <li>Your password and confirmation must match exactly</li>
         </ul>
         <form method="post" name="registration_form" action="<?php echo esc_url($_SERVER['PHP_SELF']); ?>">
-            Username: <input type='text' name='username' id='username' /><br>
+            Benutzernamen: <input type='text' name='username' id='username' /><br>
             Email: <input type="text" name="email" id="email" /><br>
-            Password: <input type="password"
+            Passwort: <input type="password"
                              name="password" 
                              id="password"/><br>
-            Confirm password: <input type="password" 
+            Passwort bestätigen: <input type="password" 
                                      name="confirmpwd" 
                                      id="confirmpwd" /><br>
             <input type="button" 
@@ -66,6 +64,6 @@ include_once 'includes/functions.php';
                                    this.form.password,
                                    this.form.confirmpwd);" /> 
         </form>
-        <p>Return to the <a href="index.php">login page</a>.</p>
+        <p>Zurück zur <a href="index.php">Einlogg-Seite</a>.</p>
     </body>
 </html>
