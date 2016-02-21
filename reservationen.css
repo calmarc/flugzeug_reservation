@@ -37,10 +37,10 @@ div#formular_innen { display: inline-block; margin-left: auto; margin-right: aut
 }
 
 /* Kalender */
-.samstag { color: blue; background-color: #ccccff; }
+.samstag { color: blue; background-color: #dddd33; }
 .sonntag { color: red; background-color: #ffaaaa; }
 
-table.calendar		{ border:1px solid #999; }
+table.calendar		{ border:1px solid #999; background-color: yellow; }
 td.calendar-day-head { background: #ccc; font-weight:bold; text-align:center; width:3em; padding:5px; border-bottom:1px solid #999; border-top:1px solid #999; border-right:1px solid #999; }
 td.calendar-day:hover { background: #eceff5; }
 td.calendar-day-np	{ background: transparent; }  /*leer */
@@ -49,9 +49,9 @@ table.calendar div { text-align: center ;}
 table.calendar a { text-decoration: none;}
 table.calendar div a { color: #000099;}
 
-table.calendar a { display: block; }
+table.calendar a { display: block; padding: 3px;}
 
-#aktiv { background-color: #ffffff; font-weight: bold; }
+#aktiv { background-color: #ffffff; font-weight: bold; border:1px solid #ff0000;}
 #aktiv a:link { color: black; }
 #aktiv a:link { color: black; }
 #aktiv a:hover { color: black;}
