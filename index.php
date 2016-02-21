@@ -31,8 +31,6 @@ sec_session_start();
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 
-<body>
-<h1>MFGC Flieger-Reservationen</h1>
 <?php if (login_check($mysqli) == true) : ?>
 <?php
 
@@ -41,11 +39,15 @@ $res = $mysqli->query($query);
 $obj = $res->fetch_object();
 $admin = "";
 if (isset($obj->admin) && $obj->admin == TRUE)
-  $admin = "<a href='login/user_admin.php'>admin</a>";
+  $admin = "<a href='login/user_admin.php'>admin</a> / ";
 
 ?>
+<body>
 
-  <p>Willkommen <?php echo htmlentities($_SESSION['username']); ?>! [<?php echo $admin; ?> / <a href="login/includes/logout.php">ausloggen</a>]</p>
+  <?php require('includes/usermenu.php'); ?>
+
+<h1>MFGC Flieger-Reservationen</h1>
+
 
 <?php 
 include_once ('kalender/include.php');

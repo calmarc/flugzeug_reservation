@@ -1,22 +1,5 @@
 <?php
 
-/*
- * Copyright (C) 2013 peredur.net
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 include_once 'psl-config.php';
 
 function sec_session_start() {
@@ -54,18 +37,7 @@ function login($email, $password, $mysqli) {
         $stmt->bind_result($user_id, $username, $db_password, $salt);
         $stmt->fetch();
 
-        // echo "<br />--------------<br />";
-        // echo $salt;
-        // echo "<br />--------------<br />";
-        // echo $password;
-        // echo "<br />--------------<br />";
-        // hash the password with the unique salt.
         $password = hash('sha512', $password . $salt);
-
-        // echo "<br />--[final]------------<br />";
-        // echo $password;
-        // echo "<br />--------------<br />";
-        // exit;
 
         if ($stmt->num_rows == 1) {
             // If the user exists we check if the account is locked

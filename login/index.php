@@ -1,26 +1,5 @@
 <?php
 
-/**
- * Copyright (C) 2013 peredur.net
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors',1);
-ini_set('html_errors', 1);
-
 include_once 'includes/db_connect.php';
 include_once 'includes/functions.php';
 
@@ -32,28 +11,51 @@ if (login_check($mysqli) == true) {
     $logged = 'aus';
 }
 ?>
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Sicheres Einloggen</title>
-        <link rel="stylesheet" href="styles/main.css" />
-        <script type="text/JavaScript" src="js/sha512.js"></script> 
-        <script type="text/JavaScript" src="js/forms.js"></script> 
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content=
+    "width=device-width, initial-scale=1.0">
+    <title>Benutzer einloggen</title>
+    <meta name="title" content="Benutzer Einloggen">
+    <meta name="keywords" content="Benutzer,einloggen">
+    <meta name="description" content="Benutzer Einloggen">
+    <meta name="generator" content="Calmar + Vim + Tidy">
+    <meta name="owner" content="calmar.ws">
+    <meta name="author" content="candrian.org">
+    <meta name="robots" content="all">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/reservationen/reservationen.css">
     </head>
     <body>
+
+    <?php include_once('../includes/usermenu.php'); ?>
+
         <?php
         if (isset($_GET['error'])) {
             echo '<p class="error">Error Logging In!</p>';
         }
         ?> 
-        <form action="includes/process_login.php" method="post" name="login_form"> 			
-            Email: <input required="required" type="email" name="email" />
-            Passwort: <input type="password" name="password" id="password"/>
-            <input type="submit" value="Login" 
-                   onclick="formhash(this.form, this.form.password);" /> 
-        </form>
-        <p> Wenn man kein Konto hat,  <a href="register.php">hier registrieren</a> bitte.</p>
-        <p>Wenn man fertig ist, bitte <a href="includes/logout.php">ausloggen</a>.</p>
-        <p>Du bist momentan  <?php echo $logged ?>geloggt.</p>
+
+        <div id="formular">
+          <div id="formular_innen">
+
+              <form action="includes/process_login.php" method="post" name="login_form"> 			
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="text-align: right;"><b>Email:</b></td>
+                        <td style="overflow: hidden;"><input required="required" type="email" name="email" /></td>
+  
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;"><b>Passwort:</b></td>
+                        <td style="overflow: hidden;"><input type="password" name="password" id="password"/></td>
+                    </tr> 
+                </table>
+                  <input type="submit" value="Login" /> 
+              </form>
+          </div>
+        </div>
     </body>
 </html>

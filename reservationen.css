@@ -2,19 +2,44 @@ body {
     color: #333333;
     background-color: #99eeff; 
     font-family: sans-serif;
+    margin: 0px;
+    padding: 0px;
 }
+
+div#usertop {
+  position: abolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+  background-color: #440044;
+  padding: 0px;
+  margin: 0px;
+  color: yellow;
+}
+
+div#usertop p { margin: 0px; padding: 8px; }
+div#usertop a:link { color: white; }
+div#usertop a:link { color: white; }
+div#usertop a:hover { color: white;}
+div#usertop a:visited { color: white;}
+
+div#formular { margin-left: auto; margin-right: auto;  text-align: center; padding: 30px; margin-top: 50px; }
+div#formular_innen { margin-left: auto; margin-right: auto; text-align: center; border-radius: 25px; border: 2px solid #73AD21; padding: 20px; width: 340px; height: 150px; background-color: yellow; }
+
 
 /* Kalender */
 .samstag { color: blue; background-color: #ccccff; }
 .sonntag { color: red; background-color: #ffcccc; }
 
 table.calendar		{ border-left:1px solid #999; }
-td.calendar-day-head { background:#ccc; font-weight:bold; text-align:center; width:3em; padding:5px; border-bottom:1px solid #999; border-top:1px solid #999; border-right:1px solid #999; }
-td.calendar-day:hover { background:#eceff5; }
+td.calendar-day-head { background: #ccc; font-weight:bold; text-align:center; width:3em; padding:5px; border-bottom:1px solid #999; border-top:1px solid #999; border-right:1px solid #999; }
+td.calendar-day:hover { background: #eceff5; }
 td.calendar-day-np	{ background:#eee; }  /*leer */
 /* td.calendar-day, td.calendar-day-np { width:5em; padding:5px; border-bottom:1px solid #999; border-right:1px solid #999; } */
 table.calendar div { text-align: center ;}
-table.calendar div a { text-decoration: none ; color: #000099;}
+table.calendar a { text-decoration: none;}
+table.calendar div a { color: #000099;}
 
 table.calendar a { display: block; }
 
