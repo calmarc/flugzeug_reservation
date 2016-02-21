@@ -22,13 +22,15 @@ include_once 'includes/functions.php';
   <meta name="robots" content="all">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="/reservationen/reservationen.css">
+  <script type="text/JavaScript" src="js/sha512.js"></script> 
+  <script type="text/JavaScript" src="js/forms.js"></script> 
 </head>
     <body>
 
     <?php include_once('../includes/usermenu.php'); ?>
 
         <div id="formular">
-          <div id="formular_innen" style="width: 400px; height: 400px;">
+          <div id="formular_innen">
 
           <!-- Registration form to be output if the POST variables are not
           set or if the registration script caused an error. -->
@@ -38,29 +40,32 @@ include_once 'includes/functions.php';
               echo $error_msg;
           }
           ?>
-          <div style="text-align: left;">
+          <div style="text-align: left; margin-left: auto; margin-right: auto;">
             <ul>
-                <li>Benutzernamen dürfen nur Buchstaben, Zahlen und "_" enthalten</li>
-                <li>Passwörter müssen mindestens 6 Zeichen lang sein und Grossbuchtaben (A..Z), Kleinbuchstaben (a..z) und mind. eine  Nummer (0..9) enthalten.</li>
+                <li><b>Benutzernamen</b> dürfen nur Buchstaben, Zahlen und "_" enthalten</li>
+                <li><b>Passwörter</b> müssen mindestens <b>6 Zeichen</b> lang sein<br /> und Gross- <b>[A..Z]</b>, Kleinbuchstaben <b>[a..z]</b> und mind. eine Nummer <b>[0..9]</b> enthalten.</li>
             </ul>
+            <form method="post" name="registration_form" action="register.php">
+    
+        <div class="center">
+              <table>
+                <tr>
+                  <td style="text-align: right;"><b>Benutzernamen:</b></td> <td><input type='text' name='username' id='username' /></td>
+                </tr>
+                <tr>
+                  <td style="text-align: right;"><b>Email:</b></td> <td><input type="text" name="email" id="email" /></td>
+                </tr>
+                <tr>
+                  <td style="text-align: right;"><b>Passwort:</b></td> <td><input type="password" name="password" id="password"/></td>
+                </tr>
+                <tr>
+                  <td style="text-align: right;"><b>Passwort bestätigen:</b></td> <td><input type="password" name="confirmpwd" id="confirmpwd" /></td>
+                </tr>
+              </table> 
+              <input  class="submit_button"  type="button" value="Register" onclick="return regformhash(this.form, this.form.username, this.form.email, this.form.password, this.form.confirmpwd);" />
+            </div>
+            </form>
           </div>
-          <form method="post" name="registration_form" action="register.php">
-            <table>
-              <tr>
-                <td style="text-align: right;"><b>Benutzernamen:</b></td> <td><input type='text' name='username' id='username' /></td>
-              </tr>
-              <tr>
-                <td style="text-align: right;"><b>Email:</b></td> <td><input type="text" name="email" id="email" /></td>
-              </tr>
-              <tr>
-                <td style="text-align: right;"><b>Passwort:</b></td> <td><input type="password" name="password" id="password"/></td>
-              </tr>
-              <tr>
-                <td style="text-align: right;"><b>Passwort bestätigen:</b></td> <td><input type="password" name="confirmpwd" id="confirmpwd" /></td>
-              </tr>
-            </table> 
-            <input type="button" value="Register" onclick="return regformhash(this.form, this.form.username, this.form.email, this.form.password, this.form.confirmpwd);" />
-          </form>
         </div>
       </div>
 </body>

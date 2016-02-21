@@ -57,7 +57,9 @@ $tag = $datum[0];
 $monat = $datum[1];
 $jahr = $datum[2];
 
+echo '<div style="float: right; margin-right: 30px;">';
 echo draw_calendar($tag, $monat, $jahr);
+echo '</div>';
 ?>
 
 

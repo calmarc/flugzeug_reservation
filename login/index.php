@@ -53,7 +53,7 @@ if (login_check($mysqli) == true) {
                         <td style="overflow: hidden;"><input type="password" name="password" id="password"/></td>
                     </tr> 
                 </table>
-                  <input type="submit" value="Login" /> 
+                  <input class="submit_button" type="submit" value="Login" /> 
               </form>
           </div>
         </div>
