@@ -115,7 +115,7 @@ if (login_check($mysqli) == true):
   echo "<form action='user_edit.php' method='post'>";
 
   echo "<div class='center'>";
-  echo "<table id='user_admin'>";
+  echo "<table class='user_admin'>";
 
   $obj = $res->fetch_object();
 

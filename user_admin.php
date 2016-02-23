@@ -55,7 +55,7 @@ if ($obj->admin == FALSE)
   $res = $mysqli->query($query); 
 
     
-  echo "<table id='user_admin'>";
+  echo "<table class='user_admin'>";
   echo "<tr><th><th><b>User-ID</b></th><th><b>Nick-Name</b></th><th><b>Name</b></th><th><b>Natel</b></th><th><b>Telefon</b></th><th><b>Email</b></th><th><b>Admin</b></th></tr>";
   while ($obj = $res->fetch_object())
   {
