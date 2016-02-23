@@ -6,8 +6,8 @@ body {
     padding: 0px;
 }
 
-div#usertop {
-  position: abolute;
+nav {
+  position: fixed;
   top: 0px;
   left: 0px;
   right: 0px;
@@ -18,14 +18,17 @@ div#usertop {
   color: yellow;
 }
 
-div#usertop p { margin: 0px; padding: 8px; }
-div#usertop a:link { color: white; }
-div#usertop a:link { color: white; }
-div#usertop a:hover { color: white;}
-div#usertop a:visited { color: white;}
+nav div { margin: 0px; padding: 12px; font-size: 120%; }
+nav a:link { color: white; }
+nav a:link { color: white; }
+nav a:hover { color: white;}
+nav a:visited { color: white;}
 
-div#formular { margin-left: auto; margin-right: auto;  text-align: center; padding: 30px; margin-top: 50px; }
-div#formular_innen { display: inline-block; margin-left: auto; margin-right: auto; text-align: center; border-radius: 25px; border: 2px solid #73AD21; padding: 20px;  background-color: yellow; }
+
+main { margin-top: 70px; margin-left: auto; margin-right: auto; text-align: center; }
+
+/*div#formular { margin-left: auto; margin-right: auto;  text-align: center; padding: 30px; margin-top: 150px; }*/
+div#formular_innen { margin-top: 100px; display: inline-block; margin-left: auto; margin-right: auto; text-align: center; border-radius: 25px; border: 2px solid #73AD21; padding: 20px;  background-color: yellow; }
 
 /* center-stuff */
 .center {
@@ -40,9 +43,9 @@ div#formular_innen { display: inline-block; margin-left: auto; margin-right: aut
 .samstag { color: blue; background-color: #dddd33; }
 .sonntag { color: red; background-color: #ffaaaa; }
 
-table.calendar		{ border:1px solid #999; background-color: yellow; }
+table.calendar		{ border:1px solid #999; background-color: yellow; box-shadow: 6px 4px 8px #6699cc; }
 td.calendar-day-head { background: #ccc; font-weight:bold; text-align:center; width:3em; padding:5px; border-bottom:1px solid #999; border-top:1px solid #999; border-right:1px solid #999; }
-td.calendar-day:hover { background: #eceff5; }
+td.calendar-day:hover { background: #ccccff; }
 td.calendar-day-np	{ background: transparent; }  /*leer */
 /* td.calendar-day, td.calendar-day-np { width:5em; padding:5px; border-bottom:1px solid #999; border-right:1px solid #999; } */
 table.calendar div { text-align: center ;}
@@ -54,13 +57,20 @@ table.calendar a { display: block; padding: 3px;}
 #aktiv { background-color: #ffffff; font-weight: bold; border:1px solid #ff0000;}
 #aktiv a:link { color: black; }
 #aktiv a:link { color: black; }
-#aktiv a:hover { color: black;}
 #aktiv a:visited { color: black;}
+#aktiv a:hover { color: black;}
+
+.vergangenheit a { background-color: #0000cc; color: #cccccc;  }
+.vergangenheit a:link { background-color: #ffffcc; color: #cccccc;   }
+.vergangenheit a:visited { background-color: #ffffcc; color: #cccccc;   }
+.vergangenheit a:hover { background: #ccccff; color: #aaaaaa;   }
+/* hover muss nach visited kommen.. um es durchzusetzen in firefox */
 
 .heute a { font-weight: bold; }
 .heute a:link { font-weight: bold; }
-.heute a:hover { font-weight: bold; }
 .heute a:visited { font-weight: bold; }
+.heute a:hover { font-weight: bold; }
+
 
 td#vor, td#nach, td#datum {
   text-align: center;
@@ -90,3 +100,5 @@ table#user_admin th {
 } 
 
 .submit_button { margin-top: 20px; }
+
+h1 { text-shadow: 2px 2px 1px #9ff, 3px 3px 2px #aaaa00; }

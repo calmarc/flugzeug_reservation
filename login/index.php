@@ -31,15 +31,23 @@ if (login_check($mysqli) == true) {
     <body>
 
     <?php include_once('../includes/usermenu.php'); ?>
+    <main>
+  
 
         <?php
+        
         if (isset($_GET['error'])) {
-            echo '<p class="error">Error Logging In!</p>';
+            $err= "Email / Passwort Kombination stimmen nicht!";
+            if ($_GET['error'] == 2)
+              $err= "Captcha stimmt nicht überein!";
+            echo "<div class='center'>";
+            echo "<h3 class='error'>$err</h3>";
+            echo "</div>";
         }
         ?> 
 
-        <div id="formular">
           <div id="formular_innen">
+            <h1>Einloggen</h1>
 
               <form action="includes/process_login.php" method="post" name="login_form"> 			
                 <table style="width: 100%;">
@@ -50,12 +58,22 @@ if (login_check($mysqli) == true) {
                     </tr>
                     <tr>
                         <td style="text-align: right;"><b>Passwort:</b></td>
-                        <td style="overflow: hidden;"><input type="password" name="password" id="password"/></td>
+                        <td style="text-align: left; overflow: hidden;"><input type="password" name="password" id="password"/></td>
                     </tr> 
+  <?php
+    $res = $mysqli->query("SELECT `show` FROM `calmarws_test`.`captcha` WHERE `captcha`.`id` =1;");
+    $obj = $res->fetch_object();
+    if ($obj->show)
+  { ?>
+                    <tr>
+                        <td style="text-align: right;"><b>Captcha:</b></td>
+                        <td style="text-align: left;"><input name="captcha" type="text" id="captcha" size="4" maxlength="4" /><img style="vertical-align:middle;" src="/reservationen/login/captcha_hardcode/captcha.php" /></td>
+                    </tr>
+<?php } ?>
                 </table>
                   <input class="submit_button" type="submit" value="Login" /> 
               </form>
-          </div>
         </div>
+    </main>
     </body>
 </html>

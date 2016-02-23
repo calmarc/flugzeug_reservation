@@ -9,10 +9,20 @@ if (isset($_POST['email'], $_POST['password'])) {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $password = hash('sha512', $_POST['password']);
 
+
+    $res = $mysqli->query("SELECT `show` FROM `calmarws_test`.`captcha` WHERE `captcha`.`id` =1;");
+    $obj = $res->fetch_object();
+    if ($obj->show){
+      if ($_SESSION['randomnr2'] != md5($_POST['captcha'])) {
+        // Login failed 
+        header('Location: ../index.php?error=2');
+        exit();
+      }
+    }
+
     if (login($email, $password, $mysqli) == true) {
         // Login success 
         header("Location: ../../index.php");
-        // header("Location: ../protected_page.php");
         exit();
     } else {
         // Login failed 

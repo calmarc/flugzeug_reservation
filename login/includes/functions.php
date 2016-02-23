@@ -40,44 +40,40 @@ function login($email, $password, $mysqli) {
         $password = hash('sha512', $password . $salt);
 
         if ($stmt->num_rows == 1) {
-            // If the user exists we check if the account is locked
-            // from too many login attempts 
-            if (checkbrute($user_id, $mysqli) == true) {
-                // Account is locked 
-                // Send an email to user saying their account is locked 
-                return false;
+
+            // more than 5 bad logins.. turn on captcha  - else turn off
+            checkbrute($mysqli);
+
+            // Check if the password in the database matches 
+            // the password the user submitted.
+            if ($db_password == $password) {
+                // Password is correct!
+                // Get the user-agent string of the user.
+                $user_browser = $_SERVER['HTTP_USER_AGENT'];
+
+                // XSS protection as we might print this value
+                $user_id = preg_replace("/[^0-9]+/", "", $user_id);
+                $_SESSION['user_id'] = $user_id;
+
+                // XSS protection as we might print this value
+                $username = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $username);
+
+                $_SESSION['username'] = $username;
+                $_SESSION['login_string'] = hash('sha512', $password . $user_browser);
+
+                // Login successful. 
+                return true;
             } else {
-                // Check if the password in the database matches 
-                // the password the user submitted.
-                if ($db_password == $password) {
-                    // Password is correct!
-                    // Get the user-agent string of the user.
-                    $user_browser = $_SERVER['HTTP_USER_AGENT'];
-
-                    // XSS protection as we might print this value
-                    $user_id = preg_replace("/[^0-9]+/", "", $user_id);
-                    $_SESSION['user_id'] = $user_id;
-
-                    // XSS protection as we might print this value
-                    $username = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $username);
-
-                    $_SESSION['username'] = $username;
-                    $_SESSION['login_string'] = hash('sha512', $password . $user_browser);
-
-                    // Login successful. 
-                    return true;
-                } else {
-                    // Password is not correct 
-                    // We record this attempt in the database 
-                    $now = time();
-                    if (!$mysqli->query("INSERT INTO login_attempts(user_id, time) 
-                                    VALUES ('$user_id', '$now')")) {
-                        header("Location: ../error.php?err=Database error: login_attempts");
-                        exit();
-                    }
-
-                    return false;
+                // Password is not correct 
+                // We record this attempt in the database 
+                $now = time();
+                if (!$mysqli->query("INSERT INTO login_attempts(user_id, time) 
+                                VALUES ('$user_id', '$now')")) {
+                    header("Location: ../error.php?err=Database error: login_attempts");
+                    exit();
                 }
+
+                return false;
             }
         } else {
             // No user exists. 
@@ -90,27 +86,31 @@ function login($email, $password, $mysqli) {
     }
 }
 
-function checkbrute($user_id, $mysqli) {
+function checkbrute($mysqli) {
     // Get timestamp of current time 
     $now = time();
 
-    // All login attempts are counted from the past 2 hours. 
-    $valid_attempts = $now - (2 * 60 * 60);
+    // cleaning up last failed attempts (60 mins)
+    $delete_old = $now - (60 * 60);
+    $mysqli->query("DELETE FROM `calmarws_test`.`login_attempts` WHERE `login_attempts`.`time` < $delete_old;");
 
-    if ($stmt = $mysqli->prepare("SELECT time 
-                                  FROM login_attempts 
-                                  WHERE user_id = ? AND time > '$valid_attempts'")) {
-        $stmt->bind_param('i', $user_id);
+    // All login attempts are counted from the past 1 minutes
+    $valid_attempts = $now - (2 * 60);
+
+    if ($stmt = $mysqli->prepare("SELECT time FROM login_attempts WHERE time > '$valid_attempts'")) {
 
         // Execute the prepared query. 
         $stmt->execute();
         $stmt->store_result();
 
-        // If there have been more than 5 failed logins 
+        // If there have been more than 5 failed logins in the last minute
         if ($stmt->num_rows > 5) {
-            return true;
+            $mysqli->query("UPDATE `calmarws_test`.`captcha` SET `show` = '1' WHERE `captcha`.`id` =1;");
+            return;
         } else {
-            return false;
+            // no 
+            $mysqli->query("UPDATE `calmarws_test`.`captcha` SET `show` = '0' WHERE `captcha`.`id` =1;");
+            return;
         }
     } else {
         // Could not create a prepared statement

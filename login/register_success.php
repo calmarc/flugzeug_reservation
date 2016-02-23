@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content=
   "width=device-width, initial-scale=1.0">
-  <title>Flieger-Reservationen</title>
+  <title>Erfolgreiche Registrierung!</title>
   <meta name="title" content="Flieger-Reservationen">
   <meta name="keywords" content="Reservierungs-System">
   <meta name="description" content="Reservierungs-System">
@@ -22,13 +22,14 @@
     <body>
 
     <?php include_once('../includes/usermenu.php'); ?>
+    <main>
+  
 
-        <div id="formular">
-          <div id="formular_innen">
+        <div id="formular_innen">
 
           <h1>Erfolgreiche Registrierung!</h1>
-          <p>Bitte zurück gehen zur  <a href="index.php">Einlogg Seite</a> und einloggen!</p>
+          <p>Bitte <a href="/reservationen/login/index.php">einloggen</a>!</p>
        </div>
-      </div>
+    </main>
     </body>
 </html>

@@ -6,6 +6,7 @@
 include_once 'includes/register.inc.php';
 include_once 'includes/functions.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,38 +23,37 @@ include_once 'includes/functions.php';
   <meta name="robots" content="all">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="/reservationen/reservationen.css">
-  <script type="text/JavaScript" src="js/sha512.js"></script> 
-  <script type="text/JavaScript" src="js/forms.js"></script> 
 </head>
     <body>
 
     <?php include_once('../includes/usermenu.php'); ?>
-
-        <div id="formular">
-          <div id="formular_innen">
+    <main>
+  
+           
+        <div id="formular_innen">
+          <h1>Registrieren</h1>
 
           <!-- Registration form to be output if the POST variables are not
           set or if the registration script caused an error. -->
-          <h1>Registrieren</h1>
           <?php
           if (!empty($error_msg)) {
-              echo $error_msg;
+              echo "<b style='color: red;'>$error_msg</b>";
           }
           ?>
           <div style="text-align: left; margin-left: auto; margin-right: auto;">
-            <ul>
-                <li><b>Benutzernamen</b> dürfen nur Buchstaben, Zahlen und "_" enthalten</li>
-                <li><b>Passwörter</b> müssen mindestens <b>6 Zeichen</b> lang sein<br /> und Gross- <b>[A..Z]</b>, Kleinbuchstaben <b>[a..z]</b> und mind. eine Nummer <b>[0..9]</b> enthalten.</li>
-            </ul>
             <form method="post" name="registration_form" action="register.php">
     
         <div class="center">
               <table>
                 <tr>
-                  <td style="text-align: right;"><b>Benutzernamen:</b></td> <td><input type='text' name='username' id='username' /></td>
+                <td style="text-align: right;"><b>Benutzernamen:</b></td> <td><input 
+                <?php if (isset($_SESSION['regusername'])) echo "value='".$_SESSION['regusername']."'"; ?> 
+                                 type='text' name='username' id='username' /></td>
                 </tr>
                 <tr>
-                  <td style="text-align: right;"><b>Email:</b></td> <td><input type="text" name="email" id="email" /></td>
+                  <td style="text-align: right;"><b>Email:</b></td> <td><input 
+                <?php if (isset($_SESSION['regemail'])) echo "value='".$_SESSION['regemail']."'"; ?> 
+                                  type="text" name="email" id="email" /></td>
                 </tr>
                 <tr>
                   <td style="text-align: right;"><b>Passwort:</b></td> <td><input type="password" name="password" id="password"/></td>
@@ -62,11 +62,11 @@ include_once 'includes/functions.php';
                   <td style="text-align: right;"><b>Passwort bestätigen:</b></td> <td><input type="password" name="confirmpwd" id="confirmpwd" /></td>
                 </tr>
               </table> 
-              <input  class="submit_button"  type="button" value="Register" onclick="return regformhash(this.form, this.form.username, this.form.email, this.form.password, this.form.confirmpwd);" />
+              <input class="submit_button"  type="submit" value="Register" />
             </div>
             </form>
           </div>
-        </div>
       </div>
+</main>
 </body>
 </html>

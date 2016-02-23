@@ -32,20 +32,12 @@ sec_session_start();
 <![endif]-->
 
 <?php if (login_check($mysqli) == true) : ?>
-<?php
 
-$query = "SELECT * FROM `members` WHERE `members`.`id` = '".$_SESSION["user_id"]."';";
-$res = $mysqli->query($query); 
-$obj = $res->fetch_object();
-$admin = "";
-if (isset($obj->admin) && $obj->admin == TRUE)
-  $admin = "<a href='login/user_admin.php'>admin</a> / ";
-
-?>
 <body>
 
   <?php require('includes/usermenu.php'); ?>
 
+<main>
 <h1>MFGC Flieger-Reservationen</h1>
 
 
@@ -62,13 +54,11 @@ echo draw_calendar($tag, $monat, $jahr);
 echo '</div>';
 ?>
 
+</main>
+</body>
+</html>
 
-<?php else : ?>
-
-    <p style="font-size: 115%;">
-     Willkommen! <span class="error">Bitte zuerst </span> <a href="login/index.php">einloggen</a>.
-    </p>
-    <p>
-    Wenn man keine Konto hat, bitte <a href="login/register.php">hier registrieren</a>
-  </p>
-<?php endif; ?>
+<?php else :
+header("Location: /reservationen/login/index.php");
+exit;
+endif; ?>
