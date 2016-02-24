@@ -3,8 +3,8 @@ error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors',1);
 ini_set('html_errors', 1);
 
-include_once ('login/includes/db_connect.php');
-include_once ('login/includes/functions.php');
+include_once ('includes/db_connect.php');
+include_once ('includes/functions.php');
 
 sec_session_start();
 
@@ -38,7 +38,6 @@ if (isset($_POST['submit']))
   // OK, eintragen
   if ($error_msg == ""){
 
-    $msg = "";
     $query= "SELECT `salt` FROM `members` WHERE `id` = $id;";
     $res = $mysqli->query($query); 
     $obj = $res->fetch_object();
@@ -49,13 +48,12 @@ if (isset($_POST['submit']))
     if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`members` SET `password` = ? WHERE `members`.`id` = ? ;"))
     {
       $stmt->bind_param('si', $password, $id);
-      // Execute the prepared query.
       if (!$stmt->execute()) 
       {
           header('Location: /reservationen/login/error.php?err=Registration failure: UPDATE');
           exit;
       }
-      $msg = "Das Passwort wurde geändert";
+      $msg = "<p style='color: green;'>Das Passwort wurde geändert</p>";
     }
   }
 }
@@ -77,9 +75,7 @@ if (isset($_POST['submit']))
   <meta name="author" content="candrian.org">
   <meta name="robots" content="all">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="/reservationen/reservationen.css">
-  <script type="text/JavaScript" src="js/sha512.js"></script> 
-  <script type="text/JavaScript" src="js/forms.js"></script> 
+  <link rel="stylesheet" href="/reservationen/css/reservationen.css">
 </head>
 
 <!--[if IE]>
@@ -97,7 +93,7 @@ if (isset($_POST['submit']))
   <?php
   if (!empty($error_msg))
     echo "<b style='color: red;'>$error_msg</b>";
-  else if (!empty($msg))
+  else if (isset($msg))
   {
     // logout (delete session)
     $_SESSION = array();
@@ -128,7 +124,7 @@ if (isset($_POST['submit']))
               <td><input value="" required="required" type="password" name="changepwd" /></td>
           </tr> 
       </table>
-      <input type="submit" name="submit" value="Ändern" /> 
+      <input class="submit_button" type="submit" name="submit" value="Ändern" /> 
     </form>
   </div>
 </main>

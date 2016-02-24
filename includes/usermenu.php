@@ -11,7 +11,7 @@ if (isset($_SESSION['pilotid']))
     $admin = '| <a href="/reservationen/user_admin.php">Admin</a>  ';
 ?>
 <nav>
-  <div style="float: right;">[ <a href= "/reservationen/login/includes/logout.php">ausloggen</a> ]</div>
+  <div style="float: right;">[ <a href= "/reservationen/login/logout.php">ausloggen</a> ]</div>
   <div><b><?php echo '['.$obj->pilotid.'] '.htmlentities($obj->name); ?></b>: [ <a href="/reservationen/index.php">Überblick</a> | <a href="/reservationen/reservieren.php">Reservieren</a> | <a href="/reservationen/pass_change.php">Passwort ändern</a> <?php echo $admin; ?> | <a target="_blank" href="http://www.mfgc.ch/">mfgc.ch</a> ]</div> 
 </nav>
 <?php } else { ?>
