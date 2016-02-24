@@ -5,7 +5,8 @@ include_once ('login/includes/functions.php');
 
 sec_session_start();
 
-if (login_check($mysqli) == true):
+
+if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 
 // check if admin rights
 $query = "SELECT `admin` from `members` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
@@ -50,13 +51,13 @@ if ($obj->admin == FALSE)
 
   <?php
 
-  $query = "SELECT * FROM `members` ORDER BY `members`.`id`;";
+  $query = "SELECT * FROM `members` ORDER BY `pilotid`;";
 
   $res = $mysqli->query($query); 
 
     
   echo "<table class='user_admin'>";
-  echo "<tr><th><th><b>User-ID</b></th><th><b>Nick-Name</b></th><th><b>Name</b></th><th><b>Natel</b></th><th><b>Telefon</b></th><th><b>Email</b></th><th><b>Admin</b></th></tr>";
+  echo "<tr><th><th><b>Pilot-ID</b></th><th><b>Name</b></th><th><b>Natel</b></th><th><b>Telefon</b></th><th><b>Email</b></th><th><b>Admin</b></th></tr>";
   while ($obj = $res->fetch_object())
   {
     if ($obj->admin == 1)
@@ -66,21 +67,14 @@ if ($obj->admin == FALSE)
       
     echo "\n<tr>";
     echo "<td><a href='user_edit.php?id=".$obj->id."'><small>[edit]</small></a></td>";
-    echo "<td style='text-align: center;'>".str_pad($obj->id, 3, "0", STR_PAD_LEFT)."</td><td>".$obj->username."</td><td>".$obj->name."</td><td>".$obj->natel."</td><td>".$obj->telefon."</td><td>".$obj->email."</td><td>".$admin_txt."</td>";
+    echo "<td style='text-align: center;'>".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."</td><td>".$obj->name."</td><td>".$obj->natel."</td><td>".$obj->telefon."</td><td>".$obj->email."</td><td>".$admin_txt."</td>";
     echo "</tr>";
   }
   echo "</table>";
-
   ?>
-   
+<div style="text-align: left;"> <p>&nbsp; &nbsp;<a href="login/register.php">+ neuen Piloten hinzufügen</a></p> </div>
   </div>
   </div>
 </main>
 </body>
 </html>
-
-<?php else :
-header("Location: /reservationen/login/index.php");
-exit;
-endif; 
-?>

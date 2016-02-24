@@ -4,6 +4,10 @@ body {
     font-family: sans-serif;
     margin: 0px;
     padding: 0px;
+    background-image: url("bilder/mfgc.png");
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    background-attachment: fixed;
 }
 
 nav {
@@ -43,7 +47,7 @@ div#formular_innen { margin-top: 100px; display: inline-block; margin-left: auto
 .samstag { color: blue; background-color: #dddd33; }
 .sonntag { color: red; background-color: #ffaaaa; }
 
-table.calendar		{ border:1px solid #999; background-color: yellow; box-shadow: 6px 4px 8px #6699cc; }
+table.calendar { border:1px solid #999; background-color: yellow; box-shadow: 6px 4px 8px #6699cc; }
 td.calendar-day-head { background: #ccc; font-weight:bold; text-align:center; width:3em; padding:5px; border-bottom:1px solid #999; border-top:1px solid #999; border-right:1px solid #999; }
 td.calendar-day:hover { background: #ccccff; }
 td.calendar-day-np	{ background: transparent; }  /*leer */

@@ -5,7 +5,7 @@ include_once ('login/includes/functions.php');
 
 sec_session_start();
 
-if (login_check($mysqli) == true):
+if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 
   // check if admin rights
   $query = "SELECT `admin` from `members` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
@@ -16,9 +16,16 @@ if (login_check($mysqli) == true):
 
   if (isset($_POST['loeschen']))
   {
-    $id = $_POST['id'];
-    $query="DELETE FROM `calmarws_test`.`members` WHERE `members`.`id` = $id;";
-    $res = $mysqli->query($query); 
+    $pilotid = $_POST['pilotid'];
+    $query="DELETE FROM `calmarws_test`.`members` WHERE `members`.`pilotid` = $pilotid;";
+
+    $mysqli->query($query); 
+    // man hat sich selber geloesch.. delete $_SESSION (ausloggen)
+    if (intval($_SESSION['pilotid']) ==  intval($pilotid)) {
+      header("Location: /reservationen/login/includes/logout.php");
+      exit;
+    }
+
     header("Location: user_admin.php");
     exit;
   }
@@ -26,7 +33,7 @@ if (login_check($mysqli) == true):
   if (isset($_POST['submit']))
   {
     $id = ""; if (isset($_POST['id'])) $id = $_POST['id'];
-    $usernamen = ""; if (isset($_POST['usernamen'])) $usernamen = $_POST['usernamen'];
+    $pilotid = ""; if (isset($_POST['pilotid'])) $pilotid = $_POST['pilotid'];
     $namen = ""; if (isset($_POST['namen'])) $namen = $_POST['namen'];
     $email = ""; if (isset($_POST['email'])) $email = $_POST['email'];
     $natel = ""; if (isset($_POST['natel'])) $natel = $_POST['natel'];
@@ -55,8 +62,11 @@ if (login_check($mysqli) == true):
     }
 
 
-    $query="UPDATE `calmarws_test`.`members` SET $passquery `username` = '$usernamen', `email` = '$email', `admin` = '$admin_nr', `name` = '$namen', `telefon` = '$telefon', `natel` = '$natel' WHERE `members`.`id` = $id; ";
+    $query="UPDATE `calmarws_test`.`members` SET $passquery `pilotid` = '$pilotid', `email` = '$email', `admin` = '$admin_nr', `name` = '$namen', `telefon` = '$telefon', `natel` = '$natel' WHERE `members`.`id` = $id; ";
 
+    //TODO remove
+    echo $query;
+    echo $query;
     $res = $mysqli->query($query); 
 
     header("Location: user_admin.php");
@@ -124,13 +134,12 @@ if (login_check($mysqli) == true):
   else
     $admin_txt = "nein";
       
-  echo "\n<tr><td><b>ID</b></td><td style='text-align: center; background-color: green; color: white;'><b>".str_pad($obj->id, 3, "0", STR_PAD_LEFT)."<input type='hidden' name='id' value='".$obj->id."'></b></td></tr>";
-  echo "\n<tr><td><b>Nick</b></td><td><input type='text' name='usernamen' value='".$obj->username."'></td></tr>";
+  echo "<input type='hidden' name='id' value='".$obj->id."'></b></td></tr>";
+  echo "\n<tr><td><b>Pilot-ID</b></td><td><input type='text' name='pilotid' value='".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."'></td></tr>";
   echo "\n<tr><td><b>Namen</b></td><td><input type='text' name='namen' value='".$obj->name."'></td></tr>";
   echo "\n<tr><td><b>email</b></td><td><input type='text' name='email' value='".$obj->email."'></td></tr>";
   echo "\n<tr><td><b>Natel</b></td><td><input type='text' name='natel' value='".$obj->natel."'></td></tr>";
   echo "\n<tr><td><b>Telefon</b></td><td><input type='text' name='telefon' value='".$obj->telefon."'></td></tr>";
-  echo "\n<tr><td><b>Passwort</b></td><td><input type='text' name='password' value=''></td></tr>";
   echo "\n<tr><td><b>Admin</b></td><td><select size='1' name='admin'>";
 
   if ($admin_txt == "nein"){
@@ -142,6 +151,7 @@ if (login_check($mysqli) == true):
     echo "<option selected='selected'>ja</option>";
   }
   echo "</select></td></tr>";
+  echo "\n<tr><td><b>Passwort</b></td><td><input type='text' name='password' value=''></td></tr>";
 
   echo "</table>";
   echo "<input class='submit_button' type='submit' name='submit' value='Aenderungen abschicken' />";
@@ -152,11 +162,11 @@ if (login_check($mysqli) == true):
 
   <hr style="margin: 8% 10px 16% 10px;" />
 
-  <form action='user_edit.php' method='post' onsubmit="return confirm('WirklichID [<?php echo $obj->id; ?>] loeschen?');">
-  <input type="hidden" name="id" value="<?php echo $obj->id; ?>" />
+  <form action='user_edit.php' method='post' onsubmit="return confirm('WirklichID [<?php echo $obj->pilotid; ?>] loeschen?');">
+  <input type="hidden" name="pilotid" value="<?php echo $obj->pilotid; ?>" />
   <div class="center">
-  <p><span style="font-size: 120%; color: red;">Benutzer &bdquo;<b><?php echo $obj->username; ?></b>&rdquo; mit ID <b>[<?php echo str_pad($obj->id, 3, "0", STR_PAD_LEFT); ?>] </b></span></p>
-  <p><input style='background-color: #ffcccc; margin: 10px;' type='submit' name='loeschen' value='LÖSCHEN'  /></p>
+  <p><span style="font-size: 120%; color: red;">Benutzer &bdquo;<b><?php echo $obj->name; ?></b>&rdquo; mit Piloten-ID <b>[<?php echo str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT); ?>] </b></span></p>
+  <p><input style='background-color: #ffcccc; margin: 10px;' type='submit' name='loeschen' value='LÖSCHEN' /></p>
   </div>
   </form>
 
@@ -164,9 +174,3 @@ if (login_check($mysqli) == true):
 </main>
 </body>
 </html>
-
-<?php else :
-header("Location: /reservationen/login/index.php");
-exit;
-endif; 
-?>

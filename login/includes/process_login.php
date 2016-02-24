@@ -5,8 +5,8 @@ include_once 'functions.php';
 
 sec_session_start(); // Our custom secure way of starting a PHP session.
 
-if (isset($_POST['email'], $_POST['password'])) {
-    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+if (isset($_POST['pilotid'], $_POST['password'])) {
+    $pilotid = $_POST['pilotid'];
     $password = hash('sha512', $_POST['password']);
 
 
@@ -20,7 +20,7 @@ if (isset($_POST['email'], $_POST['password'])) {
       }
     }
 
-    if (login($email, $password, $mysqli) == true) {
+    if (login($pilotid, $password, $mysqli) == true) {
         // Login success 
         header("Location: ../../index.php");
         exit();

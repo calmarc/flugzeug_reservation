@@ -5,11 +5,8 @@ include_once 'includes/functions.php';
 
 sec_session_start();
 
-if (login_check($mysqli) == true) {
-    $logged = 'ein';
-} else {
-    $logged = 'aus';
-}
+if (login_check($mysqli) == true)
+  echo 'header("Location: /reservationen/index.php");';
 ?>
   <!DOCTYPE html>
   <html lang="en">
@@ -37,7 +34,7 @@ if (login_check($mysqli) == true) {
         <?php
         
         if (isset($_GET['error'])) {
-            $err= "Email / Passwort Kombination stimmen nicht!";
+            $err= "Pilot-ID / Passwort Kombination stimmen nicht!";
             if ($_GET['error'] == 2)
               $err= "Captcha stimmt nicht überein!";
             echo "<div class='center'>";
@@ -52,8 +49,8 @@ if (login_check($mysqli) == true) {
               <form action="includes/process_login.php" method="post" name="login_form"> 			
                 <table style="width: 100%;">
                     <tr>
-                        <td style="text-align: right;"><b>Email:</b></td>
-                        <td style="overflow: hidden;"><input required="required" type="email" name="email" /></td>
+                        <td style="text-align: right;"><b>Pilot-ID:</b></td>
+                        <td style="overflow: hidden;"><input required="required" type="text" name="pilotid" /></td>
   
                     </tr>
                     <tr>

@@ -11,7 +11,8 @@ sec_session_start();
 
 $curstamp = time(); // wird einige male gebraucht
 
-if (login_check($mysqli) == true):
+
+if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 
   // braucht man auch unten
   $userid = $_SESSION['user_id'];
@@ -242,9 +243,3 @@ if (login_check($mysqli) == true):
   </body>
 <?php include ('datetime/include-date-time.js'); ?>
   </html>
-
-<?php else :
-header("Location: /reservationen/login/index.php");
-exit;
-endif; 
-?>

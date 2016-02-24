@@ -8,13 +8,15 @@ include_once ('login/includes/functions.php');
 
 sec_session_start();
 
+if (login_check($mysqli) == FALSE){ header("Location: /reservationen/login/index.php"); exit; }
+
+// braucht es fuer die browser passwort speicherung...
+//
 $id = $_SESSION['user_id'];
-$query= "SELECT `email` FROM `members` WHERE `id` = $id;";
+$query= "SELECT `pilotid` FROM `members` WHERE `id` = $id;";
 $res = $mysqli->query($query); 
 $obj = $res->fetch_object();
-$email = $obj->email; 
-
-if (login_check($mysqli) == true):
+$pilotid = $obj->pilotid; 
 
   if (isset($_POST['submit']))
   {
@@ -98,11 +100,11 @@ if (login_check($mysqli) == true):
     }
     ?>
       <form action="pass_change.php" method="post" name="login_form"> 			
-      <input type="hidden" name="email" value="mac@calmar.ws">
+      <input type="hidden" name="pilotid" value="">
         <table style="width: 100%;">
             <tr>
-                <td style="text-align: right;"><b>Email:</b></td>
-                <td style="overflow: hidden;"><input readonly="readonly" type="email" name="email" value="<?php echo $email; ?>" /></td>
+                <td style="text-align: right;"><b>Pilot-ID:</b></td>
+                <td style="overflow: hidden;"><input readonly="readonly" type="text" name="pilotid" value="<?php echo $pilotid; ?>" /></td>
 
             </tr>
             <tr>
@@ -122,8 +124,3 @@ if (login_check($mysqli) == true):
 </body>
 </html>
 
-<?php else :
-header("Location: /reservationen/login/index.php");
-exit;
-endif; 
-?>
