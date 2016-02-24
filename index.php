@@ -79,76 +79,113 @@ while($obj_flieger = $res->fetch_object())
   }
   echo '</table>';
 }
-?>
 
-<svg class="chart" width="80%" >
- <g transform="translate(28,22)">
+$w = number_format (98/28.0, 3, '.', '');
 
-<?php
-$w = number_format (90/28.0, 3, '.', '');
-
+$tabs = array();
 for ($i = 0; $i < 28;  $i++)
 {
-  $n = 90/28.0 * $i;
-  $x = number_format($n, 3, '.', '');
+  array_push($tabs, number_format ($i*$w, 3, '.', ''));
+}
 
-  echo '<rect x="'.$x.'%" y="0" width="'.$w.'%" height="19" style="stroke: #ffffff; fill: #009900;"></rect>'."\n";
+?>
+<svg class="chart" width="90%" height="320px" >
+ <defs>
+    <linearGradient id="gruen1" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
+      <stop offset="0%"   stop-color="#33dd33" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#66dd66" stop-opacity="1"/>
+    </linearGradient>
+    <linearGradient id="gruen2" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
+      <stop offset="0%"   stop-color="#66ee66" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#99ee99" stop-opacity="1"/>
+    </linearGradient>
+    <linearGradient id="gelblich" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
+      <stop offset="0%"   stop-color="#ffff33" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#ffcc33" stop-opacity="1"/>
+    </linearGradient>
+  </defs>
+
+
+ <g transform="translate(4,84)">
+<?php
+for ($i = 0; $i < 28; $i++)
+{
+
+  //////////////////////////// GRUEN (default)
+  if ($i % 2 == 0)
+  {
+	echo '<rect x="'.$tabs[$i].'%" y="0" width="'.$w.'%" height="20" style="fill:url(#gruen1); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+	//////////////////////////// H-LINIE
+	echo '<line x1="'.$tabs[$i].'%" y1="-20" x2="'.$tabs[$i].'%" y2="20" style="stroke:#000000; stroke-width: 3px;" />'."\n";
+  }
+  else
+  {
+	echo '<rect x="'.$tabs[$i].'%" y="0" width="'.$w.'%" height="20" style="fill:url(#gruen2); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+  }
+
+  ////////////////////////// BLAU
+  if ($i > 20 && $i < 24)
+  {
+	$tmp = floatval($tabs[$i]) + ($w/2);
+    $tmp = number_format ($tmp, 3, '.', '');
+
+    echo '<rect x="'.$tabs[$i].'%" y="0" width="'.$w.'%" height="20" style="fill: #0099ff; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+    echo '<text x="'.$tmp.'%" y="16" text-anchor="middle" style="stroke:#333399; fill: #333399; font-size: 90%;">214</text>'."\n";
+  }
+  if ($i > 2 && $i < 13)
+  {
+	$tmp = floatval($tabs[$i]) + ($w/2);
+    $tmp = number_format ($tmp, 3, '.', '');
+
+    echo '<rect x="'.$tabs[$i].'%" y="0" width="'.$w.'%" height="20" style="fill: #0099ff; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+	echo '<text x="'.$tmp.'%" y="16" text-anchor="middle" style="stroke:#333399; fill: #333399; font-size: 90%;">214</text>'."\n";
+  }
+  //////////////////////////// GELB
+  if ($i > 8 && $i < 14)
+  {
+	$tmp = floatval($tabs[$i]) + ($w/2);
+    $tmp = number_format ($tmp, 3, '.', '');
+    echo '<rect x="'.$tabs[$i].'%" y="20" width="'.$w.'%" height="20" style="fill: #ffff33; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+    echo '<text x="'.$tmp.'%" y="36" text-anchor="middle" style="stroke:#999900; fill: #999900; font-size: 90%;">078</text>'."\n";
+  }
+  //////////////////////////// DUNKELGELB
+  if ($i > 10 && $i < 18)
+  {
+	$tmp = floatval($tabs[$i]) + ($w/2);
+    $tmp = number_format ($tmp, 3, '.', '');
+    echo '<rect x="'.$tabs[$i].'%" y="40" width="'.$w.'%" height="20" style="fill: #ffcc33; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+    echo '<text x="'.$tmp.'%" y="56" text-anchor="middle" style="stroke:#999900; fill: #999900; font-size: 90%;">007</text>'."\n";
+  }
+
 }
 ?>
-
  </g>
- <g transform="translate(0,0)">
-
+ <g transform="translate(12,60)">
 <?php
-
-$tp = 100/28 * 26; // som reserve / width single unit
-
-$w = number_format ($tp/28.0, 3, '.', '');
 $t = 7;
-
-for ($i = 0; $i < 28;  $i++)
+for ($i = 0; $i < 28; $i += 2)
 {
-  $n = $tp/28.0 * $i;
-  $x = number_format($n, 3, '.', '');
-  $n = $tp/28.0 * ++$i;
-  $x2 = number_format($n, 3, '.', '');
-  echo '<text x="'.$x.'%" y="20" style="stroke:#000000; fill: #000000;font-family: monospace; font-size: 80%;">&nbsp;'.$t.':00</text>'."\n";
-  //echo '<text x="'.$x2.'%" y="20" style="stroke:#000000; fill: #000000;font-family: monospace; font-size: 80%;">&nbsp;'.$t.':30</text>'."\n";
+  //////////////////////////// ZEITEN
+  echo '<text x="'.$tabs[$i].'%" y="16" style="stroke:#666666; fill: #666666; font-family: monospace; font-size: 100%;">'.$t.':00</text>'."\n";
   $t++;
 }
-
 ?>
-
  </g>
- <g transform="translate(0,100)">
+ <g transform="translate(4,0)">
+  <text x="98%" y="30px" text-anchor="end" style="stroke:#000000; fill: #000000; font-size: 160%; font-weight: bold;">Tecnam P2002-JF</text>
+</g>
+ <g transform="translate(4, 280)">
+  <rect x="0%" y="0" width="6%" height="34" style="fill:url(#gruen2); stroke: #000000; stroke-width: 1px;"></rect>
+  <text x="3%" y="24px" text-anchor="middle" style="stroke:#000000; fill: #000000; font-size: 100%; ">Frei</text>
+  <rect x="8%" y="0" width="6%" height="34" style="fill: #0099ff; stroke: #000000; stroke-width: 1px;"></rect>
+  <text x="11%" y="24px" text-anchor="middle" style="stroke:#000000; fill: #000000; font-size: 100%; ">Gebucht</text>
+  <rect x="16%" y="0" width="6%" height="34" style="fill: url(#gelblich); stroke: #000000; stroke-width: 1px;"></rect>
+  <text x="19%" y="24px" text-anchor="middle" style="stroke:#000000; fill: #000000; font-size: 100%; ">Standby</text>
+  <rect x="24%" y="0" width="6%" height="34" style="fill: #ff0000; stroke: #000000; stroke-width: 1px;"></rect>
+  <text x="27%" y="24px" text-anchor="middle" style="stroke:#000000; fill: #000000; font-size: 100%; ">Service</text>
+</g>
 
-	<!--<text x="0.00001%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">0:00</text>-->
-	<!--<text x="4.16666%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">1:00</text>-->
-	<!--<text x="8.33333%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">2:00</text>-->
-	<text x="12.4999%" y="20" style="stroke:#000000; fill: #000000;font-family: monospace;  font-size: 14px;">&nbsp;3:00</text>
-	<!--<text x="16.6666%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">4:00</text>-->
-	<!--<text x="20.8333%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">5:00</text>-->
-	<text x="24.9999%" y="20" style="stroke:#000000; fill: #000000;font-family: monospace;  font-size: 14px;">&nbsp;6:00</text>
-	<!--<text x="29.1666%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">7:00</text>-->
-	<!--<text x="33.3333%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">8:00</text>-->
-	<text x="37.4999%" y="20" style="stroke:#000000; fill: #000000;font-family: monospace;  font-size: 14px;">&nbsp;9:00</text>
-	<!--<text x="41.6666%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">10:00</text>-->
-	<!--<text x="45.8333%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">11:00</text>-->
-	<text x="49.9999%" y="20" style="stroke:#000000; fill: #000000;font-family: monospace;  font-size: 14px;">12:00</text>
-	<!--<text x="54.1666%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">13:00</text>-->
-	<!--<text x="58.3333%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">14:00</text>-->
-	<text x="62.4999%" y="20" style="stroke:#000000; fill: #000000;font-family: monospace;  font-size: 14px;">15:00</text>
-	<!--<text x="66.6666%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">16:00</text>-->
-	<!--<text x="70.8333%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">17:00</text>-->
-	<text x="74.9999%" y="20" style="stroke:#000000; fill: #000000;font-family: monospace;  font-size: 14px;">18:00</text>
-	<!--<text x="79.1666%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">19:00</text>-->
-	<!--<text x="83.3333%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">20:00</text>-->
-	<text x="87.4999%" y="20" style="stroke:#000000; fill: #000000;font-family: monospace;  font-size: 14px;">21:00</text>
-	<!--<text x="91.6666%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">22:00</text>-->
-	<!--<text x="95.8333%" y="20" style="stroke:#000000; fill: #000000; font-size: 14px;">23:00</text>-->
- </g>
 </svg>
-
 </main>
 </body>
 </html>
