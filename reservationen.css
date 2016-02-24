@@ -11,7 +11,7 @@ body {
 }
 
 nav {
-  position: fixed;
+  position: sticky;
   top: 0px;
   left: 0px;
   right: 0px;
@@ -28,8 +28,14 @@ nav a:link { color: white; }
 nav a:hover { color: white;}
 nav a:visited { color: white;}
 
+table.formular_eingabe td:nth-child(1) { text-align: right;}
+table.formular_eingabe td:nth-child(2) { text-align: left; padding-left: 8px;}
+table.formular_eingabe td:nth-child(2) input { width: 90%;}
 
-main { margin-top: 70px; margin-left: auto; margin-right: auto; text-align: center; }
+
+main { margin-top: 0px; margin-left: auto; margin-right: auto; text-align: center; }
+
+form.login_form input { width: 80%; }
 
 /*div#formular { margin-left: auto; margin-right: auto;  text-align: center; padding: 30px; margin-top: 150px; }*/
 div#formular_innen { margin-top: 100px; display: inline-block; margin-left: auto; margin-right: auto; text-align: center; border-radius: 25px; border: 2px solid #73AD21; padding: 20px;  background-color: yellow; }

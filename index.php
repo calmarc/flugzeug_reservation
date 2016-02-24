@@ -13,12 +13,12 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content=
   "width=device-width, initial-scale=1.0">
-  <title>Flieger-Reservationen</title>
+  <title>MFGC Flieger-Reservationen</title>
   <meta name="title" content="Flieger-Reservationen">
   <meta name="keywords" content="Reservierungs-System">
   <meta name="description" content="Reservierungs-System">
@@ -29,48 +29,36 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="/reservationen/reservationen.css">
 
- <!--<style> .chart rect { fill: steelblue; } .chart text { fill: white; font: 10px sans-serif; text-anchor: end; } </style>-->
-
-<style>
-.top { stroke: 0,50,150 }
-.left { stroke: 150,50 }
-.bottom { stroke: 100,50 }
-.right { stroke: 50,50,100 }
-</style>
-
 </head>
 
 <!--[if IE]>
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 
-
 <body>
-
-<?php require('includes/usermenu.php'); ?>
-
-<main>
-
-
-
 <?php 
-include_once ('kalender/include.php');
+require('includes/usermenu.php');
+echo '<main>';
 
-$datum = get_date();
-$tag = $datum[0];
-$monat = $datum[1];
-$jahr = $datum[2];
+require('includes/kalender.php');
 
-echo '<div style="float: right; margin-right: 30px; margin-top: 0px;">';
+// either $_GET or today
+list( $tag, $monat, $jahr) = get_date();
+
+?> <div style="float: right; margin-right: 30px; margin-top: 0px;"> <?php
+
 echo draw_calendar($tag, $monat, $jahr);
-echo '</div>';
 
-echo '<h1>MFGC Flieger-Reservationen</h1>';
+?> 
+</div>
+<h1>Buchungs Überblick</h1>
+<?php
 
 $query = "SELECT * FROM `flieger`;";
 $res = $mysqli->query($query);
 
-while($obj_flieger = $res->fetch_object()){
+while($obj_flieger = $res->fetch_object())
+{
   $j = str_pad($jahr, 2, "0", STR_PAD_LEFT);
   $m = str_pad($monat, 2, "0", STR_PAD_LEFT);
   $t = str_pad($tag, 2, "0", STR_PAD_LEFT);
@@ -78,10 +66,11 @@ while($obj_flieger = $res->fetch_object()){
   $date24 = "$j-$m-$t 23:59:59";
   $query = "SELECT * FROM `reservationen` WHERE `fliegerid` = ".$obj_flieger->id." AND `bis` >= '$date0' AND `von` <= '$date24' ORDER BY `timestamp`;";
   $res2 = $mysqli->query($query);
-  echo '<table>';
-  echo '<tr>';
-  echo '<td>'.$obj_flieger->flieger.'</td>';
-  while($obj = $res2->fetch_object()){
+
+  echo '<table><tr><td><b>'.$obj_flieger->flieger.'</b></td>';
+
+  while($obj = $res2->fetch_object())
+  {
     echo "<tr>";
     echo '<td>'.$obj->von.'</td>';
     echo '<td>'.$obj->userid.'</td>';

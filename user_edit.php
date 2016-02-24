@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors',1);
+ini_set('html_errors', 1);
 
 include_once ('login/includes/db_connect.php');
 include_once ('login/includes/functions.php');
@@ -32,15 +35,14 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 
   if (isset($_POST['submit']))
   {
-    $id = ""; if (isset($_POST['id'])) $id = $_POST['id'];
-    $pilotid = ""; if (isset($_POST['pilotid'])) $pilotid = $_POST['pilotid'];
-    $namen = ""; if (isset($_POST['namen'])) $namen = $_POST['namen'];
-    $email = ""; if (isset($_POST['email'])) $email = $_POST['email'];
-    $natel = ""; if (isset($_POST['natel'])) $natel = $_POST['natel'];
-    $telefon = ""; if (isset($_POST['telefon'])) $telefon = $_POST['telefon'];
+    $id = ""; if (isset($_POST['id'])) $id = intval($_POST['id']);
+    $pilotid = ""; if (isset($_POST['pilotid'])) $pilotid = intval($_POST['pilotid']);
+    $name = ""; if (isset($_POST['name'])) $name = trim($_POST['name']);
+    $email = ""; if (isset($_POST['email'])) $email = trim($_POST['email']);
+    $natel = ""; if (isset($_POST['natel'])) $natel = trim($_POST['natel']);
+    $telefon = ""; if (isset($_POST['telefon'])) $telefon = trim($_POST['telefon']);
     $password = ""; if (isset($_POST['password'])) $password = trim($_POST['password']);
     $admin = ""; if (isset($_POST['admin'])) $admin = $_POST['admin'];
-
     if ($admin == "ja")
       $admin_nr = 1;
     else
@@ -58,16 +60,24 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
       $password = hash('sha512', $password);
       $password = hash('sha512', $password . $obj->salt);
 
-      $passquery = "`password` = '$password', ";
+      $passquery = "`password` = ?, ";
     }
 
 
-    $query="UPDATE `calmarws_test`.`members` SET $passquery `pilotid` = '$pilotid', `email` = '$email', `admin` = '$admin_nr', `name` = '$namen', `telefon` = '$telefon', `natel` = '$natel' WHERE `members`.`id` = $id; ";
+    // UPATE USER DATA
+    if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`members` SET $passquery `pilotid` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ? WHERE `members`.`id` = ?; ")) {
 
-    //TODO remove
-    echo $query;
-    echo $query;
-    $res = $mysqli->query($query); 
+      if ($passquery == "")
+        $stmt->bind_param('isisssi', $pilotid, $email, $admin_nr, $name, $telefon, $natel, $id);
+      else
+       $stmt->bind_param('sisisssi', $password, $pilotid, $email, $adminnr, $name, $telefon, $natel, $id);
+
+      // Execute the prepared query.
+      if (!$stmt->execute()) {
+          header('Location: /reservationen/login/error.php?err=Registration failure: UPDATE');
+          exit;
+      }
+    }
 
     header("Location: user_admin.php");
     exit;
@@ -121,26 +131,23 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
   $query = "SELECT * FROM `members` WHERE `members`.`id` = '$id'";
 
   $res = $mysqli->query($query); 
-    
-  echo "<form action='user_edit.php' method='post'>";
-
-  echo "<div class='center'>";
-  echo "<table class='user_admin'>";
-
   $obj = $res->fetch_object();
 
   if ($obj->admin == 1)
     $admin_txt = "ja";
   else
     $admin_txt = "nein";
-      
-  echo "<input type='hidden' name='id' value='".$obj->id."'></b></td></tr>";
-  echo "\n<tr><td><b>Pilot-ID</b></td><td><input type='text' name='pilotid' value='".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."'></td></tr>";
-  echo "\n<tr><td><b>Namen</b></td><td><input type='text' name='namen' value='".$obj->name."'></td></tr>";
-  echo "\n<tr><td><b>email</b></td><td><input type='text' name='email' value='".$obj->email."'></td></tr>";
-  echo "\n<tr><td><b>Natel</b></td><td><input type='text' name='natel' value='".$obj->natel."'></td></tr>";
-  echo "\n<tr><td><b>Telefon</b></td><td><input type='text' name='telefon' value='".$obj->telefon."'></td></tr>";
-  echo "\n<tr><td><b>Admin</b></td><td><select size='1' name='admin'>";
+    
+  echo "<form action='user_edit.php' method='post'>";
+  echo "<input type='hidden' name='id' value='".$obj->id."' />";
+  echo "<div class='center'>";
+  echo "<table class='formular_eingabe'>";
+  echo "\n<tr><td><b>Pilot-ID:</b></td><td><input type='text' name='pilotid' value='".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."'></td></tr>";
+  echo "\n<tr><td><b>Namen:</b></td><td><input type='text' name='name' value='".$obj->name."'></td></tr>";
+  echo "\n<tr><td><b>Email:</b></td><td><input type='email' name='email' value='".$obj->email."'></td></tr>";
+  echo "\n<tr><td><b>Natel:</b></td><td><input type='text' name='natel' value='".$obj->natel."'></td></tr>";
+  echo "\n<tr><td><b>Telefon:</b></td><td><input type='text' name='telefon' value='".$obj->telefon."'></td></tr>";
+  echo "\n<tr><td><b>Admin:</b></td><td><select size='1' name='admin'>";
 
   if ($admin_txt == "nein"){
     echo "<option selected='selected'>nein</option>";
@@ -151,7 +158,7 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
     echo "<option selected='selected'>ja</option>";
   }
   echo "</select></td></tr>";
-  echo "\n<tr><td><b>Passwort</b></td><td><input type='text' name='password' value=''></td></tr>";
+  echo "\n<tr><td><b>Passwort</b></td><td><input placeholder='******' type='text' name='password' value=''></td></tr>";
 
   echo "</table>";
   echo "<input class='submit_button' type='submit' name='submit' value='Aenderungen abschicken' />";

@@ -87,11 +87,11 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 
       $message = "<p><b style='color: green;'>Die Reservierung wurde eingetragen!</b></p>";
       $message .= "<div class='center'>";
-      $message .= "<table>";
-      $message .= "<tr><td style='text-align: right;'>Von:</td><td><b>$vontag_orig</b> / <b>$vonzeit Uhr</b></td></tr>";
-      $message .= "<tr><td style='text-align: right;'>Bis:</td><td><b>$bistag_orig</b> / <b>$biszeit Uhr</b></td></tr>";
-      $message .= "<tr><td style='text-align: right;'>Flieger:</td><td><b>".$obj->flieger."</b></td></tr>";
-      $message .= "<tr><td style='text-align: right;'>Dauer:</td><td><b>".$dauer_h."h ".$dauer_m."m</b></td></tr>";
+      $message .= "<table class='formular_eingabe'>";
+      $message .= "<tr><td>Von:</td><td><b>$vontag_orig</b> / <b>$vonzeit Uhr</b></td></tr>";
+      $message .= "<tr><td>Bis:</td><td><b>$bistag_orig</b> / <b>$biszeit Uhr</b></td></tr>";
+      $message .= "<tr><td>Flieger:</td><td><b>".$obj->flieger."</b></td></tr>";
+      $message .= "<tr><td>Dauer:</td><td><b>".$dauer_h."h ".$dauer_m."m</b></td></tr>";
       $message .= "</table>";
       $message .= "</div>";
       $message .= "<p style='margin-top: 40px;'>Zurück zu den <a href='reservieren.php'>Reservationen</a></p>";
@@ -167,11 +167,11 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 
   <tr>
 	<td style="text-align: right;"><b>Von (Tag/Zeit):</b></td>
-    <td style="text-align: left;"><input style="width: 120px;"  name="vontag" class="fixbreite" required="required" type="text" id="vontag" /> / <input style="width: 70px;" name="vonzeit" class="fixbreite" required="required"  type="text" id="vonzeit" /></td>
+    <td style="text-align: left;"><input pattern="[0-9]{0,1}[1-9]{1}\.[0-9]{0,1}[1-9]{1}\.20[0-9]{2}" style="width: 120px;"  name="vontag" class="fixbreite" required="required" type="text" id="vontag" /> / <input style="width: 70px;" name="vonzeit" class="fixbreite" required="required" pattern="[0-9]{1,2}:[03][0]{0,1}" type="text" id="vonzeit" /></td>
   </tr>
   <tr>
 	<td style="text-align: right;"><b>Bis (Tag/Zeit):</b></td>
-    <td style="text-align: left;"><input style="width: 120px;"  name="bistag" class="fixbreite" required="required" type="text" id="bistag" /> / <input style="width: 70px;"  name="biszeit" class="fixbreite" required="required"  type="text" id="biszeit" /></td>
+    <td style="text-align: left;"><input pattern="[0-9]{0,1}[1-9]{1}\.[0-9]{0,1}[1-9]{1}\.20[0-9]{2}" style="width: 120px;"  name="bistag" class="fixbreite" required="required" type="text" id="bistag" /> / <input style="width: 70px;"  name="biszeit" class="fixbreite" required="required" pattern="[0-9]{1,2}:[03][0]{0,1}" type="text" id="biszeit" /></td>
   </tr>
 	
 

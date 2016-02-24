@@ -5,8 +5,11 @@ include_once 'includes/functions.php';
 
 sec_session_start();
 
-if (login_check($mysqli) == true)
-  echo 'header("Location: /reservationen/index.php");';
+if (login_check($mysqli) == true) {
+  header("Location: /reservationen/index.php");
+  exit;
+}
+
 ?>
   <!DOCTYPE html>
   <html lang="en">
@@ -46,16 +49,16 @@ if (login_check($mysqli) == true)
           <div id="formular_innen">
             <h1>Einloggen</h1>
 
-              <form action="includes/process_login.php" method="post" name="login_form"> 			
-                <table style="width: 100%;">
+              <form action="includes/process_login.php" method="post" name="login_form" class="login_form"> 			
+                <table class="formular_eingabe" style="width: 100%;">
                     <tr>
-                        <td style="text-align: right;"><b>Pilot-ID:</b></td>
-                        <td style="overflow: hidden;"><input required="required" type="text" name="pilotid" /></td>
+                        <td><b>Pilot-ID:</b></td>
+                        <td ><input required="required" type="number"  min="1" max="999" name="pilotid" /></td>
   
                     </tr>
                     <tr>
-                        <td style="text-align: right;"><b>Passwort:</b></td>
-                        <td style="text-align: left; overflow: hidden;"><input type="password" name="password" id="password"/></td>
+                        <td><b>Passwort:</b></td>
+                        <td><input type="password" name="password" id="password"/></td>
                     </tr> 
   <?php
     $res = $mysqli->query("SELECT `show` FROM `calmarws_test`.`captcha` WHERE `captcha`.`id` =1;");

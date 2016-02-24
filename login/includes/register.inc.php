@@ -52,7 +52,7 @@ if (isset($_POST['pilotid'], $_POST['password'])) {
   }
 
   if (strlen(trim($_POST['password'])) < 4)
-      $error_msg .= '<p class="error">Passwörter muessen mindestend 4 Zeichen lang sein</p>';
+      $error_msg .= '<p class="error">Passwort muss mindestens 4 Zeichen lang sein</p>';
 
   $password  = hash('sha512', trim($_POST['password']));
   if (strlen($password) != 128)

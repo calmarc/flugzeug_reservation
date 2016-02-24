@@ -120,8 +120,6 @@ function checkbrute($mysqli) {
 }
 
 function login_check($mysqli) {
-  // TODO remove
-  return true;
     // Check if all session variables are set 
     if (isset($_SESSION['user_id'], $_SESSION['pilotid'], $_SESSION['login_string'])) {
         $user_id = $_SESSION['user_id'];

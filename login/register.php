@@ -51,40 +51,40 @@ include_once 'includes/register.inc.php';
           <div class="center">
             <form method="post" name="registration_form" action="register.php">
               <div class="center">
-                <table>
+                <table class="formular_eingabe">
                   <tr>
-                  <td style="text-align: right;"><b>Pilot-ID:</b></td> <td><input 
+                  <td><b>Pilot-ID:</b></td> <td><input required="required"
                   <?php if (isset($_SESSION['regpilotid'])) echo "value='".$_SESSION['regpilotid']."'"; ?> 
-                                   type='text' name='pilotid' id='pilotid' /></td>
+                                   type='number' min="1" max="999" name='pilotid' id='pilotid' /></td>
                   </tr>
                   <tr>
-                    <td style="text-align: right;"><b>Name:</b></td> <td><input 
+                    <td><b>Name:</b></td> <td><input 
                   <?php if (isset($_SESSION['regname'])) echo "value='".$_SESSION['regname']."'"; ?> 
                                     type="text" name="name" id="name" /></td>
                   </tr>
                   <tr>
-                    <td style="text-align: right;"><b>Natel:</b></td> <td><input 
+                    <td><b>Natel:</b></td> <td><input 
                   <?php if (isset($_SESSION['regnatel'])) echo "value='".$_SESSION['regnatel']."'"; ?> 
                                     type="text" name="natel" id="natel" /></td>
                   </tr>
                   <tr>
-                    <td style="text-align: right;"><b>Telefon:</b></td> <td><input 
+                    <td><b>Telefon:</b></td> <td><input 
                   <?php if (isset($_SESSION['regtel'])) echo "value='".$_SESSION['regtel']."'"; ?> 
                                     type="text" name="tel" id="tel" /></td>
                   </tr>
                   <tr>
-                    <td style="text-align: right;"><b>Email:</b></td> <td><input 
+                    <td><b>Email:</b></td> <td><input 
                   <?php if (isset($_SESSION['regemail'])) echo "value='".$_SESSION['regemail']."'"; ?> 
-                                    type="text" name="email" id="email" /></td>
+                                    type="email" name="email" id="email" /></td>
                   </tr>
                   <tr>
-                    <td style="text-align: right;"><b>Admin:</b></td> <td style="text-align: left;"><select name="admin">
+                    <td><b>Admin:</b></td> <td><select name="admin">
                       <option <?php if (isset($_SESSION['regadmin']) && $_SESSION['regadmin'] == 0 ) echo " selected='selected' "; ?> value="0">nein</option>
                       <option <?php if (isset($_SESSION['regadmin']) && $_SESSION['regadmin'] == 1 ) echo " selected='selected' "; ?> value="1">Ja</option></select>
                    
                   </tr>
                   <tr>
-                    <td style="text-align: right;"><b>Passwort:</b></td> <td><input type="text" name="password" /></td>
+                    <td><b>Passwort:</b></td> <td><input required="required" type="text" name="password" /></td>
                   </tr>
                 </table> 
                 <input class="submit_button" type="submit" value="Hinzufügen" />
