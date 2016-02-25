@@ -28,8 +28,33 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
   <meta name="robots" content="all">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="/reservationen/css/reservationen.css">
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 
+ <!-- LOAD TESTING LIBRARY -->
+      <script src="js/modernizr.js"></script>
+
+      <!-- COOKIE LIBRARY -->
+      <script src="js/jquery.cookie.js"></script>
+
+      <!-- CREATE COOKIE -->
+      <script>
+
+        var clientInfo = {
+          browserWidth: $(window).width(),
+          browserHeight: $(window).height(),
+          flexboxSupport: Modernizr.flexbox,
+          SVGSupport: Modernizr.svg
+        };
+
+        var cookieVal = JSON.stringify(clientInfo);
+
+        // was using document.cookie, this plugin worked better
+        $.cookie("_clientInfo", cookieVal, {
+          expires: 70
+        });
+      </script>
 </head>
+
 
 <!--[if IE]>
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -42,55 +67,43 @@ echo '<main>';
 
 require('includes/kalender.php');
 
+$monate = array("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", 
+"Oktober", "November", "Dezember");
 // either $_GET or today
 list( $tag, $monat, $jahr) = get_date();
 
-?> <div style="float: right; margin-right: 30px; margin-top: 0px;"> <?php
+echo '<div id="calendar">';
 
 echo draw_calendar($tag, $monat, $jahr);
 
 ?> 
 </div>
-<h1>Buchungs Überblick</h1>
+<h1>Buchungs-Überblick (<?php echo "$tag.&nbsp;".$monate[$monat-1];?>)</h1>
 <?php
 
-$query = "SELECT * FROM `flieger`;";
-$res = $mysqli->query($query);
+// 'konstants' needed below
+$w = number_format (98/28.0, 3, '.', ''); // WIDTH of tabs
 
-while($obj_flieger = $res->fetch_object())
-{
-  $j = str_pad($jahr, 2, "0", STR_PAD_LEFT);
-  $m = str_pad($monat, 2, "0", STR_PAD_LEFT);
-  $t = str_pad($tag, 2, "0", STR_PAD_LEFT);
-  $date0 = "$j-$m-$t 00:00:00";
-  $date24 = "$j-$m-$t 23:59:59";
-  $query = "SELECT * FROM `reservationen` WHERE `fliegerid` = ".$obj_flieger->id." AND `bis` >= '$date0' AND `von` <= '$date24' ORDER BY `timestamp`;";
-  $res2 = $mysqli->query($query);
-
-  echo '<table><tr><td><b>'.$obj_flieger->flieger.'</b></td>';
-
-  while($obj = $res2->fetch_object())
-  {
-    echo "<tr>";
-    echo '<td>'.$obj->von.'</td>';
-    echo '<td>'.$obj->userid.'</td>';
-    echo '<td>'.$obj->bis.'</td>';
-    echo "</tr>";
-  }
-  echo '</table>';
-}
-
-$w = number_format (98/28.0, 3, '.', '');
-
-$tabs = array();
+$tabs = array(); // TABS to place stuff
 for ($i = 0; $i < 28;  $i++)
 {
   array_push($tabs, number_format ($i*$w, 3, '.', ''));
 }
 
+$j = str_pad($jahr, 2, "0", STR_PAD_LEFT);
+$m = str_pad($monat, 2, "0", STR_PAD_LEFT);
+$t = str_pad($tag, 2, "0", STR_PAD_LEFT);
+$date = "$j-$m-$t"; // DATE
+
+//buchungs-colors: blue+text,  yellow+text, orange+text, dark-orange+t, red+text
+$boxcol = array('#0099ff', '#ffff00', '#ffcc33', '#ffff00', '#ffcc33', '#ffff00');
+$textcol = array('#333399', '#999900', '#999933', '#999900', '#999933', '#999900');
+
+$planeoffset = 120;
+
 ?>
-<svg class="chart" width="90%" height="320px" >
- <defs>
+<svg class="chart" width="90%" height="550px" >
+  <defs>
     <linearGradient id="gruen1" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
       <stop offset="0%"   stop-color="#33dd33" stop-opacity="1"/>
       <stop offset="100%" stop-color="#66dd66" stop-opacity="1"/>
@@ -105,87 +118,181 @@ for ($i = 0; $i < 28;  $i++)
     </linearGradient>
   </defs>
 
+  <g transform="translate(4,84)">
+  <?php
 
- <g transform="translate(4,84)">
-<?php
-for ($i = 0; $i < 28; $i++)
+// MAIN
+// LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOP
+
+
+// print GREEN etc (lowest layer) stuff
+$yoffset = -$planeoffset;
+
+$query = "SELECT * FROM `flieger`;";
+$res_f = $mysqli->query($query);
+
+$nullnullpad = ":00";
+if (isset($_COOKIE['_clientInfo']))
 {
-
-  //////////////////////////// GRUEN (default)
-  if ($i % 2 == 0)
-  {
-	echo '<rect x="'.$tabs[$i].'%" y="0" width="'.$w.'%" height="20" style="fill:url(#gruen1); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
-	//////////////////////////// H-LINIE
-	echo '<line x1="'.$tabs[$i].'%" y1="-20" x2="'.$tabs[$i].'%" y2="20" style="stroke:#000000; stroke-width: 3px;" />'."\n";
-  }
-  else
-  {
-	echo '<rect x="'.$tabs[$i].'%" y="0" width="'.$w.'%" height="20" style="fill:url(#gruen2); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
-  }
-
-  ////////////////////////// BLAU
-  if ($i > 20 && $i < 24)
-  {
-	$tmp = floatval($tabs[$i]) + ($w/2);
-    $tmp = number_format ($tmp, 3, '.', '');
-
-    echo '<rect x="'.$tabs[$i].'%" y="0" width="'.$w.'%" height="20" style="fill: #0099ff; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
-    echo '<text x="'.$tmp.'%" y="16" text-anchor="middle" style="stroke:#333399; fill: #333399; font-size: 90%;">214</text>'."\n";
-  }
-  if ($i > 2 && $i < 13)
-  {
-	$tmp = floatval($tabs[$i]) + ($w/2);
-    $tmp = number_format ($tmp, 3, '.', '');
-
-    echo '<rect x="'.$tabs[$i].'%" y="0" width="'.$w.'%" height="20" style="fill: #0099ff; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
-	echo '<text x="'.$tmp.'%" y="16" text-anchor="middle" style="stroke:#333399; fill: #333399; font-size: 90%;">214</text>'."\n";
-  }
-  //////////////////////////// GELB
-  if ($i > 8 && $i < 14)
-  {
-	$tmp = floatval($tabs[$i]) + ($w/2);
-    $tmp = number_format ($tmp, 3, '.', '');
-    echo '<rect x="'.$tabs[$i].'%" y="20" width="'.$w.'%" height="20" style="fill: #ffff33; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
-    echo '<text x="'.$tmp.'%" y="36" text-anchor="middle" style="stroke:#999900; fill: #999900; font-size: 90%;">078</text>'."\n";
-  }
-  //////////////////////////// DUNKELGELB
-  if ($i > 10 && $i < 18)
-  {
-	$tmp = floatval($tabs[$i]) + ($w/2);
-    $tmp = number_format ($tmp, 3, '.', '');
-    echo '<rect x="'.$tabs[$i].'%" y="40" width="'.$w.'%" height="20" style="fill: #ffcc33; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
-    echo '<text x="'.$tmp.'%" y="56" text-anchor="middle" style="stroke:#999900; fill: #999900; font-size: 90%;">007</text>'."\n";
-  }
-
+  $json = $_COOKIE['_clientInfo'];
+  $obj = json_decode(stripslashes($json));
+  if (isset($obj->browserWidth) && $obj->browserWidth > 10 && $obj->browserWidth < 1000)
+    $nullnullpad = "";
 }
-?>
- </g>
- <g transform="translate(12,60)">
-<?php
-$t = 7;
-for ($i = 0; $i < 28; $i += 2)
+
+while($obj_f = $res_f->fetch_object())
 {
-  //////////////////////////// ZEITEN
-  echo '<text x="'.$tabs[$i].'%" y="16" style="stroke:#666666; fill: #666666; font-family: monospace; font-size: 100%;">'.$t.':00</text>'."\n";
-  $t++;
-}
-?>
- </g>
- <g transform="translate(4,0)">
-  <text x="98%" y="30px" text-anchor="end" style="stroke:#000000; fill: #000000; font-size: 160%; font-weight: bold;">Tecnam P2002-JF</text>
-</g>
- <g transform="translate(4, 280)">
-  <rect x="0%" y="0" width="6%" height="34" style="fill:url(#gruen2); stroke: #000000; stroke-width: 1px;"></rect>
-  <text x="3%" y="24px" text-anchor="middle" style="stroke:#000000; fill: #000000; font-size: 100%; ">Frei</text>
-  <rect x="8%" y="0" width="6%" height="34" style="fill: #0099ff; stroke: #000000; stroke-width: 1px;"></rect>
-  <text x="11%" y="24px" text-anchor="middle" style="stroke:#000000; fill: #000000; font-size: 100%; ">Gebucht</text>
-  <rect x="16%" y="0" width="6%" height="34" style="fill: url(#gelblich); stroke: #000000; stroke-width: 1px;"></rect>
-  <text x="19%" y="24px" text-anchor="middle" style="stroke:#000000; fill: #000000; font-size: 100%; ">Standby</text>
-  <rect x="24%" y="0" width="6%" height="34" style="fill: #ff0000; stroke: #000000; stroke-width: 1px;"></rect>
-  <text x="27%" y="24px" text-anchor="middle" style="stroke:#000000; fill: #000000; font-size: 100%; ">Service</text>
-</g>
+  $yoffset += $planeoffset;
+  echo '<text x="98%" y="'.($yoffset-32).'px" text-anchor="end" style="stroke:#000000; fill: #000000; font-size: 160%; font-weight: bold;">'.$obj_f->flieger.'</text>'."\n";
+  for ($i = 0; $i < 28; $i++)
+  {
+    //////////////////////////// GRUEN (default)
+    if ($i % 2 == 0)
+    {
+      echo '<rect x="'.$tabs[$i].'%" y="'.($yoffset).'" width="'.$w.'%" height="20" style="fill:url(#gruen1); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+      //////////////////////////// H-LINIE
+      echo '<line x1="'.$tabs[$i].'%" y1="'.($yoffset-20).'" x2="'.$tabs[$i].'%" y2="'.($yoffset+20).'" style="stroke:#000000; stroke-width: 3px;" />'."\n";
+      //////////////////////////// ZEITEN
+      $tmp = (string) number_format(($tabs[$i]+0.5), 3, '.', '');
 
+      echo '<text x="'.$tmp.'%" y="'.($yoffset-4).'" style="stroke:#666666; fill: #666666; font-family: monospace; font-size: 100%;">'.($i/2+7).$nullnullpad.'</text>'."\n";
+    }
+    else
+    {
+      echo '<rect x="'.$tabs[$i].'%" y="'.($yoffset).'" width="'.$w.'%" height="20" style="fill:url(#gruen2); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+    }
+
+  }
+}
+
+$datetime0 = $date." 00:00:00";
+$datetime24 = $date." 23:59:59";
+
+$res_f->close(); // TODO or re-interate?
+$query = "SELECT * FROM `flieger`;";
+$res_f = $mysqli->query($query);
+
+// ueber die flieger iterieren
+while($obj_f = $res_f->fetch_object())
+{
+  // alle Reservierungen welche in diesen Zeitraum tangieren.
+  $query = "SELECT * FROM `reservationen` WHERE `fliegerid` = '".$obj_f->id."' AND ( `bis` > '$datetime0' AND `von` < '$datetime24') ORDER BY `timestamp` ASC;";
+
+  $res_tang = $mysqli->query($query);
+
+  // should be enough of standby-levels.. else.. well. shit happens
+  // it.: if booking[level][hour]=TRUE <- reserved
+  $bookings = array(array(), array(), array(), array(), array(), array(), array(), array(), array(), array(), array(), array());
+
+  for ($x = 0; $x < 12; $x++) // initialise with FALSE = free.
+    for ($i = 0; $i < 28; $i++)
+      $bookings[$x][$i] = FALSE;
+
+  while($obj_tang = $res_tang->fetch_object())
+  {
+    // 1. order(ed) them by timestamp
+    // 2. have a reserved-variable for each level (green, 1.standby, ...)
+    //
+    // 3. check against each of the reserved-level-variables..
+    //    beginning vrom gree, 1.standby, 2. 4.... until it fits
+    // 4. accordingly 'book' that into the level-variable
+    // 5. goto step 4.
+
+    #transfer time to blocks.
+    $vonb = strtotime($obj_tang->von);
+    $bisb = strtotime($obj_tang->bis);
+
+    $t1 = intval( date('H', $vonb));
+    $t2 = intval( date('i', $vonb));
+    $blocks_von = ($t1-7) * 2; //i.e. 8h-7 * 2 = block[2] (3rd)
+    $blocks_von += intval(($t2 / 30));
+
+
+    $t1 = intval( date('H', $bisb));
+    $t2 = intval( date('i', $bisb));
+    $blocks_bis = ($t1-7) * 2;
+    $blocks_bis += intval(($t2 / 30));
+    //i.e: 8:30 (8-7)*2 = 2 + (30/30) - 1 = block[2] (3rd)
+    
+    $level = 0;
+    while(TRUE) 
+    { 
+      $flag = FALSE;
+      for($i = $blocks_von; $i < $blocks_bis; $i++)
+      {
+        if ($bookings[$level][$i] == TRUE)
+        {
+          // Ops, not free - try next level
+          $level++;
+          $flag = TRUE;
+          break; // out of for loop
+        }
+      }
+      if ($flag == FALSE)
+        break;
+    }
+
+    //book into level
+    for($i = $blocks_von; $i < $blocks_bis; $i++)
+      $bookings[$level][$i] = TRUE;
+
+    //where to unbook??? no need to.. it gets build up from scratch all the time
+
+    $center = ($tabs[$blocks_von] + $tabs[$blocks_bis]) / 2;
+    $center = number_format ($center, 3, '.', '');
+
+    if ($level > 4)
+      continue; // don't print more standbys than 4 
+
+    $yoffset = $planeoffset * ($obj_f->id - 1) + $level * 20;
+    $width = number_format ($tabs[$blocks_bis]-$tabs[$blocks_von], 3, '.', '');
+
+    echo '<rect x="'.$tabs[$blocks_von].'%" y="'.$yoffset.'" width="'.$width.'%" height="20" style="fill: '.$boxcol[$level].'; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+
+    echo '<text x="'.$center.'%" y="'.($yoffset+16).'" text-anchor="middle" style="stroke: '.$textcol[$level].'; fill: '.$textcol[$level].'; font-size: 90%;">'.$obj_tang->userid.'</text>'."\n";
+  }
+}
+  ?>
+  </g>
 </svg>
+
+<div class="center" style="margin-top: 16px;" >
+  <svg height="30px" style="background-color: transparent; width: 60%; min-width: 380px;" >
+    <defs>
+      <linearGradient id="gruen0" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
+        <stop offset="0%"   stop-color="#66ee66" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#99ee99" stop-opacity="1"/>
+      </linearGradient>
+      <linearGradient id="gelblich0" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
+        <stop offset="0%"   stop-color="#ffff33" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#ffcc33" stop-opacity="1"/>
+      </linearGradient>
+    </defs>
+   <g transform="translate(0, 0)">
+    <rect x="10%" y="0" width="20%" height="24" style="fill:url(#gruen0); stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="20%" y="18px" text-anchor="middle" style="stroke:#000000; fill: #000000; font-size: 100%; ">Frei</text>
+    <rect x="30%" y="0" width="20%" height="24" style="fill: #0099ff; stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="40%" y="18px" text-anchor="middle" style="stroke:#000000; fill: #000000; font-size: 100%; ">Gebucht</text>
+    <rect x="50%" y="0" width="20%" height="24" style="fill: url(#gelblich0); stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="60%" y="18px" text-anchor="middle" style="stroke:#000000; fill: #000000; font-size: 100%; ">Standby</text>
+    <rect x="70%" y="0" width="20%" height="24" style="fill: #ff0000; stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="80%" y="18px" text-anchor="middle" style="stroke:#000000; fill: #000000; font-size: 100%; ">Service</text>
+    </g>
+  </svg>
+</div>
 </main>
+<!-- so you can scroll, when calendar is in the way since it's fixed -->
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
 </body>
 </html>

@@ -62,7 +62,7 @@ while ($obj = $res->fetch_object())
     
   echo "\n<tr>";
   echo "<td><a href='user_edit.php?id=".$obj->id."'><small>[edit]</small></a></td>";
-  echo "<td style='text-align: center;'>".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."</td><td>".$obj->name."</td><td>".$obj->natel."</td><td>".$obj->telefon."</td><td>".$obj->email."</td><td>".$admin_txt."</td>";
+  echo "<td style='text-align: center;'>".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."</td><td>".$obj->name."</td><td><span style=' white-space: nowrap;'>".$obj->natel."</span></td><td><span style=' white-space: nowrap;'>".$obj->telefon."</span></td><td>".$obj->email."</td><td>".$admin_txt."</td>";
   echo "</tr>";
 }
 ?>
