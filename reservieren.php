@@ -13,6 +13,7 @@ $curstamp = time(); // wird einige male gebraucht
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 
+
   // braucht man auch ganz unten
 $userid = $_SESSION['user_id'];
 
@@ -40,63 +41,78 @@ if (isset($_GET['action'], $_GET['reservierung']) && $_GET['action'] == 'del' &&
 }
 else if (isset($_POST['submit']))
 {
-  
+  $flieger_id = ""; if (isset($_POST['flieger_id'])) $flieger_id = $_POST['flieger_id'];
 
-  $flieger = ""; if (isset($_POST['flieger'])) $flieger = $_POST['flieger'];
-  $vontag = ""; if (isset($_POST['vontag'])) $vontag = $_POST['vontag'];
-  $bistag = ""; if (isset($_POST['bistag'])) $bistag = $_POST['bistag'];
-  $vontag_orig = $vontag;
-  $bistag = ""; if (isset($_POST['bistag'])) $bistag = $_POST['bistag'];
-  $bistag_orig = $bistag;
-  $vonzeit = ""; if (isset($_POST['vonzeit'])) $vonzeit = $_POST['vonzeit'];
-  $biszeit = ""; if (isset($_POST['biszeit'])) $biszeit = $_POST['biszeit'];
+  $von_tag = ""; if (isset($_POST['von_tag'])) $von_tag = $_POST['von_tag'];
+  $von_monat = ""; if (isset($_POST['von_monat'])) $von_monat = $_POST['von_monat'];
+  $von_jahr = ""; if (isset($_POST['von_jahr'])) $von_jahr = $_POST['von_jahr'];
+  $von_stunde = ""; if (isset($_POST['von_stunde'])) $von_stunde = $_POST['von_stunde'];
+  $von_minuten = ""; if (isset($_POST['von_minuten'])) $von_minuten = $_POST['von_minuten'];
+  $bis_tag = ""; if (isset($_POST['bis_tag'])) $bis_tag = $_POST['bis_tag'];
+  $bis_monat = ""; if (isset($_POST['bis_monat'])) $bis_monat = $_POST['bis_monat'];
+  $bis_jahr = ""; if (isset($_POST['bis_jahr'])) $bis_jahr = $_POST['bis_jahr'];
+  $bis_stunde = ""; if (isset($_POST['bis_stunde'])) $bis_stunde = $_POST['bis_stunde'];
+  $bis_minuten = ""; if (isset($_POST['bis_minuten'])) $bis_minuten = $_POST['bis_minuten'];
 
-  $vonstamp = strtotime ($vontag.' '.$vonzeit);
-  $bisstamp = strtotime ($bistag.' '.$biszeit);
+  $von_tag = str_pad($von_tag, 2, "0", STR_PAD_LEFT);
+  $von_monat = str_pad($von_monat, 2, "0", STR_PAD_LEFT);
+  $von_stunde = str_pad($von_stunde, 2, "0", STR_PAD_LEFT);
+  $von_minuten = str_pad($von_minuten, 2, "0", STR_PAD_LEFT);
+  $bis_tag = str_pad($bis_tag, 2, "0", STR_PAD_LEFT);
+  $bis_monat = str_pad($bis_monat, 2, "0", STR_PAD_LEFT);
+  $bis_stunde = str_pad($bis_stunde, 2, "0", STR_PAD_LEFT);
+  $bis_minuten = str_pad($bis_minuten, 2, "0", STR_PAD_LEFT);
   
+  $von_date = "$von_jahr-$von_monat-$von_tag $von_stunde:$von_minuten";
+  $bis_date = "$bis_jahr-$bis_monat-$bis_tag $bis_stunde:$bis_minuten";
+
+  $vonstamp = strtotime ($von_date);
+  $bisstamp = strtotime ($bis_date);
+
   // TODO: check values...
   $error_msg = "";
-  if ($bisstamp <= $vonstamp){
-    $error_msg = "'Von' [$vontag_orig $vonzeit] nicht grösser als 'bis' [$bistag_orig $biszeit].<br /><br />Es wurde keine Reservierung gebucht!";
+  if ($bisstamp <= $vonstamp)
+  {
+    $error_msg = "'Von' Zeit nicht grösser als 'bis' Zeit.<br /><br />Es wurde keine Reservierung gebucht!";
   }
-  if ($vonstamp <= $curstamp){
-    $error_msg = "Die Reservierung [$vontag_orig $vonzeit] liegt in der Vergangenheit.<br /><br />Es wurde keine Reservierung gebucht!<br />";
+  if ($vonstamp <= $curstamp)
+  {
+    $error_msg = "Die Reservierung liegt in der Vergangenheit.<br /><br />Es wurde keine Reservierung gebucht!<br />";
   }
    
-
   if ($error_msg == ""){
-    $tmp = explode(".", $vontag);
-    $vontag = $tmp[2].'-'.$tmp[1].'-'.$tmp[0];
-    $tmp = explode(".", $bistag);
-    $bistag = $tmp[2].'-'.$tmp[1].'-'.$tmp[0];
+    //$tmp = explode(".", $vontag);
+    //$vontag = $tmp[2].'-'.$tmp[1].'-'.$tmp[0];
+    //$tmp = explode(".", $bistag);
+    //$bistag = $tmp[2].'-'.$tmp[1].'-'.$tmp[0];
 
-    $von =  $vontag.' '.$vonzeit.':00';
-    $bis =  $bistag.' '.$biszeit.':00';
+    //$von =  $vontag.' '.$vonzeit.':00';
+    //$bis =  $bistag.' '.$biszeit.':00';
 
-    $query = "INSERT INTO `calmarws_test`.`reservationen` ( `id` , `timestamp` , `userid` , `fliegerid` , `von` , `bis`) VALUES ( NULL , CURRENT_TIMESTAMP , '$userid', '$flieger', '$von', '$bis');";
+    $query = "INSERT INTO `calmarws_test`.`reservationen` 
+      ( `id` , `timestamp` , `userid` , `fliegerid` , `von` , `bis`) VALUES 
+      ( NULL , CURRENT_TIMESTAMP , '$userid', '$flieger_id', FROM_UNIXTIME($vonstamp), FROM_UNIXTIME($bisstamp));";
 
-    $mysqli->query($query); 
-
-    $res = $mysqli->query("SELECT `flieger` from `flieger` WHERE `id` = $flieger;");
-    $obj = $res->fetch_object();
-
-    $dauer_m = (($bisstamp - $vonstamp) / 60);
-    $dauer_h = intval($dauer_m / 60);
-    $dauer_m = $dauer_m % 60;
-
-    $msg = "
-    <p><b style='color: green;'>Die Reservierung wurde eingetragen!</b></p>
-    <div class='center'>
-      <table class='formular_eingabe'>
-        <tr><td>Von:</td><td><b>$vontag_orig</b> / <b>$vonzeit Uhr</b></td></tr>
-        <tr><td>Bis:</td><td><b>$bistag_orig</b> / <b>$biszeit Uhr</b></td></tr>
-        <tr><td>Flieger:</td><td><b>".$obj->flieger."</b></td></tr>
-        <tr><td>Dauer:</td><td><b>".$dauer_h."h ".$dauer_m."m</b></td></tr>
-    </table>
-    </div>
-    <p style='margin-top: 40px;'>Zurück zu den <a href='reservieren.php'>Reservationen</a></p>";
+    $mysqli->query($query);
+    header("Location: index.php?tag=$von_tag&monat=$von_monat&jahr=$von_jahr");
   }
 }
+else if (isset($_GET['flieger_id']) && isset($_GET['tag']) && isset($_GET['monat']) && isset($_GET['jahr']))
+{
+  $pre_tag = $_GET['tag'];
+  $pre_monat = $_GET['monat'];
+  $pre_jahr = $_GET['jahr'];
+  $flieger_id = $_GET['flieger_id'];
+
+  $pre_stunde = ""; if (isset($_GET['stunde'])) $pre_stunde = $_GET['stunde'];
+  $pre_minute = ""; if (isset($_GET['minute'])) $pre_minute = $_GET['minute'];
+}
+else
+{
+  header('Location: /reservationen/index.php');
+  // else nothing to do so
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -145,28 +161,45 @@ if (isset($msg) && $msg != "")
 if (isset($error_msg) && $error_msg != "")
   echo "<p><b style='color: red;'>$error_msg</b></p>";
 
-$query = "SELECT * FROM `flieger`;";
+$query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
 $res = $mysqli->query($query); 
-$tmp = "";
-while($obj = $res->fetch_object())
-  $tmp .= "<option value='".$obj->id."'>".$obj->flieger." (".$obj->id.")</option>";
+$obj = $res->fetch_object();
+$tmp = $obj->flieger;
   
 ?>
   <form action='reservieren.php' method='post'>
+  <input type="hidden" name="flieger_id" value="<?php echo $flieger_id; ?>" />
     <div class='center'>
-      <table class='user_admin'>
+      <table class='user_admin reservierung'>
+        <tr>
+          <td><b>Pilot</b></td>
+          <td><b>[<?php echo str_pad($_SESSION['pilotid'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
+        </tr>
         <tr>
           <td><b>Flieger</b></td>
-          <td><select size='1' name='flieger'><?php echo $tmp; ?></select></td>
+          <td><b><?php echo $obj->flieger; ?></b></td>
         </tr>
-
-        <tr>
-          <td style="text-align: right;"><b>Von (Tag/Zeit):</b></td>
-          <td style="text-align: left;"><input pattern="[0-9]{0,1}[1-9]{1}\.[0-9]{0,1}[1-9]{1}\.20[0-9]{2}" style="width: 120px;"  name="vontag" class="fixbreite" required="required" type="text" id="vontag" /> / <input style="width: 70px;" name="vonzeit" class="fixbreite" required="required" pattern="[0-9]{1,2}:[03][0]{0,1}" type="text" id="vonzeit" /></td>
+        <tr class="raser2">
+          <td><b>Datum von:</b></td>
+          <td><input value="<?php echo $pre_tag; ?>" name="von_tag" style="width: 46px;;" min="1" max="31" required="required" type='number' /> <b>.</b> 
+          <input value="<?php echo $pre_monat; ?>" name="von_monat" style="width: 46px;;" min="1" max="12" required="required" type='number' /> <b>.</b> 
+          <input value="<?php echo $pre_jahr; ?>" name="von_jahr" style="width: 80px;" min="2016" max="2050" required="required" type='number' /></td>
         </tr>
-        <tr>
-          <td style="text-align: right;"><b>Bis (Tag/Zeit):</b></td>
-          <td style="text-align: left;"><input pattern="[0-9]{0,1}[1-9]{1}\.[0-9]{0,1}[1-9]{1}\.20[0-9]{2}" style="width: 120px;"  name="bistag" class="fixbreite" required="required" type="text" id="bistag" /> / <input style="width: 70px;"  name="biszeit" class="fixbreite" required="required" pattern="[0-9]{1,2}:[03][0]{0,1}" type="text" id="biszeit" /></td>
+        <tr class="raser1">
+          <td><b>Zeit von:</b></td>
+          <td><input value="<?php echo $pre_stunde; ?>" name="von_stunde" style="width: 46px;;" min="7" max="20" required="required" type='number' /> <b>:</b>
+          <input value="<?php echo $pre_minute; ?>" name="von_minuten" style="width: 46px;;" min="0" max="30" step="30" required="required" type='number' /> <b>Uhr</b></td>
+        </tr>
+        <tr class="raser2">
+          <td><b>Datum bis:</b></td>
+          <td><input value="<?php echo $pre_tag; ?>" name="bis_tag" style="width: 46px;;" min="1" max="31" required="required" type='number' /> <b>.</b> 
+          <input value="<?php echo $pre_monat; ?>" name="bis_monat" style="width: 46px;;" min="1" max="12" required="required" type='number' /> <b>.</b> 
+          <input value="<?php echo $pre_jahr; ?>" name="bis_jahr" style="width: 80px;" min="2016" max="2050" required="required" type='number' /></td>
+        </tr>
+        <tr class="raser1">
+          <td><b>Zeit bin:</b></td>
+          <td><input value="<?php echo $pre_stunde; ?>" name="bis_stunde" style="width: 46px;;" min="7" max="21" required="required" type='number' /> <b>:</b>
+          <input value="<?php echo $pre_minute; ?>" name="bis_minuten" style="width: 46px;;" min="0" max="30" step="30" required="required" type='number' /> <b>Uhr</b></td>
         </tr>
       </table>
     <input class='submit_button' type='submit' name='submit' value='Reservierung abschicken' />
