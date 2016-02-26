@@ -192,14 +192,53 @@ $res_f->close(); // TODO or re-interate?
 $query = "SELECT * FROM `flieger`;";
 $res_f = $mysqli->query($query);
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// zombies entfernen = alle buchungen in der vergangenheit.. welche nicht aktiv
+// wuerden...
+// (nachher nimmt man alle buchen welhce ins jetzt reichen (die eine maximal)
+// und die in der  unlimitierte zukunft.
+//
+// dafuer erst mischlen.. mal alles was da ist..
+//
+// dann die finden welche aktiv ist und ins jetzt reinreicht.
+// mit aktiv markieren... den rest (ausser hat aktive flag gesetzt) loeschen.
+
+// zum loeschen und fuer die letzte 'gute' buchung welche noch reingucken kann.
+$now_string = date("Y-m-d H:i:s");
+
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ueber die flieger iterieren
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 while($obj_f = $res_f->fetch_object())
 {
-  // alle Reservierungen welche in diesen Zeitraum tangieren.
-  // search for youngest on bis and oldest on von.. this is the timeframe to
-  // shuffle then.
-  $query = "SELECT * FROM `reservationen` WHERE `fliegerid` = '".$obj_f->id."' AND ( `bis` > '$datetime0' AND `von` < '$datetime24') ORDER BY `timestamp` ASC;";
-  $query = "SELECT * FROM `reservationen` WHERE `fliegerid` = '".$obj_f->id."' AND ( `bis` > '$datetime0' AND `von` < '$datetime24') ORDER BY `timestamp` ASC;";
+  // TODO: ich nehmen mal alle.. aber eigentlich alte.. oder 'gute' (geflogen // actually) nicht??
+  //
+  $query = "SELECT `von` FROM `reservationen` WHERE `fliegerid` = '".$obj_f->id."' ORDER BY `von` ASC LIMIT 1;";
+  if ($res = $mysqli->query($query))
+  {
+    if ($res->num_rows > 0)
+    {
+      $obj = $res->fetch_object();
+      $von_extrem = $obj->von;
+    }
+    else
+      continue;
+  }
+    
+  $query = "SELECT `bis` FROM `reservationen` WHERE `fliegerid` = '".$obj_f->id."' ORDER BY `bis` DESC LIMIT 1;";
+  if ($res = $mysqli->query($query))
+  {
+    if ($res->num_rows > 0)
+    {
+      $obj = $res->fetch_object();
+      $bis_extrem = $obj->bis;
+    }
+    else
+      continue;
+  }
+
+  $query = "SELECT * FROM `reservationen` WHERE `fliegerid` = '".$obj_f->id."' AND ( `bis` > '$von_extrem' AND `von` < '$bis_extrem') ORDER BY `timestamp` ASC;";
 
   $res_tang = $mysqli->query($query);
 
@@ -208,8 +247,127 @@ while($obj_f = $res_f->fetch_object())
   // it.: if booking[level][hour]=TRUE <- reserved
   $bookings = array(array(), array(), array(), array(), array(), array(), array(), array(), array(), array());
 
+  // diff of von_ext to bis_ext and then half-hour blocks.. initialise
+  $min_stamp = strtotime($von_extrem);
+  $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 60 / 60 * 2)+1;
+
+  // 1. block is time $von_extrem .. 'today's 7h block is?
+  $shift_today_block =  intval(($today_stamp_min - $min_stamp) / 60 / 60 * 2);
+
   for ($x = 0; $x < 10; $x++) // initialise with FALSE = free.
-    for ($i = 0; $i < 28; $i++)
+    for ($i = 0; $i < $half_hour_tot+1; $i++)
+      $bookings[$x][$i] = FALSE;
+
+  $delete_id = array();
+
+  while($obj_tang = $res_tang->fetch_object())
+  {
+    // 1. order(ed) them by timestamp
+    // 2. have a reserved-variable for each level (green, 1.standby, ...)
+    //
+    // 3. check against each of the reserved-level-variables..
+    //    beginning vrom gree, 1.standby, 2. 4.... until it fits
+    // 4. accordingly 'book' that into the level-variable
+    // 5. goto step 4.
+
+    #transfer time to blocks limit to today 7-21h
+    $von_stamp = strtotime($obj_tang->von);
+    $bis_stamp = strtotime($obj_tang->bis);
+
+    // /1800 = halbe stunde
+    $block_first = intval(($von_stamp - $min_stamp) / 1800); 
+    $block_last = intval(($bis_stamp - $min_stamp) / 1800)-1; 
+
+    // TODO: muss doch wesentlich einfacher schneller gehen, als den ganzen
+    // Muell ... aber mal egal..
+    $level = 0;
+    while(TRUE) 
+    { 
+      $flag = FALSE;
+      for($i = $block_first; $i <= $block_last; $i++) // max for a day
+      {
+        if ($bookings[$level][$i] == TRUE)
+        {
+          // Ops, not free - try next level
+          $level++;
+
+
+          $flag = TRUE;
+          break; // out of for loop
+        }
+      }
+      if ($flag == FALSE)
+        break;
+    }
+
+    // not green.... mark..later when here and start in past.. delete
+    if ($level > 0)
+      array_push ($delete_id, $obj_tang->id);
+
+    //book into level
+    for($i = $block_first; $i <= $block_last; $i++)
+      $bookings[$level][$i] = TRUE;
+  }
+
+  // sodali.. jetzt haben wir bookings welche nicht.. mit den levels.. hm..
+  echo "\n<!-- ===========================[ ";
+  echo $level;
+  echo " - ";
+  var_dump($delete_id);
+  var_dump($obj_tang);
+  echo " ]============================= -->\n";
+
+  foreach($delete_id as $di)
+  {
+    if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`reservationen` WHERE `reservationen`.`id` = ? AND `von` < ?;"))
+    {
+      $stmt->bind_param('is', $di, $now_string);
+      if (!$stmt->execute()) 
+      {
+          header('Location: /reservationen/login/error.php?err=Registration failure: STANDBY DELETE ');
+          exit;
+      }
+    }
+  }
+ 
+}
+
+//
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ueber die flieger iterieren
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+ 
+
+$res_f->close(); // TODO or re-interate?
+$query = "SELECT * FROM `flieger`;";
+$res_f = $mysqli->query($query);
+
+// bis > .. es kann nur einen geben.. denletzten allenfalls der noch da ist.
+while($obj_f = $res_f->fetch_object())
+{
+
+  // alle.. aber von den fruehere nur die eine welche ueberahupt reingucken kann
+  // - es kann nur eine sein.... die ist relevant.. der rest hinter der nicht
+  $query = "SELECT * FROM `reservationen` WHERE `fliegerid` = '".$obj_f->id."' AND `bis` > '$now_string'  ORDER BY `timestamp` ASC;";
+
+  $res_tang = $mysqli->query($query);
+
+  // should be enough of standby-levels.. else.. well. shit happens
+  // TODO: only 3 or 4 allowed
+  // it.: if booking[level][hour]=TRUE <- reserved
+  $bookings = array(array(), array(), array(), array(), array(), array(), array(), array(), array(), array());
+
+  // diff of von_ext to bis_ext and then half-hour blocks.. initialise
+  $min_stamp = strtotime($von_extrem);
+  $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 60 / 60 * 2)+1;
+
+  // 1. block is time $von_extrem .. 'today's 7h block is?
+  $shift_today_block =  intval(($today_stamp_min - $min_stamp) / 60 / 60 * 2);
+
+  for ($x = 0; $x < 10; $x++) // initialise with FALSE = free.
+    for ($i = 0; $i < $half_hour_tot+1; $i++)
       $bookings[$x][$i] = FALSE;
 
   while($obj_tang = $res_tang->fetch_object())
@@ -226,15 +384,9 @@ while($obj_f = $res_f->fetch_object())
     $von_stamp = strtotime($obj_tang->von);
     $bis_stamp = strtotime($obj_tang->bis);
 
-    if ($von_stamp < $today_stamp_min)
-      $von_stamp = $today_stamp_min;
-
-    if ($bis_stamp > $today_stamp_max)
-      $bis_stamp = $today_stamp_max;
-
-    // /1800 = halbe stunden
-    $block_first = intval(($von_stamp - $today_stamp_min) / 1800); 
-    $block_last = intval(($bis_stamp - $today_stamp_min) / 1800)-1; 
+    // / 1800 = halbe stunden
+    $block_first = intval(($von_stamp - $min_stamp) / 1800); 
+    $block_last = intval(($bis_stamp - $min_stamp) / 1800)-1; 
 
     $level = 0;
     while(TRUE) 
@@ -258,7 +410,17 @@ while($obj_f = $res_f->fetch_object())
     for($i = $block_first; $i <= $block_last; $i++)
       $bookings[$level][$i] = TRUE;
 
-    //where to unbook??? no need to.. it gets build up from scratch all the time
+
+    $block_first = $block_first - $shift_today_block;
+    $block_last = $block_last - $shift_today_block;
+
+    // trim according not printable data...
+    if ($block_first > 27 || $block_last < 0)
+      continue; // a booking that does not need to get printed.
+
+    if ($block_first < 0) $block_first = 0; // trip the begin
+    if ($block_last > 27) $block_last = 27; // trim the end
+
 
     $center = ($tabs[$block_first] + $tabs[$block_last+1]) / 2;
     $center = number_format ($center, 3, '.', '');
