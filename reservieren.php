@@ -227,7 +227,7 @@ else
         <tr class="raser1">
           <td><b>Zeit bin:</b></td>
           <td><input value="<?php echo $_SESSION['bis_stunde'] ?>" name="bis_stunde" style="width: 46px;;" min="7" max="21" required="required" type='number' /> <b>:</b>
-          <input value="<?php echo $_SESSION['bis_minuten'] ?>" name="bis_minuten" style="width: 46px;;" min="0" max="30" step="30" required="required" type='number' /> <b>Uhr</b></td>
+          <input value="0" name="bis_minuten" style="width: 46px;;" min="0" max="30" step="30" required="required" type='number' /> <b>Uhr</b></td>
         </tr>
       </table>
     <input class='submit_button' type='submit' name='submit' value='Reservierung abschicken' />
