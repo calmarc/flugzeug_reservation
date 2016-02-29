@@ -49,9 +49,9 @@ if (!empty($error_msg)) {
             <div class="center">
               <table class="formular_eingabe">
                 <tr>
-                   <td><b>Pilot-ID:</b></td> <td><input required="required"
+                   <td><b>Pilot-ID:</b></td> <td><input style="text-align: center;" required="required"
                   <?php if (isset($_SESSION['regpilotid'])) echo "value='".$_SESSION['regpilotid']."'"; ?> 
-                                   type='number' min="1" max="999" name='pilotid' id='pilotid' /></td>
+                                   type='number' min="1" max="9999" name='pilotid' id='pilotid' /></td>
                 </tr>
                 <tr>
                    <td><b>Name:</b></td> <td><input 
