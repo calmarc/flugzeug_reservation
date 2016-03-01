@@ -119,7 +119,7 @@ print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $tabs, $w);
 remove_zombies($mysqli);
 
 // TODO colors etc into defines? konstats etc?
-print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol);
+print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol, $tag, $monat, $jahr);
 
 ?>
 </g>

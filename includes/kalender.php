@@ -69,7 +69,7 @@ function draw_calendar($day, $month,$year){
     $days_in_month = date('t',mktime(0,0,0,$z_monat,1,$z_jahr));
     $z_day = $days_in_month; 
   }
-  $zurueck .= "<a title='Tag zurück' class='vorzurueck' href='index.php?tag=$z_day&amp;monat=$z_monat&amp;jahr=$z_jahr'><img alt='<' src='/reservationen/bilder/lsaquo.png' /></a>";
+  $zurueck .= "<a title='Tag zurück' class='vorzurueck' href='index.php?tag=$z_day&amp;monat=$z_monat&amp;jahr=$z_jahr'><img id='lsaquo' alt='<' src='/reservationen/bilder/lsaquo.png' /></a>";
 
   // tag vor
   // --------------------------------------------------------------------------
@@ -85,7 +85,7 @@ function draw_calendar($day, $month,$year){
     if ($v_monat > 12) { $v_monat = 1; $v_jahr++; }
     $v_day = 1; 
   }
-  $vor = "<a title='Tag vor' class='vorzurueck' href='index.php?tag=$v_day&amp;monat=$v_monat&amp;jahr=$v_jahr'><img alt='<' src='/reservationen/bilder/rsaquo.png' /></a>".$vor;
+  $vor = "<a title='Tag vor' class='vorzurueck' href='index.php?tag=$v_day&amp;monat=$v_monat&amp;jahr=$v_jahr'><img id='rsaquo' alt='<' src='/reservationen/bilder/rsaquo.png' /></a>".$vor;
 
   // END Vor / back ---------------------------------------
 

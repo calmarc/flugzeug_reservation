@@ -249,7 +249,7 @@ while ($obj = $res->fetch_object())
 {
   $datum = mysql2chtimef($obj);
   echo ' <tr>
-          <td><a onclick="return confirm(\'Wirklich löschen?\')" href="reservieren.php?action=del&amp;reservierung='.$obj->id.'">[löschen]</a></td>
+          <td><a onclick="return confirm(\'Reservation Wirklich löschen?\')" href="reservieren.php?action=del&amp;reservierung='.$obj->id.'">[löschen]</a></td>
           <td>'.$datum.'</td><td>'.$obj->flieger.'</td>
         </tr>';
 }
@@ -273,5 +273,4 @@ while ($obj = $res->fetch_object())
   </div>
 </main>
 </body>
-<?php include ('datetime/include-date-time.js'); ?>
-  </html>
+</html>
