@@ -142,11 +142,11 @@ $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
     <div class='center'>
       <table class='user_admin two_standard'>
         <tr>
-          <td><b>Pilot:</b></td>
+          <td><b>Pilot</b></td>
           <td><b>[<?php echo str_pad($_SESSION['pilotid'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
         </tr>
         <tr>
-          <td><b>Flieger:</b></td>
+          <td><b>Flieger</b></td>
           <td><b><?php echo $fliegertxt; ?></b></td>
         </tr>
         <tr>

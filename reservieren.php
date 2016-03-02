@@ -6,6 +6,7 @@ ini_set('html_errors', 1);
 
 include_once ('includes/db_connect.php');
 include_once ('includes/functions.php');
+include_once ('includes/graphic.php');
 
 sec_session_start();
 
@@ -74,7 +75,6 @@ else if (isset($_POST['submit']))
   $bis_stunde = str_pad($bis_stunde, 2, "0", STR_PAD_LEFT);
   $bis_minuten = str_pad($bis_minuten, 2, "0", STR_PAD_LEFT);
 
-
   $von_date = "$von_jahr-$von_monat-$von_tag $von_stunde:$von_minuten";
   $bis_date = "$bis_jahr-$bis_monat-$bis_tag $bis_stunde:$bis_minuten";
 
@@ -84,13 +84,16 @@ else if (isset($_POST['submit']))
   // TODO: check values...
   $error_msg = "";
   if ($bisstamp <= $vonstamp)
-  {
     $error_msg = "'Von' Zeit nicht grösser als 'bis' Zeit.<br /><br />Es wurde keine Reservierung gebucht!";
-  }
+
   if ($vonstamp <= $curstamp)
-  {
     $error_msg = "Die Reservierung liegt in der Vergangenheit.<br /><br />Es wurde keine Reservierung gebucht!<br />";
-  }
+
+  // CHECK LEVEL of standby
+  remove_zombies($mysqli);
+  $level = check_level($mysqli, $flieger_id, $von_date, $bis_date) - 1;
+  if ($level >= 3)
+    $error_msg = "Es hat bereits zuviele Standby's [$level] in diesem Zeitraum.<br /><br />Es wurde keine Reservierung gebucht!<br />";
    
   if ($error_msg == ""){
 
