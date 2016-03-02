@@ -26,7 +26,7 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
   <meta name="owner" content="calmar.ws">
   <meta name="author" content="candrian.org">
   <meta name="robots" content="all">
-  <meta http-equiv="refresh" content="1800">
+  <meta http-equiv="refresh" content="450">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="/reservationen/css/reservationen.css">
 </head>
@@ -79,7 +79,7 @@ for ($i = 0; $i <= 28;  $i++)
 
 //buchungs-colors: blue       yellow     orange     yellow     orange       red  
 $boxcol =   array('#33ccff', '#ffff99', '#ffee99', '#ffff99', '#ffee99', '#ff6666');
-$textcol =  array('#000000', '#333333', '#333333', '#333333', '#333333', '#333333');
+$textcol =  array('#333333', '#333333', '#333333', '#333333', '#333333', '#333333');
 
 $planeoffset = 123;
 
@@ -95,12 +95,12 @@ $planeoffset = 123;
       <stop offset="100%" stop-color="#cceecc" stop-opacity="1"/>
     </linearGradient>
     <linearGradient id="grey1" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
-      <stop offset="0%"   stop-color="#a0a0a0" stop-opacity="1"/>
-      <stop offset="100%" stop-color="#b0b0b0" stop-opacity="1"/>
+      <stop offset="0%"   stop-color="#cccccc" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#dddddd" stop-opacity="1"/>
     </linearGradient>
     <linearGradient id="grey2" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
-      <stop offset="0%"   stop-color="#bbbbbb" stop-opacity="1"/>
-      <stop offset="100%" stop-color="#cccccc" stop-opacity="1"/>
+      <stop offset="0%"   stop-color="#dddddd" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#eeeeee" stop-opacity="1"/>
     </linearGradient>
     <linearGradient id="gelblich" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
       <stop offset="0%"   stop-color="#ffff33" stop-opacity="1"/>

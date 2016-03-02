@@ -144,14 +144,6 @@ else
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" type="text/css" href="/reservationen/css/reservationen.css">
   <link rel="stylesheet" type="text/css" href="datetime/jquery.datetimepicker.css"/>
-
-  <script type="text/JavaScript" src="js/forms.js"></script> 
-
-  <style type="text/css">
-  .custom-date-style { background-color: red !important; }
-  .input{	}
-  .input-wide{ width: 500px; }
-  </style>
 </head>
 <!--[if IE]>
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>

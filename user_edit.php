@@ -146,7 +146,7 @@ echo "
       <tr>
         <td><b>Pilot-ID:</b></td><td><input type='text' name='pilotid' value='".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."'></td></tr>
       <tr>
-        <td><b>Namen:</b></td><td><input type='text' name='name' value='".$obj->name."'></td>
+        <td><b>Name:</b></td><td><input type='text' name='name' value='".$obj->name."'></td>
       </tr>
       <tr>
         <td><b>Email:</b></td><td><input type='email' name='email' value='".$obj->email."'></td>
