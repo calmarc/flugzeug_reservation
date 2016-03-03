@@ -11,11 +11,24 @@ sec_session_start();
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 
+// von der uebersicht
+if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
+{
+  $flieger_id = $_GET['flieger_id'];
 
-// braucht man auch ganz unten
-$userid = $_SESSION['user_id'];
+  $query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
+  $res = $mysqli->query($query); 
 
-if (isset($_POST['submit']))
+  if ($res->num_rows != 1)
+  {
+    header('Location: /reservationen/index.php');
+    exit;
+  }
+  $_SESSION['tag'] = date('d', time());
+  $_SESSION['monat'] = date('m', time());
+  $_SESSION['jahr'] = date('Y', time());
+}
+else if (isset($_POST['submit']))
 {
   $flieger_id = ""; if (isset($_POST['flieger_id'])) $flieger_id = $_POST['flieger_id'];
   $tag = ""; if (isset($_POST['tag'])) $tag = $_POST['tag'];
@@ -66,7 +79,7 @@ if (isset($_POST['submit']))
         NULL , ?, ?, ?, ?, 'nil'
         )"))
     {
-      $stmt->bind_param('iisi', $userid, $flieger_id, $date, $zaehler_minute);
+      $stmt->bind_param('iisi', $_SESSION['user_id'], $flieger_id, $date, $zaehler_minute);
       if (!$stmt->execute()) 
       {
           header('Location: /reservationen/login/error.php?err=Registration failure: INSERT');
@@ -75,19 +88,12 @@ if (isset($_POST['submit']))
     }
   }
 }
-else if (!isset($_GET['flieger_id']) && $_GET['flieger_id'] >= 1)
+else
 {
-    header("Location: index.php");
-    exit;
+  header('Location: /reservationen/index.php');
+  exit;
 }
-else // kommt sauber vom der uebersicht
-{
-  $flieger_id = $_GET['flieger_id'];
 
-  $_SESSION['tag'] = date('d', time());
-  $_SESSION['monat'] = date('m', time());
-  $_SESSION['jahr'] = date('Y', time());
-}
 
 ?>
 <!DOCTYPE html>
@@ -178,7 +184,13 @@ $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
   </tr>
   <?php
 
-$query = "SELECT * FROM `zaehlereintraege` INNER JOIN `members` ON `members`.`id` = `zaehlereintraege`.`user_id` WHERE `flieger_id` = '".$flieger_id."'  ORDER BY `zaehler_minute` DESC LIMIT 50;";
+$query = "SELECT `zaehlereintraege`.`id`,
+                 `zaehlereintraege`.`beanstandungen`,
+                 `members`.`name`,
+                 `zaehlereintraege`.`zaehler_minute`,
+                 `zaehlereintraege`.`datum`
+         FROM `zaehlereintraege` INNER JOIN `members` ON `members`.`id` = `zaehlereintraege`.`user_id` 
+         WHERE `flieger_id` = '".$flieger_id."'  ORDER BY `zaehler_minute` DESC LIMIT 50;";
 
 if ($res = $mysqli->query($query))
 {
@@ -188,7 +200,8 @@ if ($res = $mysqli->query($query))
     $obj = $res->fetch_object();
     while ($flag)
     {
-      $datum = $obj->datum;
+
+      list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
       $beanstandungen = $obj->beanstandungen;
       $name = $obj->name;
       $zaehler_min = $obj->zaehler_minute;
@@ -202,10 +215,10 @@ if ($res = $mysqli->query($query))
           $flag = FALSE;
       }
 
-        echo ' <tr>
-                <td><a href="landungs_eintrag.php?action=edit&amp;reservierung='.$eintrags_id.'">[edit]</a></td>
-                <td>'.$datum.'</td><td>'.$zaehlerstand.'</td><td>'.$dauer.'</td><td>'.$beanstandungen.'</td><td>'.$name.'</td>
-              </tr>';
+      echo ' <tr>
+              <td><a href="landungs_edit.php?action=edit&amp;zaehler_id='.$eintrags_id.'&amp;flieger_id='.$flieger_id.'">[edit]</a></td>
+              <td>'.$tag.'.'.$monat.'.'.$jahr.'</td><td>'.$zaehlerstand.'</td><td>'.$dauer.'</td><td>'.$beanstandungen.'</td><td>'.$name.'</td>
+            </tr>';
     }
   }
 }

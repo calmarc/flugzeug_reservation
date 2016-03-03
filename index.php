@@ -77,8 +77,6 @@ for ($i = 0; $i <= 28;  $i++)
   array_push($tabs, number_format ($i*$w+0.8, 3, '.', ''));
 }
 
-
-
 //buchungs-colors: blue       yellow     orange     yellow     orange       red  
 $boxcol =   array('#33ccff', '#ffff99', '#ffee99', '#ffff99', '#ffee99', '#ff6666');
 $textcol =  array('#333333', '#333333', '#333333', '#333333', '#333333', '#333333');
@@ -91,9 +89,20 @@ $planeoffset = 123;
   <script type="text/ecmascript"> 
   <![CDATA[
 
+	function sleep(milliseconds) 
+    {
+	  var start = new Date().getTime();
+	  for (var i = 0; i < 1e7; i++) 
+	  {
+		if ((new Date().getTime() - start) > milliseconds)
+		{
+		  break;
+		}
+	  }
+	}
     function ShowTooltip(evt, name, natel, telefon, email) 
     {
-      debugger;
+     sleep(120);
       var x = +evt.clientX - 100;
       var y = +evt.clientY + 10;
       var element;
@@ -102,7 +111,7 @@ $planeoffset = 123;
       {
         x = x + 50;
       }
-      document.getElementById("tooltip_div").setAttributeNS(null, "style", "display: block; visibility: visible; position: fixed; left: " + x + "px; top: " + y + "px;");
+      document.getElementById("tooltip_div").setAttributeNS(null, "style", "display: block; visibility: visible; position: absolute; left: " + x + "px; top: " + y + "px;");
 
       element = document.getElementById("tooltip_svg").firstChild;
       element = element.nextSibling;
@@ -140,6 +149,7 @@ $planeoffset = 123;
     }
     function HideTooltip(evt) 
     {
+      sleep(120);
       document.getElementById("tooltip_div").setAttributeNS(null, "style", "display: none; visibility: hidden;");
     }
 
@@ -214,10 +224,10 @@ print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol, $tag, $m
 <div onclick="document.getElementById('tooltip_div').style.display = 'none';" id="tooltip_div" style="display: none; visibility: hidden;">
   <svg id="tooltip_svg" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
         height="100px" width="200px" >
-    <text id="tooltip_text1" x="3%" y="20px" text-anchor="left" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
-    <text id="tooltip_text2" x="3%" y="45px" text-anchor="left" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
-    <text id="tooltip_text3" x="3%" y="70px" text-anchor="left" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
-    <text id="tooltip_text4" x="3%" y="95px" text-anchor="left" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
+    <text id="tooltip_text1" x="3%" y="20px" text-anchor="start" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
+    <text id="tooltip_text2" x="3%" y="45px" text-anchor="start" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
+    <text id="tooltip_text3" x="3%" y="70px" text-anchor="start" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
+    <text id="tooltip_text4" x="3%" y="95px" text-anchor="start" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
   </svg>
 </div>
 </main>
