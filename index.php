@@ -26,7 +26,7 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
   <meta name="owner" content="calmar.ws">
   <meta name="author" content="candrian.org">
   <meta name="robots" content="all">
-  <meta http-equiv="refresh" content="450">
+  <meta http-equiv="refresh" content="900">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="/reservationen/css/reservationen.css">
 </head>
@@ -34,6 +34,7 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 <!--[if IE]>
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
 
 <body>
 
@@ -64,6 +65,7 @@ echo draw_calendar($tag, $monat, $jahr);
 ?> 
 </div>
 <h1 id="buchung"><?php echo "$wochentag, $tag.&nbsp;".$monate[$monat-1];?> 2016 Buchungen</h1>
+
 <?php
 
 // 'konstants' needed below
@@ -85,6 +87,65 @@ $planeoffset = 123;
 
 ?>
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="chart" height="560" >
+
+  <script type="text/ecmascript"> 
+  <![CDATA[
+
+    function ShowTooltip(evt, name, natel, telefon, email) 
+    {
+      debugger;
+      var x = +evt.clientX - 100;
+      var y = +evt.clientY + 10;
+      var element;
+      var counter;
+      if (x < 50)
+      {
+        x = x + 50;
+      }
+      document.getElementById("tooltip_div").setAttributeNS(null, "style", "display: block; visibility: visible; position: fixed; left: " + x + "px; top: " + y + "px;");
+
+      element = document.getElementById("tooltip_svg").firstChild;
+      element = element.nextSibling;
+
+
+      counter = 0;
+      if (name != "")
+      {
+        element.firstChild.data = name;
+        element = element.nextSibling;
+        element = element.nextSibling;
+        counter++;
+      }
+      if (natel != "")
+      {
+        element.firstChild.data = natel;
+        element = element.nextSibling;
+        element = element.nextSibling;
+        counter++;
+      }
+      if (telefon != "")
+      {
+        element.firstChild.data = telefon;
+        element = element.nextSibling;
+        element = element.nextSibling;
+        counter++;
+      }
+      if (email != "")
+      {
+        element.firstChild.data = email;
+        counter++;
+      }
+
+      document.getElementById("tooltip_svg").setAttributeNS(null, "height", (counter * 25) + "px");
+    }
+    function HideTooltip(evt) 
+    {
+      document.getElementById("tooltip_div").setAttributeNS(null, "style", "display: none; visibility: hidden;");
+    }
+
+  ]]>
+  </script>
+
   <defs>
     <linearGradient id="gruen1" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
       <stop offset="0%"   stop-color="#88dd88" stop-opacity="1"/>
@@ -111,7 +172,6 @@ $planeoffset = 123;
   <g transform="translate(4,84)">
   <?php
 
-
 // print GREEN etc (lowest layer) stuff
 
 print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $tabs, $w);
@@ -127,7 +187,7 @@ print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol, $tag, $m
 
 <div class="center" style="margin-top: 16px;" >
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        height="30px" style="background-color: transparent; width: 60%; min-width: 480px;" >
+        height="130px" style="background-color: transparent; width: 60%; min-width: 480px;" >
     <defs>
       <linearGradient id="gruen0" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
         <stop offset="0%"   stop-color="#66ee66" stop-opacity="1"/>
@@ -147,12 +207,21 @@ print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol, $tag, $m
     <text x="60%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Standby</text>
     <rect x="70%" y="0" width="20%" height="24" style="fill: <?php echo $boxcol[5]; ?>; stroke: #000000; stroke-width: 1px;"></rect>
     <text x="80%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Service</text>
-    </g>
+  </g>
+  </svg>
+</div>
+
+<div onclick="document.getElementById('tooltip_div').style.display = 'none';" id="tooltip_div" style="display: none; visibility: hidden;">
+  <svg id="tooltip_svg" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        height="100px" width="200px" >
+    <text id="tooltip_text1" x="3%" y="20px" text-anchor="left" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
+    <text id="tooltip_text2" x="3%" y="45px" text-anchor="left" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
+    <text id="tooltip_text3" x="3%" y="70px" text-anchor="left" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
+    <text id="tooltip_text4" x="3%" y="95px" text-anchor="left" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
   </svg>
 </div>
 </main>
 <!-- so you can scroll, when calendar is in the way since it's fixed -->
-<br />
 <br />
 <br />
 <br />

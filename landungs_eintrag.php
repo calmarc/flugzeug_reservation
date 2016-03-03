@@ -49,7 +49,7 @@ if (isset($_POST['submit']))
   }
   if ($z_max >= $zaehler_minute)
   {
-    $error_msg = "Der Zählerstand ($zaehlerstand) ist weniger/gleich als zuvor.<br /><br />Es wurde kein Eintrag gemacht!<br />";
+    $error_msg = "Der Zählerstand ($zaehlerstand) ist nicht grösser als zuvor.<br /><br />Es wurde kein Eintrag gemacht!<br />";
   }
    
   if ($error_msg == "")
