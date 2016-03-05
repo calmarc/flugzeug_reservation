@@ -147,12 +147,12 @@ $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
 <?php echo $hidden; ?>
     <div class='center'>
       <table class='user_admin two_standard'>
-        <tr>
-          <td><b>Pilot</b></td>
+        <tr class="trblank">
+          <td><b>Pilot:</b></td>
           <td><b>[<?php echo str_pad($_SESSION['pilotid'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
         </tr>
-        <tr>
-          <td><b>Flieger</b></td>
+        <tr class="trblank">
+          <td><b>Flugzeug:</b></td>
           <td><b><?php echo $fliegertxt; ?></b></td>
         </tr>
         <tr>
@@ -186,6 +186,8 @@ $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
 
 $query = "SELECT `zaehlereintraege`.`id`,
                  `zaehlereintraege`.`beanstandungen`,
+                 `zaehlereintraege`.`beanstandungen`,
+                 `zaehlereintraege`.`user_id`,
                  `members`.`name`,
                  `zaehlereintraege`.`zaehler_minute`,
                  `zaehlereintraege`.`datum`
@@ -198,14 +200,19 @@ if ($res = $mysqli->query($query))
   {
     $flag = TRUE;
     $obj = $res->fetch_object();
+    $edit_c = 0;
     while ($flag)
     {
 
       list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
       $beanstandungen = $obj->beanstandungen;
+      if ($beanstandungen != "nil")
+        $beanstandungen = '<span style="color: red; font-weight: bold;">'.$beanstandungen."<span>";
+
       $name = $obj->name;
       $zaehler_min = $obj->zaehler_minute;
       $eintrags_id = $obj->id;
+      $user_id = $obj->user_id;
 
       if ($obj = $res->fetch_object())
           list($zaehlerstand, $dauer) = zaehler_into($zaehler_min, $obj->zaehler_minute);
@@ -215,8 +222,16 @@ if ($res = $mysqli->query($query))
           $flag = FALSE;
       }
 
+      $edit_link = "";	
+      // admin + die letzten 2 zum ediditerne fuer benutzer
+      if (check_admin($mysqli) || ($_SESSION['user_id'] == $user_id && $edit_c < 2))
+      {
+        $edit_link = '<a href="landungs_edit.php?action=edit&amp;zaehler_id='.$eintrags_id.'&amp;flieger_id='.$flieger_id.'">[edit]</a>';
+        $edit_c++;
+      }
+
       echo ' <tr>
-              <td><a href="landungs_edit.php?action=edit&amp;zaehler_id='.$eintrags_id.'&amp;flieger_id='.$flieger_id.'">[edit]</a></td>
+              <td>'.$edit_link.'</td>
               <td>'.$tag.'.'.$monat.'.'.$jahr.'</td><td>'.$zaehlerstand.'</td><td>'.$dauer.'</td><td>'.$beanstandungen.'</td><td>'.$name.'</td>
             </tr>';
     }

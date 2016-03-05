@@ -29,15 +29,38 @@ if ($res->num_rows != 1)
 }
 //flieger_id ist OK
 
+$zaehler_id = "0";
+if (isset($_GET['zaehler_id']))
+  $zaehler_id = intval($_GET['zaehler_id']);
+
+if (isset($_POST['zaehler_id']))
+  $zaehler_id = intval($_POST['zaehler_id']);
+
+$query = "SELECT * FROM `zaehlereintraege` WHERE `id` = '$zaehler_id' LIMIT 1;";
+echo $query;
+$res2 = $mysqli->query($query); 
+if ($res2->num_rows != 1)
+{
+  header('Location: /reservationen/index.php');
+}
+$obj2 = $res2->fetch_object();
+
+if (!check_admin($mysqli))
+{
+  if (intval($obj2->user_id) != intval($_SESSION['user_id']))
+    {
+      header('Location: /reservationen/index.php');
+      exit;
+    }
+}
+
+//zaehler_id ist OK
+
 $obj = $res->fetch_object();
 $flieger_txt = $obj->flieger;
 
 if (isset($_POST['loeschen']))
 {
-  if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
-
-  $zaehler_id = $_POST['zaehler_id'];
-
   if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`zaehlereintraege` WHERE `zaehlereintraege`.`id` = ?"))
   {
     $stmt->bind_param('i', $zaehler_id);
@@ -52,7 +75,6 @@ if (isset($_POST['loeschen']))
 }
 else if (isset($_POST['edit']))
 {
-  $id = ""; if (isset($_POST['id'])) $id = intval($_POST['id']);
   $tag = ""; if (isset($_POST['tag'])) $tag = intval($_POST['tag']);
   $monat = ""; if (isset($_POST['monat'])) $monat = intval($_POST['monat']);
   $jahr = ""; if (isset($_POST['jahr'])) $jahr = intval($_POST['jahr']);
@@ -68,7 +90,7 @@ else if (isset($_POST['edit']))
   // UPDATE USER DATA
   if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`zaehlereintraege` SET `datum` = ?, `zaehler_minute` = ?, `beanstandungen` = ? WHERE `zaehlereintraege`.`id` = ?;")) 
   {
-    $stmt->bind_param('sisi', $datum, $zaehler_minute, $beanstandungen, $id);
+    $stmt->bind_param('sisi', $datum, $zaehler_minute, $beanstandungen, $zaehler_id);
 
     if (!$stmt->execute()) 
     {
@@ -130,27 +152,26 @@ if ($res->num_rows != 1)
   header('Location: /reservationen/landungs_eintrag.php?flieger_id='.$flieger_id);
   exit;
 }
-
 $obj = $res->fetch_object();
 
 $min = intval($obj->zaehler_minute) % 60;
 $std = intval($obj->zaehler_minute / 60);
-$zaehler_eintrag = $std.'.'.$min;
+$zaehler_eintrag = $std.'.'.str_pad($min, 2, "0", STR_PAD_LEFT);
 $beanstandungen = $obj->beanstandungen;
 
 list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
 
 ?>
       <form action='landungs_edit.php' method='post'>
-        <input type='hidden' name='id' value='<?php echo $obj->id; ?>' />
+        <input type='hidden' name='zaehler_id' value='<?php echo $obj->id; ?>' />
         <input type="hidden" name="flieger_id" value="<?php echo $flieger_id; ?>" />
         <div class='center'>
           <table class='user_admin two_standard'>
-            <tr>
+            <tr class="trblank">
               <td><b>Pilot</b></td>
               <td><b>[<?php echo str_pad($_SESSION['pilotid'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
             </tr>
-            <tr>
+            <tr class="trblank">
               <td><b>Flieger</b></td>
               <td><b><?php echo $flieger_txt; ?></b></td>
             </tr>

@@ -51,6 +51,8 @@ $res = $mysqli->query($query);
             <th><b>Telefon</b></th>
             <th><b>Email</b></th>
             <th><b>Admin</b></th>
+            <th><b>Checkflug</b></th>
+            <th><b>gesperrt</b></th>
           </tr>
 <?php
 while ($obj = $res->fetch_object())
@@ -59,10 +61,25 @@ while ($obj = $res->fetch_object())
     $admin_txt = "ja";
   else
     $admin_txt = "nein";
+
+  if ($obj->gesperrt == 1)
+    $gesperrt_txt = "ja";
+  else
+    $gesperrt_txt = "nein";
+
+  $checkflug_ch = shortsql2ch_date($obj->checkflug);
+
+  if ($gesperrt_txt == "ja")
+    $checkflug_ch = "<span style='color: red; font-weight: bold;'>".$checkflug_ch."</span>";
     
-  echo "\n<tr>";
-  echo "<td><a href='user_edit.php?id=".$obj->id."'><small>[edit]</small></a></td>";
-  echo "<td style='text-align: center;'>".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."</td><td>".$obj->name."</td><td><span style=' white-space: nowrap;'>".$obj->natel."</span></td><td><span style=' white-space: nowrap;'>".$obj->telefon."</span></td><td>".$obj->email."</td><td>".$admin_txt."</td>";
+  echo "\n<tr>
+           <td><a href='user_edit.php?id=".$obj->id."'><small>[edit]</small></a></td>
+           <td style='text-align: center;'>".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."</td>
+           <td>".$obj->name."</td>
+           <td><span style='white-space: nowrap;'>".$obj->natel."</span></td>
+           <td><span style='white-space: nowrap;'>".$obj->telefon."</span></td>
+           <td>".$obj->email."</td><td>".$admin_txt."</td>
+           <td>".$checkflug_ch."</td><td>".$gesperrt_txt."</td>";
   echo "</tr>";
 }
 ?>

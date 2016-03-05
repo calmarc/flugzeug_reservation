@@ -45,21 +45,52 @@ if (isset($_POST['submit']))
   $password = ""; if (isset($_POST['password'])) $password = trim($_POST['password']);
   $admin = ""; if (isset($_POST['admin'])) $admin = $_POST['admin'];
   $email = ""; if (isset($_POST['email'])) $email = trim($_POST['email']);
-  //if ($email != "") {
-    //$email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-    //if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-      //// tue was.. aber wird bei der eingabe schon ziemlich geprueft.. 
-  //}
+  $checkflug = ""; if (isset($_POST['checkflug'])) $checkflug = trim($_POST['checkflug']);
+  $gesperrt = ""; if (isset($_POST['gesperrt'])) $gesperrt = trim($_POST['gesperrt']);
+
+
 
   if ($admin == "ja")
     $admin_nr = 1;
   else
     $admin_nr = 0;
 
+  if ($checkflug != "")
+  {
+    list ($t, $m, $y) =  explode(".", $checkflug);
+    $t = str_pad($t, 2, "0", STR_PAD_LEFT);
+    $m = str_pad($m, 2, "0", STR_PAD_LEFT);
+    $checkflug = "$y-$m-$t";
+  }
+  else
+    $checkflug = "0000-00-00";
+
+  // diese ID berichtigen.. (koennte ja sein dass noetig)
+  $res = $mysqli->query("SELECT * FROM `members` WHERE `members`.`id` = $id LIMIT 1;");
+  $obj = $res->fetch_object();
+
+  if ($obj->email_gesch == TRUE && ($checkflug > date("Y-m-d", time()) || $checkflug == "0000-00-00")) // alles io wieder
+  {
+      if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`members` SET `email_gesch` = '0' WHERE `members`.`id` = ?;")) 
+      {
+        $stmt->bind_param('i', $id);
+        if (!$stmt->execute()) 
+        {
+           header('Location: /reservationen/login/error.php?err=Registration failure: UPDATE');
+           exit;
+        }
+     }
+  }
+
+  if ($gesperrt == "ja")
+    $gesperrt_bol = TRUE;
+  else
+    $gesperrt_bol = FALSE;
+
   $passquery = "";
   if ($password != "")
   {
-    $query= "SELECT `salt` FROM `members` WHERE `id` = $id;";
+    $query= "SELECT `salt` FROM `members` WHERE `id` = $id LIMIT 1;";
     $res = $mysqli->query($query); 
     $obj = $res->fetch_object();
 
@@ -70,18 +101,23 @@ if (isset($_POST['submit']))
   }
 
   // UPDATE USER DATA
-  if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`members` SET $passquery `pilotid` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ? WHERE `members`.`id` = ?; ")) {
+  if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`members` SET $passquery `pilotid` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ?, `checkflug` = ?, `gesperrt` = ? WHERE `members`.`id` = ?; ")) {
 
     if ($passquery == "")
-      $stmt->bind_param('isisssi', $pilotid, $email, $admin_nr, $name, $telefon, $natel, $id);
+      $stmt->bind_param('isissssii', $pilotid, $email, $admin_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $id);
     else
-     $stmt->bind_param('sisisssi', $password, $pilotid, $email, $adminnr, $name, $telefon, $natel, $id);
+     $stmt->bind_param('sisissssii', $password, $pilotid, $email, $adminnr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $id);
 
     // Execute the prepared query.
     if (!$stmt->execute()) {
         header('Location: /reservationen/login/error.php?err=Registration failure: UPDATE');
         exit;
     }
+  }
+  else
+  {
+      header('Location: /reservationen/login/error.php?err=Registration failure: prepare:'.mysqli_error($mysqli));
+      exit;
   }
   header("Location: user_admin.php");
   exit;
@@ -94,10 +130,10 @@ if (isset($_POST['submit']))
   <meta charset="utf-8">
   <meta name="viewport" content=
   "width=device-width, initial-scale=1.0">
-  <title>Benutzer Editieren - Administration</title>
-  <meta name="title" content="Benutzer Administration">
-  <meta name="keywords" content="Benutzer,Administration">
-  <meta name="description" content="Benutzer Administration">
+  <title>Benutzer editieren - Administration</title>
+  <meta name="title" content="Benutzer editieren">
+  <meta name="keywords" content="Benutzer editieren">
+  <meta name="description" content="Benutzer editieren">
   <meta name="generator" content="Calmar + Vim + Tidy">
   <meta name="owner" content="calmar.ws">
   <meta name="author" content="candrian.org">
@@ -138,6 +174,11 @@ if ($obj->admin == 1)
 else
   $admin_txt = "nein";
   
+if ($obj->gesperrt == 1)
+  $gesperrt = "ja";
+else
+  $gesperrt = "nein";
+
 echo "
 <form action='user_edit.php' method='post'>
   <input type='hidden' name='id' value='".$obj->id."' />
@@ -171,11 +212,33 @@ else
   echo "<option selected='selected'>ja</option>";
 }
 
+$checkflug_ch = shortsql2ch_date ($obj->checkflug);
+
 echo "  </select>
         </td>
       </tr>
       <tr>
-        <td><b>Passwort</b></td><td><input placeholder='******' type='text' name='password' value=''></td>
+        <td><b>Checkflug:</b></td><td><input pattern='[0-3]?[0-9]\.[0-1]?[0-9]\.20[1-9][0-9]' type='text' name='checkflug' value='".$checkflug_ch."'></td>
+      </tr>
+      <tr>
+        <td><b>Gesperrt:</b></td><td><select size='1' name='gesperrt'>";
+
+if ($gesperrt == "nein")
+{
+  echo "<option selected='selected'>nein</option>";
+  echo "<option>ja</option>";
+}
+else 
+{
+  echo "<option>nein</option>";
+  echo "<option selected='selected'>ja</option>";
+}
+
+echo "  </select>
+        </td>
+      </tr>
+      <tr>
+        <td><b>Passwort</b></td><td><input placeholder='****' type='text' name='password' value=''></td>
       </tr>
     </table>
     <input class='submit_button' type='submit' name='submit' value='Aenderungen abschicken' />

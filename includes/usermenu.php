@@ -8,7 +8,7 @@ if (isset($_SESSION['pilotid']))
   $obj = $res->fetch_object();
   $admin = "";
   if ($obj->admin == TRUE)
-    $admin = '| <a href="/reservationen/user_admin.php">Admin</a>  ';
+    $admin = '| <a href="/reservationen/user_admin.php">Piloten</a>  ';
 
   $_SESSION['name'] = htmlentities($obj->name);
 ?>

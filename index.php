@@ -18,8 +18,8 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
   <meta charset="utf-8">
   <meta name="viewport" content=
   "width=device-width, initial-scale=1.0">
-  <title>MFGC Flieger-Reservationen</title>
-  <meta name="title" content="Flieger-Reservationen">
+  <title>MFGC Flugzeug-Reservationen</title>
+  <meta name="title" content="Flugzeug-Reservationen">
   <meta name="keywords" content="Reservierungs-System">
   <meta name="description" content="Reservierungs-System">
   <meta name="generator" content="Calmar + Vim + Tidy">
@@ -209,14 +209,16 @@ print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol, $tag, $m
       </linearGradient>
     </defs>
    <g transform="translate(0, 0)">
-    <rect x="10%" y="0" width="20%" height="24" style="fill:url(#gruen0); stroke: #000000; stroke-width: 1px;"></rect>
-    <text x="20%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Frei</text>
-    <rect x="30%" y="0" width="20%" height="24" style="fill: <?php echo $boxcol[0]; ?>; stroke: #000000; stroke-width: 1px;"></rect>
-    <text x="40%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Gebucht</text>
-    <rect x="50%" y="0" width="20%" height="24" style="fill: url(#gelblich0); stroke: #000000; stroke-width: 1px;"></rect>
-    <text x="60%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Standby</text>
-    <rect x="70%" y="0" width="20%" height="24" style="fill: <?php echo $boxcol[5]; ?>; stroke: #000000; stroke-width: 1px;"></rect>
-    <text x="80%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Service</text>
+    <rect x="10%" y="0" width="20%" height="24" style="fill: #eeeeee; stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="20%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Vergangenheit</text>
+    <rect x="30%" y="0" width="20%" height="24" style="fill:url(#gruen0); stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="40%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Frei</text>
+    <rect x="50%" y="0" width="20%" height="24" style="fill: <?php echo $boxcol[0]; ?>; stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="60%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Gebucht</text>
+    <rect x="70%" y="0" width="20%" height="24" style="fill: url(#gelblich0); stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="80%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Standby</text>
+    <rect x="90%" y="0" width="20%" height="24" style="fill: <?php echo $boxcol[5]; ?>; stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="95%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Service</text>
   </g>
   </svg>
 </div>

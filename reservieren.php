@@ -136,10 +136,10 @@ else
   <meta charset="utf-8">
   <meta name="viewport" content=
   "width=device-width, initial-scale=1.0">
-  <title>Benutzer Editieren - Administration</title>
-  <meta name="title" content="Benutzer Administration">
-  <meta name="keywords" content="Benutzer,Administration">
-  <meta name="description" content="Benutzer Administration">
+  <title>Flugzeug reservieren</title>
+  <meta name="title" content="Flugzeug reservieren">
+  <meta name="keywords" content="Flugzeug reservieren">
+  <meta name="description" content="Flugzeug reservieren">
   <meta name="generator" content="Calmar + Vim + Tidy">
   <meta name="owner" content="calmar.ws">
   <meta name="author" content="candrian.org">
@@ -157,7 +157,7 @@ else
 <main>
   <div id="formular_innen">
 
-  <h1>Flieger reservieren</h1>
+  <h1>Flugzeug reservieren</h1>
 
 <?php
 if (isset($msg) && $msg != "")
@@ -188,18 +188,35 @@ else
    $fliegertxt = "<select size='1' name='flieger_id'>$fliegertxt<select>";
   $hidden = "";
 }
-  
+
+$von_stunde = $_SESSION['von_stunde'];
+if ($von_stunde == "")
+  $von_stunde = "7";
+
+$von_minute = $_SESSION['von_minuten'];
+if ($von_minute == "")
+  $von_minute = "0";
+
+$bis_stunde = $_SESSION['bis_stunde'];
+if ($bis_stunde == "")
+  $bis_stunde = "7";
+
+$bis_minute = $_SESSION['bis_minuten'];
+if ($bis_minute == "")
+  $bis_minute = "0";
+
+
 ?>
   <form action='reservieren.php' method='post'>
 <?php echo $hidden; ?>
     <div class='center'>
       <table class='user_admin reservierung'>
-        <tr>
-          <td><b>Pilot</b></td>
+        <tr class="trblank">
+          <td><b>Pilot:</b></td>
           <td><b>[<?php echo str_pad($_SESSION['pilotid'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
         </tr>
-        <tr>
-          <td><b>Flieger</b></td>
+        <tr class="trblank">
+          <td><b>Flugzeug:</b></td>
           <td><b><?php echo $fliegertxt; ?></b></td>
         </tr>
         <tr class="raser2">
@@ -210,8 +227,8 @@ else
         </tr>
         <tr class="raser1">
           <td><b>Zeit von:</b></td>
-          <td><input value="<?php echo $_SESSION['von_stunde'] ?>" name="von_stunde" style="width: 46px;;" min="7" max="20" required="required" type='number' /> <b>:</b>
-          <input value="<?php echo $_SESSION['von_minuten'] ?>" name="von_minuten" style="width: 46px;;" min="0" max="30" step="30" required="required" type='number' /> <b>Uhr</b></td>
+          <td><input value="<?php echo $von_stunde; ?>" name="von_stunde" style="width: 46px;;" min="7" max="20" required="required" type='number' /> <b>:</b>
+          <input value="<?php echo $von_minute; ?>" name="von_minuten" style="width: 46px;;" min="0" max="30" step="30" required="required" type='number' /> <b>Uhr</b></td>
         </tr>
         <tr class="raser2">
           <td><b>Datum bis:</b></td>
@@ -220,9 +237,9 @@ else
           <input value="<?php echo $_SESSION['bis_jahr'] ?>" name="bis_jahr" style="width: 80px;" min="2016" max="2050" required="required" type='number' /></td>
         </tr>
         <tr class="raser1">
-          <td><b>Zeit bin:</b></td>
-          <td><input value="<?php echo $_SESSION['bis_stunde'] ?>" name="bis_stunde" style="width: 46px;;" min="7" max="21" required="required" type='number' /> <b>:</b>
-          <input value="0" name="bis_minuten" style="width: 46px;;" min="0" max="30" step="30" required="required" type='number' /> <b>Uhr</b></td>
+          <td><b>Zeit bis:</b></td>
+          <td><input value="<?php echo $bis_stunde; ?>" name="bis_stunde" style="width: 46px;;" min="7" max="21" required="required" type='number' /> <b>:</b>
+          <input value="<?php echo $bis_minute; ?>" name="bis_minuten" style="width: 46px;" min="0" max="30" step="30" required="required" type='number' /> <b>Uhr</b></td>
         </tr>
       </table>
     <input class='submit_button' type='submit' name='submit' value='Reservierung abschicken' />
@@ -249,7 +266,7 @@ while ($obj = $res->fetch_object())
         </tr>';
 }
 
-$query = "SELECT * FROM `reservationen` JOIN `flieger` ON `flieger`.`id` = `reservationen`.`fliegerid` WHERE `userid` = $userid AND `von` < '$date' ORDER BY `von` DESC;";
+$query = "SELECT * FROM `reservationen` JOIN `flieger` ON `flieger`.`id` = `reservationen`.`fliegerid` WHERE `userid` = $userid AND `von` < '$date' ORDER BY `von` DESC LIMIT 5;";
 $res = $mysqli->query($query); 
 
 while ($obj = $res->fetch_object())
