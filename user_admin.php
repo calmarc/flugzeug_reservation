@@ -7,6 +7,7 @@ sec_session_start();
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
+if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
 ?>
 
@@ -67,10 +68,14 @@ while ($obj = $res->fetch_object())
   else
     $gesperrt_txt = "nein";
 
+
+  $check_style = "";
+  if(!($obj->checkflug > date('Y-m-d', time()) || $obj->checkflug == "0000-00-00") && !$obj->gesperrt )
+    $check_style="background-color: #ffdddd; color: red;";
+
   $checkflug_ch = shortsql2ch_date($obj->checkflug);
 
-  if ($gesperrt_txt == "ja")
-    $checkflug_ch = "<span style='color: red; font-weight: bold;'>".$checkflug_ch."</span>";
+
     
   echo "\n<tr>
            <td><a href='user_edit.php?id=".$obj->id."'><small>[edit]</small></a></td>
@@ -79,7 +84,7 @@ while ($obj = $res->fetch_object())
            <td><span style='white-space: nowrap;'>".$obj->natel."</span></td>
            <td><span style='white-space: nowrap;'>".$obj->telefon."</span></td>
            <td>".$obj->email."</td><td>".$admin_txt."</td>
-           <td>".$checkflug_ch."</td><td>".$gesperrt_txt."</td>";
+           <td style='$check_style'>".$checkflug_ch."</td><td>".$gesperrt_txt."</td>";
   echo "</tr>";
 }
 ?>

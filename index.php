@@ -197,7 +197,7 @@ print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol, $tag, $m
 
 <div class="center" style="margin-top: 16px;" >
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        height="130px" style="background-color: transparent; width: 60%; min-width: 480px;" >
+        height="130px" style="background-color: transparent; width: 60%; min-width: 660px;" >
     <defs>
       <linearGradient id="gruen0" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
         <stop offset="0%"   stop-color="#66ee66" stop-opacity="1"/>
@@ -207,18 +207,22 @@ print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol, $tag, $m
       <stop offset="0%"   stop-color="<?php echo $boxcol[1];?>" stop-opacity="1"/>
         <stop offset="100%" stop-color="<?php echo $boxcol[2];?>" stop-opacity="1"/>
       </linearGradient>
+      <linearGradient id="grey0" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
+        <stop offset="0%"   stop-color="#dddddd" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#eeeeee" stop-opacity="1"/>
+      </linearGradient>
     </defs>
    <g transform="translate(0, 0)">
-    <rect x="10%" y="0" width="20%" height="24" style="fill: #eeeeee; stroke: #000000; stroke-width: 1px;"></rect>
-    <text x="20%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Vergangenheit</text>
-    <rect x="30%" y="0" width="20%" height="24" style="fill:url(#gruen0); stroke: #000000; stroke-width: 1px;"></rect>
-    <text x="40%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Frei</text>
-    <rect x="50%" y="0" width="20%" height="24" style="fill: <?php echo $boxcol[0]; ?>; stroke: #000000; stroke-width: 1px;"></rect>
-    <text x="60%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Gebucht</text>
-    <rect x="70%" y="0" width="20%" height="24" style="fill: url(#gelblich0); stroke: #000000; stroke-width: 1px;"></rect>
-    <text x="80%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Standby</text>
-    <rect x="90%" y="0" width="20%" height="24" style="fill: <?php echo $boxcol[5]; ?>; stroke: #000000; stroke-width: 1px;"></rect>
-    <text x="95%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Service</text>
+    <rect x="00%" y="0" width="20%" height="24" style="fill:url(#grey0); stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="10%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Vergangenheit</text>
+    <rect x="20%" y="0" width="20%" height="24" style="fill:url(#gruen0); stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="30%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Frei</text>
+    <rect x="40%" y="0" width="20%" height="24" style="fill: <?php echo $boxcol[0]; ?>; stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="50%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Gebucht</text>
+    <rect x="60%" y="0" width="20%" height="24" style="fill: url(#gelblich0); stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="70%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Standby</text>
+    <rect x="80%" y="0" width="20%" height="24" style="fill: <?php echo $boxcol[5]; ?>; stroke: #000000; stroke-width: 1px;"></rect>
+    <text x="90%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Service</text>
   </g>
   </svg>
 </div>

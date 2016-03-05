@@ -13,34 +13,12 @@ sec_session_start();
 $curstamp = time(); // wird einige male gebraucht
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
+if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
-
-  // braucht man auch ganz unten
+// braucht man auch ganz unten
 $userid = $_SESSION['user_id'];
 
-if (isset($_GET['action'], $_GET['reservierung']) && $_GET['action'] == 'del' && intval($_GET['reservierung']) > 0 )
-{
-  // entry must be owned by this logged-in user && must be in the future still..
-  $query = "SELECT `von` FROM `reservationen` WHERE `id` = ".$_GET['reservierung']." AND `userid` = '$userid' AND `von` > FROM_UNIXTIME($curstamp) LIMIT 1;";
-  $res = $mysqli->query($query);
-  if ($res->num_rows < 1)
-  {
-    header("Location: reservieren.php");
-    exit;
-  }
-
-  if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`reservationen` WHERE `reservationen`.`id` = ? ;"))
-  {
-    $tmp = intval($_GET['reservierung']);
-    $stmt->bind_param('i', $tmp);
-    if (!$stmt->execute()) 
-    {
-        header('Location: /reservationen/login/error.php?err=Registration failure: DELETE');
-        exit;
-    }
-  }
-}
-else if (isset($_POST['submit']))
+if (isset($_POST['submit']))
 {
   $flieger_id = ""; if (isset($_POST['flieger_id'])) $flieger_id = $_POST['flieger_id'];
   $von_tag = ""; if (isset($_POST['von_tag'])) $von_tag = $_POST['von_tag'];
@@ -205,7 +183,6 @@ $bis_minute = $_SESSION['bis_minuten'];
 if ($bis_minute == "")
   $bis_minute = "0";
 
-
 ?>
   <form action='reservieren.php' method='post'>
 <?php echo $hidden; ?>
@@ -254,14 +231,15 @@ if ($bis_minute == "")
 // jetzt Zeit
 $date = date("Y-m-d H:i:s", time());
 
-$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`  FROM `reservationen` JOIN `flieger` ON `flieger`.`id` = `reservationen`.`fliegerid` WHERE `userid` = $userid AND `von` >= '$date' ORDER BY `von` DESC;";
+$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`fliegerid` FROM `reservationen` JOIN `flieger` ON `flieger`.`id` = `reservationen`.`fliegerid` WHERE `userid` = $userid AND `von` >= '$date' ORDER BY `von` DESC;";
 $res = $mysqli->query($query); 
 
 while ($obj = $res->fetch_object())
 {
   $datum = mysql2chtimef($obj);
   echo ' <tr>
-          <td><a onclick="return confirm(\'Reservation Wirklich löschen?\')" href="reservieren.php?action=del&amp;reservierung='.$obj->id.'">[löschen]</a></td>
+          <td><a onclick="return confirm(\'Reservation wirklich löschen?\')" 
+          href="res_loeschen.php?backto=reservieren.php&amp;tag='.$_SESSION['von_tag'].'&monat='.$_SESSION['von_monat'].'&amp;jahr='.$_SESSION['von_jahr'].'&amp;flieger_id='.$flieger_id.'&amp;action=del&amp;reservierung='.$obj->id.'">[löschen]</a></td>
           <td>'.$datum.'</td><td>'.$obj->flieger.'</td>
         </tr>';
 }

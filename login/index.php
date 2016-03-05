@@ -53,12 +53,12 @@ if (isset($_GET['error']))
               <tr>
                 <td><b>Pilot-ID:</b></td>
                 <td ><input required="required" type="number"  min="1" max="999" name="pilotid" /></td>
-
               </tr>
               <tr>
                 <td><b>Passwort:</b></td>
-                <td><input type="password" name="password" id="password"/></td>
+                <td><input required="required"  type="password" name="password" id="password"/></td>
               </tr> 
+
 <?php
   $res = $mysqli->query("SELECT `show` FROM `calmarws_test`.`captcha` WHERE `captcha`.`id` =1;");
   $obj = $res->fetch_object();
@@ -69,6 +69,12 @@ if (isset($_GET['error']))
                     <td style="text-align: left;"><input name="captcha" type="text" id="captcha" size="4" maxlength="4" /><img style="vertical-align:middle;" src="/reservationen/login/captcha_hardcode/captcha.php" /></td>
                 </tr>
 <?php } ?>
+
+              <tr>
+                <td></td>
+                <td style="text-align: center; padding-top: 50px; padding-right: 30px;"><input required="required" style="width: 20px;" type="checkbox" name="zustimmen" value="" />
+                Ich bestätige die Einhaltung<br />der <a href="">Reservationspraxis</a></td>
+              </tr> 
             </table>
               <input class="submit_button" type="submit" value="Login" /> 
           </form>

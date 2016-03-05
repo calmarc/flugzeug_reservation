@@ -11,6 +11,7 @@ sec_session_start();
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
+if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
 if (isset($_POST['loeschen']))
 {
@@ -183,20 +184,20 @@ echo "
 <form action='user_edit.php' method='post'>
   <input type='hidden' name='id' value='".$obj->id."' />
     <div class='center'>
-    <table class='formular_eingabe'>
+    <table class='user_admin'>
       <tr>
         <td><b>Pilot-ID:</b></td><td><input type='text' name='pilotid' value='".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."'></td></tr>
       <tr>
         <td><b>Name:</b></td><td><input type='text' name='name' value='".$obj->name."'></td>
       </tr>
       <tr>
-        <td><b>Email:</b></td><td><input type='email' name='email' value='".$obj->email."'></td>
-      </tr>
-      <tr>
         <td><b>Natel:</b></td><td><input type='text' name='natel' value='".$obj->natel."'></td>
       </tr>
       <tr>
         <td><b>Telefon:</b></td><td><input type='text' name='telefon' value='".$obj->telefon."'></td>
+      </tr>
+      <tr>
+        <td><b>Email:</b></td><td><input type='email' name='email' value='".$obj->email."'></td>
       </tr>
       <tr>
         <td><b>Admin:</b></td><td><select size='1' name='admin'>";

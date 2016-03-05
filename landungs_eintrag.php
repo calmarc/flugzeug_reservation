@@ -10,6 +10,7 @@ include_once ('includes/functions.php');
 sec_session_start();
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
+if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
 // von der uebersicht
 if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
