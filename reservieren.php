@@ -56,8 +56,8 @@ if (isset($_POST['submit']))
   $von_date = "$von_jahr-$von_monat-$von_tag $von_stunde:$von_minuten";
   $bis_date = "$bis_jahr-$bis_monat-$bis_tag $bis_stunde:$bis_minuten";
 
-  $vonstamp = strtotime ($von_date);
-  $bisstamp = strtotime ($bis_date);
+  $vonstamp = strtotime($von_date);
+  $bisstamp = strtotime($bis_date);
 
   // TODO: check values...
   $error_msg = "";
@@ -68,7 +68,9 @@ if (isset($_POST['submit']))
     $error_msg = "Die Reservierung liegt in der Vergangenheit.<br /><br />Es wurde keine Reservierung gebucht!<br />";
 
   // CHECK LEVEL of standby
+  
   remove_zombies($mysqli);
+
   $level = check_level($mysqli, $flieger_id, $von_date, $bis_date) - 1;
   if ($level >= 3)
     $error_msg = "Es hat bereits zuviele Standby's [$level] in diesem Zeitraum.<br /><br />Es wurde keine Reservierung gebucht!<br />";
@@ -80,7 +82,11 @@ if (isset($_POST['submit']))
       ( NULL , CURRENT_TIMESTAMP , '$userid', '$flieger_id', FROM_UNIXTIME($vonstamp), FROM_UNIXTIME($bisstamp));";
 
     $mysqli->query($query);
-    header("Location: index.php?tag=$von_tag&monat=$von_monat&jahr=$von_jahr");
+
+    if (isset($_SESSION['plan']) && $_SESSION['plan'] == 'monatsplan')
+      header("Location: index.php?show=monatsplan&tag=$von_tag&monat=$von_monat&jahr=$von_jahr");
+    else
+      header("Location: index.php?tag=$von_tag&monat=$von_monat&jahr=$von_jahr");
   }
 }
 else if (isset($_GET['flieger_id']) && isset($_GET['tag']) && isset($_GET['monat']) && isset($_GET['jahr']))

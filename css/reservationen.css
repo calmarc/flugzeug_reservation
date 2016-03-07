@@ -1,0 +1,240 @@
+body {
+    color: #333333;
+    background-color: #99eeff; 
+    font-family: sans-serif;
+    margin: 0px;
+    padding: 0px;
+    background-image: url("../bilder/mfgc.png");
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    background-attachment: fixed;
+}
+
+nav {
+  position: sticky;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+  background-color: #440044;
+  padding: 0px;
+  margin: 0px;
+  color: #ffff99;
+}
+
+a, a:visited {
+    color: #111199;
+    text-decoration:none;
+    background-color: transparent;
+    border-width: 0px;
+}
+a:hover, a:active {
+    color:#000099;
+    text-decoration:underline;
+    background-color: transparent;
+    border-width: 0px;
+}
+
+
+nav div { margin: 0px; padding: 12px; font-size: 120%; }
+nav a:link { color: white; }
+nav a:link { color: white; }
+nav a:hover { color: white;}
+nav a:visited { color: white;}
+
+table.formular_eingabe td:nth-child(1) { text-align: right;}
+table.formular_eingabe td:nth-child(2) { text-align: left; padding-left: 8px;}
+table.formular_eingabe td:nth-child(2) input { width: 90%;}
+
+main { margin-top: 0px; margin-left: auto; margin-right: auto; text-align: center; }
+
+form.login_form input { width: 80%; }
+
+/*div#formular { margin-left: auto; margin-right: auto;  text-align: center; padding: 30px; margin-top: 150px; }*/
+div#formular_innen { margin-top: 100px; display: inline-block; margin-left: auto; margin-right: auto; text-align: center; border-radius: 25px; border: 2px solid #73AD21; padding: 20px;  background-color: #ffff99; }
+
+/* center-stuff */
+.center {
+    text-align: center;
+}
+.center > div, .center > table /* insert any other block-level elements here */ {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Kalender */
+.samstag { color: blue;}
+.sonntag { color: red;}
+
+div#calendar { font-size: 115%; position: fixed; left: 0px; bottom: 0px; margin: 8px; opacity: 0.9; filter: alpha(opacity=90);}
+table.calendar {min-width: 20em; border:1px solid #999; background-color: yellow; box-shadow: 4px 4px 8px #666699; }
+table.calendar td { min-width: 46px; }
+td.calendar-day-head { background: #ccc; font-weight:bold; text-align:center; padding:1px; border-bottom:1px solid #999; border-top:1px solid #999; border-right:1px solid #999; }
+td.calendar-day:hover { background: #ccccff; }
+td.calendar-day-np	{ background: transparent; }  [>leer <]
+table.calendar div { text-align: center ;}
+table.calendar a { text-decoration: none;}
+table.calendar div a { color: #000099;}
+
+table.calendar a { display: block; padding: 3px;}
+table.calendar a.vorzurueck { display: inline; padding: 0px; }
+table.calendar a.vorzurueck img { margin: 0px; padding: 0px; display: inline;}
+
+#aktiv { background-color: #ffffff; font-weight: bold; border:2px solid #ff0000;}
+#aktiv a:link { color: black; }
+#aktiv a:link { color: black; }
+#aktiv a:visited { color: black;}
+#aktiv a:hover { color: black;}
+
+.vergangenheit a { background-color: #0000cc; color: #cccccc;  }
+.vergangenheit a:link { background-color: #ffff99; color: #cccccc;   }
+.vergangenheit a:visited { background-color: #ffff99; color: #cccccc;   }
+.vergangenheit a:hover { background: #ccccff; color: #aaaaaa;   }
+[> hover muss nach visited kommen.. um es durchzusetzen in firefox <]
+
+.heute a { font-weight: bold; }
+.heute a:link { font-weight: bold; }
+.heute a:visited { font-weight: bold; }
+.heute a:hover { font-weight: bold; }
+
+
+td#datum {
+  text-align: center;
+  font-size: 120%;
+  font-weight: bold;
+}
+
+table.user_admin, table.user_admin th, table.user_admin td {
+    border: 1px solid black;
+	border-spacing: 15px;
+    border-collapse: collapse;
+}
+.raser1 td input {
+  background-color: #ffffcc;
+  text-align: center;
+  border: 1px solid #ffffcc;
+}
+.raser1 td:nth-child(2) {
+  background-color: #ffffcc;
+}
+.raser2 td input {
+  text-align: center;
+  border: 1px solid white;
+}
+/*.raser2 td:nth-child(2) {*/
+  /*background-color: #eeffff;*/
+/*}*/
+
+table.user_admin th { padding: 10px; }
+table.user_admin td { padding: 5px 16px 5px 16px; text-align: left; }
+table.user_admin td:nth-child(1) { padding-left: 2em; }
+
+table.user_admin td:nth-child(1) { text-align: right;}
+table.user_admin td:nth-child(2) { text-align: left;}
+
+table.user_admin tr:nth-child(even) {
+    background-color: #eee;
+}
+table.user_admin tr:nth-child(odd) {
+    background-color: #fff;
+}
+table.user_admin th {
+    color: white;
+    background-color: black;
+} 
+tr.trblank td { background-color: #ffff00; border-width: 0px; }
+
+.submit_button { margin-top: 20px; }
+
+h1 { text-shadow: 2px 2px 1px #9ff, 3px 3px 2px #aaaa00; }
+
+.chart {
+  box-shadow: 3px 3px 3px #aaaaaa;  
+
+  background-color: #ffffff; 
+  border: 1px solid black;
+  padding: 16px;
+  width: 93%;
+  height: 560px;
+  min-width: 550px;
+}
+.chart_monat {
+  box-shadow: 3px 3px 3px #aaaaaa;  
+
+  background-color: #ffffff; 
+  border: 1px solid black;
+  padding: 16px;
+  width: 93%;
+  height: 760px;
+  min-width: 550px;
+}
+
+svg a text {
+  opacity: 0.8;
+}
+svg a text:hover {
+  opacity: 1.0;
+}
+
+div#tooltip_div
+{
+  border-radius: 12px; border: 2px solid #BBBBBB;
+  padding: 5px;
+  background-color: #EEEEEE;
+  position: fixed;
+  font-size: 100%;
+  box-shadow: 2px 2px 2px #CCCCCC;
+}
+
+#raquo { margin-left: 0px; margin-right: 0px; padding: 8px 0px 8px 0px; }
+#rsaquo { margin-left: 8px; margin-right: 8px; padding: 8px 0px 8px 0px; }
+#laquo { margin-right: 0px; margin-left: 0px; padding: 8px 0px 8px 0px; }
+#lsaquo { margin-right: 8px; margin-left: 8px; padding: 8px 0px 8px 0px; }
+
+/* ----------- START mobile phones ------------------- */
+
+@media only screen and (max-height: 1200px) {
+  table.calendar td { line-height: 110%; padding: 1px; margin: 0px;}
+  h1#buchung { margin: 8px; padding: 13px; line-height: 104%; }
+}
+@media only screen and (max-height: 1100px) {
+  table.calendar td { line-height: 105%; padding: 1px; margin: 0px;}
+  h1#buchung { margin: 6px; padding: 10px; line-height: 94%; }
+}
+@media only screen and (max-height: 1000px) {
+  table.calendar td { line-height: 95%; padding: 1px; margin: 0px;}
+  h1#buchung { margin: 1px; padding: 6px; line-height: 89%; }
+}
+@media only screen and (max-height: 900px) {
+  table.calendar td { line-height: 70%; padding: 1px; margin: 0px;}
+  h1#buchung { margin: 1px; padding: 4px; line-height: 83%; }
+}
+@media only screen and (max-height: 800px) {
+  table.calendar td { line-height: 50%; padding: 1px; margin: 0px;}
+  h1#buchung { margin: 1px; padding: 4px; line-height: 80%; }
+}
+
+@media only screen and (max-width: 1000px) {
+
+  body { background-image: url("/reservationen/bilder/mfgc-short.png"); }
+  .chart {width: 94%; }
+  div#calendar { width: 100%; text-align: center; font-size: 90%; position: static; margin: 8px;}
+  #raquo { margin-left: 20px; }
+  #laquo { margin-right: 20px; }
+  div#calendar table { width: 92%; margin-left: auto; margin-right: auto;}
+  h1#buchung { display: none; visibility: hidden; }
+
+}
+@media only screen and (max-width: 698px) {
+
+  div#calendar { font-size: 98%; }
+  body { background-image: url("/reservationen/bilder/mfgc-logo.png"); }
+  .chart {width: 97%; }
+  .hide { display: none; visibility: hidden; } 
+}
+@media only screen and (max-width: 428px) {
+  div#calendar { font-size: 92%; }
+  .chart {width: 98%; }
+}
+/* ----------- END mobile phones ------------------- */
+

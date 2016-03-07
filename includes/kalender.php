@@ -2,8 +2,9 @@
 
 function get_date(){
 
-  date_default_timezone_set("Europe/Berlin");
-  setlocale(LC_ALL, 'de_DE');
+  //date_default_timezone_set("Europe/Berlin");
+  //TODO....
+  //setlocale(LC_ALL, 'de_DE');
 
   // default = today month/year else.. $_GET()
   if (isset($_GET["tag"])) $tag = intval($_GET["tag"]); else $tag = intval(date("j"));
@@ -17,7 +18,7 @@ function get_date(){
   }
   if ($tag < 1 || $tag > 31)
   {
-      echo "<h3 style='color: red;'>Der Tag [$tag] ist ungültig - Der Tag wird auf den ersten (1) zurueckgesetzt</h3>";
+      //echo "<h3 style='color: red;'>Der Tag [$tag] ist ungültig - Der Tag wird auf den ersten (1) zurueckgesetzt</h3>";
       $tag = 1;
   }
   if ($monat < 1 || $monat > 12)

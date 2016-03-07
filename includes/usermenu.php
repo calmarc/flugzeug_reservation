@@ -1,14 +1,49 @@
-<?php
+<?php if (isset($_SESSION['pilotid'])) {
 
-if (isset($_SESSION['pilotid']))
-{
+  // highlight... the active links
+  $logout = "";
+  $index = ""; 
+  $index_t = ""; 
+  $index_m = ""; 
+  $pass_change = "";
+  $user_admin = "";
+  
+  $style = 'style="color: yellow; font-weight: bold;"'; $curr_file = $_SERVER['PHP_SELF']; 
+
+  // switches between plan-view.
+  // will switch when pressed the menu.. only - else it should deliver the same
+
+  // default
+  if (!isset($_SESSION['show']))
+    $_SESSION['show'] = 'tag';
+
+  // switch if there is a GET
+  if (isset($_GET['show']) && $_GET['show'] == 'monat')
+    $_SESSION['show'] = 'monat';
+  else if (isset($_GET['show']) && $_GET['show'] == 'tag')
+    $_SESSION['show'] = 'tag';
+
+  if ($curr_file == "/reservationen/index.php")
+  {
+    if ($_SESSION['show'] == 'monat')
+      $index_m = $style;
+    else
+      $index_t = $style;
+  }
+  else if ($curr_file == "/reservationen/pass_change.php")
+    $pass_change = $style;
+  else if ($curr_file == "/reservationen/user_admin.php")
+    $user_admin = $style;
+  else if ($curr_file == "/reservationen/user_edit.php")
+    $user_admin = $style;
+
   // check if admin rights
   $query = "SELECT `pilotid`, `name`, `admin`, `gesperrt` from `members` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
   $res = $mysqli->query($query); 
   $obj = $res->fetch_object();
   $admin = "";
   if ($obj->admin == TRUE && $obj->gesperrt == FALSE)
-    $admin = '| <a href="/reservationen/user_admin.php">Piloten</a>  ';
+    $admin = '| <a '.$user_admin.' href="/reservationen/user_admin.php">Piloten</a>  ';
 
   $_SESSION['name'] = htmlentities($obj->name);
 
@@ -20,14 +55,16 @@ if (isset($_SESSION['pilotid']))
 
 ?>
 <nav>
-  <div style="float: right;">[ <a href= "/reservationen/login/logout.php">ausloggen</a> ]</div>
-  <div><b><?php echo '['.str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT).'] '.htmlentities($obj->name); ?></b> <?php echo $gesperrt; ?>: [ <a href="/reservationen/index.php">Tagesplan</a> | <a href="/reservationen/index.php?show=monatsplan">Monatsplan</a> | <a href="/reservationen/pass_change.php">Passwort ändern</a> <?php echo $admin; ?> | <a target="_blank" href="http://www.mfgc.ch/">mfgc.ch</a> ]</div> 
-</nav>
-<?php } else { ?>
+  <div style="float: right; white-space: nowrap;"> 
+  <?php echo '['.str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT).'] <b>'.htmlentities($obj->name).'</b>'; ?> 
+  <?php echo $gesperrt; ?>
+  : <a <?php echo $logout; ?> href= "/reservationen/login/logout.php">ausloggen</a></div> 
+  <div>[ <a <?php echo $index_t; ?> href="/reservationen/index.php?show=tag">Tagesplan</a> 
+  | <a <?php echo $index_m; ?> href="/reservationen/index.php?show=monat">Monatsplan</a> 
+  | <a <?php echo $pass_change; ?> href="/reservationen/pass_change.php">Passwort ändern</a> <?php echo $admin; ?> 
+  | <a target="_blank" href="http://www.mfgc.ch/">mfgc.ch</a> ]</div> </nav> 
 
-<nav>
-  <div>Du bist nicht eingeloggt! [<a href="/reservationen/login/index.php">einloggen</a>]</div>
-</nav>
-
+  <?php } else { ?> <nav> <div>Du bist nicht eingeloggt! [<a href="/reservationen/login/index.php">einloggen</a>]
+  </div> </nav> 
 <?php
 }

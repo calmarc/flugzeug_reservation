@@ -15,7 +15,10 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
   $anzahl_tage = date("t", strtotime("$jahr-$monat_2-01"));
 
   $stamp_print_minimum = strtotime("$jahr-$monat_2-01 07:00:00");
-  $stamp_print_maximum = strtotime("$jahr-$monat_2-$anzahl_tage 23:59:59");
+  $stamp_print_maximum = strtotime("$jahr-$monat_2-$anzahl_tage 20:59:59");
+  // half hour blocks
+  $block_print_maximum = intval(($stamp_print_maximum - $stamp_print_minimum) / (60 * 30));
+
 
   // NUR ein halbes jahr zurueck gucken. hats ueberhaupt reservationen?
   // sonst Zeit markieren als $von_extrem
@@ -100,40 +103,26 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
     for($i = $block_first; $i <= $block_last; $i++)
       $bookings[$level][$i] = TRUE;
 
-    // entweder muss man fuer jeden tag das ganze basteln.. und mischeln etc..
-    // oder aber man berechnet die position der reservation.. tia.. das letztere
-    // muss wohl gemacht werden....
-    // eigentlich muss man halt den tag, und die halbe stunde ermitteln.. und
-    // zeichnen.
-
-    // iterate over days....
-    //// today's 7h
-    // ueber jeden tag durchgehen
-    // rechteecke zeichen - jeden 7ten tag.. zeitlinie
-    
-
     $print_first = $block_first - $shift_1ster_monat_block;
     $print_last = $block_last - $shift_1ster_monat_block;
 
-    // nur muessen diese jetzt durch die tage geteilt werden...  im bereich
-    // $anzahl_tage . und der rest .. dann die stunden.. etc.. dort einfuegen
+  //echo "\n<!-- ===========================[\n ";
+  //echo $print_first.' - '. $print_last;
+  //echo "\n maximum";
+  //echo "\n";
+  //echo $block_print_maximum;
+  //echo "\n ]============================= -->\n";
+
+    //////////////////////// can't print.. next.
+    if ($print_first > $block_print_maximum || $print_last < 0)
+      continue; // a booking that does not need to get printed.
 
     // trim according not printable data...
-    // TODO: > monats halbe stunden... $anzahl_tage * 48 - 4 oder so
-    //if ($print_first > 27 || $print_last < 0)
-      //continue; // a booking that does not need to get printed.
+    if ($print_first < 0) $print_first = 0; // trip the begin
+    if ($print_last > $block_print_maximum) $print_last = $block_print_maximum; // trim the end
 
-    //if ($print_first < 0) $print_first = 0; // trip the begin
-    //if ($print_last > 27) $print_last = 27; // trim the end
-
-    //TODO.. muesste nicht noetig sein.. wird ja kontrolliert
-    //if ($level > 3)
-      //continue; // don't print more standbys than 3 
-
-    // TODO muss berechnet werden (7std schon drinnen)
-    // /48 (halbe stunden) ergibt den tag
-    // %48 (halbe stunden) ergibt den block dort
-
+    // fuer mehrlinige buchungen
+    // vorbereitungen und while{}
     
     $tag_offset_von = intval($print_first / 48);
     $print_first = intval($print_first % 48);
@@ -149,7 +138,6 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
 
     while ($x <= $tag_offset_bis)
     {
-
       // von wo bis wo...
       if ($tag_offset_von == $x)
         $print_first = $print_first_orig; // anfange hier
@@ -161,7 +149,8 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
       else
         $print_last = 27;
 
-      // zeichenn von print-first on tag_von bis nach tag_bis block_bis
+
+      // zeichnen von print-first on tag_von bis nach tag_bis block_bis
       $center = ($tabs[$print_first] + $tabs[$print_last+1]) / 2;
       $center = number_format ($center, 3, '.', '');
 
@@ -173,8 +162,8 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
       {
 
         $line_length = number_format ($tabs[$print_first]+$width, 3, '.', '');
-        echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+2).'" x2="'.$line_length.'%" y2="'.($yoffset+2).'" style="stroke: '.$boxcol[$level].'; stroke-width: 3px;"></line>'."\n";
-        echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+4).'" x2="'.$line_length.'%" y2="'.($yoffset+4).'" style="stroke: #000000; stroke-width: 1px;"></line>'."\n";
+        echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+17).'" x2="'.$line_length.'%" y2="'.($yoffset+17).'" style="stroke: '.$boxcol[$level].'; stroke-width: 3px;"></line>'."\n";
+        echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+16).'" x2="'.$line_length.'%" y2="'.($yoffset+16).'" style="stroke: #000000; stroke-width: 1px;"></line>'."\n"; 
       }
       else
       {
@@ -253,33 +242,19 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
 
 function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
 {
-
-
   $tag_v_offset = array();
 
   $monat_2 = str_pad($monat, 2, "0", STR_PAD_LEFT);
 
-  $now_tstamp = time(); // since: 01/01/1970 @ 12:00am (UTC)
   $laufender_stamp = strtotime("$jahr-$monat_2-01 00:00 UTC"); // minus tag - addiert sich dazu
 
-  //date_default_timezone_set("Europe/Berlin");
-  echo "\n<!-- ===========================[\n ";
-  echo $now_tstamp;
-  echo "\n";
-  echo $laufender_stamp;
-  echo "\n";
-  echo $now_tstamp - $laufender_stamp;
-  echo "\n";
-  echo ($now_tstamp - $laufender_stamp)/60;
-  echo "\n";
-  echo ($now_tstamp - $laufender_stamp)/60 / 60;
-  echo "\n tage \n";
-  echo ($now_tstamp - $laufender_stamp)/60 / 60 / 24;
-  echo "\n tage \n";
-  echo (($now_tstamp - $laufender_stamp)/60 / 60) % 24;
-  echo "\n";
-  echo date("Y-m-d h:m", time());
-  echo "\n ]============================= -->\n";
+  // needs real user (RAGAZ) time.
+  date_default_timezone_set("Europe/Zurich");
+  $now_date = date("Y-m-d H:i:s", time());
+  date_default_timezone_set('UTC');
+
+  // wieso das hier draussen sein muss - keine ahnung.
+  $now_tstamp = strtotime($now_date);
 
   $anzahl_tage = date("t", $laufender_stamp);
 
@@ -304,13 +279,19 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
     }
   }
 
-  $laufender_stamp -= 24*60*60; // kommt grad wieder dazu
+  $laufender_stamp += 7*60*60; // start...zeit
+  $laufender_stamp -= 10*60*60; // (temp.. kommt grad wieder hinzu
   // ueber jeden tag durchgehen
   // rechteecke zeichen - jeden 7ten tag.. zeitlinie
   while($anzahl_tage > $day_counter)
   {
     $day_counter++;
-    $laufender_stamp += 24*60*60; // hinzu mit Tag
+    $laufender_stamp += 10*60*60; // 10*1 + 28*0.5  = 24h
+  echo "\n<!-- ===========================[\n ";
+  echo $laufender_stamp;
+  echo "\n ================================ \n ";
+  echo date("Y-m-d H:i:s", $laufender_stamp);
+  echo "\n ]============================= -->\n";
 
     $yoffset += 20;
 
@@ -338,8 +319,7 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
     else if (($day_counter + $erster_wochentag) % 7 == 0)
       $color = "#ff0000";
 
-
-    echo '<a xlink:href="index.php?tag='.$day_counter.'&amp;monat='.$monat.'&amp;jahr='.$jahr.'">';
+    echo '<a xlink:href="index.php?show=tag&amp;tag='.$day_counter.'&amp;monat='.$monat.'&amp;jahr='.$jahr.'">';
     echo '<text x="1.6%" y="'.($yoffset+16).'" style="fill: '.$color.'; font-size: 80%; font-weight: bold;">'.str_pad($day_counter, 2, "0", STR_PAD_LEFT).'</text>'."\n";
     echo '</a>';
 
@@ -347,10 +327,11 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
 
     for ($i = 0; $i < 28; $i++)
     {
-      $laufender_stamp += 30 * 60; // halbe stunde hinzu
       $color = "grey";
       if ($laufender_stamp >= $now_tstamp)
         $color = "gruen";
+      // wieso nicht oben.. keine ahnung, aber 'passt' so scheins.. grr
+      $laufender_stamp += 30 * 60; // halbe stunde hinzu
 
       $t_std = 7+intval($i/2);
       $t_min = ($i % 2) * 30;
@@ -358,7 +339,7 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
       if ($i % 2 == 0)
       {
         if ($color == 'gruen')
-          echo '<a xlink:href="reservieren.php?flieger_id='.$flieger_id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$day_counter.'&amp;stunde='.$t_std.'&amp;minute='.$t_min.'">';
+          echo '<a xlink:href="reservieren.php?&amp;flieger_id='.$flieger_id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$day_counter.'&amp;stunde='.$t_std.'&amp;minute='.$t_min.'">';
         echo '<rect x="'.$tabs[$i].'%" y="'.($yoffset).'" width="'.$w.'%" height="20" style="fill:url(#'.$color.'1); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
         if ($color == 'gruen')
           echo '</a>';
@@ -377,11 +358,11 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
   return $tag_v_offset;
 }
 
-function monatsansicht($mysqli, $w, $tabs, $boxcol, $textcol, $monat, $jahr)
+function monatsansicht($mysqli, $w, $tabs, $boxcol, $textcol, $monat, $jahr, $flieger_id)
 {
 ?>
 
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="chart_monat">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height='760px' class="chart_monat">
 
   <script type="text/ecmascript"> 
   <![CDATA[
@@ -481,7 +462,6 @@ function monatsansicht($mysqli, $w, $tabs, $boxcol, $textcol, $monat, $jahr)
 
 // print GREEN etc (lowest layer) stuff
 
-$flieger_id = 1; //TODO from $_GET etc
 $tag_v_offset = print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id);
 
 // TODO colors etc into defines? konstats etc?
