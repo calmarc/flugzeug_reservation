@@ -10,6 +10,7 @@ include_once ('includes/graphic.php');
 
 sec_session_start();
 
+// TODO ? muss zurich sein..
 $curstamp = time(); // wird einige male gebraucht
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
@@ -62,10 +63,13 @@ if (isset($_POST['submit']))
   // TODO: check values...
   $error_msg = "";
   if ($bisstamp <= $vonstamp)
-    $error_msg = "'Von' Zeit nicht grösser als 'bis' Zeit.<br /><br />Es wurde keine Reservierung gebucht!";
+    $error_msg .= "'Von' Zeit nicht grösser als 'bis' Zeit.<br />";
+
+  if ($bis_stunde == "21" && $bis_minuten == "30")
+    $error_msg .= "21:30 liegt ausserhalb der Grenzen. Es kann nur bis 21:00 reserviert werden.<br />";
 
   if ($vonstamp <= $curstamp)
-    $error_msg = "Die Reservierung liegt in der Vergangenheit.<br /><br />Es wurde keine Reservierung gebucht!<br />";
+    $error_msg .= "Die Reservierung liegt in der Vergangenheit.<br /><br />Es wurde keine Reservierung gebucht!<br />";
 
   // CHECK LEVEL of standby
   
@@ -73,7 +77,7 @@ if (isset($_POST['submit']))
 
   $level = check_level($mysqli, $flieger_id, $von_date, $bis_date) - 1;
   if ($level >= 3)
-    $error_msg = "Es hat bereits zuviele Standby's [$level] in diesem Zeitraum.<br /><br />Es wurde keine Reservierung gebucht!<br />";
+    $error_msg .= "Es hat bereits zuviele Standby's [$level] in diesem Zeitraum.<br /><br />Es wurde keine Reservierung gebucht!<br />";
    
   if ($error_msg == ""){
 
@@ -193,7 +197,7 @@ if ($bis_minute == "")
   <form action='reservieren.php' method='post'>
 <?php echo $hidden; ?>
     <div class='center'>
-      <table class='user_admin reservierung'>
+      <table class='user_admin'>
         <tr class="trblank">
           <td><b>Pilot:</b></td>
           <td><b>[<?php echo str_pad($_SESSION['pilotid'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
@@ -202,27 +206,55 @@ if ($bis_minute == "")
           <td><b>Flugzeug:</b></td>
           <td><b><?php echo $fliegertxt; ?></b></td>
         </tr>
-        <tr class="raser2">
+        <tr>
           <td><b>Datum von:</b></td>
-          <td><input value="<?php echo $_SESSION['von_tag']; ?>" name="von_tag" style="width: 46px;;" min="1" max="31" required="required" type='number' /> <b>.</b> 
-          <input value="<?php echo $_SESSION['von_monat'] ?>" name="von_monat" style="width: 46px;;" min="1" max="12" required="required" type='number' /> <b>.</b> 
-          <input value="<?php echo $_SESSION['von_jahr'] ?>" name="von_jahr" style="width: 80px;" min="2016" max="2050" required="required" type='number' /></td>
+          <td>
+            <select size="1" name="von_tag" style="width: 46px;">
+              <?php combobox_tag($_SESSION['von_tag']); ?>
+            </select> <b>.</b> 
+            <select size="1" name="von_monat" style="width: 46px;">
+              <?php combobox_monat($_SESSION['von_monat']); ?>
+            </select> <b>.</b> 
+            <select size="1" name="von_jahr" style="width: 86px;">
+              <?php combobox_jahr($_SESSION['von_jahr']); ?>
+            </select>
+          </td>
         </tr>
-        <tr class="raser1">
+        <tr>
           <td><b>Zeit von:</b></td>
-          <td><input value="<?php echo $von_stunde; ?>" name="von_stunde" style="width: 46px;;" min="7" max="20" required="required" type='number' /> <b>:</b>
-          <input value="<?php echo $von_minute; ?>" name="von_minuten" style="width: 46px;;" min="0" max="30" step="30" required="required" type='number' /> <b>Uhr</b></td>
+          <td>
+            <select size="1" name="von_stunde" style="width: 46px;">
+              <?php combobox_stunde($_SESSION['von_stunde']); ?>
+            </select> <b>:</b>
+            <select size="1" name="von_minuten" style="width: 46px;">
+              <?php combobox_minute($_SESSION['von_minuten']); ?>
+            </select> <b>Uhr</b>
+          </td>
         </tr>
-        <tr class="raser2">
+        <tr>
           <td><b>Datum bis:</b></td>
-          <td><input value="<?php echo $_SESSION['bis_tag'] ?>" name="bis_tag" style="width: 46px;;" min="1" max="31" required="required" type='number' /> <b>.</b> 
-          <input value="<?php echo $_SESSION['bis_monat'] ?>" name="bis_monat" style="width: 46px;;" min="1" max="12" required="required" type='number' /> <b>.</b> 
-          <input value="<?php echo $_SESSION['bis_jahr'] ?>" name="bis_jahr" style="width: 80px;" min="2016" max="2050" required="required" type='number' /></td>
+          <td>
+            <select size="1" name="bis_tag" style="width: 46px;">
+              <?php combobox_tag($_SESSION['bis_tag']); ?>
+            </select> <b>.</b> 
+            <select size="1" name="bis_monat" style="width: 46px;">
+              <?php combobox_monat($_SESSION['bis_monat']); ?>
+            </select> <b>.</b> 
+            <select size="1" name="bis_jahr" style="width: 86px;">
+              <?php combobox_jahr($_SESSION['bis_jahr']); ?>
+            </select>
+          </td>
         </tr>
-        <tr class="raser1">
+        <tr>
           <td><b>Zeit bis:</b></td>
-          <td><input value="<?php echo $bis_stunde; ?>" name="bis_stunde" style="width: 46px;;" min="7" max="21" required="required" type='number' /> <b>:</b>
-          <input value="<?php echo $bis_minute; ?>" name="bis_minuten" style="width: 46px;" min="0" max="30" step="30" required="required" type='number' /> <b>Uhr</b></td>
+          <td>
+            <select size="1" name="bis_stunde" style="width: 46px;">
+              <?php combobox_stunde($_SESSION['bis_stunde']); ?>
+            </select> <b>:</b>
+            <select size="1" name="bis_minuten" style="width: 46px;">
+              <?php combobox_minute($_SESSION['bis_minuten']); ?>
+            </select> <b>Uhr</b>
+          </td>
         </tr>
       </table>
     <input class='submit_button' type='submit' name='submit' value='Reservierung abschicken' />
@@ -231,18 +263,20 @@ if ($bis_minute == "")
   <div class='center'>
     <br />
     <h1>Reservationen</h1>
-    <table class='user_admin'>
+    <table class='vertical_table'>
   <?php
 
 // jetzt Zeit
+date_default_timezone_set("Europe/Zurich");
 $date = date("Y-m-d H:i:s", time());
+date_default_timezone_set('UTC');
 
 $query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`fliegerid` FROM `reservationen` JOIN `flieger` ON `flieger`.`id` = `reservationen`.`fliegerid` WHERE `userid` = $userid AND `von` >= '$date' ORDER BY `von` DESC;";
 $res = $mysqli->query($query); 
 
 while ($obj = $res->fetch_object())
 {
-  $datum = mysql2chtimef($obj);
+  $datum = mysql2chtimef($obj, FALSE);
   echo ' <tr>
           <td><a onclick="return confirm(\'Reservation wirklich löschen?\')" 
           href="res_loeschen.php?backto=reservieren.php&amp;tag='.$_SESSION['von_tag'].'&monat='.$_SESSION['von_monat'].'&amp;jahr='.$_SESSION['von_jahr'].'&amp;flieger_id='.$flieger_id.'&amp;action=del&amp;reservierung='.$obj->id.'">[löschen]</a></td>
@@ -255,7 +289,7 @@ $res = $mysqli->query($query);
 
 while ($obj = $res->fetch_object())
 {
-  $datum = mysql2chtimef($obj);
+  $datum = mysql2chtimef($obj, FALSE);
   echo ' <tr>
           <td></td>
           <td style="color: grey;">'.$datum.'</td>

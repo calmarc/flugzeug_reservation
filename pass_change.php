@@ -12,10 +12,6 @@ if (login_check($mysqli) == FALSE){ header("Location: /reservationen/login/index
 
 // eigentlich ist die pilotid in der Session
 $id = $_SESSION['user_id'];
-$query= "SELECT `pilotid` FROM `members` WHERE `id` = $id;";
-$res = $mysqli->query($query); 
-$obj = $res->fetch_object();
-$pilotid = $obj->pilotid; 
 
 if (isset($_POST['submit']))
 {
@@ -108,15 +104,10 @@ if (isset($_POST['submit']))
   ?>
     <form action="pass_change.php" method="post" name="login_form"> 			
     <input type="hidden" name="pilotid" value="">
-      <table class="formular_eingabe" style="width: 100%;">
+      <table class="user_admin" style="width: 100%;">
           <tr>
-              <td><b>Pilot-ID:</b></td>
-              <td><input readonly="readonly" type="text" name="pilotid" value="<?php echo $pilotid; ?>" /></td>
-
-          </tr>
-          <tr>
-              <td style="padding-top: 16px;"><b>Passwort:</b></td>
-              <td style="padding-top: 16px;"><input value="" required="required" type="password" name="password" /></td>
+              <td><b>Neues Passwort:</b></td>
+              <td><input value="" required="required" type="password" name="password" /></td>
 
           </tr>
           <tr>

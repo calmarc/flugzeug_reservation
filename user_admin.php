@@ -43,9 +43,9 @@ if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/in
 $query = "SELECT * FROM `members` ORDER BY `pilotid`;";
 $res = $mysqli->query($query); 
 ?>
-          <table class='user_admin'>
+          <table class='vertical_table'>
           <tr>
-            <th></th>
+            <th style="background-color: #ccffcc;"></th>
             <th><b>Pilot-ID</b></th>
             <th><b>Name</b></th>
             <th><b>Natel</b></th>
@@ -89,8 +89,8 @@ while ($obj = $res->fetch_object())
 }
 ?>
           </table>
-          <div style="text-align: left;">
-            <p>&nbsp; &nbsp;<a href="login/register.php">+ neuen Piloten hinzufügen</a></p>
+          <div style="text-align: left; margin-left: 6em;">
+            <p>&nbsp; &nbsp;<a href="login/register.php"><span style="background-color: #99ff99;">+ neuen Piloten hinzufügen</span></a></p>
           </div>
         </div>
     </div>

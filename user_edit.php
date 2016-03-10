@@ -70,7 +70,11 @@ if (isset($_POST['submit']))
   $res = $mysqli->query("SELECT * FROM `members` WHERE `members`.`id` = $id LIMIT 1;");
   $obj = $res->fetch_object();
 
-  if ($obj->email_gesch == TRUE && ($checkflug > date("Y-m-d", time()) || $checkflug == "0000-00-00")) // alles io wieder
+  date_default_timezone_set("Europe/Zurich");
+  $date_t = date("Y-m-d", time(); 
+  date_default_timezone_set('UTC');
+
+  if ($obj->email_gesch == TRUE && ($checkflug > $date_t) || $checkflug == "0000-00-00")) // alles io wieder
   {
       if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`members` SET `email_gesch` = '0' WHERE `members`.`id` = ?;")) 
       {
@@ -191,7 +195,7 @@ echo "
         <td><b>Name:</b></td><td><input type='text' name='name' value='".$obj->name."'></td>
       </tr>
       <tr>
-        <td><b>Natel:</b></td><td><input type='text' name='natel' value='".$obj->natel."'></td>
+        <td><b>Natel:</b></td><td><input pattern='\+{0,1}[0-9 ]+' type='text' name='natel' value='".$obj->natel."'></td>
       </tr>
       <tr>
         <td><b>Telefon:</b></td><td><input type='text' name='telefon' value='".$obj->telefon."'></td>
@@ -200,7 +204,7 @@ echo "
         <td><b>Email:</b></td><td><input type='email' name='email' value='".$obj->email."'></td>
       </tr>
       <tr>
-        <td><b>Admin:</b></td><td><select size='1' name='admin'>";
+        <td><b>Admin:</b></td><td><select style='width: 4em;' size='1' name='admin'>";
 
 if ($admin_txt == "nein")
 {
@@ -222,7 +226,7 @@ echo "  </select>
         <td><b>Checkflug:</b></td><td><input pattern='[0-3]?[0-9]\.[0-1]?[0-9]\.20[1-9][0-9]' type='text' name='checkflug' value='".$checkflug_ch."'></td>
       </tr>
       <tr>
-        <td><b>Gesperrt:</b></td><td><select size='1' name='gesperrt'>";
+        <td><b>Gesperrt:</b></td><td><select style='width: 4em;' size='1' name='gesperrt'>";
 
 if ($gesperrt == "nein")
 {
@@ -253,7 +257,7 @@ echo "  </select>
       <input type="hidden" name="pilotid" value="<?php echo $obj->pilotid; ?>" />
         <div class="center">
           <p>Benutzer &bdquo;<b><?php echo $obj->name; ?></b>&rdquo; mit Piloten-ID <b>[<?php echo str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT); ?>]</b></p>
-          <p><input style='background-color: #ffcccc; margin: 10px;' type='submit' name='loeschen' value='LÖSCHEN' /></p>
+          <p><input class="sub_loeschen" type='submit' name='loeschen' value='LÖSCHEN' /></p>
         </div>
       </form>
     </div>

@@ -1,5 +1,36 @@
 <?php
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Ablauf
+//
+// 1 die grundstruktur zeichen
+//   :requirements:
+//   anzahl tage
+//   was ist tag am 1ten? (fuer die leocher)
+//   'jetzt ist was' (grau/gruen)
+//  
+//   a) zeichnen von 
+//      . waehrend dem die offsets der tage speichern (fuer buchungen)
+//
+// 2 die buchungen reinmontieren
+//   :requirements:
+//   von .. und bis (letztes bis)range ermitteln relvanter buchungen
+//
+//   a) flieger in dieser range drucken
+//      .halbe stund bloecke ermitteln (in range)
+//      .die speichern wo gedruckt, fuer standbyes (bookings..)
+//      .gucken ob in die tabelle passt (>1ster_monat-block < +blocks im monat)
+//      .trimmen
+//      .von in tage teilen (fuer starttag + offset
+//      .bis in tage teilen (fuer endtag + offset)
+//      .print_nr-on - wo die nummer reinschreiben (mitte der tage)
+//        (an dem tag (wenns kommt) - mitte ermitteln und dort reinschreiben)
+//      . gelb (level = 0) striche sonst blau 
+//                                       rechteck.
+//                                       members infos.. fuer tooltip
+//
+//
+//      
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  MAIN BUCHUNG's DRAWING LOOOOOP
@@ -9,10 +40,11 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
 {
 
   // habes jahr zureuck
+  date_default_timezone_set("Europe/Zurich");
   $date_xmonth_back = date("Y-m-d H:i:s", time()-20736000);
-
   $monat_2 = str_pad($monat, 2, "0", STR_PAD_LEFT);
   $anzahl_tage = date("t", strtotime("$jahr-$monat_2-01"));
+  date_default_timezone_set('UTC');
 
   $stamp_print_minimum = strtotime("$jahr-$monat_2-01 07:00:00");
   $stamp_print_maximum = strtotime("$jahr-$monat_2-$anzahl_tage 20:59:59");
@@ -106,13 +138,6 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
     $print_first = $block_first - $shift_1ster_monat_block;
     $print_last = $block_last - $shift_1ster_monat_block;
 
-  //echo "\n<!-- ===========================[\n ";
-  //echo $print_first.' - '. $print_last;
-  //echo "\n maximum";
-  //echo "\n";
-  //echo $block_print_maximum;
-  //echo "\n ]============================= -->\n";
-
     //////////////////////// can't print.. next.
     if ($print_first > $block_print_maximum || $print_last < 0)
       continue; // a booking that does not need to get printed.
@@ -158,6 +183,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
 
       $yoffset = $tag_v_offset[$x];
 
+      // yellow little line.. to show there are some standby's
       if ($level > 0)
       {
 
@@ -165,6 +191,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
         echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+17).'" x2="'.$line_length.'%" y2="'.($yoffset+17).'" style="stroke: '.$boxcol[$level].'; stroke-width: 3px;"></line>'."\n";
         echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+16).'" x2="'.$line_length.'%" y2="'.($yoffset+16).'" style="stroke: #000000; stroke-width: 1px;"></line>'."\n"; 
       }
+      // normal blue booking
       else
       {
         echo '<rect x="'.$tabs[$print_first].'%" y="'.$yoffset.'" width="'.$width.'%" height="20" style="fill: '.$boxcol[$level].'; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
@@ -182,8 +209,20 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
             continue;
         }
 
-        $rounded_stamp = time();
-        // round up cur_time to half hour blocks
+        // round up cur_time to half hour blocks um zu gucken ob nummer
+        // clickable (loeschbar) generell wird unten auf immer true gesetzt bei
+        // admin..
+        //
+        // Es muss die wirklcihe lokale uhrzeit ermittelt werden ann muss der
+        // aber per UTC in UNIX-STAMP (quasi neutral ohne sommerzeit und
+        // verschiebung) verwandelt werden // weil das ueberall so gemacht wir..
+        //
+        // muss quasi ueberall gemacht werden wo time() verwendet wird.
+        
+        date_default_timezone_set("Europe/Zurich");
+        $tmp_date = date("Y-m-d H:i:s", time());
+        date_default_timezone_set('UTC');
+        $rounded_stamp = strtotime($tmp_date);
         $rounded_stamp = (intval($rounded_stamp / 1800) + 1) * 1800;
 
         $showlink = FALSE;
@@ -192,7 +231,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
 
         $txtcolor = $textcol[$level];
 
-        // print pilotennummer
+        // print pilotennummer mit tooltips etc. wenn tag ($x) kommt
         if ($print_nr_on == $x)
         {
           // always show for admins
@@ -218,7 +257,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
           }
 
           if ($showlink)
-            echo '<a onclick="return confirm(\'Buchung wirklich löschen/ Zeit freigeben?\')" xlink:href="res_loeschen.php?to=ueberblick&amp;action=del&amp;reservierung='.$obj_tang->id.'&amp;monat='.$monat.'&amp;jahr='.$jahr.'">';
+            echo '<a xlink:href="res_loeschen.php?to=ueberblick&amp;action=del&amp;reservierung='.$obj_tang->id.'&amp;monat='.$monat.'&amp;jahr='.$jahr.'">';
           // TODO: tag geloescht hiere...
 
 
@@ -251,15 +290,12 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
   // needs real user (RAGAZ) time.
   date_default_timezone_set("Europe/Zurich");
   $now_date = date("Y-m-d H:i:s", time());
-  date_default_timezone_set('UTC');
-
-  // wieso das hier draussen sein muss - keine ahnung.
-  $now_tstamp = strtotime($now_date);
-
   $anzahl_tage = date("t", $laufender_stamp);
-
   $erster_wochentag = date("N", $laufender_stamp); // 1(Mon)-7(Son) TODO: evt zusammen mit oben
   $heute_monats_tag = date ("d", time());
+  date_default_timezone_set('UTC');
+  // wieso das hier draussen sein muss - keine ahnung.
+  $now_tstamp = strtotime($now_date);
 
   $day_counter = 0;
 
@@ -287,11 +323,6 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
   {
     $day_counter++;
     $laufender_stamp += 10*60*60; // 10*1 + 28*0.5  = 24h
-  echo "\n<!-- ===========================[\n ";
-  echo $laufender_stamp;
-  echo "\n ================================ \n ";
-  echo date("Y-m-d H:i:s", $laufender_stamp);
-  echo "\n ]============================= -->\n";
 
     $yoffset += 20;
 
@@ -315,12 +346,12 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
     // 1-31 ganz links
     $color = "#000000";
     if (($day_counter + $erster_wochentag - 1) % 7 == 0)
-      $color = "#0000ff";
-    else if (($day_counter + $erster_wochentag) % 7 == 0)
       $color = "#ff0000";
+    else if (($day_counter + $erster_wochentag) % 7 == 0)
+      $color = "#0000ff";
 
     echo '<a xlink:href="index.php?show=tag&amp;tag='.$day_counter.'&amp;monat='.$monat.'&amp;jahr='.$jahr.'">';
-    echo '<text x="1.6%" y="'.($yoffset+16).'" style="fill: '.$color.'; font-size: 80%; font-weight: bold;">'.str_pad($day_counter, 2, "0", STR_PAD_LEFT).'</text>'."\n";
+    echo '<text  text-anchor="end" x="2.8%" y="'.($yoffset+16).'" style="fill: '.$color.'; font-size: 80%; font-weight: bold;">'.str_pad($day_counter, 2, "0", STR_PAD_LEFT).'</text>'."\n";
     echo '</a>';
 
     array_push($tag_v_offset, $yoffset); // todo: may fine tune.. (needs on buchungen print)
@@ -362,7 +393,7 @@ function monatsansicht($mysqli, $w, $tabs, $boxcol, $textcol, $monat, $jahr, $fl
 {
 ?>
 
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height='760px' class="chart_monat">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height='740px' class="chart_monat">
 
   <script type="text/ecmascript"> 
   <![CDATA[
@@ -457,62 +488,20 @@ function monatsansicht($mysqli, $w, $tabs, $boxcol, $textcol, $monat, $jahr, $fl
     </linearGradient>
   </defs>
 
-  <g transform="translate(4,4)">
+  <g transform="translate(4,-14)">
   <?php
 
-// print GREEN etc (lowest layer) stuff
+  // print GREEN etc (lowest layer) stuff
 
-$tag_v_offset = print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id);
+  $tag_v_offset = print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id);
 
-// TODO colors etc into defines? konstats etc?
-print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $monat, $tabs, $w, $tag_v_offset);
+  // TODO colors etc into defines? konstats etc?
+  print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $monat, $tabs, $w, $tag_v_offset);
 
-?>
-</g>
-</svg>
+  echo '</g></svg>';
 
-<div class="center" style="margin-top: 16px;" >
-  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        height="130px" style="background-color: transparent; width: 60%; min-width: 660px;" >
-    <defs>
-      <linearGradient id="gruen0" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
-        <stop offset="0%"   stop-color="#66ee66" stop-opacity="1"/>
-        <stop offset="100%" stop-color="#99ee99" stop-opacity="1"/>
-      </linearGradient>
-      <linearGradient id="gelblich0" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
-      <stop offset="0%"   stop-color="<?php echo $boxcol[1];?>" stop-opacity="1"/>
-        <stop offset="100%" stop-color="<?php echo $boxcol[2];?>" stop-opacity="1"/>
-      </linearGradient>
-      <linearGradient id="grey0" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
-        <stop offset="0%"   stop-color="#dddddd" stop-opacity="1"/>
-        <stop offset="100%" stop-color="#eeeeee" stop-opacity="1"/>
-      </linearGradient>
-    </defs>
-   <g transform="translate(0, 0)">
-    <rect x="0.1%" y="0" width="20%" height="24" style="fill:url(#grey0); stroke: #666666; stroke-width: 1px;"></rect>
-    <text x="10.0%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Vergangenheit</text>
-    <rect x="20%" y="0" width="20%" height="24" style="fill:url(#gruen0); stroke: #666666; stroke-width: 1px;"></rect>
-    <text x="30%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Frei</text>
-    <rect x="40%" y="0" width="20%" height="24" style="fill: <?php echo $boxcol[0]; ?>; stroke: #666666; stroke-width: 1px;"></rect>
-    <text x="50%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Gebucht</text>
-    <rect x="60%" y="0" width="20%" height="24" style="fill: url(#gelblich0); stroke: #666666; stroke-width: 1px;"></rect>
-    <text x="70%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Standby</text>
-    <rect x="79.9%" y="0" width="20%" height="24" style="fill: <?php echo $boxcol[5]; ?>; stroke: #666666; stroke-width: 1px;"></rect>
-    <text x="90.0%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Service</text>
-  </g>
-  </svg>
-</div>
+  legende_print($boxcol);
+  tooltip_print();
 
-<div onclick="document.getElementById('tooltip_div').style.display = 'none';" id="tooltip_div" style="display: none; visibility: hidden;">
-  <svg id="tooltip_svg" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        height="100px" width="200px" >
-    <text id="tooltip_text1" x="3%" y="20px" text-anchor="start" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
-    <text id="tooltip_text2" x="3%" y="45px" text-anchor="start" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
-    <text id="tooltip_text3" x="3%" y="70px" text-anchor="start" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
-    <text id="tooltip_text4" x="3%" y="95px" text-anchor="start" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
-  </svg>
-</div>
-<?php
 }
-
 ?>

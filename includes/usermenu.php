@@ -7,6 +7,7 @@
   $index_m = ""; 
   $pass_change = "";
   $user_admin = "";
+  $res_admin = "";
   
   $style = 'style="color: yellow; font-weight: bold;"'; $curr_file = $_SERVER['PHP_SELF']; 
 
@@ -36,6 +37,8 @@
     $user_admin = $style;
   else if ($curr_file == "/reservationen/user_edit.php")
     $user_admin = $style;
+  else if ($curr_file == "/reservationen/res_admin.php")
+    $res_admin = $style;
 
   // check if admin rights
   $query = "SELECT `pilotid`, `name`, `admin`, `gesperrt` from `members` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
@@ -43,7 +46,7 @@
   $obj = $res->fetch_object();
   $admin = "";
   if ($obj->admin == TRUE && $obj->gesperrt == FALSE)
-    $admin = '| <a '.$user_admin.' href="/reservationen/user_admin.php">Piloten</a>  ';
+    $admin = '| <a '.$user_admin.' href="/reservationen/user_admin.php"><span style="color: #ff3333;">Piloten</span></a> | <a '.$res_admin.' href="/reservationen/res_admin.php"><span style="color: #ff3333;">Gelöscht</span></a>';
 
   $_SESSION['name'] = htmlentities($obj->name);
 
@@ -61,8 +64,9 @@
   : <a <?php echo $logout; ?> href= "/reservationen/login/logout.php">ausloggen</a></div> 
   <div>[ <a <?php echo $index_t; ?> href="/reservationen/index.php?show=tag">Tagesplan</a> 
   | <a <?php echo $index_m; ?> href="/reservationen/index.php?show=monat">Monatsplan</a> 
-  | <a <?php echo $pass_change; ?> href="/reservationen/pass_change.php">Passwort ändern</a> <?php echo $admin; ?> 
-  | <a target="_blank" href="http://www.mfgc.ch/">mfgc.ch</a> ]</div> </nav> 
+  | <a <?php echo $pass_change; ?> href="/reservationen/pass_change.php">Passwort ändern</a> 
+  | <a href="http://www.ics.li/cfdocs/flugplragaz/admin/bewegungen.cfm">Startliste Flugplatz</a> <?php echo $admin; ?> 
+  ]</div> </nav> 
 
   <?php } else { ?> <nav> <div>Du bist nicht eingeloggt! [<a href="/reservationen/login/index.php">einloggen</a>]
   </div> </nav> 

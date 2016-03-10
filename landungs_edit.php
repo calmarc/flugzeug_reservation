@@ -38,7 +38,6 @@ if (isset($_POST['zaehler_id']))
   $zaehler_id = intval($_POST['zaehler_id']);
 
 $query = "SELECT * FROM `zaehlereintraege` WHERE `id` = '$zaehler_id' LIMIT 1;";
-echo $query;
 $res2 = $mysqli->query($query); 
 if ($res2->num_rows != 1)
 {
@@ -201,7 +200,7 @@ list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
       <input type="hidden" name="zaehler_id" value="<?php echo $zaehler_id; ?>" />
       <input type="hidden" name="flieger_id" value="<?php echo $flieger_id; ?>" />
         <div class="center">
-          <p><input style='background-color: #ffcccc; margin: 10px;' type='submit' name='loeschen' value='EINTRAG LÖSCHEN' /></p>
+          <p><input class="sub_loeschen" type='submit' name='loeschen' value='EINTRAG LÖSCHEN' /></p>
         </div>
       </form>
     </div>

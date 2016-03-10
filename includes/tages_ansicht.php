@@ -8,11 +8,18 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
 
   $yoffset = -$planeoffset;
 
+  $arr = ["8:45h", "44m", "44:05h", "2:20h"];
+  $arr2 = ["#666666", "#ff3333", "#666666", "#ff0000"];
+  $iii = -1;
   while($obj_f = $res_f->fetch_object())
   {
+    $iii++;
 
     $yoffset += $planeoffset;
     echo '<text x="98.6%" y="'.($yoffset-28).'px" text-anchor="end" style="fill: #000000; font-size: 120%; font-weight: bold;">'.$obj_f->flieger.'</text>'."\n";
+    //$query= "SELECT MAX(`zaehler_minute`) FROM `zaehlereintraege` WHERE `flieger_id` = '".$obj_f->id.";";
+    //$res4 = $mysqli->query() 
+    echo '<text x="98.6%" y="'.($yoffset-28-26).'px" text-anchor="end" style="fill: '.$arr2[$iii].'; font-size: 90%; font-weight: bold;">[Service in '.$arr[$iii].']</text>'."\n";
     
     echo '<a xlink:href="reservieren.php?flieger_id='.$obj_f->id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$tag.'">';
     echo '<text x="1%" y="'.($yoffset-28).'px" style=" fill: #000099; font-size: 100%; font-weight: bold;">'.$obj_f->kurzname.' buchen</text>'."\n";
@@ -82,7 +89,9 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
 {
 
   // habes jahr zureuck
+  date_default_timezone_set("Europe/Zurich");
   $date_xmonth_back = date("Y-m-d H:i:s", time()-20736000);
+  date_default_timezone_set('UTC');
 
   $today_stamp_seven = strtotime($date.' 07:00:00');
 
@@ -248,7 +257,7 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
       }
 
       if ($showlink)
-        echo '<a onclick="return confirm(\'Buchung wirklich löschen/ Zeit freigeben?\')" xlink:href="res_loeschen.php?to=ueberblick&amp;action=del&amp;reservierung='.$obj_tang->id.'&amp;tag='.$tag.'&amp;monat='.$monat.'&amp;jahr='.$jahr.'">';
+        echo '<a xlink:href="res_loeschen.php?to=ueberblick&amp;action=del&amp;reservierung='.$obj_tang->id.'&amp;tag='.$tag.'&amp;monat='.$monat.'&amp;jahr='.$jahr.'">';
 
 
       echo '<text '.$tmptxt.' x="'.$center.'%" y="'.($yoffset+16).'" text-anchor="middle" style="fill: '.$txtcolor.'; font-size: 95%; font-weight: bold;">'.$t_id.'</text>'."\n";
@@ -358,64 +367,22 @@ function tagesansicht($mysqli, $w, $tabs, $boxcol, $textcol, $planeoffset, $tag,
     </linearGradient>
   </defs>
 
-  <g transform="translate(4,84)">
+  <g transform="translate(4,72)">
   <?php
 
-// print GREEN etc (lowest layer) stuff
+  // print GREEN etc (lowest layer) stuff
 
-print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $tabs, $w);
+  print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $tabs, $w);
 
-remove_zombies($mysqli);
+  remove_zombies($mysqli);
 
-// TODO colors etc into defines? konstats etc?
-print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol, $tag, $monat, $jahr);
+  // TODO colors etc into defines? konstats etc?
+  print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol, $tag, $monat, $jahr);
 
-?>
-</g>
-</svg>
+  echo '</g></svg>';
 
-<div class="center" style="margin-top: 16px;" >
-  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        height="130px" style="background-color: transparent; width: 60%; min-width: 660px;" >
-    <defs>
-      <linearGradient id="gruen0" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
-        <stop offset="0%"   stop-color="#66ee66" stop-opacity="1"/>
-        <stop offset="100%" stop-color="#99ee99" stop-opacity="1"/>
-      </linearGradient>
-      <linearGradient id="gelblich0" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
-      <stop offset="0%"   stop-color="<?php echo $boxcol[1];?>" stop-opacity="1"/>
-        <stop offset="100%" stop-color="<?php echo $boxcol[2];?>" stop-opacity="1"/>
-      </linearGradient>
-      <linearGradient id="grey0" x1="0" y1="0" x2="100%" y2="0" spreadMethod="pad">
-        <stop offset="0%"   stop-color="#dddddd" stop-opacity="1"/>
-        <stop offset="100%" stop-color="#eeeeee" stop-opacity="1"/>
-      </linearGradient>
-    </defs>
-   <g transform="translate(0, 0)">
-    <rect x="0.1%" y="0" width="20%" height="24" style="fill:url(#grey0); stroke: #666666; stroke-width: 1px;"></rect>
-    <text x="10.0%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Vergangenheit</text>
-    <rect x="20%" y="0" width="20%" height="24" style="fill:url(#gruen0); stroke: #666666; stroke-width: 1px;"></rect>
-    <text x="30%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Frei</text>
-    <rect x="40%" y="0" width="20%" height="24" style="fill: <?php echo $boxcol[0]; ?>; stroke: #666666; stroke-width: 1px;"></rect>
-    <text x="50%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Gebucht</text>
-    <rect x="60%" y="0" width="20%" height="24" style="fill: url(#gelblich0); stroke: #666666; stroke-width: 1px;"></rect>
-    <text x="70%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Standby</text>
-    <rect x="79.9%" y="0" width="20%" height="24" style="fill: <?php echo $boxcol[5]; ?>; stroke: #666666; stroke-width: 1px;"></rect>
-    <text x="90.0%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Service</text>
-  </g>
-  </svg>
-</div>
+  legende_print($boxcol);
+  tooltip_print();
 
-<div onclick="document.getElementById('tooltip_div').style.display = 'none';" id="tooltip_div" style="display: none; visibility: hidden;">
-  <svg id="tooltip_svg" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        height="100px" width="200px" >
-    <text id="tooltip_text1" x="3%" y="20px" text-anchor="start" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
-    <text id="tooltip_text2" x="3%" y="45px" text-anchor="start" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
-    <text id="tooltip_text3" x="3%" y="70px" text-anchor="start" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
-    <text id="tooltip_text4" x="3%" y="95px" text-anchor="start" style="fill: #000000; font-size: 100%; ">&nbsp;</text>
-  </svg>
-</div>
-
-<?php
 }
 ?>

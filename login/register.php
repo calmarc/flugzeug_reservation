@@ -47,7 +47,7 @@ if (!empty($error_msg)) {
         <div class="center">
           <form method="post" name="registration_form" action="register.php">
             <div class="center">
-              <table class="formular_eingabe">
+              <table class="user_admin">
                 <tr>
                    <td><b>Pilot-ID:</b></td> <td><input style="text-align: center;" required="required"
                   <?php if (isset($_SESSION['regpilotid'])) echo "value='".$_SESSION['regpilotid']."'"; ?> 
