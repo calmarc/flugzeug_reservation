@@ -45,7 +45,7 @@ $res = $mysqli->query($query);
 ?>
           <table class='vertical_table'>
           <tr>
-            <th style="background-color: #ccffcc;"></th>
+            <th style="background-color: #99ff99;"></th>
             <th><b>Pilot-ID</b></th>
             <th><b>Name</b></th>
             <th><b>Natel</b></th>

@@ -43,13 +43,11 @@ if (isset($_POST['submit']))
   $name = ""; if (isset($_POST['name'])) $name = trim($_POST['name']);
   $natel = ""; if (isset($_POST['natel'])) $natel = trim($_POST['natel']);
   $telefon = ""; if (isset($_POST['telefon'])) $telefon = trim($_POST['telefon']);
-  $password = ""; if (isset($_POST['password'])) $password = trim($_POST['password']);
-  $admin = ""; if (isset($_POST['admin'])) $admin = $_POST['admin'];
   $email = ""; if (isset($_POST['email'])) $email = trim($_POST['email']);
+  $admin = ""; if (isset($_POST['admin'])) $admin = $_POST['admin'];
   $checkflug = ""; if (isset($_POST['checkflug'])) $checkflug = trim($_POST['checkflug']);
   $gesperrt = ""; if (isset($_POST['gesperrt'])) $gesperrt = trim($_POST['gesperrt']);
-
-
+  $password = ""; if (isset($_POST['password'])) $password = trim($_POST['password']);
 
   if ($admin == "ja")
     $admin_nr = 1;
@@ -71,10 +69,10 @@ if (isset($_POST['submit']))
   $obj = $res->fetch_object();
 
   date_default_timezone_set("Europe/Zurich");
-  $date_t = date("Y-m-d", time(); 
+  $date_t = date("Y-m-d", time()); 
   date_default_timezone_set('UTC');
 
-  if ($obj->email_gesch == TRUE && ($checkflug > $date_t) || $checkflug == "0000-00-00")) // alles io wieder
+  if ($obj->email_gesch == TRUE && ($checkflug > $date_t || $checkflug == "0000-00-00")) // alles io wieder
   {
       if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`members` SET `email_gesch` = '0' WHERE `members`.`id` = ?;")) 
       {
@@ -111,7 +109,7 @@ if (isset($_POST['submit']))
     if ($passquery == "")
       $stmt->bind_param('isissssii', $pilotid, $email, $admin_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $id);
     else
-     $stmt->bind_param('sisissssii', $password, $pilotid, $email, $adminnr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $id);
+     $stmt->bind_param('sisissssii', $password, $pilotid, $email, $admin_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $id);
 
     // Execute the prepared query.
     if (!$stmt->execute()) {
@@ -198,7 +196,7 @@ echo "
         <td><b>Natel:</b></td><td><input pattern='\+{0,1}[0-9 ]+' type='text' name='natel' value='".$obj->natel."'></td>
       </tr>
       <tr>
-        <td><b>Telefon:</b></td><td><input type='text' name='telefon' value='".$obj->telefon."'></td>
+        <td><b>Telefon:</b></td><td><input pattern='\+{0,1}[0-9 ]+' type='text' name='telefon' value='".$obj->telefon."'></td>
       </tr>
       <tr>
         <td><b>Email:</b></td><td><input type='email' name='email' value='".$obj->email."'></td>

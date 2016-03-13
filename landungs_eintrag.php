@@ -75,11 +75,10 @@ else if (isset($_POST['submit']))
         `user_id` ,
         `flieger_id` ,
         `datum` ,
-        `zaehler_minute` ,
-        `beanstandungen`
+        `zaehler_minute`
         )
         VALUES (
-        NULL , ?, ?, ?, ?, 'nil'
+        NULL , ?, ?, ?, ?
         )"))
     {
       $stmt->bind_param('iisi', $_SESSION['user_id'], $flieger_id, $date, $zaehler_minute);
@@ -186,18 +185,15 @@ $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
     <br />
     <table class='vertical_table'>
     <tr>
-      <th style="background-color: #ccffcc;"></th>
+      <th style="background-color: #99ff99;"></th>
       <th>Datum</th>
       <th>Zählerstand</th>
       <th>Dauer</th>
-      <th>Beanstandungen</th>
       <th>Pilot</th>
   </tr>
   <?php
 
 $query = "SELECT `zaehlereintraege`.`id`,
-                 `zaehlereintraege`.`beanstandungen`,
-                 `zaehlereintraege`.`beanstandungen`,
                  `zaehlereintraege`.`user_id`,
                  `members`.`name`,
                  `zaehlereintraege`.`zaehler_minute`,
@@ -216,9 +212,6 @@ if ($res = $mysqli->query($query))
     {
 
       list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
-      $beanstandungen = $obj->beanstandungen;
-      if ($beanstandungen != "nil")
-        $beanstandungen = '<span style="color: red; font-weight: bold;">'.$beanstandungen."<span>";
 
       $name = $obj->name;
       $zaehler_min = $obj->zaehler_minute;
@@ -243,7 +236,7 @@ if ($res = $mysqli->query($query))
 
       echo ' <tr>
               <td>'.$edit_link.'</td>
-              <td>'.$tag.'.'.$monat.'.'.$jahr.'</td><td>'.$zaehlerstand.'</td><td>'.$dauer.'</td><td>'.$beanstandungen.'</td><td>'.$name.'</td>
+              <td>'.$tag.'.'.$monat.'.'.$jahr.'</td><td style="text-align: right;">'.$zaehlerstand.'</td><td style="text-align: right;">'.$dauer.'</td><td>'.$name.'</td>
             </tr>';
     }
   }

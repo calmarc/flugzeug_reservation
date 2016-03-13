@@ -38,7 +38,9 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
 
       $color = "gruen";
       // 7*60*60 (7 stunden) + 30*60 (halbe stunde) * i -> startzeit block in
+      date_default_timezone_set("Europe/Zurich");
       $print_stamp = strtotime($date." 00:00:00") + 30*60*$i + (7*60*60); // 30min*..x + 7h to print..
+      date_default_timezone_set("UTC");
 
       if ($now_tstamp > $print_stamp)
         $color = "grey";

@@ -39,6 +39,22 @@
 function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $monat, $tabs, $w, $tag_v_offset)
 {
 
+  // round up cur_time to half hour blocks um zu gucken ob nummer
+  // clickable (loeschbar) generell wird unten auf immer true gesetzt bei
+  // admin..
+  //
+  // Es muss die wirklcihe lokale uhrzeit ermittelt werden ann muss der
+  // aber per UTC in UNIX-STAMP (quasi neutral ohne sommerzeit und
+  // verschiebung) verwandelt werden // weil das ueberall so gemacht wir..
+  //
+  // muss quasi ueberall gemacht werden wo time() verwendet wird.
+  
+  date_default_timezone_set("Europe/Zurich");
+  $tmp_date = date("Y-m-d H:i:s", time());
+  date_default_timezone_set('UTC');
+  $rounded_stamp = strtotime($tmp_date);
+  $rounded_stamp = (intval($rounded_stamp / 1800) + 1) * 1800;
+
   // habes jahr zureuck
   date_default_timezone_set("Europe/Zurich");
   $date_xmonth_back = date("Y-m-d H:i:s", time()-20736000);
@@ -93,6 +109,8 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
   for ($x = 0; $x < 6; $x++) // initialise with FALSE = free.
     for ($i = 0; $i < $half_hour_tot+1; $i++)
       $bookings[$x][$i] = FALSE;
+
+  $print_number_txt = ""; // at the end for highest z-index
 
   // alle hohlen
   $query = "SELECT * FROM `reservationen` WHERE `fliegerid` = '$flieger_id' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
@@ -174,7 +192,6 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
       else
         $print_last = 27;
 
-
       // zeichnen von print-first on tag_von bis nach tag_bis block_bis
       $center = ($tabs[$print_first] + $tabs[$print_last+1]) / 2;
       $center = number_format ($center, 3, '.', '');
@@ -188,8 +205,8 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
       {
 
         $line_length = number_format ($tabs[$print_first]+$width, 3, '.', '');
-        echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+17).'" x2="'.$line_length.'%" y2="'.($yoffset+17).'" style="stroke: '.$boxcol[$level].'; stroke-width: 3px;"></line>'."\n";
-        echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+16).'" x2="'.$line_length.'%" y2="'.($yoffset+16).'" style="stroke: #000000; stroke-width: 1px;"></line>'."\n"; 
+        echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+16).'" x2="'.$line_length.'%" y2="'.($yoffset+16).'" style="stroke: '.$boxcol[$level].'; stroke-width: 7px;"></line>'."\n";
+        echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+13).'" x2="'.$line_length.'%" y2="'.($yoffset+13).'" style="stroke: #333333; stroke-width: 1px;"></line>'."\n"; 
       }
       // normal blue booking
       else
@@ -209,21 +226,6 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
             continue;
         }
 
-        // round up cur_time to half hour blocks um zu gucken ob nummer
-        // clickable (loeschbar) generell wird unten auf immer true gesetzt bei
-        // admin..
-        //
-        // Es muss die wirklcihe lokale uhrzeit ermittelt werden ann muss der
-        // aber per UTC in UNIX-STAMP (quasi neutral ohne sommerzeit und
-        // verschiebung) verwandelt werden // weil das ueberall so gemacht wir..
-        //
-        // muss quasi ueberall gemacht werden wo time() verwendet wird.
-        
-        date_default_timezone_set("Europe/Zurich");
-        $tmp_date = date("Y-m-d H:i:s", time());
-        date_default_timezone_set('UTC');
-        $rounded_stamp = strtotime($tmp_date);
-        $rounded_stamp = (intval($rounded_stamp / 1800) + 1) * 1800;
 
         $showlink = FALSE;
         if (strtotime($obj_tang->bis) > $rounded_stamp && $obj_tang->userid == $_SESSION['user_id'])
@@ -257,20 +259,21 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
           }
 
           if ($showlink)
-            echo '<a xlink:href="res_loeschen.php?to=ueberblick&amp;action=del&amp;reservierung='.$obj_tang->id.'&amp;monat='.$monat.'&amp;jahr='.$jahr.'">';
+            $print_number_txt .= '<a xlink:href="res_loeschen.php?to=ueberblick&amp;action=del&amp;reservierung='.$obj_tang->id.'&amp;monat='.$monat.'&amp;jahr='.$jahr.'">';
           // TODO: tag geloescht hiere...
 
 
-          echo '<text '.$tmptxt.' x="'.$center.'%" y="'.($yoffset+16).'" text-anchor="middle" style="fill: '.$txtcolor.'; font-size: 95%; font-weight: bold;">'.$t_id.'</text>'."\n";
+          $print_number_txt .=  '<text '.$tmptxt.' x="'.$center.'%" y="'.($yoffset+16).'" text-anchor="middle" style="fill: '.$txtcolor.'; font-size: 95%; font-weight: bold;">'.$t_id.'</text>'."\n";
 
           if ($showlink)
-          echo '</a>';
+          $print_number_txt .=  '</a>';
         }
       }
      
       $x++; // reiterate if necessary
     }
   }
+  echo $print_number_txt;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -53,12 +53,12 @@
   $gesperrt = "";
   if ($obj->gesperrt == TRUE)
   {
-    $gesperrt = "<span style='color:red; font-weight: bold; background-color: yellow;'>(Flüge gesperrt. Bitte nachfragen!)</span>";
+    $gesperrt = "<span style='color: red; font-weight: bold; background-color: yellow;'>(Flüge gesperrt. Bitte nachfragen!)</span>";
   }
 
 ?>
 <nav>
-  <div style="float: right; white-space: nowrap;"> 
+  <div style="float: right;"> 
   <?php echo '['.str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT).'] <b>'.htmlentities($obj->name).'</b>'; ?> 
   <?php echo $gesperrt; ?>
   : <a <?php echo $logout; ?> href= "/reservationen/login/logout.php">ausloggen</a></div> 

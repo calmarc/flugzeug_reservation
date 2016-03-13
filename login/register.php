@@ -61,12 +61,12 @@ if (!empty($error_msg)) {
                 <tr>
                   <td><b>Natel:</b></td> <td><input 
                 <?php if (isset($_SESSION['regnatel'])) echo "value='".$_SESSION['regnatel']."'"; ?> 
-                                  type="text" name="natel" id="natel" /></td>
+                                 pattern='\+{0,1}[0-9 ]+'  type="text" name="natel" id="natel" /></td>
                 </tr>
                 <tr>
                   <td><b>Telefon:</b></td> <td><input 
                 <?php if (isset($_SESSION['regtel'])) echo "value='".$_SESSION['regtel']."'"; ?> 
-                                  type="text" name="tel" id="tel" /></td>
+                                 pattern='\+{0,1}[0-9 ]+'  type="text" name="tel" id="tel" /></td>
                 </tr>
                 <tr>
                   <td><b>Email:</b></td> <td><input 
@@ -75,7 +75,7 @@ if (!empty($error_msg)) {
                 </tr>
                 <tr>
                   <td><b>Admin:</b></td> <td>
-                    <select name="admin">
+                    <select  style='width: 4em;' name="admin">
                       <option <?php if (isset($_SESSION['regadmin']) && $_SESSION['regadmin'] == 0 ) echo " selected='selected' "; ?> value="0">nein</option>
                       <option <?php if (isset($_SESSION['regadmin']) && $_SESSION['regadmin'] == 1 ) echo " selected='selected' "; ?> value="1">Ja</option>
                     </select></td>
