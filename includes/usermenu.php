@@ -52,7 +52,7 @@
   $obj = $res->fetch_object();
   $admin = "";
   if ($obj->admin == TRUE && $obj->gesperrt == FALSE)
-    $admin = '<span style="white-space: nowrap;">[ <a '.$user_admin.' href="/reservationen/user_admin.php"><span style="color: #ff3333;">Piloten</span></a> | <a '.$res_admin.' href="/reservationen/res_admin.php"><span style="color: #ff3333;">Gelöscht</span></a></span> <span style="white-space: nowrap;"> | <a '.$res_trimmed.' href="/reservationen/res_trimmed.php"><span style="color: #ff3333;">Teil-gelöscht</span></a> | <a '.$res_moment.' href="/reservationen/res_momentan.php"><span style="color: #ff3333;">Reservationen</span></a> ]</span>';
+    $admin = '<span style="white-space: nowrap;">[ <a '.$user_admin.' href="/reservationen/user_admin.php"><span style="color: #ff3333;">Piloten</span></a> | <a '.$res_moment.' href="/reservationen/res_momentan.php"><span style="color: #ff3333;">Reservationen</span></a> | <a '.$res_admin.' href="/reservationen/res_admin.php"><span style="color: #ff3333;">Gelöscht</span></a></span> <span style="white-space: nowrap;"> | <a '.$res_trimmed.' href="/reservationen/res_trimmed.php"><span style="color: #ff3333;">Teil-gelöscht</span></a> ]</span>';
 
   $_SESSION['name'] = htmlentities($obj->name);
 
