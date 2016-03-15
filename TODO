@@ -1,0 +1,34 @@
+= TODO =
+
+== MAYOR ==
+
+* nicht nich reservation drinnnen.. ausser ganze werden
+  geloescht. ?????????????????????????
+
+* zaehlereintraege duerfen nur bis x.59 sein..
+  kontrollieren.. errorhandling allenfalls
+ 
+* landungseintrag editiere.. muss errormsg ausgeben...
+
+* service nicht rot.. nur zahl (tspan...)
+
+== MINOR ==
+
+* Wenn eine Buchung gelöscht wird solle ein Mail an andreas mathis amathis@deep.ch  und mich armin.beck@dsl.li
+  nur bei komplett loeschung momentan
+
+* select .. kein required .. und size="1" ueberall
+
+* mail() kann keine umlaute
+
+* wie beim monatsplan auch pfeile fuer tag-wechsel
+
+* sms return value
+ 
+* Buchung löschen:  kontrollieren clean-upen
+ 
+* flieger managen wie user_edit und user_admin.. einfach flieger.
+
+
+
+// vim: nospell :
