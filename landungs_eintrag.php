@@ -39,7 +39,8 @@ else if (isset($_POST['submit']))
   $jahr = ""; if (isset($_POST['jahr'])) $jahr = $_POST['jahr'];
   $zaehlerstand = ""; if (isset($_POST['zaehlerstand'])) $zaehlerstand = $_POST['zaehlerstand'];
 
-  $zaehler_minute = intval($zaehlerstand) * 60 + (($zaehlerstand * 100) % 100);
+  $zaehler_minute = intval($zaehlerstand) * 60;
+  $zaehler_minute += round($zaehlerstand * 100, 0, PHP_ROUND_HALF_UP) % 100;
 
   $_SESSION['flieger_id']  = $flieger_id;
   $_SESSION['tag']  = $tag;
@@ -55,18 +56,19 @@ else if (isset($_POST['submit']))
 
   $z_max = -1;
 
-  $query = "SELECT MAX(`zaehler_minute`) AS 'zaehler_max' FROM `zaehlereintraege` WHERE `flieger_id` = '$flieger_id';";
-  $res = $mysqli->query($query); 
+  // geht nicht.. man muss auch zwischendurch etc.
+  //$query = "SELECT MAX(`zaehler_minute`) AS 'zaehler_max' FROM `zaehlereintraege` WHERE `flieger_id` = '$flieger_id';";
+  //$res = $mysqli->query($query); 
 
-  if ($res->num_rows > 0)
-  {
-    $obj = $res->fetch_object();
-    $z_max = intval($obj->zaehler_max);
-  }
-  if ($z_max >= $zaehler_minute)
-  {
-    $error_msg = "Der Zählerstand ($zaehlerstand) ist nicht grösser als zuvor.<br /><br />Es wurde kein Eintrag gemacht!<br />";
-  }
+  //if ($res->num_rows > 0)
+  //{
+    //$obj = $res->fetch_object();
+    //$z_max = intval($obj->zaehler_max);
+  //}
+  //if ($z_max >= $zaehler_minute)
+  //{
+    //$error_msg = "Der Zählerstand ($zaehlerstand) ist nicht grösser als zuvor.<br /><br />Es wurde kein Eintrag gemacht!<br />";
+  //}
    
   if ($error_msg == "")
   {
@@ -114,7 +116,6 @@ else
   <meta name="robots" content="all">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" type="text/css" href="/reservationen/css/reservationen.css">
-  <link rel="stylesheet" type="text/css" href="datetime/jquery.datetimepicker.css"/>
 
 </head>
 <!--[if IE]>
@@ -230,7 +231,7 @@ if ($res = $mysqli->query($query))
       // admin + die letzten 2 zum ediditerne fuer benutzer
       if (check_admin($mysqli) || ($_SESSION['user_id'] == $user_id && $edit_c < 2))
       {
-        $edit_link = '<a href="landungs_edit.php?action=edit&amp;zaehler_id='.$eintrags_id.'&amp;flieger_id='.$flieger_id.'">[edit]</a>';
+        $edit_link = '<a href="landungs_edit.php?action=edit&amp;zaehler_id='.$eintrags_id.'&amp;flieger_id='.$flieger_id.'"><img alt="edit" src="bilder/edit.png" /></a>';
         $edit_c++;
       }
 

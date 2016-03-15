@@ -1,6 +1,6 @@
 <?php
 
-function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $tabs, $w)
+function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $tabs, $w, $admin_bol)
 {
   $now_tstamp = time();
   $query = "SELECT * FROM `flieger`;";
@@ -8,29 +8,48 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
 
   $yoffset = -$planeoffset;
 
-  $arr = ["8:45h", "44m", "44:05h", "2:20h"];
-  $arr2 = ["#666666", "#ff3333", "#666666", "#ff0000"];
-  $iii = -1;
   while($obj_f = $res_f->fetch_object())
   {
-    $iii++;
+    $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `zaehlereintraege` WHERE `flieger_id` = '".$obj_f->id."';");
+    $obj_x = $res_x->fetch_object();
+    $min = $obj_x->zaehler_minute;
+    $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `service_eintraege` WHERE `flieger_id` = '".$obj_f->id."';");
+    $obj_x = $res_x->fetch_object();
+    $service_min = $obj_x->zaehler_minute;
+
+    $res_x = $mysqli->query("SELECT `service_interval_min`  FROM `flieger` WHERE `id` = '".$obj_f->id."';");
+    $obj_x = $res_x->fetch_object();
+    $service_interval_min = $obj_x->service_interval_min;
+
+    $countdown = ($service_interval_min + $service_min) - $min;
+
+    if ($countdown < 0)
+      $s_color = "#ff0000";
+    else
+      $s_color = "#999999";
+
+    $in = intval($countdown / 60);
+    if ($countdown < 0 && $in == 0)
+      $in = "-$in";
+    $in .= ":".str_pad(abs($countdown % 60), 2, "0", STR_PAD_LEFT)."h";
 
     $yoffset += $planeoffset;
-    echo '<text x="98.6%" y="'.($yoffset-28).'px" text-anchor="end" style="fill: #000000; font-size: 120%; font-weight: bold;">'.$obj_f->flieger.'</text>'."\n";
-    //$query= "SELECT MAX(`zaehler_minute`) FROM `zaehlereintraege` WHERE `flieger_id` = '".$obj_f->id.";";
-    //$res4 = $mysqli->query() 
-    echo '<text x="98.6%" y="'.($yoffset-28-26).'px" text-anchor="end" style="fill: '.$arr2[$iii].'; font-size: 90%; font-weight: bold;">[Service in '.$arr[$iii].']</text>'."\n";
+    echo '<text x="97.6%" y="'.($yoffset-28).'px" text-anchor="end" style="fill: #000000; font-size: 120%; font-weight: bold;">'.$obj_f->flieger.'</text>'."\n";
+    echo '<text x="97.6%" y="'.($yoffset-28-26).'px" text-anchor="end" style="fill: '.$s_color.'; font-size: 90%; font-weight: bold;">[Service in '.$in.']</text>'."\n";
     
     echo '<a xlink:href="reservieren.php?flieger_id='.$obj_f->id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$tag.'">';
-    echo '<text x="1%" y="'.($yoffset-28).'px" style=" fill: #000099; font-size: 100%; font-weight: bold;">'.$obj_f->kurzname.' buchen</text>'."\n";
+    echo '<text x="3.6%" y="'.($yoffset-28).'px" style=" fill: #000099; font-size: 100%; font-weight: bold;">'.$obj_f->kurzname.' buchen</text>'."\n";
     echo '</a>';
-    echo '<text x="10.8em" y="'.($yoffset-28).'px" style=" fill: #000099; font-size: 100%; font-weight: bold;">|</text>'."\n";
+    echo '<text x="13.3em" y="'.($yoffset-28).'px" style=" fill: #000099; font-size: 100%; font-weight: bold;">|</text>'."\n";
     echo '<a xlink:href="landungs_eintrag.php?flieger_id='.$obj_f->id.'">';
-    echo '<text x="11.5em" y="'.($yoffset-28).'px" style="fill: #000099; font-size: 100%; font-weight: bold;">Eintrag nach Landung</text>'."\n";
+    echo '<text x="14.8em" y="'.($yoffset-28).'px" style="fill: #000099; font-size: 100%; font-weight: bold;">Eintrag nach Landung</text>'."\n";
     echo '</a>';
-    echo '<a xlink:href="reservieren.php">';
-    echo '<text x="1%" y="'.($yoffset-48).'px" style="fill: #990022; font-size: 100%; font-weight: bold;">Serviceliste</text>'."\n";
-    echo '</a>';
+    if ($admin_bol)
+    {
+      echo '<a xlink:href="/reservationen/service_edit.php?flieger_id='.$obj_f->id.'">';
+      echo '<text x="3.6%" y="'.($yoffset-48).'px" style="fill: #990022; font-size: 100%; font-weight: bold;">Serviceliste</text>'."\n";
+      echo '</a>';
+    }
 
     for ($i = 0; $i < 28; $i++)
     {
@@ -270,7 +289,7 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
   }
 }
 
-function tagesansicht($mysqli, $w, $tabs, $boxcol, $textcol, $planeoffset, $tag, $monat, $jahr, $date)
+function tagesansicht($mysqli, $w, $tabs, $boxcol, $textcol, $planeoffset, $tag, $monat, $jahr, $date, $admin_bol)
 {
 ?>
 
@@ -374,7 +393,7 @@ function tagesansicht($mysqli, $w, $tabs, $boxcol, $textcol, $planeoffset, $tag,
 
   // print GREEN etc (lowest layer) stuff
 
-  print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $tabs, $w);
+  print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $tabs, $w, $admin_bol);
 
   remove_zombies($mysqli);
 

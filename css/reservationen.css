@@ -25,6 +25,11 @@ nav {
   font-size: 110%;
 }
 
+.only_on_print {
+  visibility: none;
+  display: none;
+}
+
 h1 { text-shadow: 2px 2px 1px #9ff, 3px 3px 2px #aaaa00; }
 
 h1#h1tag { margin: 0px; padding: 0px; line-height: 40%; }
@@ -288,4 +293,8 @@ select.flieger_select {
   .chart, .chart_monat {width: 98%; }
 }
 /* ----------- END mobile phones ------------------- */
+
+@media print {
+body {-webkit-print-color-adjust: exact;}
+}
 

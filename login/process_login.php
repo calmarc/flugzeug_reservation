@@ -37,14 +37,14 @@ if (isset($_POST['pilotid'], $_POST['password'])) {
           if ($obj->checkflug > "0000-00-00" && $obj->checkflug < $jetzt && $obj->email_gesch == FALSE)
           {
             //mail
-            $res2 = $mysqli->query("SELECT * FROM `diverses`;");
+            $res2 = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'bei_gesperrt';");
             $obj2 = $res2->fetch_object();
-            $to = $obj2->gesperrt_email;
+            $to = $obj2->email;
             $subject = "Checkflug ueberfaellig: '".$obj->name."' [".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."]";
 			$txt = $subject;
 			$headers = "From: noreply@mfgc.ch";
 
-            if (mail($to,$subject,$txt,$headers))
+            if (mail($to, $subject, $txt, $headers))
               $mysqli->query("UPDATE `calmarws_test`.`members` SET `email_gesch` = '1' WHERE `members`.`id` = ".$obj->id." ;");
           } 
         }

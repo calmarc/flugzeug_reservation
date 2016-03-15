@@ -196,14 +196,14 @@ function esc_url($url) {
     }
 }
 
-function mysql2chtimef ($fobj, $raw)
+function mysql2chtimef ($von, $bis, $raw)
 {
-  list( $tag, $zeit) = explode(" ", $fobj->von);
+  list( $tag, $zeit) = explode(" ", $von);
   $tmp = explode(":", $zeit);
   $vonzeit = $tmp[0].':'.$tmp[1];
   $tmp = explode("-", $tag);
   $vontag = $tmp[2].'.'.$tmp[1].'.'.preg_replace('/../',"",$tmp[0], 1);
-  list( $tag, $zeit)  = explode(" ", $fobj->bis);
+  list( $tag, $zeit)  = explode(" ", $bis);
   $tmp = explode(":", $zeit);
   $biszeit = $tmp[0].':'.$tmp[1];
   $tmp = explode("-", $tag);
@@ -717,7 +717,98 @@ function tooltip_print()
 <?php
 }
 
+function delete_reservation($mysqli, $id_tmp, $begruendung, $user_id)
+{
+  $query = "SELECT * from `reservationen` WHERE `id` = $id_tmp LIMIT 1;";
+  $res = $mysqli->query($query);
+  $obj = $res->fetch_object();
+
+  // make copy into reser_geloescht
+  $query = "INSERT INTO `calmarws_test`.`reser_geloescht` (
+  `id` ,
+  `timestamp` ,
+  `userid` ,
+  `fliegerid` ,
+  `von` ,
+  `bis` ,
+  `loescher` ,
+  `grund`
+  )
+  VALUES (
+  NULL , NULL, '".$obj->userid."', '".$obj->fliegerid."', '".$obj->von."', '".$obj->bis."', '".$user_id."', '".$begruendung."'
+  );";
+
+  $mysqli->query($query);
+
+  // komplett loeschen da komplett in der zukunft oder komplett in der
+  // vergangenheit
+  if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`reservationen` WHERE `reservationen`.`id` = ? ;"))
+  {
+    $stmt->bind_param('i', $id_tmp);
+    if (!$stmt->execute()) 
+    {
+        header('Location: /reservationen/login/error.php?err=Registration failure: DELETE');
+        exit;
+    }
+  }
+}
+
+function reser_getrimmt_eintrag($mysqli, $obj, $user_id, $begruendung, $loeschen_datum_von, $loeschen_datum_bis)
+{
+  $query = "INSERT INTO `calmarws_test`.`reser_getrimmt` (
+  `id` ,
+  `timestamp` ,
+  `userid` ,
+  `fliegerid` ,
+  `von` ,
+  `bis` ,
+  `loescher` ,
+  `grund`,
+  `getrimmt_von`,
+  `getrimmt_bis`
+  )
+  VALUES (
+  NULL , NULL, '".$obj->userid."', '".$obj->fliegerid."', '".$obj->von."', '".$obj->bis."', '".$user_id."', '".$begruendung."', '".$loeschen_datum_von."', '".$loeschen_datum_bis."'
+  );";
+  $mysqli->query($query);
+}
+
+function bei_geloescht_email($mysqli, $subject_hint, $pilot_id, $flieger_id, $zeit, $begruendung)
+{
+
+  $res = $mysqli->query("SELECT * from `diverses` WHERE `funktion` = 'bei_geloescht';");
+  $obj = $res->fetch_object();
+  $to = $obj->email;
+
+  $res = $mysqli->query("SELECT * from `members` WHERE `id` = $pilot_id;");
+  $obj = $res->fetch_object();
+  $pilot = str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT). " (".$obj->name.")";
+
+  $res = $mysqli->query("SELECT * from `flieger` WHERE `id` = $flieger_id;");
+  $obj = $res->fetch_object();
+  $flieger = $obj->flieger;
+
+  $subject = "Reservierung $subject_hint: $pilot: $zeit";
+  $txt = "Bei der Motorfluggruppe Chur wurde folgende Flugzeug-Reservierung $subject_hint:";
+  $txt .= "\n\n";
+  $txt .= "Pilot: $pilot";
+  $txt .= "\n";
+  $txt .= "Flugzeug: $flieger";
+  $txt .= "\n";
+  $txt .= "Buchungszeit: $zeit";
+  $txt .= "\n\n";
+  $txt .= "Begreundung: $begruendung";
+  $txt .= "\n\n";
+  $txt .= "Mit freundlichen Gruessen";
+  $txt .= "\n";
+  $txt .= "Motorfluggruppe Chur";
+
+  $headers = "From: noreply@mfgc.ch";
+
+  mail ($to, $subject, $txt, $headers);
+}
 
 ?>
+
 
 

@@ -71,6 +71,9 @@ if (isset($_POST['submit']))
   if ($vonstamp <= $curstamp)
     $error_msg .= "Die Reservierung liegt in der Vergangenheit.<br /><br />Es wurde keine Reservierung gebucht!<br />";
 
+  if (intval($bis_stunde) == 7 && intval($bis_minuten) == 0)
+    $error_msg .= "Auf 7:00Uhr kann man nicht reservieren.<br />Bitte den Vortag 21:00 Uhr benutzen stattdessen!<br />";
+
   // CHECK LEVEL of standby
   
   remove_zombies($mysqli);
@@ -134,7 +137,8 @@ else
   <meta name="robots" content="all">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" type="text/css" href="/reservationen/css/reservationen.css">
-  <link rel="stylesheet" type="text/css" href="datetime/jquery.datetimepicker.css"/>
+  <link rel="stylesheet" type="text/css" media="print" href="/reservationen/css/printer.css" />
+
 </head>
 <!--[if IE]>
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -145,7 +149,7 @@ else
 <main>
   <div id="formular_innen">
 
-  <h1>Flugzeug reservieren</h1>
+  <h1 class="hide_on_print">Flugzeug reservieren</h1>
 
 <?php
 if (isset($msg) && $msg != "")
@@ -196,7 +200,7 @@ if ($bis_minute == "")
 ?>
   <form action='reservieren.php' method='post'>
 <?php echo $hidden; ?>
-    <div class='center'>
+    <div class='center hide_on_print'>
       <table class='user_admin'>
         <tr class="trblank">
           <td><b>Pilot:</b></td>
@@ -260,9 +264,13 @@ if ($bis_minute == "")
     <input class='submit_button' type='submit' name='submit' value='Reservierung abschicken' />
     </div>
   </form>
-  <div class='center'>
     <br />
-    <h1>Reservationen</h1>
+    <div class='center'>
+      <h1 class="hide_on_print">Reservationen <a href="javascript:window.print()"><img alt="Ausdrucken" src="/reservationen/bilder/print-out.png" /></a></h1>
+      <h1 class="only_on_print">Kommende MFGC Reservationen<br />von: <?php echo "[".str_pad($_SESSION['pilotid'], 3, "0", STR_PAD_LEFT)."] ".$_SESSION['name']; ?><br />&nbsp; &nbsp;</h1>
+    </div>
+
+    <div class='center'>
     <table class='vertical_table'>
   <?php
 
@@ -271,27 +279,51 @@ date_default_timezone_set("Europe/Zurich");
 $date = date("Y-m-d H:i:s", time());
 date_default_timezone_set('UTC');
 
-$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`fliegerid` FROM `reservationen` JOIN `flieger` ON `flieger`.`id` = `reservationen`.`fliegerid` WHERE `userid` = $userid AND `von` >= '$date' ORDER BY `von` DESC;";
+remove_zombies($mysqli);
+
+// get all valid reservation
+// later: see if there is an entry.. if not.. yellow (standby)
+
+$res = $mysqli->query("SELECT `id` FROM `flieger`;");
+
+$valid_res = array(array(), array(), array(), array(), array());
+
+$x = 0;
+while ($obj = $res->fetch_object())
+{
+  $valid_res[$x] = get_valid_reserv($mysqli, $obj->id);
+  $x++;
+}
+
+$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`fliegerid` FROM `reservationen` LEFT OUTER JOIN `flieger` ON `flieger`.`id` = `reservationen`.`fliegerid` WHERE `userid` = $userid AND `bis` >= '$date' ORDER BY `von` DESC;";
 $res = $mysqli->query($query); 
 
 while ($obj = $res->fetch_object())
 {
-  $datum = mysql2chtimef($obj, FALSE);
-  echo ' <tr>
-          <td><a onclick="return confirm(\'Reservation wirklich löschen?\')" 
-          href="res_loeschen.php?backto=reservieren.php&amp;tag='.$_SESSION['von_tag'].'&monat='.$_SESSION['von_monat'].'&amp;jahr='.$_SESSION['von_jahr'].'&amp;flieger_id='.$flieger_id.'&amp;action=del&amp;reservierung='.$obj->id.'">[löschen]</a></td>
-          <td>'.$datum.'</td><td>'.$obj->flieger.'</td>
+  $yellow = '';
+  if ( ! in_array(strval($obj->id), $valid_res[$obj->fliegerid - 1]))
+    $yellow = 'style="background-color: #ffff99; color: #ff6600 !important;"';
+
+  $datum = mysql2chtimef($obj->von, $obj->bis, FALSE);
+  list( $g_datum, $zeit) = explode(" ", $obj->von);
+  list( $g_jahr, $g_monat, $g_tag) = explode("-", $g_datum);
+  $g_jahr = intval($g_jahr);
+  $g_monat = intval($g_monat);
+  $g_tag = intval($g_tag);
+
+  echo ' <tr><td><a href="index.php?show=tag&amp;tag='.$g_tag.'&amp;monat='.$g_monat.'&amp;jahr='.$g_jahr.'">[Tagansicht]</a></td>
+          <td '.$yellow.'>'.$datum.'</td><td '.$yellow.'>'.$obj->flieger.'</td>
         </tr>';
 }
 
-$query = "SELECT * FROM `reservationen` JOIN `flieger` ON `flieger`.`id` = `reservationen`.`fliegerid` WHERE `userid` = $userid AND `von` < '$date' ORDER BY `von` DESC LIMIT 5;";
+$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`fliegerid` FROM `reservationen` LEFT OUTER JOIN `flieger` ON `flieger`.`id` = `reservationen`.`fliegerid` WHERE `userid` = $userid AND `bis` < '$date' ORDER BY `von` DESC LIMIT 5;";
 $res = $mysqli->query($query); 
 
+echo '<tr><td style="background-color: #99ff99;"></td><td style="background-color: #99ff99; text-align: left;" colspan="2">Vergangene:</td></tr>';
 while ($obj = $res->fetch_object())
 {
-  $datum = mysql2chtimef($obj, FALSE);
-  echo ' <tr>
-          <td></td>
+  $datum = mysql2chtimef($obj->von, $obj->bis, FALSE);
+  echo ' <tr><td></td>
           <td style="color: grey;">'.$datum.'</td>
           <td style="color: grey;">'.$obj->flieger.'</td>
         </tr>';

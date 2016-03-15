@@ -45,6 +45,7 @@ if ($res2->num_rows != 1)
 }
 $obj2 = $res2->fetch_object();
 
+//TODO ???????????????????????? wieso nicht oben?
 if (!check_admin($mysqli))
 {
   if (intval($obj2->user_id) != intval($_SESSION['user_id']))
@@ -79,18 +80,19 @@ else if (isset($_POST['edit']))
   $monat = ""; if (isset($_POST['monat'])) $monat = intval($_POST['monat']);
   $jahr = ""; if (isset($_POST['jahr'])) $jahr = intval($_POST['jahr']);
   $zaehlerstand = ""; if (isset($_POST['zaehlerstand'])) $zaehlerstand = $_POST['zaehlerstand'];
-  $beanstandungen = ""; if (isset($_POST['beanstandungen'])) $beanstandungen = $_POST['beanstandungen'];
 
   $tag = str_pad($tag, 2, "0", STR_PAD_LEFT);
   $monat = str_pad($monat, 2, "0", STR_PAD_LEFT);
-  $zaehler_minute = intval($zaehlerstand) * 60 + (($zaehlerstand * 100) % 100);
+
+  $zaehler_minute = intval($zaehlerstand) * 60;
+  $zaehler_minute += round($zaehlerstand * 100, 0, PHP_ROUND_HALF_UP) % 100;
 
   $datum = "$jahr-$monat-$tag";
 
   // UPDATE USER DATA
-  if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`zaehlereintraege` SET `datum` = ?, `zaehler_minute` = ?, `beanstandungen` = ? WHERE `zaehlereintraege`.`id` = ?;")) 
+  if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`zaehlereintraege` SET `datum` = ?, `zaehler_minute` = ? WHERE `zaehlereintraege`.`id` = ?;")) 
   {
-    $stmt->bind_param('sisi', $datum, $zaehler_minute, $beanstandungen, $zaehler_id);
+    $stmt->bind_param('sii', $datum, $zaehler_minute, $zaehler_id);
 
     if (!$stmt->execute()) 
     {
@@ -157,7 +159,6 @@ $obj = $res->fetch_object();
 $min = intval($obj->zaehler_minute) % 60;
 $std = intval($obj->zaehler_minute / 60);
 $zaehler_eintrag = $std.'.'.str_pad($min, 2, "0", STR_PAD_LEFT);
-$beanstandungen = $obj->beanstandungen;
 
 list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
 
@@ -184,10 +185,6 @@ list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
             <tr>
               <td><b>Zählerstand:</b></td>
               <td><input value="<?php echo $zaehler_eintrag; ?>" name="zaehlerstand" style="width: 80px;" required="required" type="number" step="0.01" /></td>
-            </tr>
-            <tr>
-              <td><b>Beanstandungen:</b></td>
-              <td><input value="<?php echo $beanstandungen; ?>" name="beanstandungen" required="required" type="text" /></td>
             </tr>
           </table>
         <input class='submit_button' type='submit' name='edit' value='Änderungen abschicken' />

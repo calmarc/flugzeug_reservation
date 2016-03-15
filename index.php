@@ -11,6 +11,12 @@ include_once ('includes/monats_ansicht.php');
 sec_session_start();
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
+
+if (check_admin($mysqli) == TRUE) 
+  $_SESSION['admin'] = TRUE;
+else
+  $_SESSION['admin'] = FALSE;
+
 ?>
 
 <!DOCTYPE html>
@@ -108,26 +114,6 @@ else
 
   if ($z_monat < 1) { $z_monat = 12; $z_jahr--; }
   if ($v_monat > 12) { $v_monat = 1; $v_jahr++; }
-  //echo "<form method='get' action='index.php'>";
-  //echo "<table style='width: 100%; text-align: center;'><tr>";
-  //echo "<td>";
-  //echo "<h1 id='h1monat'>";
-  //echo '<a href="/reservationen/index.php?flieger_id='.$flieger_id.'&amp;show=monat&amp;monat='.$z_monat.'&amp;jahr='.$z_jahr.'&amp;tag='.$tag.'"><span>&laquo;</span></a> &nbsp; '; 
-  //echo  $monate[$monat-1];
-  //echo " $jahr";
-  //echo "\n";
-  //echo " &nbsp; &nbsp;";
-  //echo "<input type='hidden' name='show' value='monat' />";
-  //echo "<input type='hidden' name='tag' value='$tag' />";
-  //echo "<input type='hidden' name='monat' value='$monat' />";
-  //echo "<input type='hidden' name='jahr' value='$jahr' />";
-  //echo $select;
-  ////echo "<input type='submit' name='wasauchimmer' value='&lt;' />";
-  //echo ' &nbsp; <a href="/reservationen/index.php?flieger_id='.$flieger_id.'&amp;show=monat&amp;monat='.$v_monat.'&amp;jahr='.$v_jahr.'&amp;tag='.$tag.'">&raquo;</a> '; 
-  //echo '</h1>';
-  //echo "</td>";
-  //echo "</tr></table>";
-  //echo "</form>";
   echo "<form method='get' action='index.php'>";
   echo "<div class='center'>";
   echo "<table id='monat_title'><tr>";
@@ -154,7 +140,6 @@ else
 
 // 'stuff' needed below
 //$w = number_format (98/28.0, 3, '.', ''); // WIDTH of tabs
-$perplus = 0.8; //(shift to right in percent)
 
 // TODO: if calender.. must be less than 98%
 $w = number_format (94/28.0, 3, '.', ''); // WIDTH of tabs
@@ -180,7 +165,7 @@ if ($_SESSION['show'] == 'monat')
 else
 {
   $planeoffset = 123;
-  tagesansicht($mysqli, $w, $tabs, $boxcol, $textcol, $planeoffset, $tag, $monat, $jahr, $date);
+  tagesansicht($mysqli, $w, $tabs, $boxcol, $textcol, $planeoffset, $tag, $monat, $jahr, $date, $_SESSION['admin']);
 }
 
 ?>
