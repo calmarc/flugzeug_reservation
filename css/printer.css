@@ -1,0 +1,186 @@
+body {
+    color: #000000;
+    /*background-color: #aaddff; */
+    /*background-color: #74c4ee; */
+    background-color: #ffffff; 
+    font-family: serif;
+    margin: 14px;
+    padding: 14px;
+    -webkit-print-color-adjust: exact; 
+    print-color-adjust: exact; 
+}
+
+nav {
+  visibility: none;
+  display: none;
+}
+
+.hide_on_print {
+  visibility: none;
+  display: none;
+}
+.only_on_print {
+  visibility: visible;
+  display: inline;
+}
+
+h1 { font-size: 115% }
+
+table.formular_eingabe td:nth-child(1) { text-align: right;}
+table.formular_eingabe td:nth-child(2) { text-align: left; padding-left: 8px;}
+table.formular_eingabe td:nth-child(2) input { width: 90%;}
+
+main { margin-top: 0px; margin-left: auto; margin-right: auto; text-align: center; }
+
+div#formular_innen { margin-top: 100px; display: inline-block; margin-left: auto; margin-right: auto; text-align: center; border-radius: 25px; border: 2px solid #73AD21; padding: 20px;  background-color: #99ff99; }
+
+/* center-stuff */
+.center {
+    text-align: center;
+}
+.center > div, .center > table /* insert any other block-level elements here */ {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Kalender */
+.samstag { color: blue;}
+.sonntag { color: red;}
+
+div#calendar { font-size: 115%; position: fixed; left: 2%; bottom: 0px; margin: 8px; opacity: 0.9; filter: alpha(opacity=90);}
+table.calendar {min-width: 20em; border:1px solid #999; background-color: yellow; box-shadow: 4px 4px 8px #666699; }
+table.calendar td { min-width: 46px; }
+td.calendar-day-head { background: #ccc; font-weight:bold; text-align:center; padding:1px; border-bottom:1px solid #999; border-top:1px solid #999; border-right:1px solid #999; }
+td.calendar-day:hover { background: #ccccff; }
+td.calendar-day-np	{ background: transparent; }
+table.calendar div { text-align: center ;}
+table.calendar a { text-decoration: none;}
+table.calendar div a { color: #000099;}
+
+table.calendar a { display: block; padding: 3px;}
+table.calendar a.vorzurueck { display: inline; padding: 0px; }
+table.calendar a.vorzurueck img { margin: 0px; padding: 0px; display: inline;}
+
+#aktiv { background-color: #ffffff; font-weight: bold; border:2px solid #ff0000;}
+#aktiv a:link { color: black; }
+#aktiv a:link { color: black; }
+#aktiv a:visited { color: black;}
+#aktiv a:hover { color: black;}
+
+.vergangenheit a { background-color: #0000cc; color: #cccccc;  }
+.vergangenheit a:link { background-color: #ffff99; color: #cccccc;   }
+.vergangenheit a:visited { background-color: #ffff99; color: #cccccc;   }
+.vergangenheit a:hover { background: #ccccff; color: #aaaaaa;   }
+/* hover muss nach visited kommen.. um es durchzusetzen in firefox */
+
+.heute a { font-weight: bold; }
+.heute a:link { font-weight: bold; }
+.heute a:visited { font-weight: bold; }
+.heute a:hover { font-weight: bold; }
+
+td#datum {
+  text-align: center;
+  font-size: 120%;
+  font-weight: bold;
+}
+
+table.vertical_table { border-style: none; border-width: 0; border-collapse: collapse; }
+table.vertical_table th { padding: 10px;}
+table.vertical_table td { padding: 5px 12px 5px 16px; text-align: left; margin: 0px;}
+
+/*table.vertical_table td:nth-child(1) { padding-left: 2em; text-align: right; background-color: #99ff99;}*/
+table.vertical_table td:nth-child(1) { padding-left: 1em; text-align: right; background-color: #99ff99;}
+table.vertical_table td:nth-child(1) a { background-color: #99ff99;}
+table.vertical_table td:nth-child(2) { text-align: left;}
+
+table.vertical_table tr:nth-child(even) { background-color: #eee; }
+table.vertical_table tr:nth-child(odd) { background-color: #fff; }
+table.vertical_table th { color: white; background-color: #336633; } 
+
+table.vertical_table th a { color: white; text-decoration: underline; } 
+table.vertical_table td a { color: #000099; text-decoration: underline; } 
+
+table.user_admin { border-style: none; border-width: 0; border-collapse: collapse; }
+table.user_admin th { padding: 10px;}
+table.user_admin td { border-bottom: 1px solid #333333;border-right: 1px solid #333333; padding: 5px 12px 5px 16px; text-align: left; margin: 0px;}
+table.user_admin td:nth-child(1) { padding-left: 2em; text-align: right; background-color: #99ff99; color: black;}
+table.user_admin td:nth-child(1) { padding-left: 2em; text-align: right; background-color: #eeeeee; color: black;}
+table.user_admin td:nth-child(2) { text-align: left;}
+
+table.user_admin tr:nth-child(even) { background-color: #ffffff; }
+table.user_admin tr:nth-child(odd) { background-color: #ffffff; }
+table.user_admin th { color: white; background-color: #555555; } 
+
+
+/*tr.trblank td:nth-child(1) { background-color: #99ff99; color: black; }*/
+/*tr.trblank td:nth-child(2) { background-color: #ccffcc; color: black; }*/
+
+tr.trblank td:nth-child(1) { background-color: #eeeeee; color: black; }
+tr.trblank td:nth-child(2) { background-color: #eeeeee; color: black; }
+
+/*table input[type="text"] { background-color: #eeee00;}*/
+.submit_button { padding: 5px; border: 2px solid #339933; margin-top: 20px; font-weight: bold; font-size: 110%; background-color: #009900; color: white; }
+.submit_button:hover { border: 2px solid #ee3300; background-color: #ee3300;}
+
+.sub_loeschen { border: 2px solid #000000; margin-top: 20px; font-size: 110%; font-weight: bold; background-color: #aa0000; color: white; }
+.sub_loeschen:hover { border: 2px solid #ee3300; background-color: #ee3300;}
+
+.chart {
+  box-shadow: 3px 3px 3px #aaaaaa;  
+
+  background-color: #ffffff; 
+  border: 1px solid black;
+  padding: 16px;
+  width: 93%;
+  height: 528px;
+  min-width: 624px;
+}
+.chart_monat {
+  box-shadow: 3px 3px 3px #aaaaaa;  
+
+  background-color: #ffffff; 
+  border: 1px solid black;
+  padding: 16px;
+  width: 93%;
+  height: 752px;
+  min-width: 624px;
+}
+
+div.legende {
+  text-align: right;
+  margin-top: 4px;
+  margin-right: 2.6%;
+}
+svg a text {
+  opacity: 0.8;
+}
+svg a text:hover {
+  opacity: 1.0;
+}
+
+div#tooltip_div {
+  border-radius: 12px; border: 2px solid #BBBBBB;
+  padding: 5px;
+  background-color: #EEEEEE;
+  position: fixed;
+  font-size: 100%;
+  box-shadow: 2px 2px 2px #CCCCCC;
+}
+
+select.flieger_select {
+  vertical-align: middle; 
+  font-size: 100%; 
+  border-right: 0px solid #ffff00; 
+  border-left: 0px solid #ffff00; 
+  border-top: 0px solid #ffff00; 
+  border-bottom: 0px solid #ffff00;
+  border: 3px solid #44ff00;
+}
+
+#raquo { margin-left: 0px; margin-right: 0px; padding: 8px 0px 8px 0px; }
+#rsaquo { margin-left: 8px; margin-right: 8px; padding: 8px 0px 8px 0px; }
+#laquo { margin-right: 0px; margin-left: 0px; padding: 8px 0px 8px 0px; }
+#lsaquo { margin-right: 8px; margin-left: 8px; padding: 8px 0px 8px 0px; }
+
+/* ----------- START mobile phones ------------------- */
+
