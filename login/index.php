@@ -7,27 +7,10 @@ sec_session_start();
 
 if (login_check($mysqli) == true) { header("Location: /reservationen/index.php"); exit; }
 
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content=
-  "width=device-width, initial-scale=1.0">
-  <title>Benutzer einloggen</title>
-  <meta name="title" content="Benutzer Einloggen">
-  <meta name="keywords" content="Benutzer,einloggen">
-  <meta name="description" content="Benutzer Einloggen">
-  <meta name="generator" content="Calmar + Vim + Tidy">
-  <meta name="owner" content="calmar.ws">
-  <meta name="author" content="candrian.org">
-  <meta name="robots" content="all">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="/reservationen/css/reservationen.css">
-  </head>
-  <body>
+print_html_to_body('Benutzer einloggen', ''); 
+include_once('../includes/usermenu.php'); 
 
-<?php include_once('../includes/usermenu.php'); ?>
+?>
     <main>
 <?php
 

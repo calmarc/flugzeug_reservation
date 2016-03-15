@@ -72,7 +72,7 @@ if (isset($_POST['submit']))
     $error_msg .= "Die Reservierung liegt in der Vergangenheit.<br /><br />Es wurde keine Reservierung gebucht!<br />";
 
   if (intval($bis_stunde) == 7 && intval($bis_minuten) == 0)
-    $error_msg .= "Auf 7:00Uhr kann man nicht reservieren.<br />Bitte den Vortag 21:00 Uhr benutzen stattdessen!<br />";
+    $error_msg .= "Auf 7:00 Uhr kann man nicht reservieren.<br />Bitte stattdessen auf den Vortag 21:00 Uhr buchen!<br />";
 
   // CHECK LEVEL of standby
   
@@ -120,32 +120,9 @@ else
   // else nothing to do so
 }
 
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content=
-  "width=device-width, initial-scale=1.0">
-  <title>Flugzeug reservieren</title>
-  <meta name="title" content="Flugzeug reservieren">
-  <meta name="keywords" content="Flugzeug reservieren">
-  <meta name="description" content="Flugzeug reservieren">
-  <meta name="generator" content="Calmar + Vim + Tidy">
-  <meta name="owner" content="calmar.ws">
-  <meta name="author" content="candrian.org">
-  <meta name="robots" content="all">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" type="text/css" href="/reservationen/css/reservationen.css">
-  <link rel="stylesheet" type="text/css" media="print" href="/reservationen/css/printer.css" />
+print_html_to_body('Flugzeug reservieren', ''); 
+include_once('includes/usermenu.php'); ?>
 
-</head>
-<!--[if IE]>
-<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-<body>
-
-<?php include_once('includes/usermenu.php'); ?>
 <main>
   <div id="formular_innen">
 

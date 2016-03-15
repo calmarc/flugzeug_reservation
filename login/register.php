@@ -13,28 +13,10 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 
 include_once 'register.inc.php';
 
+print_html_to_body('Neuen Piloten hinzufügen', ''); 
+include_once('../includes/usermenu.php'); 
+
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content=
-  "width=device-width, initial-scale=1.0">
-  <title>Neuen Piloten hinzufügen</title>
-  <meta name="title" content="Neuen Piloten hinzufügen">
-  <meta name="keywords" content="Neuen Piloten hinzufügen">
-  <meta name="description" content="Neuen Piloten hinzufügen">
-  <meta name="generator" content="Calmar + Vim + Tidy">
-  <meta name="owner" content="calmar.ws">
-  <meta name="author" content="candrian.org">
-  <meta name="robots" content="all">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="/reservationen/css/reservationen.css">
-</head>
-<body>
-
-<?php include_once('../includes/usermenu.php'); ?>
   <main>
       <div id="formular_innen">
         <h1>Neuen Piloten hinzufügen</h1>

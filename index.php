@@ -17,34 +17,9 @@ if (check_admin($mysqli) == TRUE)
 else
   $_SESSION['admin'] = FALSE;
 
-?>
+print_html_to_body('Motorfluggruppe Chur Reservierungssystem', 
+                   '<meta http-equiv="refresh" content="900">');
 
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content=
-  "width=device-width, initial-scale=1.0">
-  <title>MFGC Flugzeug-Reservationen</title>
-  <meta name="title" content="Flugzeug-Reservationen">
-  <meta name="keywords" content="Reservierungs-System">
-  <meta name="description" content="Reservierungs-System">
-  <meta name="generator" content="Calmar + Vim + Tidy">
-  <meta name="owner" content="calmar.ws">
-  <meta name="author" content="candrian.org">
-  <meta name="robots" content="all">
-  <meta http-equiv="refresh" content="900">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="/reservationen/css/reservationen.css">
-</head>
-
-<!--[if IE]>
-<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-
-<body>
-
-<?php 
 
 require('includes/usermenu.php');
 echo '<main>';

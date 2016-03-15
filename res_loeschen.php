@@ -117,52 +117,56 @@ if (isset($_POST['submit']))
       $bis_stunde = ""; if (isset($_POST['bis_stunde'])) $bis_stunde = $_POST['bis_stunde'];
       $bis_minute = ""; if (isset($_POST['bis_minute'])) $bis_minute = $_POST['bis_minute'];
 
+
+      //todo am besten ueberall machen.. oder halt fehlermeldung
+      //unguelties 21:30 auf 21:00 machen.
+      if ($von_stunde == "21" && $von_minute != "00")
+        $von_minute = "00";
+      if ($bis_stunde == "21" && $bis_minute != "00")
+        $bis_minute = "00";
+
       $res_datum_von = $obj->von;
       $res_datum_bis = $obj->bis;
 
       $loeschen_datum_von = "$von_jahr-$von_monat-$von_tag $von_stunde:$von_minute:00";
       $loeschen_datum_bis = "$bis_jahr-$bis_monat-$bis_tag $bis_stunde:$bis_minute:00";
 
-      // TODO: evt.. aeh.. zeit kontrollieren jetzt wird einfach abgeschnitten
-      // TODO: wenn loeschen 'bis' = 7 uhr.. mache 22 vortag daraus
-      // TODO: wenn loeschen 'von' = 21 uhr.. mache 7 naester tag daraus
+      $loeschen_datum_von_orig =  $loeschen_datum_von;
+      $loeschen_datum_bis_orig =  $loeschen_datum_bis;
+
+      // brute force.. korrigieren... (in den Bereich draengen)
+      // TODO: besser warnung ausgeben und nichts machen.
+
+      // |7---------21|7-----------21|7-----------21|7----------21|
+      //               **************
+      // |7---------21|7-----------21|7-----------21|7----------21|
+      //      *********
+      // |7---------21|7-----------21|7-----------21|7----------21|
+      //                                            ********
+      //
+      // ein geloescht-von 0:00-7:00  muss ein 21:00 uhr Vor-tag werden
+      // ein geloescht-von > 21:00  muss ein 21:00 uhr werden (oder // fehlermeldung)
+      // ein geloescht-bis >= 21:00  muss ein 7:00 uhr naechste-tag werden
       
-      // TODO kontrolllier.. was das unten da macht.. war zu muede..
-      // no zurich.. it's about calculation only
       $loeschen_stamp_von = strtotime($loeschen_datum_von);
       $loeschen_stamp_bis = strtotime($loeschen_datum_bis);
       
-      if (date("G", $loeschen_stamp_von) >= 21) // mache 7 draus
+      // 'von' ausdehnen... <=7 auf 21:00 vortag
+      if (date("H:i", $loeschen_stamp_von) <= "07:00")
       {
-        // naechster tag 7 uhr
-        $date07 = strtotime(date("Y-m-d", $loeschen_stamp_von)." 23:00:00");
-        $loeschen_datum_von = date("Y-m-d H:i:s", $date07 + 8 * 60 * 60);
+        $date22 = strtotime(date("Y-m-d", $loeschen_stamp_von)." 00:00:00");
+        $loeschen_datum_von = date("Y-m-d H:i:s", $date22 - 3 * 60 * 60);
       }
-      else if (date("G", $loeschen_stamp_bis) < 7)  // mache 21:00 draus
+      //  'bis' ausdehnen...  >=21 -->  7:00 naechster tag
+      if (date("H:i", $loeschen_stamp_bis) >= "21:00")
       {
-        $date22 = strtotime(date("Y-m-d", $loeschen_stamp_bis)." 00:00:00");
-        $loeschen_datum_bis = date("Y-m-d H:i:s", $date22 - 3 * 60 * 60);
+        echo "wir sind drinnen <br />";
+        $date07 = strtotime(date("Y-m-d", $loeschen_stamp_bis)." 23:00:00");
+        $loeschen_datum_bis = date("Y-m-d H:i:s", $date07 + 8 * 60 * 60);
       }
 
-      ///////////////////////////////////////////////
-      ///////////////////////////////////////////////
-      
-      if ($loeschen_datum_von < $res_datum_von)
-        $loeschen_datum_von == $res_datum_von;
-
-      if ($loeschen_datum_bis > $res_datum_bis)
-        $loeschen_datum_bis == $res_datum_bis;
-
-
-      // falls der anfang gleich ist.. vorne trimmen
-      // falls das ende gleich ist.. hinten trimmen
-      // sonst ist es zwischendurch (danke Maeni-like!)
-      //     eintrag clonen (inklusive timestamp - ohne ID)
-      //     beim einen alles nach dem 'von' loeschen
-      //     beim anderen alles vor dem 'bis' loeschen
-
-      // start und endzeit stimmen ueberein - komplett loeschen
-      if ($loeschen_datum_von == $res_datum_von && $loeschen_datum_bis == $res_datum_bis)
+      // start und endzeit = groesser reservation - komplett loeschen
+      if ($loeschen_datum_von <= $res_datum_von && $loeschen_datum_bis >= $res_datum_bis)
       {
         $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
         delete_reservation($mysqli, $id_tmp, $begruendung, $_SESSION['user_id']);
@@ -171,7 +175,7 @@ if (isset($_POST['submit']))
                             mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
       }
       // Anfang kuerzen
-      else if ($loeschen_datum_von <= $res_datum_von )
+      else if ($loeschen_datum_von <= $res_datum_von && $loeschen_datum_bis < $res_datum_bis)
       {
         if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`reservationen` SET `von` = ? WHERE `reservationen`.`id` = ?;"))
         {
@@ -183,10 +187,10 @@ if (isset($_POST['submit']))
           }
         }
 
-        reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von, $loeschen_datum_bis);
+        reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
       }
       // Ende kuerzen
-      else if ($loeschen_datum_bis >= $res_datum_bis)
+      else if ($loeschen_datum_von > $res_datum_von && $loeschen_datum_bis >= $res_datum_bis)
       {
         if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;"))
         {
@@ -198,14 +202,12 @@ if (isset($_POST['submit']))
           }
         }
 
-        reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von, $loeschen_datum_bis);
+        reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
       }
       else
       {
-        // clone.. 
-        // etc
-        // make copy  into reservieren
-        // and while doing so trim the 'von' to 'bis' from loeschen
+        // eintrag clonen (inklusive timestamp - ohne ID)
+        //
         $query = "INSERT INTO `calmarws_test`.`reservationen` (
         `id` ,
         `timestamp` ,
@@ -220,7 +222,7 @@ if (isset($_POST['submit']))
 
         $mysqli->query($query);
 
-        // update the initial one (bis ... to loeschen_von..
+        // update the initial one (bis ... to loeschen_von..)
         if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;"))
         {
           $stmt->bind_param('si', $loeschen_datum_von, $id_tmp);
@@ -231,7 +233,7 @@ if (isset($_POST['submit']))
           }
         }
 
-        reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von, $loeschen_datum_bis);
+        reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
 
         $res_t = $mysqli->query("SELECT `id` FROM `reservationen` ORDER BY `id` DESC LIMIT 1;");
         $obj_t = $res_t->fetch_object();
@@ -386,32 +388,11 @@ else
     $h3 = "Begründung$optional";
     $button = "Reservation löschen";
 }
+
+print_html_to_body('Reservierung loeschen', ''); 
+include_once('includes/usermenu.php'); 
+
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content=
-  "width=device-width, initial-scale=1.0">
-  <title>Reservierung loeschen</title>
-  <meta name="title" content="Reservierung loeschen">
-  <meta name="keywords" content="Reservierung loeschen">
-  <meta name="description" content="Reservierung loeschen">
-  <meta name="generator" content="Calmar + Vim + Tidy">
-  <meta name="owner" content="mfgc.ch">
-  <meta name="author" content="candrian.org">
-  <meta name="robots" content="all">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="/reservationen/css/reservationen.css">
-</head>
-
-<!--[if IE]>
-<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-
-<body>
-<?php include_once('includes/usermenu.php'); ?>
 
   <main>
     <div id="formular_innen">

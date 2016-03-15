@@ -2,6 +2,7 @@
 
 /* 
  * Copyright (C) 2013 peter
+ * Copyright (C) 2016 calmar
  * See <http://www.gnu.org/licenses/>.
  */
 

@@ -547,6 +547,8 @@ function get_valid_reserv($mysqli, $flieger_id)
       $obj = $res->fetch_object();
       $von_extrem = $obj->von;
     }
+    else
+      return $level_0;
   }
 
   // die max-zukunfstigste (bis)-datum gucken
@@ -559,6 +561,8 @@ function get_valid_reserv($mysqli, $flieger_id)
       $obj = $res->fetch_object();
       $bis_extrem = $obj->bis;
     }
+    else
+      return $level_0;
   }
 
   // halbe stunde blocks ganz links nach ganz rechts.
@@ -808,7 +812,34 @@ function bei_geloescht_email($mysqli, $subject_hint, $pilot_id, $flieger_id, $ze
   mail ($to, $subject, $txt, $headers);
 }
 
+function print_html_to_body ($title, $special_meta)
+{ ?>
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content=
+  "width=device-width, initial-scale=1.0">
+  <title><?php echo $title; ?></title>
+  <meta name="generator" content="Calmar + Vim + Tidy">
+  <meta name="owner" content="MFGC.ch">
+  <meta name="author" content="candrian.org">
+  <meta name="robots" content="all">
+  <?php echo $special_meta; ?>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/reservationen/css/reservationen.css">
+</head>
+
+<!--[if IE]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<body>
+<?php
+}
+
+
+
+
 ?>
-
-
-

@@ -105,31 +105,10 @@ else
 }
 
 
+print_html_to_body('Service Eintrag', ''); 
+include_once('includes/usermenu.php'); 
+
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content=
-  "width=device-width, initial-scale=1.0">
-  <title>Service Eintrag</title>
-  <meta name="title" content="Service Eintrag">
-  <meta name="keywords" content="Service,Eintrag">
-  <meta name="description" content="Service Eintrag">
-  <meta name="generator" content="Calmar + Vim + Tidy">
-  <meta name="owner" content="calmar.ws">
-  <meta name="author" content="candrian.org">
-  <meta name="robots" content="all">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" type="text/css" href="/reservationen/css/reservationen.css">
-
-</head>
-<!--[if IE]>
-<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-<body>
-
-<?php include_once('includes/usermenu.php'); ?>
 <main>
   <div id="formular_innen">
 

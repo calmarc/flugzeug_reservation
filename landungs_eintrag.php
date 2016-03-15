@@ -98,32 +98,10 @@ else
   exit;
 }
 
+print_html_to_body('Landungs Eintrag', ''); 
+include_once('includes/usermenu.php'); 
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content=
-  "width=device-width, initial-scale=1.0">
-  <title>Landungs Eintrag</title>
-  <meta name="title" content="Benutzer Administration">
-  <meta name="keywords" content="Benutzer,Administration">
-  <meta name="description" content="Benutzer Administration">
-  <meta name="generator" content="Calmar + Vim + Tidy">
-  <meta name="owner" content="calmar.ws">
-  <meta name="author" content="candrian.org">
-  <meta name="robots" content="all">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" type="text/css" href="/reservationen/css/reservationen.css">
-
-</head>
-<!--[if IE]>
-<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-<body>
-
-<?php include_once('includes/usermenu.php'); ?>
 <main>
   <div id="formular_innen">
 
@@ -161,13 +139,13 @@ $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
         <tr>
           <td><b>Datum:</b></td>
           <td>
-            <select name="tag" style="width: 46px;"  required="required">
+            <select size="1" name="tag" style="width: 46px;">
               <?php combobox_tag($_SESSION['tag']); ?>
             </select> <b>.</b> 
-            <select name="monat" style="width: 46px;"  required="required">
+            <select size="1" name="monat" style="width: 46px;">
               <?php combobox_monat($_SESSION['monat']); ?>
             </select> <b>.</b> 
-            <select name="jahr" style="width: 86px;"  required="required">
+            <select size="1" name="jahr" style="width: 86px;">
               <?php combobox_jahr($_SESSION['jahr']); ?>
             </select>
           </td>

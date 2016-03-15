@@ -103,33 +103,11 @@ else if (isset($_POST['edit']))
   header("Location: landungs_eintrag.php?flieger_id=$flieger_id"); 
   exit;
 }
+
+print_html_to_body('Landungs-Eintrag editieren', ''); 
+include_once('includes/usermenu.php'); 
+
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content=
-  "width=device-width, initial-scale=1.0">
-  <title>Landungs-Eintrag editieren</title>
-  <meta name="title" content="Eintrag editieren">
-  <meta name="keywords" content="Eintrag editieren">
-  <meta name="description" content="Eintrag editieren">
-  <meta name="generator" content="Calmar + Vim + Tidy">
-  <meta name="owner" content="calmar.ws">
-  <meta name="author" content="candrian.org">
-  <meta name="robots" content="all">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="/reservationen/css/reservationen.css">
-</head>
-
-<!--[if IE]>
-<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-
-<body>
-
-<?php include_once('includes/usermenu.php'); ?>
 
   <main>
     <div id="formular_innen">
