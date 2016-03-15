@@ -8,7 +8,7 @@ use Aspsms\Aspsms;
 function sendsms($natel, $txt)
 {
   define('USER_KEY', 'armin.beck@dsl.li');
-  define('USER_PASS', 'mfg#ch:a_b');
+  define('USER_PASS', '**********');
   // set optional attributes
   $options = array(
       "AffiliateId" => "205567",
