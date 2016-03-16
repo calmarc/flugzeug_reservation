@@ -112,7 +112,7 @@ include_once('includes/usermenu.php');
   <main>
     <div id="formular_innen">
 
-    <h1>Eintrag editieren</h1>
+    <h1>Flug-Eintrag editieren</h1>
 
 <?php
 
@@ -156,9 +156,17 @@ list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
             </tr>
             <tr>
               <td><b>Datum:</b></td>
-              <td><input value="<?php echo $tag; ?>" name="tag" style="width: 46px;;" min="1" max="31" required="required" type='number' /> <b>.</b> 
-              <input value="<?php echo $monat; ?>" name="monat" style="width: 46px;;" min="1" max="12" required="required" type='number' /> <b>.</b> 
-              <input value="<?php echo $jahr; ?>" name="jahr" style="width: 80px;" min="2016" max="2050" required="required" type='number' /></td>
+              <td>
+                <select size="1" name="tag" style="width: 46px;">
+                  <?php combobox_tag($tag); ?>
+                </select> <b>.</b> 
+                <select size="1" name="monat" style="width: 46px;">
+                  <?php combobox_monat($monat); ?>
+                </select> <b>.</b> 
+                <select size="1" name="jahr" style="width: 86px;">
+                  <?php combobox_jahr($jahr); ?>
+                </select>
+              </td>
             </tr>
             <tr>
               <td><b>Zählerstand:</b></td>

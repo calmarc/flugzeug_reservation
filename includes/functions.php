@@ -689,17 +689,6 @@ function legende_print($boxcol)
     <text x="70%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Gebucht</text>
     <rect x="80%" y="0" width="20%" height="24" style="fill: url(#gelblich0); stroke: #666666; stroke-width: 1px;"></rect>
     <text x="90%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Standby</text>
-
-    <!--<rect x="0.1%" y="0" width="20%" height="24" style="fill:url(#grey0); stroke: #666666; stroke-width: 1px;"></rect>-->
-    <!--<text x="10.0%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Vergangenheit</text>-->
-    <!--<rect x="20%" y="0" width="20%" height="24" style="fill:url(#gruen0); stroke: #666666; stroke-width: 1px;"></rect>-->
-    <!--<text x="30%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Frei</text>-->
-    <!--<rect x="40%" y="0" width="20%" height="24" style="stroke: #666666; stroke-width: 1px;"></rect>-->
-    <!--<text x="50%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Gebucht</text>-->
-    <!--<rect x="60%" y="0" width="20%" height="24" style="fill: url(#gelblich0); stroke: #666666; stroke-width: 1px;"></rect>-->
-    <!--<text x="70%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Standby</text>-->
-    <!--<rect x="79.9%" y="0" width="20%" height="24" style="stroke: #666666; stroke-width: 1px;"></rect>-->
-    <!--<text x="90.0%" y="18px" text-anchor="middle" style="fill: #000000; font-size: 100%; ">Service</text>-->
   </g>
   </svg>
 </div>
@@ -816,7 +805,7 @@ function print_html_to_body ($title, $special_meta)
 { ?>
 
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content=
