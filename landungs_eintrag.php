@@ -130,7 +130,7 @@ $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
       <table class='vtable'>
         <tr class="trblank">
           <td><b>Pilot:</b></td>
-          <td><b>[<?php echo str_pad($_SESSION['pilotid'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
+          <td><b>[<?php echo str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
         </tr>
         <tr class="trblank">
           <td><b>Flugzeug:</b></td>

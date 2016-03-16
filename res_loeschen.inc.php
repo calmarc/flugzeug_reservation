@@ -55,7 +55,7 @@ if (isset($_POST['submit']))
     if (check_admin($mysqli))
       $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = ".$_POST['reservierung']." LIMIT 1;";
     else
-      $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = ".$_POST['reservierung']." AND `userid` = '".$_SESSION['user_id']."' AND `bis` > '$curdate' LIMIT 1;";
+      $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = ".$_POST['reservierung']." AND `user_id` = '".$_SESSION['user_id']."' AND `bis` > '$curdate' LIMIT 1;";
 
     $res = $mysqli->query($query);
 
@@ -72,9 +72,9 @@ if (isset($_POST['submit']))
     // find again all valid reservation.
     // array_diff will find occurance not found in the pre.
     
-    $res2 = $mysqli->query("SELECT `fliegerid` from `reservationen` WHERE `id` = ".$_POST['reservierung'].";");
+    $res2 = $mysqli->query("SELECT `flieger_id` from `reservationen` WHERE `id` = ".$_POST['reservierung'].";");
     $obj2 = $res2->fetch_object();
-    $flieger_id = $obj2->fliegerid;
+    $flieger_id = $obj2->flieger_id;
 
     // vor den loeschungen die gueltigen speichern
     $valid_0_pre = get_valid_reserv($mysqli, $flieger_id);
@@ -158,7 +158,7 @@ if (isset($_POST['submit']))
         $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
         delete_reservation($mysqli, $id_tmp, $begruendung, $_SESSION['user_id']);
 
-        bei_geloescht_email($mysqli, "gelöscht", $obj->userid, $obj->fliegerid, 
+        bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flieger_id, 
                             mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
       }
       // Anfang kuerzen
@@ -198,13 +198,13 @@ if (isset($_POST['submit']))
         $query = "INSERT INTO `calmarws_test`.`reservationen` (
         `id` ,
         `timestamp` ,
-        `userid` ,
-        `fliegerid` ,
+        `user_id` ,
+        `flieger_id` ,
         `von` ,
         `bis`
         )
         VALUES (
-        NULL , '".$obj->timestamp."', '".$obj->userid."', '".$obj->fliegerid."', '".$loeschen_datum_bis."', '".$obj->bis."'
+        NULL , '".$obj->timestamp."', '".$obj->user_id."', '".$obj->flieger_id."', '".$loeschen_datum_bis."', '".$obj->bis."'
         );";
 
         $mysqli->query($query);
@@ -235,7 +235,7 @@ if (isset($_POST['submit']))
       $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
       delete_reservation($mysqli, $id_tmp, $begruendung, $_SESSION['user_id']);
 
-      bei_geloescht_email($mysqli, "gelöscht", $obj->userid, $obj->fliegerid, 
+      bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flieger_id, 
                           mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
     }
     //
@@ -311,7 +311,7 @@ if (isset($_POST['submit']))
             continue;
 
           $res3 = $mysqli->query("SELECT * FROM `piloten`
-                                 JOIN `reservationen` ON `piloten`.`id` = `reservationen`.`userid`
+                                 JOIN `reservationen` ON `piloten`.`id` = `reservationen`.`user_id`
                                  WHERE `reservationen`.`id` =".$res_id." LIMIT 1;");
 
           $obj3 = $res3->fetch_object();
@@ -322,7 +322,7 @@ if (isset($_POST['submit']))
           $res_vin = $obj3->bis;
 
           $res_datum = mysql2chtimef($obj3->von, $obj3->bis, TRUE);
-          $res4 = $mysqli->query("SELECT * FROM `flieger` WHERE `id` = ".$obj3->fliegerid." ;");
+          $res4 = $mysqli->query("SELECT * FROM `flieger` WHERE `id` = ".$obj3->flieger_id." ;");
           $obj4 = $res4->fetch_object();
           $flieger = $obj4->flieger;
           $headers = "From: noreply@mfgc.ch";
@@ -340,7 +340,7 @@ if (isset($_POST['submit']))
     $monat = ""; if (isset($_POST['monat'])) $monat = $_POST['monat']; 
     $jahr = ""; if (isset($_POST['jahr'])) $jahr = $_POST['jahr']; 
 
-    //TODO woher soll post'fliegerid is da wenn von res_neu.php oder?
+    //TODO woher soll post'flieger_id is da wenn von res_neu.php oder?
     if (isset($_POST['backto'], $_POST['flieger_id']) && $_POST['backto'] == "res_neu.php")
     {
        header("Location: /reservationen/res_neu.php?tag=$tag&monat=$monat&jahr=$jahr&flieger_id=".$_POST['flieger_id']);

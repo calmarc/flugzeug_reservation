@@ -27,14 +27,14 @@ include_once('includes/usermenu.php');
 echo "<h1>$h1</h1>";
 
 $query = "SELECT * FROM `reservationen` 
-          LEFT JOIN `piloten` ON `piloten`.`id` = `reservationen`.`userid`
+          LEFT JOIN `piloten` ON `piloten`.`id` = `reservationen`.`user_id`
           WHERE `reservationen`.`id` = $reservierung
           LIMIT 1";
 
 $res = $mysqli->query($query);
 $obj = $res->fetch_object();
 
-$flugzeug = $obj->fliegerid;
+$flugzeug = $obj->flieger_id;
 $res2 = $mysqli->query("SELECT `flieger` FROM `flieger` where `id` = $flugzeug;");
 $obj2 = $res2->fetch_object();
 $flugzeug = $obj2->flieger;
@@ -44,7 +44,7 @@ $flugzeug = $obj2->flieger;
       <table class="vtable">
         <tr class="trblank">
           <td><b>Pilot:</b></td>
-          <td><?php echo "[".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."] ".$obj->name; ?></td>
+          <td><?php echo "[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] ".$obj->name; ?></td>
         </tr>
         <?php if ($obj->telefon != "") {?>
         <tr class="trblank">

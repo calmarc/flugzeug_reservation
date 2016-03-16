@@ -70,7 +70,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
 
   // NUR ein halbes jahr zurueck gucken. hats ueberhaupt reservationen?
   // sonst Zeit markieren als $von_extrem
-  $query = "SELECT `von` FROM `reservationen` WHERE `fliegerid` = '$flieger_id' AND `von` > '$date_xmonth_back'  ORDER BY `von` ASC LIMIT 1;";
+  $query = "SELECT `von` FROM `reservationen` WHERE `flieger_id` = '$flieger_id' AND `von` > '$date_xmonth_back'  ORDER BY `von` ASC LIMIT 1;";
   if ($res = $mysqli->query($query))
   {
     if ($res->num_rows > 0)
@@ -84,7 +84,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
 
   // die max-zukunfstigste (bis)-datum gucken
   // zeit markieren ($bis_extrem)
-  $query = "SELECT `bis` FROM `reservationen` WHERE `fliegerid` = '$flieger_id' ORDER BY `bis` DESC LIMIT 1;";
+  $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '$flieger_id' ORDER BY `bis` DESC LIMIT 1;";
   if ($res = $mysqli->query($query))
   {
     if ($res->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
@@ -113,7 +113,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
   $print_number_txt = ""; // at the end for highest z-index
 
   // alle hohlen
-  $query = "SELECT * FROM `reservationen` WHERE `fliegerid` = '$flieger_id' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
+  $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '$flieger_id' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
   $res_tang = $mysqli->query($query);
 
   // 1. order(ed) them by timestamp
@@ -214,13 +214,13 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
         echo '<rect x="'.$tabs[$print_first].'%" y="'.$yoffset.'" width="'.$width.'%" height="20" style="fill: '.$boxcol[$level].'; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
 
 
-        $query = "SELECT * from `piloten` where `id` = '".$obj_tang->userid."';";
+        $query = "SELECT * from `piloten` where `id` = '".$obj_tang->user_id."';";
         if ($res_id = $mysqli->query($query))
         {
           if ($res_id->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
           {
             $obj_id = $res_id->fetch_object();
-            $t_id = str_pad($obj_id->pilotid, 3, "0", STR_PAD_LEFT);
+            $t_id = str_pad($obj_id->pilot_id, 3, "0", STR_PAD_LEFT);
           }
           else
             continue;
@@ -228,7 +228,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
 
 
         $showlink = FALSE;
-        if (strtotime($obj_tang->bis) > $rounded_stamp && $obj_tang->userid == $_SESSION['user_id'])
+        if (strtotime($obj_tang->bis) > $rounded_stamp && $obj_tang->user_id == $_SESSION['user_id'])
           $showlink = TRUE;
 
         $txtcolor = $textcol[$level];
@@ -245,7 +245,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
           }
 
           $tmptxt = "";
-          if ($obj_tang->userid == $_SESSION['user_id']) // user
+          if ($obj_tang->user_id == $_SESSION['user_id']) // user
           {
             if ($showlink)
             {

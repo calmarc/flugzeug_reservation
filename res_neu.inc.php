@@ -66,8 +66,8 @@ if (isset($_POST['submit']))
   if ($error_msg == ""){
 
     $query = "INSERT INTO `calmarws_test`.`reservationen` 
-      ( `id` , `timestamp` , `userid` , `fliegerid` , `von` , `bis`) VALUES 
-      ( NULL , CURRENT_TIMESTAMP , '$userid', '$flieger_id', FROM_UNIXTIME($vonstamp), FROM_UNIXTIME($bisstamp));";
+      ( `id` , `timestamp` , `user_id` , `flieger_id` , `von` , `bis`) VALUES 
+      ( NULL , CURRENT_TIMESTAMP , '$user_id', '$flieger_id', FROM_UNIXTIME($vonstamp), FROM_UNIXTIME($bisstamp));";
 
     $mysqli->query($query);
 

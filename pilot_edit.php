@@ -65,7 +65,7 @@ echo "
     <div class='center'>
     <table class='vtable'>
       <tr>
-        <td><b>Pilot-ID:</b></td><td><input type='text' name='pilotid' value='".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."'></td></tr>
+        <td><b>Pilot-ID:</b></td><td><input type='text' name='pilot_id' value='".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."'></td></tr>
       <tr>
         <td><b>Name:</b></td><td><input type='text' name='name' value='".$obj->name."'></td>
       </tr>
@@ -128,10 +128,10 @@ echo "  </select>
 
       <hr style="margin: 52px 10px 84px 10px;" />
 
-      <form action='pilot_edit.php' method='post' onsubmit="return confirm('Wirklich Pilot-ID [<?php echo $obj->pilotid; ?>] löschen?');">
-      <input type="hidden" name="pilotid" value="<?php echo $obj->pilotid; ?>" />
+      <form action='pilot_edit.php' method='post' onsubmit="return confirm('Wirklich Pilot-ID [<?php echo $obj->pilot_id; ?>] löschen?');">
+      <input type="hidden" name="pilot_id" value="<?php echo $obj->pilot_id; ?>" />
         <div class="center">
-          <p><b>Pilot: [<?php echo str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."] ".$obj->name; ?></b></p>
+          <p><b>Pilot: [<?php echo str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] ".$obj->name; ?></b></p>
           <p><input class="sub_loeschen" type='submit' name='loeschen' value='LÖSCHEN' /></p>
         </div>
       </form>

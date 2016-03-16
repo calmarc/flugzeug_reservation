@@ -5,8 +5,8 @@ include_once '../includes/functions.php';
 
 sec_session_start(); // Our custom secure way of starting a PHP session.
 
-if (isset($_POST['pilotid'], $_POST['password'])) {
-    $pilotid = $_POST['pilotid'];
+if (isset($_POST['pilot_id'], $_POST['password'])) {
+    $pilot_id = $_POST['pilot_id'];
     $password = hash('sha512', $_POST['password']);
 
 
@@ -20,7 +20,7 @@ if (isset($_POST['pilotid'], $_POST['password'])) {
       }
     }
 
-    if (login($pilotid, $password, $mysqli) == true) {
+    if (login($pilot_id, $password, $mysqli) == true) {
         // Login success 
       
         // EMAILEN WO NOETIG
@@ -29,7 +29,7 @@ if (isset($_POST['pilotid'], $_POST['password'])) {
         $jetzt = date('Y-m-d', time());
         date_default_timezone_set('UTC');
 
-        $query= "SELECT `name`, `id`, `pilotid`, `checkflug`, `email_gesch` FROM `piloten`;";
+        $query= "SELECT `name`, `id`, `pilot_id`, `checkflug`, `email_gesch` FROM `piloten`;";
         $res = $mysqli->query($query); 
 
         while ($obj = $res->fetch_object())
@@ -40,7 +40,7 @@ if (isset($_POST['pilotid'], $_POST['password'])) {
             $res2 = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'bei_gesperrt';");
             $obj2 = $res2->fetch_object();
             $to = $obj2->email;
-            $subject = "Checkflug ueberfaellig: '".$obj->name."' [".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."]";
+            $subject = "Checkflug ueberfaellig: '".$obj->name."' [".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."]";
 			$txt = $subject;
 			$headers = "From: noreply@mfgc.ch";
 

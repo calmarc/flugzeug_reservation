@@ -2,11 +2,11 @@
 
 if (isset($_POST['loeschen']))
 {
-  $pilotid = $_POST['pilotid'];
+  $pilot_id = $_POST['pilot_id'];
 
-  if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`piloten` WHERE `piloten`.`pilotid` = ?;"))
+  if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`piloten` WHERE `piloten`.`pilot_id` = ?;"))
   {
-    $stmt->bind_param('i', $pilotid);
+    $stmt->bind_param('i', $pilot_id);
     if (!$stmt->execute()) 
     {
         header('Location: /reservationen/login/error.php?err=Registration failure: DELETE');
@@ -16,7 +16,7 @@ if (isset($_POST['loeschen']))
 
   // man hat sich selber geloesch.. delete $_SESSION (ausloggen)
   
-  if (intval($_SESSION['pilotid']) ==  intval($pilotid)) {
+  if (intval($_SESSION['pilot_id']) ==  intval($pilot_id)) {
     header("Location: /reservationen/login/logout.php");
     exit;
   }
@@ -31,7 +31,7 @@ if (isset($_POST['loeschen']))
 if (isset($_POST['updaten']))
 {
   $id = intval($_POST['id']);
-  $pilotid = intval($_POST['pilotid']);
+  $pilot_id = intval($_POST['pilot_id']);
   $name = trim($_POST['name']);
   $natel = trim($_POST['natel']);
   $telefon = trim($_POST['telefon']);
@@ -91,8 +91,8 @@ if (isset($_POST['updaten']))
   }
 
   // UPDATE USER DATA
-  $query = "UPDATE `calmarws_test`.`piloten` SET `pilotid` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ?, `checkflug` = ?, `gesperrt` = ? WHERE `piloten`.`id` = ?; ";
-  mysqli_prepare_execute($mysqli, $query, 'isissssii', array ($pilotid, $email, $admin_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $id));
+  $query = "UPDATE `calmarws_test`.`piloten` SET `pilot_id` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ?, `checkflug` = ?, `gesperrt` = ? WHERE `piloten`.`id` = ?; ";
+  mysqli_prepare_execute($mysqli, $query, 'isissssii', array ($pilot_id, $email, $admin_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $id));
 
   header("Location: pilot_admin.php");
   exit;

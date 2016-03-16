@@ -35,7 +35,7 @@ if (isset($_GET['error']))
             <table class="formular_eingabe" style="width: 100%;">
               <tr>
                 <td><b>Pilot-ID:</b></td>
-                <td ><input required="required" type="number"  min="1" max="999" name="pilotid" /></td>
+                <td ><input required="required" type="number"  min="1" max="999" name="pilot_id" /></td>
               </tr>
               <tr>
                 <td><b>Passwort:</b></td>

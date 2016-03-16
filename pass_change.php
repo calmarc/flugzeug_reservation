@@ -10,7 +10,7 @@ sec_session_start();
 
 if (login_check($mysqli) == FALSE){ header("Location: /reservationen/login/index.php"); exit; }
 
-// eigentlich ist die pilotid in der Session
+// eigentlich ist die pilot_id in der Session
 $id = $_SESSION['user_id'];
 
 if (isset($_POST['submit']))
@@ -81,7 +81,7 @@ include_once('includes/usermenu.php');
   }
   ?>
     <form action="pass_change.php" method="post" name="login_form"> 			
-    <input type="hidden" name="pilotid" value="">
+    <input type="hidden" name="pilot_id" value="">
       <table class="vtable" style="width: 100%;">
           <tr>
               <td><b>Neues Passwort:</b></td>

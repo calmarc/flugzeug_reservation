@@ -18,7 +18,7 @@ if (isset($_GET['pilot_id']))
 
 $where_pilot = "";
 if ($_SESSION['res_sort_pilot'] != "")
-  $where_pilot = "`mem1`.`pilotid` = ".intval($_SESSION['res_sort_pilot']);
+  $where_pilot = "`mem1`.`pilot_id` = ".intval($_SESSION['res_sort_pilot']);
 
 $t_old = $_SESSION['res_sort_by'];
 if (isset($_GET['sort']) && $_GET['sort'] != '') $_SESSION['res_sort_by'] = $_GET['sort'];
@@ -74,15 +74,15 @@ include_once('includes/usermenu.php');
           <form style="display: inline-block;" action="res_momentan.php" method='get'>
               <select  onchange='this.form.submit()' style="width: 16em;" name = "pilot_id">
 <?php
-$res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilotid`;");
+$res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_id`;");
 
 echo '<option value="">alle Piloten</option>';
 while ($obj = $res->fetch_object())
 {
   $selected = "";
-  if ($obj->pilotid == $_SESSION['res_sort_pilot'])
+  if ($obj->pilot_id == $_SESSION['res_sort_pilot'])
     $selected = 'selected="selected"';
-  echo '<option '.$selected.' value="'.$obj->pilotid.'">['.str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT).'] '.$obj->name.'</option>';
+  echo '<option '.$selected.' value="'.$obj->pilot_id.'">['.str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT).'] '.$obj->name.'</option>';
 }
 ?>
               </select>
@@ -101,7 +101,7 @@ while ($obj = $res->fetch_object())
           <table class='vertical_table'>
           <tr>
           <th><a href="res_momentan.php?sort=timestamp"><b>Am</b></a></th>
-            <th><a href="res_momentan.php?sort=pilotid"><b>Pilot</b></a></th>
+            <th><a href="res_momentan.php?sort=pilot_id"><b>Pilot</b></a></th>
             <th><a href="res_momentan.php?sort=flieger"><b>Flieger</b></a></th>
             <th><a href="res_momentan.php?sort=von"><b>Datum</b></a></th>
           </tr>
@@ -111,13 +111,13 @@ while ($obj = $res->fetch_object())
 $query = " SELECT 
   `reservationen`.`timestamp` AS 'timestamp',
   `mem1`.`name` AS 'pilot', 
-  `mem1`.`pilotid` AS 'pilotid',
+  `mem1`.`pilot_id` AS 'pilot_id',
   `flieger`.`flieger` AS 'flieger',
   `reservationen`.`von` AS 'von',
   `reservationen`.`bis` AS 'bis'
       FROM `reservationen`
-          LEFT OUTER JOIN `piloten` AS `mem1` ON `reservationen`.`userid` = `mem1`.`id`
-          LEFT OUTER JOIN `flieger` AS `flieger` ON `reservationen`.`fliegerid` = `flieger`.`id`
+          LEFT OUTER JOIN `piloten` AS `mem1` ON `reservationen`.`user_id` = `mem1`.`id`
+          LEFT OUTER JOIN `flieger` AS `flieger` ON `reservationen`.`flieger_id` = `flieger`.`id`
    $where_txt $order_by_txt LIMIT 150;";
 
 $res = $mysqli->query($query);
@@ -130,14 +130,14 @@ while ($obj = $res->fetch_object())
   $tmp = explode("-", $tag);
   $gel_datum = $tmp[2].'.'.$tmp[1].'.'.$tmp[0];
 
-  if ($obj->loescher == $obj->pilot)
-    $loescher = "<span style='color: #999999'>".$obj->loescher."</span>";
+  if ($obj->loescher_id == $obj->pilot)
+    $loescher_id = "<span style='color: #999999'>".$obj->loescher_id."</span>";
   else
-    $loescher = $obj->loescher;
+    $loescher_id = $obj->loescher_id;
 
   echo "\n<tr>
            <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>$gel_datum</td>
-           <td>[".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."] ".$obj->pilot."</td>
+           <td>[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] ".$obj->pilot."</td>
            <td>$obj->flieger</td>
            <td>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>
         </tr>";

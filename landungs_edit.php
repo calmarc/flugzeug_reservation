@@ -58,7 +58,7 @@ list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
           <table class='vtable two_standard'>
             <tr class="trblank">
               <td><b>Pilot</b></td>
-              <td><b>[<?php echo str_pad($_SESSION['pilotid'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
+              <td><b>[<?php echo str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
             </tr>
             <tr class="trblank">
               <td><b>Flieger</b></td>

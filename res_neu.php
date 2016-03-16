@@ -17,7 +17,7 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
 // braucht man auch ganz unten
-$userid = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id'];
 
 include_once('res_neu.inc.php');
 
@@ -82,7 +82,7 @@ if ($bis_minute == "")
       <table class='vtable'>
         <tr class="trblank">
           <td><b>Pilot:</b></td>
-          <td><b>[<?php echo str_pad($_SESSION['pilotid'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
+          <td><b>[<?php echo str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
         </tr>
         <tr class="trblank">
           <td><b>Flugzeug:</b></td>
@@ -145,7 +145,7 @@ if ($bis_minute == "")
     <br />
     <div class='center'>
       <h1 class="hide_on_print">Reservationen <a href="javascript:window.print()"><img alt="Ausdrucken" src="/reservationen/bilder/print-out.png" /></a></h1>
-      <h1 class="only_on_print">Kommende MFGC Reservationen<br />von: <?php echo "[".str_pad($_SESSION['pilotid'], 3, "0", STR_PAD_LEFT)."] ".$_SESSION['name']; ?><br />&nbsp; &nbsp;</h1>
+      <h1 class="only_on_print">Kommende MFGC Reservationen<br />von: <?php echo "[".str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT)."] ".$_SESSION['name']; ?><br />&nbsp; &nbsp;</h1>
     </div>
 
     <div class='center'>
@@ -173,13 +173,13 @@ while ($obj = $res->fetch_object())
   $x++;
 }
 
-$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`fliegerid` FROM `reservationen` LEFT OUTER JOIN `flieger` ON `flieger`.`id` = `reservationen`.`fliegerid` WHERE `userid` = $userid AND `bis` >= '$date' ORDER BY `von` DESC;";
+$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`flieger_id` FROM `reservationen` LEFT OUTER JOIN `flieger` ON `flieger`.`id` = `reservationen`.`flieger_id` WHERE `user_id` = $user_id AND `bis` >= '$date' ORDER BY `von` DESC;";
 $res = $mysqli->query($query); 
 
 while ($obj = $res->fetch_object())
 {
   $yellow = '';
-  if ( ! in_array(strval($obj->id), $valid_res[$obj->fliegerid - 1]))
+  if ( ! in_array(strval($obj->id), $valid_res[$obj->flieger_id - 1]))
     $yellow = 'style="background-color: #ffff99; color: #ff6600 !important;"';
 
   $datum = mysql2chtimef($obj->von, $obj->bis, FALSE);
@@ -194,7 +194,7 @@ while ($obj = $res->fetch_object())
         </tr>';
 }
 
-$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`fliegerid` FROM `reservationen` LEFT OUTER JOIN `flieger` ON `flieger`.`id` = `reservationen`.`fliegerid` WHERE `userid` = $userid AND `bis` < '$date' ORDER BY `von` DESC LIMIT 5;";
+$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`flieger_id` FROM `reservationen` LEFT OUTER JOIN `flieger` ON `flieger`.`id` = `reservationen`.`flieger_id` WHERE `user_id` = $user_id AND `bis` < '$date' ORDER BY `von` DESC LIMIT 5;";
 $res = $mysqli->query($query); 
 
 echo '<tr><td style="background-color: #99ff99;"></td><td style="background-color: #99ff99; text-align: left;" colspan="2">Vergangene:</td></tr>';

@@ -2,10 +2,10 @@
 
 $error_msg = "";
 
-if (isset($_POST['pilotid'], $_POST['password'])) {
+if (isset($_POST['pilot_id'], $_POST['password'])) {
 
   // Sanitize and validate the data passed in
-  $pilotid = intval(trim($_POST['pilotid']));
+  $pilot_id = intval(trim($_POST['pilot_id']));
   $password = trim($_POST['password']);
 
   $name = ""; if (isset($_POST['name'])) $name = trim($_POST['name']);
@@ -20,18 +20,18 @@ if (isset($_POST['pilotid'], $_POST['password'])) {
         $error_msg .= '<p class="error">Die eingegebene Email ist nicht gültig</p>';
   }
 
-  $_SESSION['regpilotid'] = $pilotid;
+  $_SESSION['regpilotid'] = $pilot_id;
   $_SESSION['regname'] = $name;
   $_SESSION['regnatel'] = $natel;
   $_SESSION['regtel'] = $tel;
   $_SESSION['regemail'] = $email;
   $_SESSION['regadmin'] = $admin;
 
-  $prep_stmt = "SELECT id FROM piloten WHERE pilotid = ? LIMIT 1";
+  $prep_stmt = "SELECT id FROM piloten WHERE pilot_id = ? LIMIT 1";
   $stmt = $mysqli->prepare($prep_stmt);
   
   if ($stmt) {
-      $stmt->bind_param('i', $pilotid);
+      $stmt->bind_param('i', $pilot_id);
       $stmt->execute();
       $stmt->store_result();
       
@@ -58,8 +58,8 @@ if (isset($_POST['pilotid'], $_POST['password'])) {
       $password = hash('sha512', $password . $random_salt);
 
       // Insert the new user into the database 
-      if ($insert_stmt = $mysqli->prepare("INSERT INTO piloten (pilotid, email, password, salt, admin, name, telefon, natel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
-          $insert_stmt->bind_param('isssssss', $pilotid, $email, $password, $random_salt, $admin, $name, $tel, $natel);
+      if ($insert_stmt = $mysqli->prepare("INSERT INTO piloten (pilot_id, email, password, salt, admin, name, telefon, natel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+          $insert_stmt->bind_param('isssssss', $pilot_id, $email, $password, $random_salt, $admin, $name, $tel, $natel);
           // Execute the prepared query.
           if (! $insert_stmt->execute()) {
               header('Location: /reservationen/login/error.php?err=Registration failure: INSERT');

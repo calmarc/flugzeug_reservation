@@ -56,14 +56,14 @@ $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
           <td>
 <?php
 
-$res = $mysqli->query("SELECT * FROM `piloten` WHERE `admin` > 0 ORDER BY `pilotid` ASC;");
+$res = $mysqli->query("SELECT * FROM `piloten` WHERE `admin` > 0 ORDER BY `pilot_id` ASC;");
 echo '<select size="1" style="width: 15em;" name="verantwortlich">';
 while ($obj = $res->fetch_object())
 {
   $selected = "";
-  if ($_SESSION['user_id'] == $obj->pilotid)
+  if ($_SESSION['user_id'] == $obj->pilot_id)
     $selected = "selected='selected'";
-  echo "<option $selected value='".$obj->pilotid."'>".$obj->name."</option>";
+  echo "<option $selected value='".$obj->pilot_id."'>".$obj->name."</option>";
 }
 echo '</select>';
 
@@ -99,7 +99,7 @@ $query = "SELECT `service_eintraege`.`id`,
                  `piloten`.`name`,
                  `service_eintraege`.`zaehler_minute`,
                  `service_eintraege`.`datum`
-         FROM `service_eintraege` LEFT OUTER JOIN `piloten` ON `piloten`.`pilotid` = `service_eintraege`.`user_id` 
+         FROM `service_eintraege` LEFT OUTER JOIN `piloten` ON `piloten`.`pilot_id` = `service_eintraege`.`user_id` 
          WHERE `flieger_id` = '".$flieger_id."'  ORDER BY `zaehler_minute` DESC LIMIT 50;";
 
 $res = $mysqli->query($query);

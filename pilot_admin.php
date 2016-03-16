@@ -23,7 +23,7 @@ include_once('includes/usermenu.php');
       <div class="center">
         <h1>Piloten Übersicht</h1>
 <?php
-$query = "SELECT * FROM `piloten` ORDER BY `pilotid`;";
+$query = "SELECT * FROM `piloten` ORDER BY `pilot_id`;";
 $res = $mysqli->query($query); 
 ?>
           <table class='vertical_table'>
@@ -65,7 +65,7 @@ while ($obj = $res->fetch_object())
     
   echo "\n<tr>
            <td><a href='pilot_edit.php?id=".$obj->id."'><img alt='editieren' src='/reservationen/bilder/edit.png' /></a></td>
-           <td style='text-align: center;'>".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."</td>
+           <td style='text-align: center;'>".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."</td>
            <td>".$obj->name."</td>
            <td><span style='white-space: nowrap;'>".$obj->natel."</span></td>
            <td><span style='white-space: nowrap;'>".$obj->telefon."</span></td>

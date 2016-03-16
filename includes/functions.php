@@ -26,15 +26,15 @@ function sec_session_start() {
     session_regenerate_id();    // regenerated the session, delete the old one. 
 }
 
-function login($pilotid, $password, $mysqli) {
+function login($pilot_id, $password, $mysqli) {
     // Using prepared statements means that SQL injection is not possible. 
-    if ($stmt = $mysqli->prepare("SELECT id, pilotid, password, salt FROM piloten WHERE pilotid = ? LIMIT 1")) {
-        $stmt->bind_param('s', $pilotid);  // Bind "$email" to parameter.
+    if ($stmt = $mysqli->prepare("SELECT id, pilot_id, password, salt FROM piloten WHERE pilot_id = ? LIMIT 1")) {
+        $stmt->bind_param('s', $pilot_id);  // Bind "$email" to parameter.
         $stmt->execute();    // Execute the prepared query.
         $stmt->store_result();
 
         // get variables from result.
-        $stmt->bind_result($user_id, $pilotid, $db_password, $salt);
+        $stmt->bind_result($user_id, $pilot_id, $db_password, $salt);
         $stmt->fetch();
 
         $password = hash('sha512', $password . $salt);
@@ -56,9 +56,9 @@ function login($pilotid, $password, $mysqli) {
                 $_SESSION['user_id'] = $user_id;
 
                 // XSS protection as we might print this value
-                $pilotid = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $pilotid);
+                $pilot_id = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $pilot_id);
 
-                $_SESSION['pilotid'] = $pilotid;
+                $_SESSION['pilot_id'] = $pilot_id;
                 $_SESSION['login_string'] = hash('sha512', $password . $user_browser);
 
                 // Login successful. 
@@ -121,10 +121,10 @@ function checkbrute($mysqli) {
 
 function login_check($mysqli) {
     // Check if all session variables are set 
-    if (isset($_SESSION['user_id'], $_SESSION['pilotid'], $_SESSION['login_string'])) {
+    if (isset($_SESSION['user_id'], $_SESSION['pilot_id'], $_SESSION['login_string'])) {
         $user_id = $_SESSION['user_id'];
         $login_string = $_SESSION['login_string'];
-        $pilotid = $_SESSION['pilotid'];
+        $pilot_id = $_SESSION['pilot_id'];
 
         // Get the user-agent string of the user.
         $user_browser = $_SERVER['HTTP_USER_AGENT'];
@@ -307,7 +307,7 @@ function remove_zombies($mysqli)
     // TODO: auf ein jahr reduzieren in der vergangenheit...
     //
     // zurueckreichenste punkt allers reservierungen (ganz in der vergangenheit)
-    $query = "SELECT `von` FROM `reservationen` WHERE `fliegerid` = '".$obj_f->id."' ORDER BY `von` ASC LIMIT 1;";
+    $query = "SELECT `von` FROM `reservationen` WHERE `flieger_id` = '".$obj_f->id."' ORDER BY `von` ASC LIMIT 1;";
     if ($res = $mysqli->query($query))
     {
       if ($res->num_rows > 0)
@@ -321,7 +321,7 @@ function remove_zombies($mysqli)
       
     // zukuenfstigste punkt der reservierungen (ganz in der zukunft)
     //
-    $query = "SELECT `bis` FROM `reservationen` WHERE `fliegerid` = '".$obj_f->id."' ORDER BY `bis` DESC LIMIT 1;";
+    $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '".$obj_f->id."' ORDER BY `bis` DESC LIMIT 1;";
     if ($res = $mysqli->query($query))
     {
       if ($res->num_rows > 0)
@@ -333,8 +333,6 @@ function remove_zombies($mysqli)
         continue;
     }
 
-
-    // TODO: only 3 or 4 allowed - limit on buchen
     // it.: if booking[level][hour]=TRUE <- reserved
     $bookings = array(array(), array(), array(), array(), array());
     
@@ -351,7 +349,7 @@ function remove_zombies($mysqli)
     $delete_id = array();
 
     // jetzt alle reservierungen hohlen
-    $query = "SELECT * FROM `reservationen` WHERE `fliegerid` = '".$obj_f->id."' AND ( `bis` > '$von_extrem' AND `von` < '$bis_extrem') ORDER BY `timestamp` ASC;";
+    $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '".$obj_f->id."' AND ( `bis` > '$von_extrem' AND `von` < '$bis_extrem') ORDER BY `timestamp` ASC;";
 
     $res_tang = $mysqli->query($query);
     while($obj_tang = $res_tang->fetch_object())
@@ -396,8 +394,8 @@ function remove_zombies($mysqli)
       //TODO: mark them as zombies... don't delelte.. for recovery reason (false //time etc)
       
       // make copy into reser_zombies
-      $query = "INSERT INTO `reser_zombies` (`timestamp`, `userid`, `fliegerid`, `von`, `bis`)
-        SELECT `timestamp`, `userid`, `fliegerid`, `von`, `bis` FROM `reservationen` WHERE `id` = $di AND `von` < '$now_string';";
+      $query = "INSERT INTO `reser_zombies` (`timestamp`, `user_id`, `flieger_id`, `von`, `bis`)
+        SELECT `timestamp`, `user_id`, `flieger_id`, `von`, `bis` FROM `reservationen` WHERE `id` = $di AND `von` < '$now_string';";
       $mysqli->query($query);
 
       if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`reservationen` WHERE `reservationen`.`id` = ? AND `von` < ?;"))
@@ -423,7 +421,7 @@ function check_level($mysqli, $flieger_id, $von_date, $bis_date)
 
   // NUR ein halbes jahr zurueck gucken. hats ueberhaupt reservationen?
   // sonst Zeit markieren als $von_extrem
-  $query = "SELECT `von` FROM `reservationen` WHERE `fliegerid` = '".$flieger_id."' AND `von` > '$date_xmonth_back'  ORDER BY `von` ASC LIMIT 1;";
+  $query = "SELECT `von` FROM `reservationen` WHERE `flieger_id` = '".$flieger_id."' AND `von` > '$date_xmonth_back'  ORDER BY `von` ASC LIMIT 1;";
 
   if ($res = $mysqli->query($query))
   {
@@ -440,7 +438,7 @@ function check_level($mysqli, $flieger_id, $von_date, $bis_date)
 
   // die max-zukunfstigste (bis)-datum gucken
   // zeit markieren ($bis_extrem)
-  $query = "SELECT `bis` FROM `reservationen` WHERE `fliegerid` = '".$flieger_id."' ORDER BY `bis` DESC LIMIT 1;";
+  $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '".$flieger_id."' ORDER BY `bis` DESC LIMIT 1;";
   if ($res = $mysqli->query($query))
   {
     if ($res->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
@@ -466,7 +464,7 @@ function check_level($mysqli, $flieger_id, $von_date, $bis_date)
       $bookings[$x][$i] = FALSE;
 
   // alle hohlen
-  $query = "SELECT * FROM `reservationen` WHERE `fliegerid` = '".$flieger_id."' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
+  $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '".$flieger_id."' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
   $res_tang = $mysqli->query($query);
 
   while($obj_tang = $res_tang->fetch_object())
@@ -538,7 +536,7 @@ function get_valid_reserv($mysqli, $flieger_id)
 
   // NUR ein halbes jahr zurueck gucken. hats ueberhaupt reservationen?
   // sonst Zeit markieren als $von_extrem
-  $query = "SELECT `von` FROM `reservationen` WHERE `fliegerid` = '".$flieger_id."' AND `von` > '$date_xmonth_back'  ORDER BY `von` ASC LIMIT 1;";
+  $query = "SELECT `von` FROM `reservationen` WHERE `flieger_id` = '".$flieger_id."' AND `von` > '$date_xmonth_back'  ORDER BY `von` ASC LIMIT 1;";
 
   if ($res = $mysqli->query($query))
   {
@@ -553,7 +551,7 @@ function get_valid_reserv($mysqli, $flieger_id)
 
   // die max-zukunfstigste (bis)-datum gucken
   // zeit markieren ($bis_extrem)
-  $query = "SELECT `bis` FROM `reservationen` WHERE `fliegerid` = '".$flieger_id."' ORDER BY `bis` DESC LIMIT 1;";
+  $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '".$flieger_id."' ORDER BY `bis` DESC LIMIT 1;";
   if ($res = $mysqli->query($query))
   {
     if ($res->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
@@ -577,7 +575,7 @@ function get_valid_reserv($mysqli, $flieger_id)
       $bookings[$x][$i] = FALSE;
 
   // alle hohlen
-  $query = "SELECT * FROM `reservationen` WHERE `fliegerid` = '".$flieger_id."' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
+  $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '".$flieger_id."' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
   $res_tang = $mysqli->query($query);
   
   while($obj_tang = $res_tang->fetch_object())
@@ -720,15 +718,15 @@ function delete_reservation($mysqli, $id_tmp, $begruendung, $user_id)
   $query = "INSERT INTO `calmarws_test`.`reser_geloescht` (
   `id` ,
   `timestamp` ,
-  `userid` ,
-  `fliegerid` ,
+  `user_id` ,
+  `flieger_id` ,
   `von` ,
   `bis` ,
-  `loescher` ,
+  `loescher_id` ,
   `grund`
   )
   VALUES (
-  NULL , NULL, '".$obj->userid."', '".$obj->fliegerid."', '".$obj->von."', '".$obj->bis."', '".$user_id."', '".$begruendung."'
+  NULL , NULL, '".$obj->user_id."', '".$obj->flieger_id."', '".$obj->von."', '".$obj->bis."', '".$user_id."', '".$begruendung."'
   );";
 
   $mysqli->query($query);
@@ -751,17 +749,17 @@ function reser_getrimmt_eintrag($mysqli, $obj, $user_id, $begruendung, $loeschen
   $query = "INSERT INTO `calmarws_test`.`reser_getrimmt` (
   `id` ,
   `timestamp` ,
-  `userid` ,
-  `fliegerid` ,
+  `user_id` ,
+  `flieger_id` ,
   `von` ,
   `bis` ,
-  `loescher` ,
+  `loescher_id` ,
   `grund`,
   `getrimmt_von`,
   `getrimmt_bis`
   )
   VALUES (
-  NULL , NULL, '".$obj->userid."', '".$obj->fliegerid."', '".$obj->von."', '".$obj->bis."', '".$user_id."', '".$begruendung."', '".$loeschen_datum_von."', '".$loeschen_datum_bis."'
+  NULL , NULL, '".$obj->user_id."', '".$obj->flieger_id."', '".$obj->von."', '".$obj->bis."', '".$user_id."', '".$begruendung."', '".$loeschen_datum_von."', '".$loeschen_datum_bis."'
   );";
   $mysqli->query($query);
 }
@@ -775,7 +773,7 @@ function bei_geloescht_email($mysqli, $subject_hint, $pilot_id, $flieger_id, $ze
 
   $res = $mysqli->query("SELECT * from `piloten` WHERE `id` = $pilot_id;");
   $obj = $res->fetch_object();
-  $pilot = str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT). " (".$obj->name.")";
+  $pilot = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT). " (".$obj->name.")";
 
   $res = $mysqli->query("SELECT * from `flieger` WHERE `id` = $flieger_id;");
   $obj = $res->fetch_object();
