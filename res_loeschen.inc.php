@@ -164,30 +164,17 @@ if (isset($_POST['submit']))
       // Anfang kuerzen
       else if ($loeschen_datum_von <= $res_datum_von && $loeschen_datum_bis < $res_datum_bis)
       {
-        if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`reservationen` SET `von` = ? WHERE `reservationen`.`id` = ?;"))
-        {
-          $stmt->bind_param('si', $loeschen_datum_bis, $id_tmp);
-          if (!$stmt->execute()) 
-          {
-              header('Location: /reservationen/login/error.php?err=Registration failure: UPDATE');
-              exit;
-          }
-        }
+
+        $query = "UPDATE `calmarws_test`.`reservationen` SET `von` = ? WHERE `reservationen`.`id` = ?;";
+        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_bis, $id_tmp));
 
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
       }
       // Ende kuerzen
       else if ($loeschen_datum_von > $res_datum_von && $loeschen_datum_bis >= $res_datum_bis)
       {
-        if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;"))
-        {
-          $stmt->bind_param('si', $loeschen_datum_von, $id_tmp);
-          if (!$stmt->execute()) 
-          {
-              header('Location: /reservationen/login/error.php?err=Registration failure: UPDATE');
-              exit;
-          }
-        }
+        $query = "UPDATE `calmarws_test`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
+        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von, $id_tmp));
 
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
       }
@@ -210,15 +197,8 @@ if (isset($_POST['submit']))
         $mysqli->query($query);
 
         // update the initial one (bis ... to loeschen_von..)
-        if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;"))
-        {
-          $stmt->bind_param('si', $loeschen_datum_von, $id_tmp);
-          if (!$stmt->execute()) 
-          {
-              header('Location: /reservationen/login/error.php?err=Registration failure: UPDATE');
-              exit;
-          }
-        }
+        $query = "UPDATE `calmarws_test`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
+        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von, $id_tmp));
 
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
 
@@ -269,16 +249,9 @@ if (isset($_POST['submit']))
       }
 
 
-      if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;"))
-      {
-        $id_tmp = intval($_POST['reservierung']);
-        $stmt->bind_param('si', $new_end_date, $id_tmp);
-        if (!$stmt->execute()) 
-        {
-            header('Location: /reservationen/login/error.php?err=Registration failure: UPDATE');
-            exit;
-        }
-      }
+      $query = "UPDATE `calmarws_test`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
+      mysqli_prepare_execute($mysqli, $query, 'si', array ($new_end_date, $id_tmp));
+
       // get the trimmed stuff...
       if (date("G", $curstamp) > 21)
       {

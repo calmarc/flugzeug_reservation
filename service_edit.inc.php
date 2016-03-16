@@ -18,15 +18,8 @@ if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
 
   if (isset($_GET['action'], $_GET['service_id']) && $_GET['action'] == "del" && $_GET['service_id'] > 0)
   {
-	if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`service_eintraege` WHERE `service_eintraege`.`id` = ?;"))
-	{
-	  $stmt->bind_param('i', $_GET['service_id']);
-	  if (!$stmt->execute()) 
-	  {
-		header('Location: /reservationen/login/error.php?err=Registration failure: DELETE');
-		exit;
-	  }
-	}
+    $query = "DELETE FROM `calmarws_test`.`service_eintraege` WHERE `service_eintraege`.`id` = ?;";
+    mysqli_prepare_execute($mysqli, $query, 'i', array ($_GET['service_id']));
   }
 }
 else if (isset($_POST['submit']))

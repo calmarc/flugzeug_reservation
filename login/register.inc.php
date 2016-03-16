@@ -58,14 +58,9 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
       $password = hash('sha512', $password . $random_salt);
 
       // Insert the new user into the database 
-      if ($insert_stmt = $mysqli->prepare("INSERT INTO piloten (pilot_id, email, password, salt, admin, name, telefon, natel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
-          $insert_stmt->bind_param('isssssss', $pilot_id, $email, $password, $random_salt, $admin, $name, $tel, $natel);
-          // Execute the prepared query.
-          if (! $insert_stmt->execute()) {
-              header('Location: /reservationen/login/error.php?err=Registration failure: INSERT');
-              exit();
-          }
-      }
+      $query = "INSERT INTO piloten (pilot_id, email, password, salt, admin, name, telefon, natel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+      mysqli_prepare_execute($mysqli, $query, 'isssssss', array ($pilot_id, $email, $password, $random_salt, $admin, $name, $tel, $natel));
+
       header('Location: ../pilot_admin.php');
       exit();
   }

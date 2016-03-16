@@ -45,7 +45,7 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
 			$headers = "From: noreply@mfgc.ch";
 
             if (mail($to, $subject, $txt, $headers))
-              $mysqli->query("UPDATE `calmarws_test`.`piloten` SET `email_gesch` = '1' WHERE `piloten`.`id` = ".$obj->id." ;");
+              mysqli_prepare_execute($mysqli, "UPDATE `calmarws_test`.`piloten` SET `email_gesch` = '1' WHERE `piloten`.`id` = ?;", 'i', array ($obj->id));
           } 
         }
 

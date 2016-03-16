@@ -4,15 +4,8 @@ if (isset($_POST['loeschen']))
 {
   $pilot_id = $_POST['pilot_id'];
 
-  if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`piloten` WHERE `piloten`.`pilot_id` = ?;"))
-  {
-    $stmt->bind_param('i', $pilot_id);
-    if (!$stmt->execute()) 
-    {
-        header('Location: /reservationen/login/error.php?err=Registration failure: DELETE');
-        exit;
-    }
-  }
+  $query = "DELETE FROM `calmarws_test`.`piloten` WHERE `piloten`.`pilot_id` = ?;";
+  mysqli_prepare_execute($mysqli, $query, 'i', array ($pilot_id));
 
   // man hat sich selber geloesch.. delete $_SESSION (ausloggen)
   

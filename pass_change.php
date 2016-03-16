@@ -32,7 +32,8 @@ if (isset($_POST['submit']))
     $error_msg .= "<p>Passwörter stimmen nicht überrein</p>";
    
   // OK, eintragen
-  if ($error_msg == ""){
+  if ($error_msg == "")
+  {
 
     $query= "SELECT `salt` FROM `piloten` WHERE `id` = $id;";
     $res = $mysqli->query($query); 
@@ -41,16 +42,9 @@ if (isset($_POST['submit']))
     $password = hash('sha512', $password);
     $password = hash('sha512', $password . $obj->salt);
 
-    if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ? ;"))
-    {
-      $stmt->bind_param('si', $password, $id);
-      if (!$stmt->execute()) 
-      {
-          header('Location: /reservationen/login/error.php?err=Registration failure: UPDATE');
-          exit;
-      }
+    $query = "UPDATE `calmarws_test`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ? ;";
+    if (mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $id)))
       $msg = "<p style='color: green;'>Das Passwort wurde geändert</p>";
-    }
   }
 }
 

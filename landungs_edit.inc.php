@@ -50,15 +50,9 @@ $flieger_txt = $obj->flieger;
 
 if (isset($_POST['loeschen']))
 {
-  if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`zaehler_eintraege` WHERE `zaehler_eintraege`.`id` = ?"))
-  {
-    $stmt->bind_param('i', $zaehler_id);
-    if (!$stmt->execute()) 
-    {
-        header('Location: /reservationen/login/error.php?err=Registration failure: DELETE');
-        exit;
-    }
-  }
+  $query = "DELETE FROM `calmarws_test`.`zaehler_eintraege` WHERE `zaehler_eintraege`.`id` = ?";
+  mysqli_prepare_execute($mysqli, $query, 'i', array ($zaehler_id));
+
   header("Location: landungs_eintrag.php?flieger_id=$flieger_id"); 
   exit;
 }
@@ -77,17 +71,9 @@ else if (isset($_POST['edit']))
 
   $datum = "$jahr-$monat-$tag";
 
-  // UPDATE USER DATA
-  if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`zaehler_eintraege` SET `datum` = ?, `zaehler_minute` = ? WHERE `zaehler_eintraege`.`id` = ?;")) 
-  {
-    $stmt->bind_param('sii', $datum, $zaehler_minute, $zaehler_id);
+  $query = "UPDATE `calmarws_test`.`zaehler_eintraege` SET `datum` = ?, `zaehler_minute` = ? WHERE `zaehler_eintraege`.`id` = ?;";
+  mysqli_prepare_execute($mysqli, $query, 'sii', array ($datum, $zaehler_minute, $zaehler_id));
 
-    if (!$stmt->execute()) 
-    {
-        header('Location: /reservationen/login/error.php?err=Registration failure: UPDATE');
-        exit;
-    }
-  }
   header("Location: landungs_eintrag.php?flieger_id=$flieger_id"); 
   exit;
 }
