@@ -15,6 +15,9 @@
 * landungseintrage fuer admins.. mit pilotenliste (oder/und
   bei edit...
 
+* bei teiloeschung werte kontrollieren.. i.e bis muss
+  groesser sein als von etc.
+
 == MINOR ==
 
 * Wenn eine Buchung gelöscht wird solle ein Mail an andreas mathis amathis@deep.ch  und mich armin.beck@dsl.li
