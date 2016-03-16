@@ -128,13 +128,15 @@ for ($i = 0; $i <= 28;  $i++)
 $boxcol =   array('#33ccff', '#ffff99', '#ffee99', '#ffff99', '#ffee99', '#ff6666');
 $textcol =  array('#333333', '#333333', '#333333', '#333333', '#333333', '#333333');
 
+
+// winterzeit weg.. wenn man differenzen von datum berechnet
+// TODO.. gucken wo das ueberall effekt hat
+date_default_timezone_set('UTC');
+
 remove_zombies($mysqli);
 
 if ($_SESSION['show'] == 'monat')
 {
-  // winterzeit weg.. wenn man differenzen von datum berechnet
-  // TODO.. gucken wo das ueberall effekt hat
-  date_default_timezone_set('UTC');
   monatsansicht($mysqli, $w, $tabs, $boxcol, $textcol, $monat, $jahr, $flieger_id);
 }
 else
