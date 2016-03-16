@@ -10,6 +10,8 @@ include_once ('../includes/functions.php');
 sec_session_start();
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
+if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
+if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
 include_once 'register.inc.php';
 
@@ -29,7 +31,7 @@ if (!empty($error_msg)) {
         <div class="center">
           <form method="post" name="registration_form" action="register.php">
             <div class="center">
-              <table class="user_admin">
+              <table class="vtable">
                 <tr>
                    <td><b>Pilot-ID:</b></td> <td><input style="text-align: center;" required="required"
                   <?php if (isset($_SESSION['regpilotid'])) echo "value='".$_SESSION['regpilotid']."'"; ?> 

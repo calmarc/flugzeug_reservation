@@ -353,10 +353,10 @@ if (isset($_POST['submit']))
     $monat = ""; if (isset($_POST['monat'])) $monat = $_POST['monat']; 
     $jahr = ""; if (isset($_POST['jahr'])) $jahr = $_POST['jahr']; 
 
-    //TODO woher soll post'fliegerid is da wenn von reservieren.php oder?
-    if (isset($_POST['backto'], $_POST['flieger_id']) && $_POST['backto'] == "reservieren.php")
+    //TODO woher soll post'fliegerid is da wenn von res_neu.php oder?
+    if (isset($_POST['backto'], $_POST['flieger_id']) && $_POST['backto'] == "res_neu.php")
     {
-       header("Location: /reservationen/reservieren.php?tag=$tag&monat=$monat&jahr=$jahr&flieger_id=".$_POST['flieger_id']);
+       header("Location: /reservationen/res_neu.php?tag=$tag&monat=$monat&jahr=$jahr&flieger_id=".$_POST['flieger_id']);
     }
     else
        header("Location: index.php?tag=$tag&monat=$monat&jahr=$jahr");
@@ -415,7 +415,7 @@ $flugzeug = $obj2->flieger;
 
 ?>
     <div class="center">
-      <table class="user_admin">
+      <table class="vtable">
         <tr class="trblank">
           <td><b>Pilot:</b></td>
           <td><?php echo "[".str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT)."] ".$obj->name; ?></td>
@@ -508,7 +508,7 @@ if (! $show_2_datum)
 <?php  } ?>
 
 <div class="center">
-      <table class="user_admin">
+      <table class="vtable">
 <?php
 if ($show_2_datum)
 { ?>

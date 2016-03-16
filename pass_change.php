@@ -82,7 +82,7 @@ include_once('includes/usermenu.php');
   ?>
     <form action="pass_change.php" method="post" name="login_form"> 			
     <input type="hidden" name="pilotid" value="">
-      <table class="user_admin" style="width: 100%;">
+      <table class="vtable" style="width: 100%;">
           <tr>
               <td><b>Neues Passwort:</b></td>
               <td><input value="" required="required" type="password" name="password" /></td>

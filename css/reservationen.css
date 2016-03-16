@@ -139,16 +139,16 @@ table.vertical_table th { color: white; background-color: #336633; }
 table.vertical_table th a { color: white; text-decoration: underline; } 
 table.vertical_table td a { color: #000099; text-decoration: underline; } 
 
-table.user_admin { border-style: none; border-width: 0; border-collapse: collapse; }
-table.user_admin th { padding: 10px;}
-table.user_admin td { border-bottom: 1px solid #333333;border-right: 1px solid #333333; padding: 5px 12px 5px 16px; text-align: left; margin: 0px;}
-table.user_admin td:nth-child(1) { padding-left: 2em; text-align: right; background-color: #99ff99; color: black;}
-table.user_admin td:nth-child(1) { padding-left: 2em; text-align: right; background-color: #eeeeee; color: black;}
-table.user_admin td:nth-child(2) { text-align: left;}
+table.vtable { border-style: none; border-width: 0; border-collapse: collapse; }
+table.vtable th { padding: 10px;}
+table.vtable td { border-bottom: 1px solid #333333;border-right: 1px solid #333333; padding: 5px 12px 5px 16px; text-align: left; margin: 0px;}
+table.vtable td:nth-child(1) { padding-left: 2em; text-align: right; background-color: #99ff99; color: black;}
+table.vtable td:nth-child(1) { padding-left: 2em; text-align: right; background-color: #eeeeee; color: black;}
+table.vtable td:nth-child(2) { text-align: left;}
 
-table.user_admin tr:nth-child(even) { background-color: #ffffff; }
-table.user_admin tr:nth-child(odd) { background-color: #ffffff; }
-table.user_admin th { color: white; background-color: #555555; } 
+table.vtable tr:nth-child(even) { background-color: #ffffff; }
+table.vtable tr:nth-child(odd) { background-color: #ffffff; }
+table.vtable th { color: white; background-color: #555555; } 
 
 
 /*tr.trblank td:nth-child(1) { background-color: #99ff99; color: black; }*/

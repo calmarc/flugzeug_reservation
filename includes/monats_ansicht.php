@@ -373,7 +373,7 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
       if ($i % 2 == 0)
       {
         if ($color == 'gruen')
-          echo '<a xlink:href="reservieren.php?&amp;flieger_id='.$flieger_id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$day_counter.'&amp;stunde='.$t_std.'&amp;minute='.$t_min.'">';
+          echo '<a xlink:href="res_neu.php?&amp;flieger_id='.$flieger_id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$day_counter.'&amp;stunde='.$t_std.'&amp;minute='.$t_min.'">';
         echo '<rect x="'.$tabs[$i].'%" y="'.($yoffset).'" width="'.$w.'%" height="20" style="fill:url(#'.$color.'1); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
         if ($color == 'gruen')
           echo '</a>';
@@ -381,7 +381,7 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
       else
       {
         if ($color == 'gruen')
-          echo '<a xlink:href="reservieren.php?flieger_id='.$flieger_id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$day_counter.'&amp;stunde='.$t_std.'&amp;minute='.$t_min.'">';
+          echo '<a xlink:href="res_neu.php?flieger_id='.$flieger_id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$day_counter.'&amp;stunde='.$t_std.'&amp;minute='.$t_min.'">';
         echo '<rect x="'.$tabs[$i].'%" y="'.($yoffset).'" width="'.$w.'%" height="20" style="fill:url(#'.$color.'2); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
         if ($color == 'gruen')
           echo '</a>';

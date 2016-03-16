@@ -175,10 +175,10 @@ if ($bis_minute == "")
   $bis_minute = "0";
 
 ?>
-  <form action='reservieren.php' method='post'>
+  <form action='res_neu.php' method='post'>
 <?php echo $hidden; ?>
     <div class='center hide_on_print'>
-      <table class='user_admin'>
+      <table class='vtable'>
         <tr class="trblank">
           <td><b>Pilot:</b></td>
           <td><b>[<?php echo str_pad($_SESSION['pilotid'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>

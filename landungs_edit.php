@@ -121,7 +121,7 @@ if (isset($_GET['zaehler_id']) && intval($_GET['zaehler_id']) > 0)
   $zaehler_id = $_GET['zaehler_id'];
 }
 else {
-  echo "<h3>Keine gültgie Zahler-ID erhalten. Bitte <a href='user_admin.php'>wiederhohlen</a> oder an mac@calmar.ws melden</h3>";
+  echo "<h3>Keine gültgie Zahler-ID erhalten. Bitte <a href='pilot_admin.php'>wiederhohlen</a> oder an mac@calmar.ws melden</h3>";
   exit;
 }
 $query = "SELECT * FROM `zaehlereintraege` WHERE `id` = '$zaehler_id' LIMIT 1;";
@@ -145,7 +145,7 @@ list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
         <input type='hidden' name='zaehler_id' value='<?php echo $obj->id; ?>' />
         <input type="hidden" name="flieger_id" value="<?php echo $flieger_id; ?>" />
         <div class='center'>
-          <table class='user_admin two_standard'>
+          <table class='vtable two_standard'>
             <tr class="trblank">
               <td><b>Pilot</b></td>
               <td><b>[<?php echo str_pad($_SESSION['pilotid'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>

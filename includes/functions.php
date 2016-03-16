@@ -840,6 +840,50 @@ function print_html_to_body ($title, $special_meta)
 }
 
 
+function mysqli_prepare_execute ($mysqli, $query, $bind_string, $arr)
+{
+  if ($stmt = $mysqli->prepare($query))
+  {
+    $count_arr = count($arr);
+
+    if ($count_arr == 1)
+      $stmt->bind_param($bind_string, $arr[0]);
+    else if ($count_arr == 2)
+      $stmt->bind_param($bind_string, $arr[0], $arr[1]);
+    else if ($count_arr == 3)
+      $stmt->bind_param($bind_string, $arr[0], $arr[1], $arr[2]);
+    else if ($count_arr == 4)
+      $stmt->bind_param($bind_string, $arr[0], $arr[1], $arr[2], $arr[3]);
+    else if ($count_arr == 5)
+      $stmt->bind_param($bind_string, $arr[0], $arr[1], $arr[2], $arr[3], $arr[4]);
+    else if ($count_arr == 6)
+      $stmt->bind_param($bind_string, $arr[0], $arr[1], $arr[2], $arr[3], $arr[4], $arr[5]);
+    else if ($count_arr == 7)
+      $stmt->bind_param($bind_string, $arr[0], $arr[1], $arr[2], $arr[3], $arr[4], $arr[5], $arr[6]);
+    else if ($count_arr == 8)
+      $stmt->bind_param($bind_string, $arr[0], $arr[1], $arr[2], $arr[3], $arr[4], $arr[5], $arr[6], $arr[7]);
+    else if ($count_arr == 9)
+      $stmt->bind_param($bind_string, $arr[0], $arr[1], $arr[2], $arr[3], $arr[4], $arr[5], $arr[6], $arr[7], $arr[8]);
+    else if ($count_arr == 10)
+      $stmt->bind_param($bind_string, $arr[0], $arr[1], $arr[2], $arr[3], $arr[4], $arr[5], $arr[6], $arr[7], $arr[8], $arr[9]);
+    else if ($count_arr == 11)
+      $stmt->bind_param($bind_string, $arr[0], $arr[1], $arr[2], $arr[3], $arr[4], $arr[5], $arr[6], $arr[7], $arr[8], $arr[9], $arr[10]);
+    else if ($count_arr == 12)
+      $stmt->bind_param($bind_string, $arr[0], $arr[1], $arr[2], $arr[3], $arr[4], $arr[5], $arr[6], $arr[7], $arr[8], $arr[9], $arr[10], $arr[11]);
+
+    // Execute the prepared query.
+    if (!$stmt->execute()) 
+    {
+        header('Location: /reservationen/login/error.php?err=Registration failure: '.$query);
+        exit;
+    }
+  }
+  else
+  {
+      header('Location: /reservationen/login/error.php?err=Registration failure: prepare:'.mysqli_error($mysqli));
+      exit;
+  }
+}
 
 
 ?>

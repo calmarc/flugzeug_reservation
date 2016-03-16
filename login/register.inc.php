@@ -1,14 +1,5 @@
 <?php
 
-/* 
- * Copyright (C) 2013 peter
- * Copyright (C) 2016 calmar
- * See <http://www.gnu.org/licenses/>.
- */
-
-include_once '../includes/db_connect.php';
-include_once '../includes/psl-config.php'; // TODO: needed?
-
 $error_msg = "";
 
 if (isset($_POST['pilotid'], $_POST['password'])) {
@@ -75,7 +66,7 @@ if (isset($_POST['pilotid'], $_POST['password'])) {
               exit();
           }
       }
-      header('Location: ../user_admin.php');
+      header('Location: ../pilot_admin.php');
       exit();
   }
 }

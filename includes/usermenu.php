@@ -6,7 +6,7 @@
   $index_t = ""; 
   $index_m = ""; 
   $pass_change = "";
-  $user_admin = "";
+  $pilot_admin = "";
   $res_admin = "";
   $res_trimmed = "";
   $res_moment = "";
@@ -35,10 +35,10 @@
   }
   else if ($curr_file == "/reservationen/pass_change.php")
     $pass_change = $style;
-  else if ($curr_file == "/reservationen/user_admin.php")
-    $user_admin = $style;
-  else if ($curr_file == "/reservationen/user_edit.php")
-    $user_admin = $style;
+  else if ($curr_file == "/reservationen/pilot_admin.php")
+    $pilot_admin = $style;
+  else if ($curr_file == "/reservationen/pilot_edit.php")
+    $pilot_admin = $style;
   else if ($curr_file == "/reservationen/res_admin.php")
     $res_admin = $style;
   else if ($curr_file == "/reservationen/res_trimmed.php")
@@ -52,14 +52,14 @@
   $obj = $res->fetch_object();
   $admin = "";
   if ($obj->admin == TRUE && $obj->gesperrt == FALSE)
-    $admin = '<span style="white-space: nowrap;">[ <a '.$user_admin.' href="/reservationen/user_admin.php"><span style="color: #ff3333;">Piloten</span></a> | <a '.$res_moment.' href="/reservationen/res_momentan.php"><span style="color: #ff3333;">Reservationen</span></a> | <a '.$res_admin.' href="/reservationen/res_admin.php"><span style="color: #ff3333;">Gelöscht</span></a></span> <span style="white-space: nowrap;"> | <a '.$res_trimmed.' href="/reservationen/res_trimmed.php"><span style="color: #ff3333;">Teil-gelöscht</span></a> ]</span>';
+    $admin = '<span style="white-space: nowrap;">[ <a '.$pilot_admin.' href="/reservationen/pilot_admin.php"><span style="color: #ff3333;">Piloten</span></a> | <a '.$res_moment.' href="/reservationen/res_momentan.php"><span style="color: #ff3333;">Reservationen</span></a> | <a '.$res_admin.' href="/reservationen/res_admin.php"><span style="color: #ff3333;">Gelöscht</span></a></span> <span style="white-space: nowrap;"> | <a '.$res_trimmed.' href="/reservationen/res_trimmed.php"><span style="color: #ff3333;">Teil-gelöscht</span></a> ]</span>';
 
   $_SESSION['name'] = htmlentities($obj->name);
 
   $gesperrt = "";
   if ($obj->gesperrt == TRUE)
   {
-    $gesperrt = "<span style='color: red; font-weight: bold; background-color: yellow;'>(Flüge gesperrt. Bitte nachfragen!)</span>";
+    $gesperrt = "<span style='color: red; font-weight: bold; background-color: yellow;'>(Gesperrt - Vorstand kontaktieren!)</span>";
   }
 
 ?>

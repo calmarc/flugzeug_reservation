@@ -120,7 +120,7 @@ $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
   <form action='/reservationen/service_edit.php' method='post'>
 <?php echo $hidden; ?>
     <div class='center'>
-      <table class='user_admin'>
+      <table class='vtable'>
         <tr class="trblank">
           <td><b>Datum:</b></td>
           <td>
