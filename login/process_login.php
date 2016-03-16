@@ -29,7 +29,7 @@ if (isset($_POST['pilotid'], $_POST['password'])) {
         $jetzt = date('Y-m-d', time());
         date_default_timezone_set('UTC');
 
-        $query= "SELECT `name`, `id`, `pilotid`, `checkflug`, `email_gesch` FROM `members`;";
+        $query= "SELECT `name`, `id`, `pilotid`, `checkflug`, `email_gesch` FROM `piloten`;";
         $res = $mysqli->query($query); 
 
         while ($obj = $res->fetch_object())
@@ -45,7 +45,7 @@ if (isset($_POST['pilotid'], $_POST['password'])) {
 			$headers = "From: noreply@mfgc.ch";
 
             if (mail($to, $subject, $txt, $headers))
-              $mysqli->query("UPDATE `calmarws_test`.`members` SET `email_gesch` = '1' WHERE `members`.`id` = ".$obj->id." ;");
+              $mysqli->query("UPDATE `calmarws_test`.`piloten` SET `email_gesch` = '1' WHERE `piloten`.`id` = ".$obj->id." ;");
           } 
         }
 

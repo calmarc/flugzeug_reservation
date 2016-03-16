@@ -34,14 +34,14 @@ if (isset($_POST['submit']))
   // OK, eintragen
   if ($error_msg == ""){
 
-    $query= "SELECT `salt` FROM `members` WHERE `id` = $id;";
+    $query= "SELECT `salt` FROM `piloten` WHERE `id` = $id;";
     $res = $mysqli->query($query); 
     $obj = $res->fetch_object();
 
     $password = hash('sha512', $password);
     $password = hash('sha512', $password . $obj->salt);
 
-    if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`members` SET `password` = ? WHERE `members`.`id` = ? ;"))
+    if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ? ;"))
     {
       $stmt->bind_param('si', $password, $id);
       if (!$stmt->execute()) 

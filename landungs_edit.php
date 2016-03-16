@@ -34,7 +34,7 @@ else {
   echo "<h3>Keine gültgie Zahler-ID erhalten. Bitte <a href='pilot_admin.php'>wiederhohlen</a> oder an mac@calmar.ws melden</h3>";
   exit;
 }
-$query = "SELECT * FROM `zaehlereintraege` WHERE `id` = '$zaehler_id' LIMIT 1;";
+$query = "SELECT * FROM `zaehler_eintraege` WHERE `id` = '$zaehler_id' LIMIT 1;";
 $res = $mysqli->query($query); 
 
 if ($res->num_rows != 1)

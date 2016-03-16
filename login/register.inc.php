@@ -27,7 +27,7 @@ if (isset($_POST['pilotid'], $_POST['password'])) {
   $_SESSION['regemail'] = $email;
   $_SESSION['regadmin'] = $admin;
 
-  $prep_stmt = "SELECT id FROM members WHERE pilotid = ? LIMIT 1";
+  $prep_stmt = "SELECT id FROM piloten WHERE pilotid = ? LIMIT 1";
   $stmt = $mysqli->prepare($prep_stmt);
   
   if ($stmt) {
@@ -58,7 +58,7 @@ if (isset($_POST['pilotid'], $_POST['password'])) {
       $password = hash('sha512', $password . $random_salt);
 
       // Insert the new user into the database 
-      if ($insert_stmt = $mysqli->prepare("INSERT INTO members (pilotid, email, password, salt, admin, name, telefon, natel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+      if ($insert_stmt = $mysqli->prepare("INSERT INTO piloten (pilotid, email, password, salt, admin, name, telefon, natel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
           $insert_stmt->bind_param('isssssss', $pilotid, $email, $password, $random_salt, $admin, $name, $tel, $natel);
           // Execute the prepared query.
           if (! $insert_stmt->execute()) {

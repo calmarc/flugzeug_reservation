@@ -23,7 +23,7 @@ include_once('includes/usermenu.php');
       <div class="center">
         <h1>Piloten Übersicht</h1>
 <?php
-$query = "SELECT * FROM `members` ORDER BY `pilotid`;";
+$query = "SELECT * FROM `piloten` ORDER BY `pilotid`;";
 $res = $mysqli->query($query); 
 ?>
           <table class='vertical_table'>

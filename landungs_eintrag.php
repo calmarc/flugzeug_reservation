@@ -57,7 +57,7 @@ else if (isset($_POST['submit']))
   $z_max = -1;
 
   // geht nicht.. man muss auch zwischendurch etc.
-  //$query = "SELECT MAX(`zaehler_minute`) AS 'zaehler_max' FROM `zaehlereintraege` WHERE `flieger_id` = '$flieger_id';";
+  //$query = "SELECT MAX(`zaehler_minute`) AS 'zaehler_max' FROM `zaehle_reintraege` WHERE `flieger_id` = '$flieger_id';";
   //$res = $mysqli->query($query); 
 
   //if ($res->num_rows > 0)
@@ -72,7 +72,7 @@ else if (isset($_POST['submit']))
    
   if ($error_msg == "")
   {
-    if ($stmt = $mysqli->prepare("INSERT INTO `calmarws_test`.`zaehlereintraege` (
+    if ($stmt = $mysqli->prepare("INSERT INTO `calmarws_test`.`zaehler_eintraege` (
         `id` ,
         `user_id` ,
         `flieger_id` ,
@@ -172,12 +172,12 @@ $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
   </tr>
   <?php
 
-$query = "SELECT `zaehlereintraege`.`id`,
-                 `zaehlereintraege`.`user_id`,
-                 `members`.`name`,
-                 `zaehlereintraege`.`zaehler_minute`,
-                 `zaehlereintraege`.`datum`
-         FROM `zaehlereintraege` INNER JOIN `members` ON `members`.`id` = `zaehlereintraege`.`user_id` 
+$query = "SELECT `zaehler_eintraege`.`id`,
+                 `zaehler_eintraege`.`user_id`,
+                 `piloten`.`name`,
+                 `zaehler_eintraege`.`zaehler_minute`,
+                 `zaehler_eintraege`.`datum`
+         FROM `zaehler_eintraege` INNER JOIN `piloten` ON `piloten`.`id` = `zaehler_eintraege`.`user_id` 
          WHERE `flieger_id` = '".$flieger_id."'  ORDER BY `zaehler_minute` DESC LIMIT 50;";
 
 if ($res = $mysqli->query($query))

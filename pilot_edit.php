@@ -44,7 +44,7 @@ else
   exit;
 }
 
-$query = "SELECT * FROM `members` WHERE `members`.`id` = '$id'";
+$query = "SELECT * FROM `piloten` WHERE `piloten`.`id` = '$id'";
 
 $res = $mysqli->query($query); 
 $obj = $res->fetch_object();

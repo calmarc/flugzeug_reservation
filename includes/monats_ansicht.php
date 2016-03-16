@@ -214,7 +214,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
         echo '<rect x="'.$tabs[$print_first].'%" y="'.$yoffset.'" width="'.$width.'%" height="20" style="fill: '.$boxcol[$level].'; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
 
 
-        $query = "SELECT * from `members` where `id` = '".$obj_tang->userid."';";
+        $query = "SELECT * from `piloten` where `id` = '".$obj_tang->userid."';";
         if ($res_id = $mysqli->query($query))
         {
           if ($res_id->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt

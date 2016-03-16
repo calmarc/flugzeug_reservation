@@ -5,12 +5,15 @@
 * nicht nich reservation drinnnen.. ausser ganze werden
   geloescht. ?????????????????????????
 
-* zaehlereintraege duerfen nur bis x.59 sein..
+* zaehler_eintraege duerfen nur bis x.59 sein..
   kontrollieren.. errorhandling allenfalls
  
 * landungseintrag editiere.. muss errormsg ausgeben...
 
 * service nicht rot.. nur zahl (tspan...)
+
+* landungseintrage fuer admins.. mit pilotenliste (oder/und
+  bei edit...
 
 == MINOR ==
 

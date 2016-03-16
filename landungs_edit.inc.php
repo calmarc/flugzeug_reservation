@@ -25,7 +25,7 @@ if (isset($_GET['zaehler_id']))
 if (isset($_POST['zaehler_id']))
   $zaehler_id = intval($_POST['zaehler_id']);
 
-$query = "SELECT * FROM `zaehlereintraege` WHERE `id` = '$zaehler_id' LIMIT 1;";
+$query = "SELECT * FROM `zaehler_eintraege` WHERE `id` = '$zaehler_id' LIMIT 1;";
 $res2 = $mysqli->query($query); 
 if ($res2->num_rows != 1)
 {
@@ -50,7 +50,7 @@ $flieger_txt = $obj->flieger;
 
 if (isset($_POST['loeschen']))
 {
-  if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`zaehlereintraege` WHERE `zaehlereintraege`.`id` = ?"))
+  if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`zaehler_eintraege` WHERE `zaehler_eintraege`.`id` = ?"))
   {
     $stmt->bind_param('i', $zaehler_id);
     if (!$stmt->execute()) 
@@ -78,7 +78,7 @@ else if (isset($_POST['edit']))
   $datum = "$jahr-$monat-$tag";
 
   // UPDATE USER DATA
-  if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`zaehlereintraege` SET `datum` = ?, `zaehler_minute` = ? WHERE `zaehlereintraege`.`id` = ?;")) 
+  if ($stmt = $mysqli->prepare("UPDATE `calmarws_test`.`zaehler_eintraege` SET `datum` = ?, `zaehler_minute` = ? WHERE `zaehler_eintraege`.`id` = ?;")) 
   {
     $stmt->bind_param('sii', $datum, $zaehler_minute, $zaehler_id);
 

@@ -10,7 +10,7 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
 
   while($obj_f = $res_f->fetch_object())
   {
-    $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `zaehlereintraege` WHERE `flieger_id` = '".$obj_f->id."';");
+    $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `zaehler_eintraege` WHERE `flieger_id` = '".$obj_f->id."';");
     $obj_x = $res_x->fetch_object();
     $min = $obj_x->zaehler_minute;
     $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `service_eintraege` WHERE `flieger_id` = '".$obj_f->id."';");
@@ -233,7 +233,7 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
       echo '<rect x="'.$tabs[$print_first].'%" y="'.$yoffset.'" width="'.$width.'%" height="20" style="fill: '.$boxcol[$level].'; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
 
 
-      $query = "SELECT * from `members` where `id` = '".$obj_tang->userid."';";
+      $query = "SELECT * from `piloten` where `id` = '".$obj_tang->userid."';";
       if ($res_id = $mysqli->query($query))
       {
         if ($res_id->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt

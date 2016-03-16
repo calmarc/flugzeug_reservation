@@ -47,7 +47,7 @@
     $res_moment = $style;
 
   // check if admin rights
-  $query = "SELECT `pilotid`, `name`, `admin`, `gesperrt` from `members` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
+  $query = "SELECT `pilotid`, `name`, `admin`, `gesperrt` from `piloten` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
   $res = $mysqli->query($query); 
   $obj = $res->fetch_object();
   $admin = "";

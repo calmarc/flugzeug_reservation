@@ -323,8 +323,8 @@ if (isset($_POST['submit']))
           if ($res_id == $not_new_no_notification)
             continue;
 
-          $res3 = $mysqli->query("SELECT * FROM `members`
-                                 JOIN `reservationen` ON `members`.`id` = `reservationen`.`userid`
+          $res3 = $mysqli->query("SELECT * FROM `piloten`
+                                 JOIN `reservationen` ON `piloten`.`id` = `reservationen`.`userid`
                                  WHERE `reservationen`.`id` =".$res_id." LIMIT 1;");
 
           $obj3 = $res3->fetch_object();
@@ -401,7 +401,7 @@ include_once('includes/usermenu.php');
 echo "<h1>$h1</h1>";
 
 $query = "SELECT * FROM `reservationen` 
-          LEFT JOIN `members` ON `members`.`id` = `reservationen`.`userid`
+          LEFT JOIN `piloten` ON `piloten`.`id` = `reservationen`.`userid`
           WHERE `reservationen`.`id` = $reservierung
           LIMIT 1";
 

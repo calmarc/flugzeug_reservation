@@ -28,7 +28,7 @@ function sec_session_start() {
 
 function login($pilotid, $password, $mysqli) {
     // Using prepared statements means that SQL injection is not possible. 
-    if ($stmt = $mysqli->prepare("SELECT id, pilotid, password, salt FROM members WHERE pilotid = ? LIMIT 1")) {
+    if ($stmt = $mysqli->prepare("SELECT id, pilotid, password, salt FROM piloten WHERE pilotid = ? LIMIT 1")) {
         $stmt->bind_param('s', $pilotid);  // Bind "$email" to parameter.
         $stmt->execute();    // Execute the prepared query.
         $stmt->store_result();
@@ -130,7 +130,7 @@ function login_check($mysqli) {
         $user_browser = $_SERVER['HTTP_USER_AGENT'];
 
         if ($stmt = $mysqli->prepare("SELECT password 
-				      FROM members 
+				      FROM piloten 
 				      WHERE id = ? LIMIT 1")) {
             // Bind "$user_id" to parameter. 
             $stmt->bind_param('i', $user_id);
@@ -228,14 +228,14 @@ function mysql2chtimef ($von, $bis, $raw)
 
 function check_admin($mysqli)
 {
-  $query = "SELECT `admin` from `members` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
+  $query = "SELECT `admin` from `piloten` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
   $res = $mysqli->query($query); 
   $obj = $res->fetch_object();
   return $obj->admin;
 }
 function check_gesperrt($mysqli)
 {
-  $query = "SELECT `gesperrt` from `members` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
+  $query = "SELECT `gesperrt` from `piloten` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
   $res = $mysqli->query($query); 
   $obj = $res->fetch_object();
   return $obj->gesperrt;
@@ -773,7 +773,7 @@ function bei_geloescht_email($mysqli, $subject_hint, $pilot_id, $flieger_id, $ze
   $obj = $res->fetch_object();
   $to = $obj->email;
 
-  $res = $mysqli->query("SELECT * from `members` WHERE `id` = $pilot_id;");
+  $res = $mysqli->query("SELECT * from `piloten` WHERE `id` = $pilot_id;");
   $obj = $res->fetch_object();
   $pilot = str_pad($obj->pilotid, 3, "0", STR_PAD_LEFT). " (".$obj->name.")";
 

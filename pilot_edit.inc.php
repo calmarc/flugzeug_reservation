@@ -4,7 +4,7 @@ if (isset($_POST['loeschen']))
 {
   $pilotid = $_POST['pilotid'];
 
-  if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`members` WHERE `members`.`pilotid` = ?;"))
+  if ($stmt = $mysqli->prepare("DELETE FROM `calmarws_test`.`piloten` WHERE `piloten`.`pilotid` = ?;"))
   {
     $stmt->bind_param('i', $pilotid);
     if (!$stmt->execute()) 
@@ -65,7 +65,7 @@ if (isset($_POST['updaten']))
   else
     $checkflug = "0000-00-00";
 
-  $res = $mysqli->query("SELECT * FROM `members` WHERE `members`.`id` = $id LIMIT 1;");
+  $res = $mysqli->query("SELECT * FROM `piloten` WHERE `piloten`.`id` = $id LIMIT 1;");
   $obj = $res->fetch_object();
 
   date_default_timezone_set("Europe/Zurich");
@@ -74,24 +74,24 @@ if (isset($_POST['updaten']))
 
   // email scharf wenn noetig (weil wieder gut ist jetzt)
   if ($obj->email_gesch == TRUE && ($checkflug > $date_t || $checkflug == "0000-00-00"))
-    mysqli_prepare_execute($mysqli, "UPDATE `calmarws_test`.`members` SET `email_gesch` = '0' WHERE `members`.`id` = ?;", 'i', array ($id));
+    mysqli_prepare_execute($mysqli, "UPDATE `calmarws_test`.`piloten` SET `email_gesch` = '0' WHERE `piloten`.`id` = ?;", 'i', array ($id));
 
   // passwort mit salt.. generieren.. und eintragen
   if ($password != "")
   {
-    $query= "SELECT `salt` FROM `members` WHERE `id` = $id LIMIT 1;";
+    $query= "SELECT `salt` FROM `piloten` WHERE `id` = $id LIMIT 1;";
     $res = $mysqli->query($query); 
     $obj = $res->fetch_object();
 
     $password = hash('sha512', $password);
     $password = hash('sha512', $password . $obj->salt);
 
-    $query = "UPDATE `calmarws_test`.`members` SET `password` = ? WHERE `members`.`id` = ?; ";
+    $query = "UPDATE `calmarws_test`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ?; ";
     mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $id));
   }
 
   // UPDATE USER DATA
-  $query = "UPDATE `calmarws_test`.`members` SET `pilotid` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ?, `checkflug` = ?, `gesperrt` = ? WHERE `members`.`id` = ?; ";
+  $query = "UPDATE `calmarws_test`.`piloten` SET `pilotid` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ?, `checkflug` = ?, `gesperrt` = ? WHERE `piloten`.`id` = ?; ";
   mysqli_prepare_execute($mysqli, $query, 'isissssii', array ($pilotid, $email, $admin_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $id));
 
   header("Location: pilot_admin.php");

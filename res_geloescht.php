@@ -74,7 +74,7 @@ include_once('includes/usermenu.php');
           <form style="display: inline-block;" action="res_geloescht.php" method='get'>
               <select  onchange='this.form.submit()' style="width: 16em;" name = "pilot_id">
 <?php
-$res = $mysqli->query("SELECT * FROM `members` ORDER BY `pilotid`;");
+$res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilotid`;");
 
 echo '<option value="">alle Piloten</option>';
 while ($obj = $res->fetch_object())
@@ -120,8 +120,8 @@ $query = " SELECT
   `reser_geloescht`.`bis` AS 'bis',
   `reser_geloescht`.`grund` AS 'grund'
       FROM `reser_geloescht`
-          LEFT OUTER JOIN `members` AS `mem1` ON `reser_geloescht`.`userid` = `mem1`.`id`
-          LEFT OUTER JOIN `members` AS `mem2` ON `reser_geloescht`.`loescher` = `mem2`.`id`
+          LEFT OUTER JOIN `piloten` AS `mem1` ON `reser_geloescht`.`userid` = `mem1`.`id`
+          LEFT OUTER JOIN `piloten` AS `mem2` ON `reser_geloescht`.`loescher` = `mem2`.`id`
           LEFT OUTER JOIN `flieger` AS `flieger` ON `reser_geloescht`.`fliegerid` = `flieger`.`id`
    $where_txt $order_by_txt LIMIT 600;";
 
