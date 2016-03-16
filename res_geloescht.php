@@ -71,7 +71,7 @@ include_once('includes/usermenu.php');
       <div class="center">
         <h1>Gelöschte Reservationen</h1>
 
-          <form style="display: inline-block;" action="res_admin.php" method='get'>
+          <form style="display: inline-block;" action="res_geloescht.php" method='get'>
               <select  onchange='this.form.submit()' style="width: 16em;" name = "pilot_id">
 <?php
 $res = $mysqli->query("SELECT * FROM `members` ORDER BY `pilotid`;");
@@ -88,7 +88,7 @@ while ($obj = $res->fetch_object())
               </select>
           </form>
 
-          <form style="display: inline-block;" action="res_admin.php" method='get'>
+          <form style="display: inline-block;" action="res_geloescht.php" method='get'>
               <select  onchange='this.form.submit()' style="width: 12em;" name = "z_bereich">
                 <option <?php if ($_SESSION['res_sort_bereich'] == '0') echo 'selected="selected"'; ?> value="0">alle</option>
                 <option <?php if ($_SESSION['res_sort_bereich'] == '30') echo 'selected="selected"'; ?> value="30">letze 30 Tage</option>
@@ -100,12 +100,12 @@ while ($obj = $res->fetch_object())
           </form>
           <table class='vertical_table'>
           <tr>
-          <th><a href="res_admin.php?sort=timestamp"><b>Am</b></a></th>
-            <th><a href="res_admin.php?sort=pilotid"><b>Pilot</b></a></th>
-            <th><a href="res_admin.php?sort=flieger"><b>Flieger</b></a></th>
-            <th><a href="res_admin.php?sort=von"><b>Datum</b></a></th>
+          <th><a href="res_geloescht.php?sort=timestamp"><b>Am</b></a></th>
+            <th><a href="res_geloescht.php?sort=pilotid"><b>Pilot</b></a></th>
+            <th><a href="res_geloescht.php?sort=flieger"><b>Flieger</b></a></th>
+            <th><a href="res_geloescht.php?sort=von"><b>Datum</b></a></th>
             <th><b>Grund</b></th>
-            <th><a href="res_admin.php?sort=loescher"><b>Gelöscht durch</b></a></th>
+            <th><a href="res_geloescht.php?sort=loescher"><b>Gelöscht durch</b></a></th>
           </tr>
 
 <?php 

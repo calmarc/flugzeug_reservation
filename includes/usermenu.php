@@ -7,7 +7,7 @@
   $index_m = ""; 
   $pass_change = "";
   $pilot_admin = "";
-  $res_admin = "";
+  $res_geloescht = "";
   $res_trimmed = "";
   $res_moment = "";
   
@@ -39,8 +39,8 @@
     $pilot_admin = $style;
   else if ($curr_file == "/reservationen/pilot_edit.php")
     $pilot_admin = $style;
-  else if ($curr_file == "/reservationen/res_admin.php")
-    $res_admin = $style;
+  else if ($curr_file == "/reservationen/res_geloescht.php")
+    $res_geloescht = $style;
   else if ($curr_file == "/reservationen/res_trimmed.php")
     $res_trimmed = $style;
   else if ($curr_file == "reservationen/res_momentan.php")
@@ -52,7 +52,7 @@
   $obj = $res->fetch_object();
   $admin = "";
   if ($obj->admin == TRUE && $obj->gesperrt == FALSE)
-    $admin = '<span style="white-space: nowrap;">[ <a '.$pilot_admin.' href="/reservationen/pilot_admin.php"><span style="color: #ff3333;">Piloten</span></a> | <a '.$res_moment.' href="/reservationen/res_momentan.php"><span style="color: #ff3333;">Reservationen</span></a> | <a '.$res_admin.' href="/reservationen/res_admin.php"><span style="color: #ff3333;">Gelöscht</span></a></span> <span style="white-space: nowrap;"> | <a '.$res_trimmed.' href="/reservationen/res_trimmed.php"><span style="color: #ff3333;">Teil-gelöscht</span></a> ]</span>';
+    $admin = '<span style="white-space: nowrap;">[ <a '.$pilot_admin.' href="/reservationen/pilot_admin.php"><span style="color: #ff3333;">Piloten</span></a> | <a '.$res_moment.' href="/reservationen/res_momentan.php"><span style="color: #ff3333;">Reservationen</span></a> | <a '.$res_geloescht.' href="/reservationen/res_geloescht.php"><span style="color: #ff3333;">Gelöscht</span></a></span> <span style="white-space: nowrap;"> | <a '.$res_trimmed.' href="/reservationen/res_trimmed.php"><span style="color: #ff3333;">Teil-gelöscht</span></a> ]</span>';
 
   $_SESSION['name'] = htmlentities($obj->name);
 
