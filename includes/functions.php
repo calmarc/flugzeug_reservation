@@ -93,7 +93,7 @@ function checkbrute($mysqli) {
     // cleaning up last failed attempts (60 mins)
     $delete_old = $now - (60 * 60);
 
-    mysqli_prepare_execute($mysqli, "DELETE FROM `calmarws_test`.`login_attempts` WHERE `login_attempts`.`time` < ?;", 'i', array ($delete_old));
+    mysqli_prepare_execute($mysqli, "DELETE FROM `mfgcadmin_reservationen`.`login_attempts` WHERE `login_attempts`.`time` < ?;", 'i', array ($delete_old));
 
     // All login attempts are counted from the past 1 minutes
     $valid_attempts = $now - (2 * 60);
@@ -106,11 +106,11 @@ function checkbrute($mysqli) {
 
         // If there have been more than 5 failed logins in the last minute
         if ($stmt->num_rows > 5) {
-            $mysqli->query("UPDATE `calmarws_test`.`captcha` SET `show` = '1' WHERE `captcha`.`id` =1;");
+            $mysqli->query("UPDATE `mfgcadmin_reservationen`.`captcha` SET `show` = '1' WHERE `captcha`.`id` =1;");
             return;
         } else {
             // no 
-            $mysqli->query("UPDATE `calmarws_test`.`captcha` SET `show` = '0' WHERE `captcha`.`id` =1;");
+            $mysqli->query("UPDATE `mfgcadmin_reservationen`.`captcha` SET `show` = '0' WHERE `captcha`.`id` =1;");
             return;
         }
     } else {
@@ -397,7 +397,7 @@ function remove_zombies($mysqli)
         SELECT `timestamp`, `user_id`, `flieger_id`, `von`, `bis` FROM `reservationen` WHERE `id` = ? AND `von` < ?;";
       mysqli_prepare_execute($mysqli, $query, 'is', array ($di, $now_string));
 
-      $query = "DELETE FROM `calmarws_test`.`reservationen` WHERE `reservationen`.`id` = ? AND `von` < ?;";
+      $query = "DELETE FROM `mfgcadmin_reservationen`.`reservationen` WHERE `reservationen`.`id` = ? AND `von` < ?;";
       mysqli_prepare_execute($mysqli, $query, 'is', array ($di, $now_string));
     }
   }
@@ -707,7 +707,7 @@ function delete_reservation($mysqli, $id_tmp, $begruendung, $user_id)
   $obj = $res->fetch_object();
 
   // make copy into reser_geloescht
-  $query = "INSERT INTO `calmarws_test`.`reser_geloescht` 
+  $query = "INSERT INTO `mfgcadmin_reservationen`.`reser_geloescht` 
          (`id` , `timestamp`, `user_id`, `flieger_id`, `von`, `bis`, `loescher_id`, `grund`)
   VALUES ( NULL , NULL, ?, ?, ?, ?, ?, ?);";
 
@@ -715,14 +715,14 @@ function delete_reservation($mysqli, $id_tmp, $begruendung, $user_id)
 
   // komplett loeschen da komplett in der zukunft oder komplett in der
   // vergangenheit
-  $query = "DELETE FROM `calmarws_test`.`reservationen` WHERE `reservationen`.`id` = ? ;";
+  $query = "DELETE FROM `mfgcadmin_reservationen`.`reservationen` WHERE `reservationen`.`id` = ? ;";
   mysqli_prepare_execute($mysqli, $query, 'i', array ($id_tmp));
 }
 
 function reser_getrimmt_eintrag($mysqli, $obj, $user_id, $begruendung, $loeschen_datum_von, $loeschen_datum_bis)
 {
 
-  $query = "INSERT INTO `calmarws_test`.`reser_getrimmt` 
+  $query = "INSERT INTO `mfgcadmin_reservationen`.`reser_getrimmt` 
             (`id`, `timestamp`, `user_id`, `flieger_id`, `von`, `bis`, `loescher_id`, `grund`, `getrimmt_von`, `getrimmt_bis`)
             VALUES ( NULL , NULL, ?, ?, ?, ?, ?, ?, ?, ?);";
   mysqli_prepare_execute($mysqli, $query, 'iississs', array ($obj->user_id, $obj->flieger_id, $obj->von, $obj->bis, $user_id, $begruendung, $loeschen_datum_von, $loeschen_datum_bis));

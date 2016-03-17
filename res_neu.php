@@ -6,7 +6,6 @@ ini_set('html_errors', 1);
 
 include_once ('includes/db_connect.php');
 include_once ('includes/functions.php');
-include_once ('includes/graphic.php');
 
 sec_session_start();
 

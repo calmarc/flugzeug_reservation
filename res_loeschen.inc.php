@@ -165,7 +165,7 @@ if (isset($_POST['submit']))
       else if ($loeschen_datum_von <= $res_datum_von && $loeschen_datum_bis < $res_datum_bis)
       {
 
-        $query = "UPDATE `calmarws_test`.`reservationen` SET `von` = ? WHERE `reservationen`.`id` = ?;";
+        $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `von` = ? WHERE `reservationen`.`id` = ?;";
         mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_bis, $id_tmp));
 
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
@@ -173,7 +173,7 @@ if (isset($_POST['submit']))
       // Ende kuerzen
       else if ($loeschen_datum_von > $res_datum_von && $loeschen_datum_bis >= $res_datum_bis)
       {
-        $query = "UPDATE `calmarws_test`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
+        $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
         mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von, $id_tmp));
 
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
@@ -182,7 +182,7 @@ if (isset($_POST['submit']))
       {
         // eintrag clonen (inklusive timestamp - ohne ID)
         //
-        $query = "INSERT INTO `calmarws_test`.`reservationen` (
+        $query = "INSERT INTO `mfgcadmin_reservationen`.`reservationen` (
         `id` ,
         `timestamp` ,
         `user_id` ,
@@ -197,7 +197,7 @@ if (isset($_POST['submit']))
         $mysqli->query($query);
 
         // update the initial one (bis ... to loeschen_von..)
-        $query = "UPDATE `calmarws_test`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
+        $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
         mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von, $id_tmp));
 
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
@@ -249,7 +249,7 @@ if (isset($_POST['submit']))
       }
 
 
-      $query = "UPDATE `calmarws_test`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
+      $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
       mysqli_prepare_execute($mysqli, $query, 'si', array ($new_end_date, $id_tmp));
 
       // get the trimmed stuff...

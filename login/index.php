@@ -43,7 +43,7 @@ if (isset($_GET['error']))
               </tr> 
 
 <?php
-  $res = $mysqli->query("SELECT `show` FROM `calmarws_test`.`captcha` WHERE `captcha`.`id` =1;");
+  $res = $mysqli->query("SELECT `show` FROM `mfgcadmin_reservationen`.`captcha` WHERE `captcha`.`id` =1;");
   $obj = $res->fetch_object();
   if ($obj->show)
 { ?>

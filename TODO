@@ -20,6 +20,8 @@
 
 == MINOR ==
 
+* teilloeschung auch mininum 4cahrs.. (javascript)
+
 * Wenn eine Buchung gelöscht wird solle ein Mail an andreas mathis amathis@deep.ch  und mich armin.beck@dsl.li
   nur bei komplett loeschung momentan
 
@@ -34,6 +36,9 @@
 * Buchung löschen:  kontrollieren clean-upen
  
 * flieger managen wie user_edit und user_admin.. einfach flieger.
+
+* menu balknen auch auf natel schwarz.. wenn unten
+  verschoben.
 
 
 

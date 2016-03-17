@@ -65,7 +65,7 @@ if (isset($_POST['submit']))
    
   if ($error_msg == ""){
 
-    $query = "INSERT INTO `calmarws_test`.`reservationen` 
+    $query = "INSERT INTO `mfgcadmin_reservationen`.`reservationen` 
       ( `id` , `timestamp` , `user_id` , `flieger_id` , `von` , `bis`) VALUES 
       ( NULL , CURRENT_TIMESTAMP , '$user_id', '$flieger_id', FROM_UNIXTIME($vonstamp), FROM_UNIXTIME($bisstamp));";
 

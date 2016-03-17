@@ -18,7 +18,7 @@ if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
 
   if (isset($_GET['action'], $_GET['service_id']) && $_GET['action'] == "del" && $_GET['service_id'] > 0)
   {
-    $query = "DELETE FROM `calmarws_test`.`service_eintraege` WHERE `service_eintraege`.`id` = ?;";
+    $query = "DELETE FROM `mfgcadmin_reservationen`.`service_eintraege` WHERE `service_eintraege`.`id` = ?;";
     mysqli_prepare_execute($mysqli, $query, 'i', array ($_GET['service_id']));
   }
 }
@@ -53,7 +53,7 @@ else if (isset($_POST['submit']))
 
   $z_max = -1;
 
-  if ($stmt = $mysqli->prepare("INSERT INTO `calmarws_test`.`service_eintraege` (
+  if ($stmt = $mysqli->prepare("INSERT INTO `mfgcadmin_reservationen`.`service_eintraege` (
 	  `id` ,
 	  `user_id` ,
 	  `flieger_id` ,

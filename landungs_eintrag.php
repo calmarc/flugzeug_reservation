@@ -72,7 +72,7 @@ else if (isset($_POST['submit']))
    
   if ($error_msg == "")
   {
-    if ($stmt = $mysqli->prepare("INSERT INTO `calmarws_test`.`zaehler_eintraege` (
+    if ($stmt = $mysqli->prepare("INSERT INTO `mfgcadmin_reservationen`.`zaehler_eintraege` (
         `id` ,
         `user_id` ,
         `flieger_id` ,

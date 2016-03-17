@@ -10,7 +10,7 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
     $password = hash('sha512', $_POST['password']);
 
 
-    $res = $mysqli->query("SELECT `show` FROM `calmarws_test`.`captcha` WHERE `captcha`.`id` =1;");
+    $res = $mysqli->query("SELECT `show` FROM `mfgcadmin_reservationen`.`captcha` WHERE `captcha`.`id` =1;");
     $obj = $res->fetch_object();
     if ($obj->show){
       if ($_SESSION['randomnr2'] != md5($_POST['captcha'])) {
@@ -45,7 +45,7 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
 			$headers = "From: noreply@mfgc.ch";
 
             if (mail($to, $subject, $txt, $headers))
-              mysqli_prepare_execute($mysqli, "UPDATE `calmarws_test`.`piloten` SET `email_gesch` = '1' WHERE `piloten`.`id` = ?;", 'i', array ($obj->id));
+              mysqli_prepare_execute($mysqli, "UPDATE `mfgcadmin_reservationen`.`piloten` SET `email_gesch` = '1' WHERE `piloten`.`id` = ?;", 'i', array ($obj->id));
           } 
         }
 

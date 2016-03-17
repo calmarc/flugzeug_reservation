@@ -4,7 +4,7 @@ if (isset($_POST['loeschen']))
 {
   $pilot_id = $_POST['pilot_id'];
 
-  $query = "DELETE FROM `calmarws_test`.`piloten` WHERE `piloten`.`pilot_id` = ?;";
+  $query = "DELETE FROM `mfgcadmin_reservationen`.`piloten` WHERE `piloten`.`pilot_id` = ?;";
   mysqli_prepare_execute($mysqli, $query, 'i', array ($pilot_id));
 
   // man hat sich selber geloesch.. delete $_SESSION (ausloggen)
@@ -67,7 +67,7 @@ if (isset($_POST['updaten']))
 
   // email scharf wenn noetig (weil wieder gut ist jetzt)
   if ($obj->email_gesch == TRUE && ($checkflug > $date_t || $checkflug == "0000-00-00"))
-    mysqli_prepare_execute($mysqli, "UPDATE `calmarws_test`.`piloten` SET `email_gesch` = '0' WHERE `piloten`.`id` = ?;", 'i', array ($id));
+    mysqli_prepare_execute($mysqli, "UPDATE `mfgcadmin_reservationen`.`piloten` SET `email_gesch` = '0' WHERE `piloten`.`id` = ?;", 'i', array ($id));
 
   // passwort mit salt.. generieren.. und eintragen
   if ($password != "")
@@ -79,12 +79,12 @@ if (isset($_POST['updaten']))
     $password = hash('sha512', $password);
     $password = hash('sha512', $password . $obj->salt);
 
-    $query = "UPDATE `calmarws_test`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ?; ";
+    $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ?; ";
     mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $id));
   }
 
   // UPDATE USER DATA
-  $query = "UPDATE `calmarws_test`.`piloten` SET `pilot_id` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ?, `checkflug` = ?, `gesperrt` = ? WHERE `piloten`.`id` = ?; ";
+  $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `pilot_id` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ?, `checkflug` = ?, `gesperrt` = ? WHERE `piloten`.`id` = ?; ";
   mysqli_prepare_execute($mysqli, $query, 'isissssii', array ($pilot_id, $email, $admin_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $id));
 
   header("Location: pilot_admin.php");

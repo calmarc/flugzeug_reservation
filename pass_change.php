@@ -42,7 +42,7 @@ if (isset($_POST['submit']))
     $password = hash('sha512', $password);
     $password = hash('sha512', $password . $obj->salt);
 
-    $query = "UPDATE `calmarws_test`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ? ;";
+    $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ? ;";
     if (mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $id)))
       $msg = "<p style='color: green;'>Das Passwort wurde geändert</p>";
   }
