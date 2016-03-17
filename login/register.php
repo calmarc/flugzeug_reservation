@@ -59,7 +59,7 @@ if (!empty($error_msg)) {
                 </tr>
                 <tr>
                   <td><b>Admin:</b></td> <td>
-                    <select  style='width: 4em;' name="admin">
+                    <select size="1"  style='width: 4em;' name="admin">
                       <option <?php if (isset($_SESSION['regadmin']) && $_SESSION['regadmin'] == 0 ) echo " selected='selected' "; ?> value="0">nein</option>
                       <option <?php if (isset($_SESSION['regadmin']) && $_SESSION['regadmin'] == 1 ) echo " selected='selected' "; ?> value="1">Ja</option>
                     </select></td>

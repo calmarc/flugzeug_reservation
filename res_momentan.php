@@ -72,7 +72,7 @@ include_once('includes/usermenu.php');
         <h1>Reservationen</h1>
 
           <form style="display: inline-block;" action="res_momentan.php" method='get'>
-              <select  onchange='this.form.submit()' style="width: 16em;" name = "pilot_id">
+              <select size="1" onchange='this.form.submit()' style="width: 16em;" name = "pilot_id">
 <?php
 $res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_id`;");
 
@@ -89,7 +89,7 @@ while ($obj = $res->fetch_object())
           </form>
 
           <form style="display: inline-block;" action="res_momentan.php" method='get'>
-              <select  onchange='this.form.submit()' style="width: 12em;" name = "z_bereich">
+              <select size="1" onchange='this.form.submit()' style="width: 12em;" name = "z_bereich">
                 <option <?php if ($_SESSION['res_sort_bereich'] == '0') echo 'selected="selected"'; ?> value="0">alle</option>
                 <option <?php if ($_SESSION['res_sort_bereich'] == '30') echo 'selected="selected"'; ?> value="30">letze 30 Tage</option>
                 <option <?php if ($_SESSION['res_sort_bereich'] == '90') echo 'selected="selected"'; ?>value="90">letze 90 Tage</option>

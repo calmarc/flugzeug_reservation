@@ -64,7 +64,7 @@ else
   else if (isset($_SESSION['flieger_id']))
     $flieger_id = $_SESSION['flieger_id'];
 
-  $select = "<select style='width: 10em;' class='flieger_select' name='flieger_id'  onchange='this.form.submit()' >";
+  $select = "<select size='1' style='width: 10em;' class='flieger_select' name='flieger_id'  onchange='this.form.submit()' >";
 
   $res = $mysqli->query("SELECT * FROM `flieger`;");
   $x = 0;
