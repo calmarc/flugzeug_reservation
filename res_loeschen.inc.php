@@ -282,11 +282,14 @@ if (isset($_POST['submit']))
           $res4 = $mysqli->query("SELECT * FROM `flieger` WHERE `id` = ".$obj3->flieger_id." ;");
           $obj4 = $res4->fetch_object();
           $flieger = $obj4->flieger;
-          $headers = "From: noreply@mfgc.ch";
+          $headers   = array();
+          $headers[] = "MIME-Version: 1.0";
+          $headers[] = "Content-type: text/plain; charset=utf-8";
+          $headers[] = "From: noreply@mfgc.ch";
 
-          $txt = "Deine Reservierung:\n\nPilot: $pilot\nFlieger: $flieger\nDatum: $res_datum\n\nist nun gueltig!";
+          $txt = "Deine Reservation:\n\nPilot: $pilot\nFlieger: $flieger\nDatum: $res_datum\n\nist wurde aktiviert!";
 
-          mail ($email, "MFGC Reservierung vom $res_datum gültig!", $txt, $headers);
+          mail ($email, "MFGC Reservation vom $res_datum aktiviert!", $txt, implode("\r\n",$headers));
 
           // send sms.
           $ret_val = sendsms($natel, $txt);

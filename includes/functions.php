@@ -744,8 +744,8 @@ function bei_geloescht_email($mysqli, $subject_hint, $pilot_id, $flieger_id, $ze
   $obj = $res->fetch_object();
   $flieger = $obj->flieger;
 
-  $subject = "Reservierung $subject_hint: $pilot: $zeit";
-  $txt = "Bei der Motorfluggruppe Chur wurde folgende Flugzeug-Reservierung $subject_hint:";
+  $subject = "Reservation $subject_hint: $pilot: $zeit";
+  $txt = "Bei der Motorfluggruppe Chur wurde folgende Flugzeug-Reservation $subject_hint:";
   $txt .= "\n\n";
   $txt .= "Pilot: $pilot";
   $txt .= "\n";
