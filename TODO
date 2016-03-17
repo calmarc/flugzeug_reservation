@@ -18,6 +18,9 @@
 * bei teiloeschung werte kontrollieren.. i.e bis muss
   groesser sein als von etc.
 
+* sms nur wenn es auch natel nummer gibt.. (nicht immer der
+* FAll)
+
 == MINOR ==
 
 * teilloeschung auch mininum 4cahrs.. (javascript)
@@ -39,6 +42,8 @@
 
 * menu balknen auch auf natel schwarz.. wenn unten
   verschoben.
+
+* ragaz kann man nicht lesen.. beim logo unten
 
 
 
