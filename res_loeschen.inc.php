@@ -21,28 +21,10 @@ $flieger_id = ""; if (isset($_GET['flieger_id'])) $flieger_id = $_GET['flieger_i
 
 $curstamp = time(); // wird einige male gebraucht
 // round up cur_time to half hour blocks
-$curstamp = (intval($curstamp / 1800) + 1) * 1800;
+$rounded_stamp = (intval($curstamp / 1800) + 1) * 1800;
 date_default_timezone_set("Europe/Zurich");
-$curdate = date("Y-m-d H:i:s", $curstamp);
-list ($stunde_block, $minute_block) =  explode(":", date("H:i", $curstamp), 2);
+$rounded_date = date("Y-m-d H:i:s", $rounded_stamp);
 date_default_timezone_set("UTC");
-$curstamp = strtotime($curdate);
-
-// TODO: PS unten gibts rounde_time und so?!
-
-$minute_block = intval($minute_block);
-$stunde_block = intval($stunde_block);
-
-if ($minute_block > 30)
-{
-  $minute_block = 0 ;
-  $stunde_block++;
-}
-else if ($minute_block > 0 && $minute_block <= 30)
-  $minute_block = 30;
-
-$jetzt_rounded = str_pad($stunde_block, 2, "0", STR_PAD_LEFT).":".str_pad($minute_block, 2, "0", STR_PAD_LEFT);
-
 
 if (isset($_POST['submit']))
 {
@@ -55,7 +37,7 @@ if (isset($_POST['submit']))
     if (check_admin($mysqli))
       $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = ".$_POST['reservierung']." LIMIT 1;";
     else
-      $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = ".$_POST['reservierung']." AND `user_id` = '".$_SESSION['user_id']."' AND `bis` > '$curdate' LIMIT 1;";
+      $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = ".$_POST['reservierung']." AND `user_id` = '".$_SESSION['user_id']."' AND `bis` >= '$rounded_date' LIMIT 1;";
 
     $res = $mysqli->query($query);
 
@@ -208,9 +190,10 @@ if (isset($_POST['submit']))
       }
     }
     //
-    // loeschen
+    // loeschen gedruckt
     //
-    else if (strtotime($obj->von) >= $curstamp || strtotime($obj->bis) <= $curstamp)
+    // TODO: nur admins! und so? sonst nur die eigenen darf man loeschen
+    else if ($obj->von >= $rounded_date || $obj->bis <= $rounded_date)
     {
       $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
       delete_reservation($mysqli, $id_tmp, $begruendung, $_SESSION['user_id']);
@@ -223,51 +206,51 @@ if (isset($_POST['submit']))
     //
     else
     {
-      /// START ZURICH
-      date_default_timezone_set("Europe/Zurich");
-      $tmp_hour = date("G", $curstamp); // stunden ohne nullen
+      //  braucht keine Zurich.. reine H:i Hohlung.. auf 'neutralem' string
+      //  zurich wurde aber auch gehen.. egal
 
-      //  TODO: muss man da nicht nur bei date zurich und utc immer? strtotime
-      //  auch sensible nicht?
-      if (date("G", $curstamp) < 7)
+      //  wenn ZEIT nach >21 <7 ----> 7 nachster tag 'von'
+      //  sollte nicht passieren, aber orig bis muss > sein als neues von
+      $tmp_hour_min = date("H:i", strtotime($rounded_date));
+      
+      if ($tmp_hour_min < "07:00")
       {
-        // new end: yesterday 10:00  
-        $date00 = strtotime(date("Y-m-d", $curstamp)." 00:00:00");
-        $new_end_date = date("Y-m-d H:i:s", $date00 - 3 * 60 * 60);
+        // new end: 7 uhr
+        $date07 = strtotime(date("Y-m-d", strtotime($rounded_date))." 07:00:00");
+        $new_end_date = date("Y-m-d H:i:s", $date07);
       }
-      else if (date("G", $curstamp) > 21)
+      else if ($tmp_hour_min >= "21:00")
       {
-        // new end: today 21:00
-        $date21 = strtotime(date("Y-m-d", $curstamp)." 21:00:00");
-        $new_end_date = date("Y-m-d H:i:s", $date21);
+        // new end: 7 uhr next day
+        $date07 = strtotime(date("Y-m-d", strtotime($rounded_date))." 23:00:00");
+        $new_end_date = date("Y-m-d H:i:s", $date07 + 8 * 60 * 60);
       }
       else
       {
         // new end: now rounded up half hour
-        $rounded_stamp = (intval($cur_stamp / 1800) + 1) * 1800;
-        $new_end_date =  date("Y-m-d H:i:s", $rounded_stamp);
+        $new_end_date = $rounded_date;
       }
-
 
       $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
       mysqli_prepare_execute($mysqli, $query, 'si', array ($new_end_date, $id_tmp));
 
-      // get the trimmed stuff...
-      if (date("G", $curstamp) > 21)
+      // fuer den eintrag . muss alles auf  21:00 zurueck.. falls "07:00"
+      // loeschen bis ende abend.. quasi..
+      $tmp_d = date("H:i", strtotime($new_end_date));
+
+      if ($tmp_d == "07:00")
       {
-        // naechster tag 7 uhr
-        $date07 = strtotime(date("Y-m-d", $curstamp)." 23:00:00");
-        $del_start_date = date("Y-m-d H:i:s", $date07 + 8 * 60 * 60);
-      }
-      else if (date("G", $curstamp) < 7)
-      {
-        $del_start_date = date("Y-m-d", $curstamp)." 07:00:00";
+        $new_end_date = date("Y-m-d H:i:s", strtotime($new_end_date) - 10 * 60 * 60);
       }
 
-      reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $del_start_date, $obj->bis);
+      reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $obj->von , $new_end_date);
 
-      date_default_timezone_set("UTC");
-      /// END ZURICH UTC again
+      // TODO stimmt noch nicht..
+      // TODO stimmt noch nicht..
+      // TODO stimmt noch nicht..
+      // TODO stimmt noch nicht..
+      // TODO stimmt noch nicht..
+
     }
 
     // send sms when a standby is green now.
@@ -334,12 +317,12 @@ if ($res->num_rows < 1)
 }
 $obj = $res->fetch_object();
 
-if (!(strtotime($obj->von) >= $curstamp || strtotime($obj->bis) <= $curstamp))
+if (!($obj->von >= $rounded_date || $obj->bis <= $rounded_date))
 {
 	$trimmen = TRUE;	
 	$h1 = "Reservation freigeben";
     $h3 = "";
-    $button = "Ab ".$jetzt_rounded."h freigeben";
+    $button = "Ab ".date("H:i", strtotime($rounded_date))."h freigeben";
 }
 else
 {

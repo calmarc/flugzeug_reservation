@@ -753,15 +753,18 @@ function bei_geloescht_email($mysqli, $subject_hint, $pilot_id, $flieger_id, $ze
   $txt .= "\n";
   $txt .= "Buchungszeit: $zeit";
   $txt .= "\n\n";
-  $txt .= "Begreundung: $begruendung";
+  $txt .= "Begründung: $begruendung";
   $txt .= "\n\n";
-  $txt .= "Mit freundlichen Gruessen";
+  $txt .= "Mit freundlichen Grüssen";
   $txt .= "\n";
   $txt .= "Motorfluggruppe Chur";
 
-  $headers = "From: noreply@mfgc.ch";
+  $headers   = array();
+  $headers[] = "MIME-Version: 1.0";
+  $headers[] = "Content-type: text/plain; charset=utf-8";
+  $headers[] = "From: noreply@mfgc.ch";
 
-  mail ($to, $subject, $txt, $headers);
+  mail ($to, $subject, $txt, implode("\r\n",$headers));
 }
 
 function print_html_to_body ($title, $special_meta)

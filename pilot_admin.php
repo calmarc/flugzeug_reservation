@@ -75,8 +75,8 @@ while ($obj = $res->fetch_object())
 }
 ?>
           </table>
-          <div style="text-align: left; margin-left: 6em;">
-            <p>&nbsp; &nbsp;<a href="login/register.php"><span style="background-color: #99ff99;">+ neuen Piloten hinzufügen</span></a></p>
+          <div style="text-align: left; margin-left: 5em;">
+            <p><a href="login/register.php"><span style="background-color: #99ff99;">+ neuen Piloten hinzufügen</span></a></p>
           </div>
         </div>
     </div>
