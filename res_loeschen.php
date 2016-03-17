@@ -115,7 +115,7 @@ if ($datum_v ==  $datum)
 
 ?>
 
-<form action="res_loeschen.php" method="post">
+<form <?php echo $chars_java2; ?> action="res_loeschen.php" method="post">
         <input type="hidden" name="reservierung" value='<?php echo $reservierung; ?>' />
         <input type="hidden" name="backto" value='<?php echo $backto; ?>' />
         <input type="hidden" name="tag" value='<?php echo $tag; ?>' />

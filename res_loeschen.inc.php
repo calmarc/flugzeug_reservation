@@ -9,6 +9,7 @@ if (check_admin($mysqli))
   $required = '';
   $optional = " (optional)";
   $chars_java = "";
+  $chars_java2 = "";
 }
 
 $tag = ""; if (isset($_GET['tag'])) $tag = $_GET['tag']; 

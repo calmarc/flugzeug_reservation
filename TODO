@@ -19,12 +19,7 @@
 
 == MINOR ==
 
-* teilloeschung auch mininum 4cahrs.. (javascript)
-
-* Wenn eine Buchung gelöscht wird solle ein Mail an andreas mathis amathis@deep.ch  und mich armin.beck@dsl.li
-  nur bei komplett loeschung momentan
-
-* select .. kein required .. und size="1" ueberall
+* Wenn eine Buchung gelöscht wird  amathis@deep.ch,  armin.beck@dsl.li (scharf machen in der datenbank)
 
 * wie beim monatsplan auch pfeile fuer tag-wechsel
 
