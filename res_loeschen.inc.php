@@ -287,7 +287,7 @@ if (isset($_POST['submit']))
           $headers[] = "Content-type: text/plain; charset=utf-8";
           $headers[] = "From: noreply@mfgc.ch";
 
-          $txt = "Deine Reservation:\n\nPilot: $pilot\nFlieger: $flieger\nDatum: $res_datum\n\nist wurde aktiviert!";
+          $txt = "Deine Reservation:\n\nPilot: $pilot\nFlugzeug: $flieger\nDatum: $res_datum\n\nwurde aktiviert!";
 
           mail ($email, "MFGC Reservation vom $res_datum aktiviert!", $txt, implode("\r\n",$headers));
 
