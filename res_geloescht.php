@@ -141,12 +141,12 @@ while ($obj = $res->fetch_object())
     $loescher_id = $obj->loescher_id;
 
   echo "\n<tr>
-           <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>$gel_datum</td>
-           <td>[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] ".$obj->pilot."</td>
-           <td>$obj->flieger</td>
+           <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>{$gel_datum}</td>
+           <td>[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
+           <td>{$obj->flieger}</td>
            <td>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>
            <td style='font-weight: bold; color #333333;'>".nl2br($obj->grund)."</td>
-           <td>".$loescher_id."</td>
+           <td>{$loescher_id}</td>
         </tr>";
 }
 ?>

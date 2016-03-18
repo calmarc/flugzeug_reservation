@@ -44,7 +44,7 @@ else
   exit;
 }
 
-$query = "SELECT * FROM `piloten` WHERE `piloten`.`id` = '$id'";
+$query = "SELECT * FROM `piloten` WHERE `piloten`.`id` = '{$id}'";
 
 $res = $mysqli->query($query);
 $obj = $res->fetch_object();
@@ -61,22 +61,22 @@ else
 
 echo "
 <form action='pilot_edit.php' method='post'>
-  <input type='hidden' name='id' value='".$obj->id."' />
+  <input type='hidden' name='id' value='{$obj->id}' />
     <div class='center'>
     <table class='vtable'>
       <tr>
         <td><b>Pilot-ID:</b></td><td><input type='text' name='pilot_id' value='".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."'></td></tr>
       <tr>
-        <td><b>Name:</b></td><td><input type='text' name='name' value='".$obj->name."'></td>
+        <td><b>Name:</b></td><td><input type='text' name='name' value='{$obj->name}'></td>
       </tr>
       <tr>
-        <td><b>Natel:</b></td><td><input pattern='\+{0,1}[0-9 ]+' type='text' name='natel' value='".$obj->natel."'></td>
+        <td><b>Natel:</b></td><td><input pattern='\+{0,1}[0-9 ]+' type='text' name='natel' value='{$obj->natel}'></td>
       </tr>
       <tr>
-        <td><b>Telefon:</b></td><td><input pattern='\+{0,1}[0-9 ]+' type='text' name='telefon' value='".$obj->telefon."'></td>
+        <td><b>Telefon:</b></td><td><input pattern='\+{0,1}[0-9 ]+' type='text' name='telefon' value='{$obj->telefon}'></td>
       </tr>
       <tr>
-        <td><b>Email:</b></td><td><input type='email' name='email' value='".$obj->email."'></td>
+        <td><b>Email:</b></td><td><input type='email' name='email' value='{$obj->email}'></td>
       </tr>
       <tr>
         <td><b>Admin:</b></td><td><select style='width: 4em;' size='1' name='admin'>";
@@ -98,7 +98,7 @@ echo "  </select>
         </td>
       </tr>
       <tr>
-        <td><b>Checkflug:</b></td><td><input pattern='[0-3]?[0-9]\.[0-1]?[0-9]\.20[1-9][0-9]' type='text' name='checkflug' value='".$checkflug_ch."'></td>
+        <td><b>Checkflug:</b></td><td><input pattern='[0-3]?[0-9]\.[0-1]?[0-9]\.20[1-9][0-9]' type='text' name='checkflug' value='{$checkflug_ch}'></td>
       </tr>
       <tr>
         <td><b>Gesperrt:</b></td><td><select style='width: 4em;' size='1' name='gesperrt'>";

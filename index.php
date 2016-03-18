@@ -49,7 +49,7 @@ if ($_SESSION['show'] == 'tag')
   echo '</div>';
   echo '<div class="center">';
   echo '<table id="monat_title"><tr>';
-  echo "<td style='padding: 10px;'>".$tage[$wochentag_i].", $tag.&nbsp;".$monate[$monat-1]." $jahr</td>";
+  echo "<td style='padding: 10px;'>{$tage[$wochentag_i]}, {$tag}.&nbsp;{$monate[$monat-1]} {$jahr}</td>";
   echo '</tr></table>';
   echo '</div>';
 }
@@ -76,7 +76,7 @@ else
     if ($x == $flieger_id)
       $sel = "selected='selected'";
 
-    $select .= "<option $sel value='$x'>".$obj->flieger."</option>";
+    $select .= "<option {$sel} value='{$x}'>{$obj->flieger}</option>";
   }
 
   $select .= "</select>";
@@ -93,7 +93,7 @@ else
   echo "<div class='center'>";
   echo "<table id='monat_title'><tr>";
   echo "<td>";
-  echo '<a href="/reservationen/index.php?flieger_id='.$flieger_id.'&amp;show=monat&amp;monat='.$z_monat.'&amp;jahr='.$z_jahr.'&amp;tag='.$tag.'"><span>&laquo;</span></a> &nbsp; ';
+  echo "<a href='/reservationen/index.php?flieger_id={$flieger_id}&amp;show=monat&amp;monat={$z_monat}&amp;jahr={$z_jahr}&amp;tag={$tag}'><span>&laquo;</span></a> &nbsp; ";
   echo "</td><td>";
   echo $monate[$monat-1];
   echo " $jahr";
@@ -101,12 +101,12 @@ else
   echo " &nbsp; &nbsp;";
   echo "</td><td>";
   echo "<input type='hidden' name='show' value='monat' />";
-  echo "<input type='hidden' name='tag' value='$tag' />";
-  echo "<input type='hidden' name='monat' value='$monat' />";
-  echo "<input type='hidden' name='jahr' value='$jahr' />";
+  echo "<input type='hidden' name='tag' value='{$tag}' />";
+  echo "<input type='hidden' name='monat' value='{$monat}' />";
+  echo "<input type='hidden' name='jahr' value='{$jahr}' />";
   echo $select;
   echo "</td><td>";
-  echo ' &nbsp; <a href="/reservationen/index.php?flieger_id='.$flieger_id.'&amp;show=monat&amp;monat='.$v_monat.'&amp;jahr='.$v_jahr.'&amp;tag='.$tag.'">&raquo;</a> ';
+  echo " &nbsp; <a href='/reservationen/index.php?flieger_id={$flieger_id}&amp;show=monat&amp;monat={$v_monat}&amp;jahr={$v_jahr}&amp;tag={$tag}'>&raquo;</a> ";
   echo "</td>";
   echo "</tr></table>";
   echo "</div>";

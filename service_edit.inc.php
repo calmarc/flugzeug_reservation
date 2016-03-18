@@ -42,7 +42,7 @@ else if (isset($_POST['submit']))
 
   $error_msg = check_zaehlerstand($zaehlerstand, $digit_minute);
 
-  $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `zaehler_eintraege` WHERE `flieger_id` = '$flieger_id';");
+  $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `zaehler_eintraege` WHERE `flieger_id` = '{$flieger_id}';");
   $obj_x = $res_x->fetch_object();
   $min = $obj_x->zaehler_minute;
 

@@ -23,7 +23,7 @@ include_once('service_edit.inc.php');
 print_html_to_body('Service Eintrag', '');
 include_once('includes/usermenu.php');
 
-$query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
+$query = "SELECT * FROM `flieger` WHERE `id` = '{$flieger_id}' LIMIT 1;";
 $res = $mysqli->query($query);
 $flieger_name = $res->fetch_object()->flieger;
 
@@ -36,9 +36,9 @@ $flieger_name = $res->fetch_object()->flieger;
 <?php
 
 if (isset($error_msg) && $error_msg != "")
-  echo "<p><b style='color: red;'>$error_msg</b></p>";
+  echo "<p><b style='color: red;'>{$error_msg}</b></p>";
 
-$hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
+$hidden = "<input type='hidden' name='flieger_id' value='{$flieger_id}' />";
 ?>
   <form action='/reservationen/service_edit.php' method='post'>
 <?php echo $hidden; ?>
@@ -70,7 +70,7 @@ while ($obj = $res->fetch_object())
   $selected = "";
   if ($_SESSION['user_id'] == $obj->id)
     $selected = "selected='selected'";
-  echo "<option $selected value='".$obj->id."'>".$obj->name."</option>";
+  echo "<option {$selected} value='{$obj->id}'>{$obj->name}</option>";
 }
 echo '</select>';
 
@@ -107,7 +107,7 @@ $query = "SELECT `service_eintraege`.`id`,
                  `service_eintraege`.`zaehler_minute`,
                  `service_eintraege`.`datum`
          FROM `service_eintraege` LEFT OUTER JOIN `piloten` ON `piloten`.`id` = `service_eintraege`.`user_id`
-         WHERE `flieger_id` = '".$flieger_id."'  ORDER BY `zaehler_minute` DESC LIMIT 50;";
+         WHERE `flieger_id` = '{$flieger_id}'  ORDER BY `zaehler_minute` DESC LIMIT 50;";
 
 $res = $mysqli->query($query);
 
@@ -127,10 +127,10 @@ while ($obj = $res->fetch_object())
 
   $edit_link = '<a onclick="return confirm(\'Service-Eintrag wirklich löschen?\')" href="service_edit.php?action=del&amp;service_id='.$service_id.'&amp;flieger_id='.$flieger_id.'"><img src="/reservationen/bilder/delete.png" alt="loeschen" /></a>';
 
-  echo ' <tr>
-          <td>'.$edit_link.'</td>
-          <td>'.$tag.'.'.$monat.'.'.$jahr.'</td><td style="text-align: right;">'.$zaehlerstand.'</td><td>'.$obj->name.'</td>
-        </tr>';
+  echo " <tr>
+          <td>{$edit_link}</td>
+          <td>{$tag}.{$monat}.{$jahr}</td><td style='text-align: right;'>{$zaehlerstand}</td><td>{$obj->name}</td>
+        </tr>";
 }
 
 ?>

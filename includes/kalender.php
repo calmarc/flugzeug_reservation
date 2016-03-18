@@ -159,7 +159,7 @@ function draw_calendar($day, $month,$year){
       if ($day == $list_day)
         $tmp2 = 'id="aktiv"';
 
-      $calendar.= "<div $tmp2 $vergangenheit><a href='index.php?tag=$list_day&amp;monat=$month&amp;jahr=$year'>$list_day</a></div>";
+      $calendar.= "<div {$tmp2} {$vergangenheit}><a href='index.php?tag={$list_day}&amp;monat={$month}&amp;jahr={$year}'>{$list_day}</a></div>";
       $calendar.= "</td>\n";
 
       if ($days_in_this_week == 7){ // Voll -> umschlagen
@@ -174,11 +174,11 @@ function draw_calendar($day, $month,$year){
   // finish the rest of the days in the week
   if ($days_in_this_week > 1 && $days_in_this_week < 8){
       for($x = 1; $x <= (8 - $days_in_this_week); $x++){
-          $calendar.= '<td class="calendar-day-np"> </td>';
+          $calendar.= "<td class='calendar-day-np'> </td>";
       }
   }
 
-  $calendar.= '</table>';
+  $calendar.= "</table>";
 
   date_default_timezone_set('UTC');
   return $calendar;

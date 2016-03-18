@@ -31,12 +31,12 @@ if (isset($error_msg) && $error_msg != "")
   echo "<p><b style='color: red;'>$error_msg</b></p>";
 
 // wurde zwar im .inc schon abgefragt zur id-kontrolle.. aber naja..
-$query = "SELECT * FROM `zaehler_eintraege` WHERE `id` = '$zaehler_id' LIMIT 1;";
+$query = "SELECT * FROM `zaehler_eintraege` WHERE `id` = '{$zaehler_id}' LIMIT 1;";
 $res = $mysqli->query($query);
 
 if ($res->num_rows != 1)
 {
-  header('Location: /reservationen/landungs_eintrag.php?flieger_id='.$flieger_id);
+  header("Location: /reservationen/landungs_eintrag.php?flieger_id={$flieger_id}");
   exit;
 }
 $obj = $res->fetch_object();

@@ -35,7 +35,7 @@ if (isset($_POST['submit']))
   if ($error_msg == "")
   {
 
-    $query= "SELECT `salt` FROM `piloten` WHERE `id` = $id;";
+    $query= "SELECT `salt` FROM `piloten` WHERE `id` = {$id};";
     $res = $mysqli->query($query);
     $obj = $res->fetch_object();
 

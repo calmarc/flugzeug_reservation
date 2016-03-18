@@ -126,7 +126,7 @@ $query = " SELECT
           LEFT OUTER JOIN `piloten` AS `mem1` ON `reser_getrimmt`.`user_id` = `mem1`.`id`
           LEFT OUTER JOIN `piloten` AS `mem2` ON `reser_getrimmt`.`loescher_id` = `mem2`.`id`
           LEFT OUTER JOIN `flieger` AS `flieger` ON `reser_getrimmt`.`flieger_id` = `flieger`.`id`
-   $where_txt $order_by_txt LIMIT 600;";
+  {$where_txt} {$order_by_txt} LIMIT 600;";
 
 $res = $mysqli->query($query);
 
@@ -139,18 +139,18 @@ while ($obj = $res->fetch_object())
   $gel_datum = $tmp[2].'.'.$tmp[1].'.'.$tmp[0];
 
   if ($obj->loescher_id == $obj->pilot)
-    $loescher_id = "<span style='color: #999999'>".$obj->loescher_id."</span>";
+    $loescher_id = "<span style='color: #999999'>{$obj->loescher_id}</span>";
   else
     $loescher_id = $obj->loescher_id;
 
   echo "\n<tr>
-           <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>$gel_datum</td>
-           <td>[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] ".$obj->pilot."</td>
-           <td>$obj->flieger</td>
+           <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>{$gel_datum}</td>
+           <td>[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
+           <td>{$obj->flieger}</td>
            <td>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>
            <td>".mysql2chtimef($obj->getrimmt_von, $obj->getrimmt_bis, FALSE)."</td>
            <td style='font-weight: bold; color #333333;'>".nl2br($obj->grund)."</td>
-           <td>".$loescher_id."</td>
+           <td>{$loescher_id}</td>
         </tr>";
 }
 ?>

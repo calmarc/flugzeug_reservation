@@ -56,11 +56,11 @@ else
 
 $where_txt = '';
 if ($where_bereich != '' && $where_pilot != '')
-  $where_txt = " WHERE $where_bereich AND $where_pilot ";
+  $where_txt = " WHERE {$where_bereich} AND {$where_pilot} ";
 else if ($where_bereich != '')
-  $where_txt = " WHERE $where_bereich ";
+  $where_txt = " WHERE {$where_bereich} ";
 else if ($where_pilot != '')
-  $where_txt = " WHERE $where_pilot ";
+  $where_txt = " WHERE {$where_pilot} ";
 
 print_html_to_body('Aktuelle Reservationen', '');
 include_once('includes/usermenu.php');
@@ -118,7 +118,7 @@ $query = " SELECT
       FROM `reservationen`
           LEFT OUTER JOIN `piloten` AS `mem1` ON `reservationen`.`user_id` = `mem1`.`id`
           LEFT OUTER JOIN `flieger` AS `flieger` ON `reservationen`.`flieger_id` = `flieger`.`id`
-   $where_txt $order_by_txt LIMIT 150;";
+      {$where_txt} {$order_by_txt} LIMIT 150;";
 
 $res = $mysqli->query($query);
 
@@ -136,9 +136,9 @@ while ($obj = $res->fetch_object())
     $loescher_id = $obj->loescher_id;
 
   echo "\n<tr>
-           <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>$gel_datum</td>
-           <td>[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] ".$obj->pilot."</td>
-           <td>$obj->flieger</td>
+           <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>{$gel_datum}</td>
+           <td>[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
+           <td>{$obj->flieger}</td>
            <td>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>
         </tr>";
 }

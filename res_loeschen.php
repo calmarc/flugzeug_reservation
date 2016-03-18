@@ -35,7 +35,7 @@ $res = $mysqli->query($query);
 $obj = $res->fetch_object();
 
 $flugzeug = $obj->flieger_id;
-$res2 = $mysqli->query("SELECT `flieger` FROM `flieger` where `id` = $flugzeug;");
+$res2 = $mysqli->query("SELECT `flieger` FROM `flieger` where `id` = {$flugzeug};");
 $obj2 = $res2->fetch_object();
 $flugzeug = $obj2->flieger;
 
@@ -94,7 +94,7 @@ if (!$trimmen)
 
 <?php
 
-$res = $mysqli->query("SELECT * FROM `reservationen` WHERE `id` = $reservierung;");
+$res = $mysqli->query("SELECT * FROM `reservationen` WHERE `id` = {$reservierung};");
 $obj = $res->fetch_object();
 $von = $obj->von;
 $bis = $obj->bis;

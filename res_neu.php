@@ -40,11 +40,11 @@ if (isset($error_msg) && $error_msg != "")
 
 if (isset($flieger_id))
 {
-  $query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
+  $query = "SELECT * FROM `flieger` WHERE `id` = '{$flieger_id}' LIMIT 1;";
   $res = $mysqli->query($query);
   $obj = $res->fetch_object();
   $fliegertxt = $obj->flieger;
-  $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
+  $hidden = "<input type='hidden' name='flieger_id' value="{$flieger_id}" />";
 }
 else
 {
@@ -53,8 +53,8 @@ else
   $res = $mysqli->query($query);
   $fliegertxt = "";
   while($obj = $res->fetch_object())
-     $fliegertxt .= "<option value='".$obj->id."'>".$obj->flieger." (".$obj->id.")</option>";
-   $fliegertxt = "<select size='1' name='flieger_id'>$fliegertxt<select>";
+     $fliegertxt .= "<option value='{$obj->id}'>{$obj->flieger} ({$obj->id})</option>";
+   $fliegertxt = "<select size='1' name='flieger_id'>{$fliegertxt}<select>";
   $hidden = "";
 }
 
@@ -172,7 +172,7 @@ while ($obj = $res->fetch_object())
   $x++;
 }
 
-$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`flieger_id` FROM `reservationen` LEFT OUTER JOIN `flieger` ON `flieger`.`id` = `reservationen`.`flieger_id` WHERE `user_id` = $user_id AND `bis` >= '$date' ORDER BY `von` DESC;";
+$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`flieger_id` FROM `reservationen` LEFT OUTER JOIN `flieger` ON `flieger`.`id` = `reservationen`.`flieger_id` WHERE `user_id` = {$user_id} AND `bis` >= '{$date}' ORDER BY `von` DESC;";
 $res = $mysqli->query($query);
 
 while ($obj = $res->fetch_object())
@@ -188,22 +188,22 @@ while ($obj = $res->fetch_object())
   $g_monat = intval($g_monat);
   $g_tag = intval($g_tag);
 
-  echo ' <tr><td><a href="index.php?show=tag&amp;tag='.$g_tag.'&amp;monat='.$g_monat.'&amp;jahr='.$g_jahr.'">[Tagesplan]</a></td>
-          <td '.$yellow.'>'.$datum.'</td><td '.$yellow.'>'.$obj->flieger.'</td>
-        </tr>';
+  echo " <tr><td><a href='index.php?show=tag&amp;tag={$g_tag}&amp;monat={$g_monat}&amp;jahr={$g_jahr}'>[Tagesplan]</a></td>
+          <td {$yellow}>{$datum}</td><td {$yellow}>{$obj->flieger}</td>
+        </tr>";
 }
 
-$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`flieger_id` FROM `reservationen` LEFT OUTER JOIN `flieger` ON `flieger`.`id` = `reservationen`.`flieger_id` WHERE `user_id` = $user_id AND `bis` < '$date' ORDER BY `von` DESC LIMIT 5;";
+$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`flieger_id` FROM `reservationen` LEFT OUTER JOIN `flieger` ON `flieger`.`id` = `reservationen`.`flieger_id` WHERE `user_id` = {$user_id} AND `bis` < '{$date}' ORDER BY `von` DESC LIMIT 5;";
 $res = $mysqli->query($query);
 
 echo '<tr><td style="background-color: #99ff99;"></td><td style="background-color: #99ff99; text-align: left;" colspan="2">Vergangene:</td></tr>';
 while ($obj = $res->fetch_object())
 {
   $datum = mysql2chtimef($obj->von, $obj->bis, FALSE);
-  echo ' <tr><td></td>
-          <td style="color: grey;">'.$datum.'</td>
-          <td style="color: grey;">'.$obj->flieger.'</td>
-        </tr>';
+  echo " <tr><td></td>
+          <td style='color: grey;'>{$datum}</td>
+          <td style='color: grey;'>{$obj->flieger}</td>
+        </tr>";
 }
 
 ?>

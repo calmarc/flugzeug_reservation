@@ -36,15 +36,15 @@ if (isset($_POST['submit']))
     // bigger than next half-hour rounded up
 
     if (check_admin($mysqli))
-      $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = ".$_POST['reservierung']." LIMIT 1;";
+      $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = {$_POST['reservierung']} LIMIT 1;";
     else
-      $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = ".$_POST['reservierung']." AND `user_id` = '".$_SESSION['user_id']."' AND `bis` >= '$rounded_date' LIMIT 1;";
+      $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = {$_POST['reservierung']} AND `user_id` = '{$_SESSION['user_id']}' AND `bis` >= '{$rounded_date}' LIMIT 1;";
 
     $res = $mysqli->query($query);
 
     if ($res->num_rows < 1)
     {
-      header("Location: index.php?tag=$tag&monat=$monat&jahr=$jahr");
+      header("Location: index.php?tag={$tag}&monat={$monat}&jahr={$jahr}");
       exit;
     }
 
@@ -55,7 +55,7 @@ if (isset($_POST['submit']))
     // find again all valid reservation.
     // array_diff will find occurance not found in the pre.
 
-    $res2 = $mysqli->query("SELECT `flieger_id` from `reservationen` WHERE `id` = ".$_POST['reservierung'].";");
+    $res2 = $mysqli->query("SELECT `flieger_id` from `reservationen` WHERE `id` = {$_POST['reservierung']};");
     $obj2 = $res2->fetch_object();
     $flieger_id = $obj2->flieger_id;
 
@@ -65,7 +65,7 @@ if (isset($_POST['submit']))
     $id_tmp = intval($_POST['reservierung']);
     $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
 
-    $query = "SELECT * from `reservationen` WHERE `id` = $id_tmp LIMIT 1;";
+    $query = "SELECT * from `reservationen` WHERE `id` = {$id_tmp} LIMIT 1;";
     $res = $mysqli->query($query);
     $obj = $res->fetch_object();
 
@@ -269,7 +269,7 @@ if (isset($_POST['submit']))
 
           $res3 = $mysqli->query("SELECT * FROM `piloten`
                                  JOIN `reservationen` ON `piloten`.`id` = `reservationen`.`user_id`
-                                 WHERE `reservationen`.`id` =".$res_id." LIMIT 1;");
+                                 WHERE `reservationen`.`id` ={$res_id} LIMIT 1;");
 
           $obj3 = $res3->fetch_object();
           $natel = $obj3->natel;
@@ -279,7 +279,7 @@ if (isset($_POST['submit']))
           $res_vin = $obj3->bis;
 
           $res_datum = mysql2chtimef($obj3->von, $obj3->bis, TRUE);
-          $res4 = $mysqli->query("SELECT * FROM `flieger` WHERE `id` = ".$obj3->flieger_id." ;");
+          $res4 = $mysqli->query("SELECT * FROM `flieger` WHERE `id` = {$obj3->flieger_id} ;");
           $obj4 = $res4->fetch_object();
           $flieger = $obj4->flieger;
           $headers   = array();
@@ -287,9 +287,9 @@ if (isset($_POST['submit']))
           $headers[] = "Content-type: text/plain; charset=utf-8";
           $headers[] = "From: noreply@mfgc.ch";
 
-          $txt = "Deine Reservation:\n\nPilot: $pilot\nFlugzeug: $flieger\nDatum: $res_datum\n\nwurde aktiviert!";
+          $txt = "Deine Reservation:\n\nPilot: {$pilot}\nFlugzeug: {$flieger}\nDatum: {$res_datum}\n\nwurde aktiviert!";
 
-          mail ($email, "MFGC Reservation vom $res_datum aktiviert!", $txt, implode("\r\n",$headers));
+          mail ($email, "MFGC Reservation vom {$res_datum} aktiviert!", $txt, implode("\r\n",$headers));
 
           // send sms.
           $ret_val = sendsms($natel, $txt);
@@ -303,20 +303,20 @@ if (isset($_POST['submit']))
     //TODO woher soll post'flieger_id is da wenn von res_neu.php oder?
     if (isset($_POST['backto'], $_POST['flieger_id']) && $_POST['backto'] == "res_neu.php")
     {
-       header("Location: /reservationen/res_neu.php?tag=$tag&monat=$monat&jahr=$jahr&flieger_id=".$_POST['flieger_id']);
+       header("Location: /reservationen/res_neu.php?tag={$tag}&monat={$monat}&jahr={$jahr}&flieger_id={$_POST['flieger_id']}");
     }
     else
-       header("Location: index.php?tag=$tag&monat=$monat&jahr=$jahr");
+       header("Location: index.php?tag={$tag}&monat={$monat}&jahr={$jahr}");
   }
 }
 
 // check if trimmer or delete
-$query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = $reservierung LIMIT 1;";
+$query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = {$reservierung} LIMIT 1;";
 $res = $mysqli->query($query);
 
 if ($res->num_rows < 1)
 {
-  header("Location: index.php?tag=$tag&monat=$monat&jahr=$jahr");
+  header("Location: index.php?tag={$tag}&monat={$monat}&jahr={$jahr}");
   exit;
 }
 $obj = $res->fetch_object();
@@ -332,7 +332,7 @@ else
 {
 	$trimmen = FALSE;	
 	$h1 = "Reservation löschen";
-    $h3 = "Begründung$optional";
+    $h3 = "Begründung{$optional}";
     $button = "Reservation löschen";
 }
 

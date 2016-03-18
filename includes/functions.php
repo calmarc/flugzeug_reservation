@@ -98,7 +98,7 @@ function checkbrute($mysqli) {
     // All login attempts are counted from the past 1 minutes
     $valid_attempts = $now - (2 * 60);
 
-    if ($stmt = $mysqli->prepare("SELECT time FROM login_attempts WHERE time > '$valid_attempts'")) {
+    if ($stmt = $mysqli->prepare("SELECT time FROM login_attempts WHERE time > '{$valid_attempts}'")) {
 
         // Execute the prepared query.
         $stmt->execute();
@@ -220,23 +220,23 @@ function mysql2chtimef ($von, $bis, $raw)
   else
   {
     if ($vontag == $bistag)
-      $datum = "<span style='color: #990000;'>$vontag</span>: <span style='color: green'><i>$vonzeit - $biszeit Uhr</i></span>";
+      $datum = "<span style='color: #990000;'>{$vontag}</span>: <span style='color: green'><i>{$vonzeit} - {$biszeit} Uhr</i></span>";
     else
-      $datum = "<span style='color: #990000;'>$vontag</span> <span style='color: green'><i>$vonzeit</i></span> - <span style='color: #990000;'>$bistag</span> <span style='color: green'><i>$biszeit</i></span>";
+      $datum = "<span style='color: #990000;'>{$vontag}</span> <span style='color: green'><i>{$vonzeit}</i></span> - <span style='color: #990000;'>{$bistag}</span> <span style='color: green'><i>{$biszeit}</i></span>";
   }
   return $datum;
 }
 
 function check_admin($mysqli)
 {
-  $query = "SELECT `admin` from `piloten` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
+  $query = "SELECT `admin` from `piloten` where `id` = {$_SESSION['user_id']} LIMIT 1;";
   $res = $mysqli->query($query);
   $obj = $res->fetch_object();
   return $obj->admin;
 }
 function check_gesperrt($mysqli)
 {
-  $query = "SELECT `gesperrt` from `piloten` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
+  $query = "SELECT `gesperrt` from `piloten` where `id` = {$_SESSION['user_id']} LIMIT 1;";
   $res = $mysqli->query($query);
   $obj = $res->fetch_object();
   return $obj->gesperrt;
@@ -308,7 +308,7 @@ function remove_zombies($mysqli)
     // TODO: auf ein jahr reduzieren in der vergangenheit...
     //
     // zurueckreichenste punkt allers reservierungen (ganz in der vergangenheit)
-    $query = "SELECT `von` FROM `reservationen` WHERE `flieger_id` = '".$obj_f->id."' ORDER BY `von` ASC LIMIT 1;";
+    $query = "SELECT `von` FROM `reservationen` WHERE `flieger_id` = '{$obj_f->id}' ORDER BY `von` ASC LIMIT 1;";
     if ($res = $mysqli->query($query))
     {
       if ($res->num_rows > 0)
@@ -322,7 +322,7 @@ function remove_zombies($mysqli)
 
     // zukuenfstigste punkt der reservierungen (ganz in der zukunft)
     //
-    $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '".$obj_f->id."' ORDER BY `bis` DESC LIMIT 1;";
+    $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '{$obj_f->id}' ORDER BY `bis` DESC LIMIT 1;";
     if ($res = $mysqli->query($query))
     {
       if ($res->num_rows > 0)
@@ -350,7 +350,7 @@ function remove_zombies($mysqli)
     $delete_id = array();
 
     // jetzt alle reservierungen hohlen
-    $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '".$obj_f->id."' AND ( `bis` > '$von_extrem' AND `von` < '$bis_extrem') ORDER BY `timestamp` ASC;";
+    $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '{$obj_f->id}' AND ( `bis` > '{$von_extrem}' AND `von` < '{$bis_extrem}') ORDER BY `timestamp` ASC;";
 
     $res_tang = $mysqli->query($query);
     while($obj_tang = $res_tang->fetch_object())
@@ -413,7 +413,7 @@ function check_level($mysqli, $flieger_id, $von_date, $bis_date)
 
   // NUR ein halbes jahr zurueck gucken. hats ueberhaupt reservationen?
   // sonst Zeit markieren als $von_extrem
-  $query = "SELECT `von` FROM `reservationen` WHERE `flieger_id` = '".$flieger_id."' AND `von` > '$date_xmonth_back'  ORDER BY `von` ASC LIMIT 1;";
+  $query = "SELECT `von` FROM `reservationen` WHERE `flieger_id` = '{$flieger_id}' AND `von` > '{$date_xmonth_back}'  ORDER BY `von` ASC LIMIT 1;";
 
   if ($res = $mysqli->query($query))
   {
@@ -430,7 +430,7 @@ function check_level($mysqli, $flieger_id, $von_date, $bis_date)
 
   // die max-zukunfstigste (bis)-datum gucken
   // zeit markieren ($bis_extrem)
-  $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '".$flieger_id."' ORDER BY `bis` DESC LIMIT 1;";
+  $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '{$flieger_id}' ORDER BY `bis` DESC LIMIT 1;";
   if ($res = $mysqli->query($query))
   {
     if ($res->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
@@ -456,7 +456,7 @@ function check_level($mysqli, $flieger_id, $von_date, $bis_date)
       $bookings[$x][$i] = FALSE;
 
   // alle hohlen
-  $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '".$flieger_id."' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
+  $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '{$flieger_id}' AND `von` >= '{$von_extrem}'  ORDER BY `timestamp` ASC;";
   $res_tang = $mysqli->query($query);
 
   while($obj_tang = $res_tang->fetch_object())
@@ -528,7 +528,7 @@ function get_valid_reserv($mysqli, $flieger_id)
 
   // NUR ein halbes jahr zurueck gucken. hats ueberhaupt reservationen?
   // sonst Zeit markieren als $von_extrem
-  $query = "SELECT `von` FROM `reservationen` WHERE `flieger_id` = '".$flieger_id."' AND `von` > '$date_xmonth_back'  ORDER BY `von` ASC LIMIT 1;";
+  $query = "SELECT `von` FROM `reservationen` WHERE `flieger_id` = '{$flieger_id}' AND `von` > '{$date_xmonth_back}'  ORDER BY `von` ASC LIMIT 1;";
 
   if ($res = $mysqli->query($query))
   {
@@ -543,7 +543,7 @@ function get_valid_reserv($mysqli, $flieger_id)
 
   // die max-zukunfstigste (bis)-datum gucken
   // zeit markieren ($bis_extrem)
-  $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '".$flieger_id."' ORDER BY `bis` DESC LIMIT 1;";
+  $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '{$flieger_id}' ORDER BY `bis` DESC LIMIT 1;";
   if ($res = $mysqli->query($query))
   {
     if ($res->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
@@ -567,7 +567,7 @@ function get_valid_reserv($mysqli, $flieger_id)
       $bookings[$x][$i] = FALSE;
 
   // alle hohlen
-  $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '".$flieger_id."' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
+  $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '{$flieger_id}' AND `von` >= '{$von_extrem}'  ORDER BY `timestamp` ASC;";
   $res_tang = $mysqli->query($query);
 
   while($obj_tang = $res_tang->fetch_object())
@@ -610,9 +610,9 @@ function print_options($default, $t_array)
   foreach ($t_array as $item)
   {
     if (intval($default) == intval($item))
-      echo '<option selected="selected">'.$item.'</option>';
+      echo "<option selected='selected'>{$item}</option>";
     else
-      echo '<option>'.$item.'</option>';
+      echo "<option>{$item}</option>";
   }
 }
 
@@ -745,15 +745,15 @@ function bei_geloescht_email($mysqli, $subject_hint, $pilot_id, $flieger_id, $ze
   $flieger = $obj->flieger;
 
   $subject = "Reservation $subject_hint: $pilot: $zeit";
-  $txt = "Bei der Motorfluggruppe Chur wurde folgende Flugzeug-Reservation $subject_hint:";
+  $txt = "Bei der Motorfluggruppe Chur wurde folgende Flugzeug-Reservation {$subject_hint}:";
   $txt .= "\n\n";
-  $txt .= "Pilot: $pilot";
+  $txt .= "Pilot: {$pilot}";
   $txt .= "\n";
-  $txt .= "Flugzeug: $flieger";
+  $txt .= "Flugzeug: {$flieger}";
   $txt .= "\n";
-  $txt .= "Buchungszeit: $zeit";
+  $txt .= "Buchungszeit: {$zeit}";
   $txt .= "\n\n";
-  $txt .= "Begründung: $begruendung";
+  $txt .= "Begründung: {$begruendung}";
   $txt .= "\n\n";
   $txt .= "Mit freundlichen Grüssen";
   $txt .= "\n";

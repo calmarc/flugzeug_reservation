@@ -67,14 +67,14 @@ if (isset($_POST['submit']))
 
     $query = "INSERT INTO `mfgcadmin_reservationen`.`reservationen`
       ( `id` , `timestamp` , `user_id` , `flieger_id` , `von` , `bis`) VALUES
-      ( NULL , CURRENT_TIMESTAMP , '$user_id', '$flieger_id', FROM_UNIXTIME($vonstamp), FROM_UNIXTIME($bisstamp));";
+      ( NULL , CURRENT_TIMESTAMP , '{$user_id}', '{$flieger_id}', FROM_UNIXTIME({$vonstamp}), FROM_UNIXTIME({$bisstamp}));";
 
     $mysqli->query($query);
 
     if (isset($_SESSION['plan']) && $_SESSION['plan'] == 'monatsplan')
-      header("Location: index.php?show=monatsplan&tag=$von_tag&monat=$von_monat&jahr=$von_jahr");
+      header("Location: index.php?show=monatsplan&tag={$von_tag}&monat={$von_monat}&jahr={$von_jahr}");
     else
-      header("Location: index.php?tag=$von_tag&monat=$von_monat&jahr=$von_jahr");
+      header("Location: index.php?tag={$von_tag}&monat={$von_monat}&jahr={$von_jahr}");
   }
 }
 else if (isset($_GET['flieger_id']) && isset($_GET['tag']) && isset($_GET['monat']) && isset($_GET['jahr']))

@@ -7,7 +7,7 @@ if (isset($_GET['flieger_id']))
 if (isset($_POST['flieger_id']))
   $flieger_id = intval($_POST['flieger_id']);
 
-$query = "SELECT `flieger` FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
+$query = "SELECT `flieger` FROM `flieger` WHERE `id` = '{$flieger_id}' LIMIT 1;";
 $res = $mysqli->query($query);
 
 if ($res->num_rows != 1)
@@ -24,7 +24,7 @@ if (isset($_GET['zaehler_id']))
 if (isset($_POST['zaehler_id']))
   $zaehler_id = intval($_POST['zaehler_id']);
 
-$query = "SELECT * FROM `zaehler_eintraege` WHERE `id` = '$zaehler_id' LIMIT 1;";
+$query = "SELECT * FROM `zaehler_eintraege` WHERE `id` = '{$zaehler_id}' LIMIT 1;";
 $res2 = $mysqli->query($query);
 if ($res2->num_rows != 1)
 {
@@ -76,7 +76,7 @@ else if (isset($_POST['edit']))
     $query = "UPDATE `mfgcadmin_reservationen`.`zaehler_eintraege` SET `datum` = ?, `zaehler_minute` = ? WHERE `zaehler_eintraege`.`id` = ?;";
     mysqli_prepare_execute($mysqli, $query, 'sii', array ($datum, $zaehler_minute, $zaehler_id));
 
-    header("Location: landungs_eintrag.php?flieger_id=$flieger_id");
+    header("Location: landungs_eintrag.php?flieger_id={$flieger_id}");
     exit;
   }
 }

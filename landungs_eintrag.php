@@ -17,7 +17,7 @@ if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
 {
   $flieger_id = $_GET['flieger_id'];
 
-  $query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
+  $query = "SELECT * FROM `flieger` WHERE `id` = '{$flieger_id}' LIMIT 1;";
   $res = $mysqli->query($query);
 
   if ($res->num_rows != 1)
@@ -84,11 +84,11 @@ if (isset($msg) && $msg != "")
 if (isset($error_msg) && $error_msg != "")
   echo "<p><b style='color: red;'>$error_msg</b></p>";
 
-$query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
+$query = "SELECT * FROM `flieger` WHERE `id` = '{$flieger_id}' LIMIT 1;";
 $res = $mysqli->query($query);
 $obj = $res->fetch_object();
 $fliegertxt = $obj->flieger;
-$hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
+$hidden = "<input type='hidden' name='flieger_id' value='{$flieger_id}' />";
 
 ?>
   <form action='landungs_eintrag.php' method='post'>
@@ -145,7 +145,7 @@ $query = "SELECT `zaehler_eintraege`.`id`,
                  `zaehler_eintraege`.`zaehler_minute`,
                  `zaehler_eintraege`.`datum`
          FROM `zaehler_eintraege` INNER JOIN `piloten` ON `piloten`.`id` = `zaehler_eintraege`.`user_id`
-         WHERE `flieger_id` = '".$flieger_id."'  ORDER BY `zaehler_minute` DESC LIMIT 50;";
+         WHERE `flieger_id` = '{$flieger_id}'  ORDER BY `zaehler_minute` DESC LIMIT 50;";
 
 if ($res = $mysqli->query($query))
 {
@@ -176,14 +176,14 @@ if ($res = $mysqli->query($query))
       // admin + die letzten 2 zum ediditerne fuer benutzer
       if (check_admin($mysqli) || ($_SESSION['user_id'] == $user_id && $edit_c < 2))
       {
-        $edit_link = '<a href="landungs_edit.php?action=edit&amp;zaehler_id='.$eintrags_id.'&amp;flieger_id='.$flieger_id.'"><img alt="edit" src="bilder/edit.png" /></a>';
+        $edit_link = "<a href='landungs_edit.php?action=edit&amp;zaehler_id={$eintrags_id}&amp;flieger_id={$flieger_id}'><img alt='edit' src='bilder/edit.png' /></a>";
         $edit_c++;
       }
 
-      echo ' <tr>
-              <td>'.$edit_link.'</td>
-              <td>'.$tag.'.'.$monat.'.'.$jahr.'</td><td style="text-align: right;">'.$zaehlerstand.'</td><td style="text-align: right;">'.$dauer.'</td><td>'.$name.'</td>
-            </tr>';
+      echo " <tr>
+              <td>{$edit_link}</td>
+              <td>{$tag}.{$monat}.{$jahr}</td><td style='text-align: right;'>{$zaehlerstand}</td><td style='text-align: right;'>{$dauer}</td><td>{$name}</td>
+            </tr>";
     }
   }
 }

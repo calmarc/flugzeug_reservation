@@ -40,7 +40,7 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
             $res2 = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'bei_gesperrt';");
             $obj2 = $res2->fetch_object();
             $to = $obj2->email;
-            $subject = "Checkflug überfällig: '".$obj->name."' [".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."]";
+            $subject = "Checkflug überfällig: '{$obj->name}' [".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."]";
 			$txt = $subject;
             $headers   = array();
             $headers[] = "MIME-Version: 1.0";

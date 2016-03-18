@@ -64,13 +64,13 @@ while ($obj = $res->fetch_object())
   $checkflug_ch = shortsql2ch_date($obj->checkflug);
 
   echo "\n<tr>
-           <td><a href='pilot_edit.php?id=".$obj->id."'><img alt='editieren' src='/reservationen/bilder/edit.png' /></a></td>
+           <td><a href='pilot_edit.php?id={$obj->id}'><img alt='editieren' src='/reservationen/bilder/edit.png' /></a></td>
            <td style='text-align: center;'>".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."</td>
-           <td>".$obj->name."</td>
-           <td><span style='white-space: nowrap;'>".$obj->natel."</span></td>
-           <td><span style='white-space: nowrap;'>".$obj->telefon."</span></td>
-           <td>".$obj->email."</td><td>".$admin_txt."</td>
-           <td style='$check_style'>".$checkflug_ch."</td><td>".$gesperrt_txt."</td>";
+           <td>{$obj->name}</td>
+           <td><span style='white-space: nowrap;'>{$obj->natel}</span></td>
+           <td><span style='white-space: nowrap;'>{$obj->telefon}</span></td>
+           <td>{$obj->email}</td><td>{$admin_txt}</td>
+           <td style='$check_style'>{$checkflug_ch}</td><td>{$gesperrt_txt}</td>";
   echo "</tr>";
 }
 ?>

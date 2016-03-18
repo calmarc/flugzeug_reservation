@@ -58,7 +58,7 @@ if (isset($_POST['updaten']))
   else
     $checkflug = "0000-00-00";
 
-  $res = $mysqli->query("SELECT * FROM `piloten` WHERE `piloten`.`id` = $id LIMIT 1;");
+  $res = $mysqli->query("SELECT * FROM `piloten` WHERE `piloten`.`id` = {$id} LIMIT 1;");
   $obj = $res->fetch_object();
 
   date_default_timezone_set("Europe/Zurich");
@@ -72,7 +72,7 @@ if (isset($_POST['updaten']))
   // passwort mit salt.. generieren.. und eintragen
   if ($password != "")
   {
-    $query= "SELECT `salt` FROM `piloten` WHERE `id` = $id LIMIT 1;";
+    $query= "SELECT `salt` FROM `piloten` WHERE `id` = {$id} LIMIT 1;";
     $res = $mysqli->query($query);
     $obj = $res->fetch_object();
 

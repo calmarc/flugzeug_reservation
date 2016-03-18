@@ -10,14 +10,14 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
 
   while($obj_f = $res_f->fetch_object())
   {
-    $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `zaehler_eintraege` WHERE `flieger_id` = '".$obj_f->id."';");
+    $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `zaehler_eintraege` WHERE `flieger_id` = '{$obj_f->id}';");
     $obj_x = $res_x->fetch_object();
     $min = $obj_x->zaehler_minute;
-    $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `service_eintraege` WHERE `flieger_id` = '".$obj_f->id."';");
+    $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `service_eintraege` WHERE `flieger_id` = '{$obj_f->id}';");
     $obj_x = $res_x->fetch_object();
     $service_min = $obj_x->zaehler_minute;
 
-    $res_x = $mysqli->query("SELECT `service_interval_min`  FROM `flieger` WHERE `id` = '".$obj_f->id."';");
+    $res_x = $mysqli->query("SELECT `service_interval_min`  FROM `flieger` WHERE `id` = '{$obj_f->id}';");
     $obj_x = $res_x->fetch_object();
     $service_interval_min = $obj_x->service_interval_min;
 
@@ -70,12 +70,12 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
       if ($i % 2 == 0)
       {
         if ($color == 'gruen')
-          echo '<a xlink:href="res_neu.php?flieger_id='.$obj_f->id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$tag.'&amp;stunde='.$stunde.'&amp;minute='.$minute.'">';
+          echo "<a xlink:href='res_neu.php?flieger_id={$obj_f->id}&amp;jahr={$jahr}&amp;monat={$monat}&amp;tag={$tag}&amp;stunde={$stunde}&amp;minute={$minute}'>";
 
-        echo '<rect x="'.$tabs[$i].'%" y="'.($yoffset).'" width="'.$w.'%" height="20" style="fill:url(#'.$color.'1); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+        echo "<rect x='{$tabs[$i]}%' y='{$yoffset}' width='{$w}%' height='20' style='fill:url(#{$color}1); stroke: #000000; stroke-width: 1px;'></rect>\n";
 
         if ($color == 'gruen')
-          echo '</a>';
+          echo "</a>";
 
         //////////////////////////// H-LINIE
         echo '<line x1="'.$tabs[$i].'%" y1="'.($yoffset-20).'" x2="'.$tabs[$i].'%" y2="'.($yoffset+20).'" style="stroke:#000000; stroke-width: 3px;" />'."\n";
@@ -88,12 +88,12 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
       else
       {
         if ($color == 'gruen')
-          echo '<a xlink:href="res_neu.php?flieger_id='.$obj_f->id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$tag.'&amp;stunde='.$stunde.'&amp;minute='.$minute.'">';
+          echo "<a xlink:href='res_neu.php?flieger_id={$obj_f->id}&amp;jahr={$jahr}&amp;monat={$monat}&amp;tag={$tag}&amp;stunde={$stunde}&amp;minute={$minute}'>";
 
-        echo '<rect x="'.$tabs[$i].'%" y="'.($yoffset).'" width="'.$w.'%" height="20" style="fill:url(#'.$color.'2); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+        echo "<rect x='{$tabs[$i]}%' y='{$yoffset}' width='{$w}%' height='20' style='fill:url(#{$color}2); stroke: #000000; stroke-width: 1px;'></rect>\n";
 
         if ($color == 'gruen')
-          echo '</a>';
+          echo "</a>";
       }
 
     }
@@ -128,7 +128,7 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
 
     // NUR ein halbes jahr zurueck gucken. hats ueberhaupt reservationen?
     // sonst Zeit markieren als $von_extrem
-    $query = "SELECT `von` FROM `reservationen` WHERE `flieger_id` = '".$obj_f->id."' AND `von` > '$date_xmonth_back'  ORDER BY `von` ASC LIMIT 1;";
+    $query = "SELECT `von` FROM `reservationen` WHERE `flieger_id` = '{$obj_f->id}' AND `von` > '{$date_xmonth_back}'  ORDER BY `von` ASC LIMIT 1;";
     if ($res = $mysqli->query($query))
     {
       if ($res->num_rows > 0)
@@ -142,7 +142,7 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
 
     // die max-zukunfstigste (bis)-datum gucken
     // zeit markieren ($bis_extrem)
-    $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '".$obj_f->id."' ORDER BY `bis` DESC LIMIT 1;";
+    $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '{$obj_f->id}' ORDER BY `bis` DESC LIMIT 1;";
     if ($res = $mysqli->query($query))
     {
       if ($res->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
@@ -171,7 +171,7 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
         $bookings[$x][$i] = FALSE;
 
     // alle hohlen
-    $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '".$obj_f->id."' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
+    $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '{$obj_f->id}' AND `von` >= '{$von_extrem}'  ORDER BY `timestamp` ASC;";
     $res_tang = $mysqli->query($query);
 
     while($obj_tang = $res_tang->fetch_object())
@@ -230,10 +230,10 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
 
       $width = number_format ($tabs[$print_last+1]-$tabs[$print_first], 3, '.', '');
 
-      echo '<rect x="'.$tabs[$print_first].'%" y="'.$yoffset.'" width="'.$width.'%" height="20" style="fill: '.$boxcol[$level].'; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+      echo "<rect x='{$tabs[$print_first]}%' y='{$yoffset}' width='{$width}%' height='20' style='fill: {$boxcol[$level]}; stroke: #000000; stroke-width: 1px;'></rect>\n";
 
 
-      $query = "SELECT * from `piloten` where `id` = '".$obj_tang->user_id."';";
+      $query = "SELECT * from `piloten` where `id` = '{$obj_tang->user_id}';";
       if ($res_id = $mysqli->query($query))
       {
         if ($res_id->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
@@ -278,7 +278,7 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
       }
 
       if ($showlink)
-        echo '<a xlink:href="res_loeschen.php?to=ueberblick&amp;action=del&amp;reservierung='.$obj_tang->id.'&amp;tag='.$tag.'&amp;monat='.$monat.'&amp;jahr='.$jahr.'">';
+        echo "<a xlink:href='res_loeschen.php?to=ueberblick&amp;action=del&amp;reservierung={$obj_tang->id}&amp;tag={$tag}&amp;monat={$monat}&amp;jahr={$jahr}'>";
 
 
       echo '<text '.$tmptxt.' x="'.$center.'%" y="'.($yoffset+16).'" text-anchor="middle" style="fill: '.$txtcolor.'; font-size: 95%; font-weight: bold;">'.$t_id.'</text>'."\n";
@@ -400,7 +400,7 @@ function tagesansicht($mysqli, $w, $tabs, $boxcol, $textcol, $planeoffset, $tag,
   // TODO colors etc into defines? konstats etc?
   print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol, $tag, $monat, $jahr);
 
-  echo '</g></svg>';
+  echo "</g></svg>";
 
   legende_print($boxcol);
   tooltip_print();
