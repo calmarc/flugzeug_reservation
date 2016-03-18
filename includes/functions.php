@@ -773,17 +773,17 @@ function print_html_to_body ($title, $special_meta)
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   <meta name="viewport" content=
-  "width=device-width, initial-scale=1.0">
+  "width=device-width, initial-scale=1.0" />
   <title><?php echo $title; ?></title>
-  <meta name="generator" content="Calmar + Vim + Tidy">
-  <meta name="owner" content="MFGC.ch">
-  <meta name="author" content="candrian.org">
-  <meta name="robots" content="all">
+  <meta name="generator" content="Calmar + Vim + Tidy" />
+  <meta name="owner" content="MFGC.ch" />
+  <meta name="author" content="candrian.org" />
+  <meta name="robots" content="all" />
   <?php echo $special_meta; ?>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="/reservationen/css/reservationen.css">
+  <link rel="SHORTCUT ICON" href="http://www.mfgc.ch/flugschule/bilder/icon.png" />
+  <link rel="stylesheet" href="/reservationen/css/reservationen.css" />
 </head>
 
 <!--[if IE]>

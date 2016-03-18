@@ -17,6 +17,11 @@
 
 * sms nur wenn es auch natel nummer gibt.. (nicht immer der FAll)
 
+* man kann datum mehr angeben.. als was die ist.. und
+  loescht..  soweit so gut.. aber sollte dann nur angeben
+  bis was die echte Zeit war.. oder? Oder nicht loeschen und
+  warnen?
+
 == MINOR ==
 
 * Wenn eine Buchung gelöscht wird  amathis@deep.ch,  armin.beck@dsl.li (scharf machen in der datenbank)
