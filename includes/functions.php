@@ -734,7 +734,7 @@ function bei_geloescht_email($mysqli, $subject_hint, $pilot_id, $flieger_id, $ze
 
   $res = $mysqli->query("SELECT * from `diverses` WHERE `funktion` = 'bei_geloescht';");
   $obj = $res->fetch_object();
-  $to = $obj->email;
+  $to = $obj->data1;
 
   $res = $mysqli->query("SELECT * from `piloten` WHERE `id` = $pilot_id;");
   $obj = $res->fetch_object();

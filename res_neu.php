@@ -44,7 +44,7 @@ if (isset($flieger_id))
   $res = $mysqli->query($query);
   $obj = $res->fetch_object();
   $fliegertxt = $obj->flieger;
-  $hidden = "<input type='hidden' name='flieger_id' value="{$flieger_id}" />";
+  $hidden = "<input type='hidden' name='flieger_id' value='{$flieger_id}' />";
 }
 else
 {

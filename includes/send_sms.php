@@ -5,7 +5,7 @@ require_once 'sms/Request.php';
 require_once 'sms/Exception.php';
 use Aspsms\Aspsms;
 
-function sendsms($natel, $txt)
+function sendsms($mysqli, $natel, $txt)
 {
   $res = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'sms_login' LIMIT 1;");
   $obj = $res->fetch_object();

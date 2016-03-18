@@ -69,6 +69,9 @@ if (isset($_POST['submit']))
     $res = $mysqli->query($query);
     $obj = $res->fetch_object();
 
+    // beim splitten (zwischendrin) wird da die neue reservation gespeichert
+    // damit man da keine sms sendet daraufhin.
+    $not_new_no_notification = "";
 
     //
     // teilloeschung
@@ -292,7 +295,7 @@ if (isset($_POST['submit']))
           mail ($email, "MFGC Reservation vom {$res_datum} aktiviert!", $txt, implode("\r\n",$headers));
 
           // send sms.
-          $ret_val = sendsms($natel, $txt);
+          $ret_val = sendsms($mysqli, $natel, $txt);
         }
     }
 
