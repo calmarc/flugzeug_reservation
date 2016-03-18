@@ -14,23 +14,23 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
     $obj = $res->fetch_object();
     if ($obj->show){
       if ($_SESSION['randomnr2'] != md5($_POST['captcha'])) {
-        // Login failed 
+        // Login failed
         header('Location: ../index.php?error=2');
         exit();
       }
     }
 
     if (login($pilot_id, $password, $mysqli) == true) {
-        // Login success 
-      
+        // Login success
+
         // EMAILEN WO NOETIG
-        // checkflug gueltig und checkflug < time.. dann email wenn noetig ->  markierung 
+        // checkflug gueltig und checkflug < time.. dann email wenn noetig ->  markierung
         date_default_timezone_set("Europe/Zurich");
         $jetzt = date('Y-m-d', time());
         date_default_timezone_set('UTC');
 
         $query= "SELECT `name`, `id`, `pilot_id`, `checkflug`, `email_gesch` FROM `piloten`;";
-        $res = $mysqli->query($query); 
+        $res = $mysqli->query($query);
 
         while ($obj = $res->fetch_object())
         {
@@ -49,18 +49,18 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
 
             if (mail($to, $subject, $txt, implode("\r\n",$headers)))
               mysqli_prepare_execute($mysqli, "UPDATE `mfgcadmin_reservationen`.`piloten` SET `email_gesch` = '1' WHERE `piloten`.`id` = ?;", 'i', array ($obj->id));
-          } 
+          }
         }
 
         header("Location: ../index.php");
         exit();
     } else {
-        // Login failed 
+        // Login failed
         header('Location: index.php?error=1');
         exit();
     }
 } else {
-    // The correct POST variables were not sent to this page. 
+    // The correct POST variables were not sent to this page.
     header('Location: error.php?err=Could not process login');
     exit();
 }

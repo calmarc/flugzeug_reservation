@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $required = 'required="required"';
 $chars_java = "onsubmit=\"var text = document.getElementById('texta').value; if(text.length < 7) { alert('Ausführlichere Begruendung bitte!'); return false; } return true;\"";
@@ -12,13 +12,13 @@ if (check_admin($mysqli))
   $chars_java2 = "";
 }
 
-$tag = ""; if (isset($_GET['tag'])) $tag = $_GET['tag']; 
-$monat = ""; if (isset($_GET['monat'])) $monat = $_GET['monat']; 
-$jahr = ""; if (isset($_GET['jahr'])) $jahr = $_GET['jahr']; 
+$tag = ""; if (isset($_GET['tag'])) $tag = $_GET['tag'];
+$monat = ""; if (isset($_GET['monat'])) $monat = $_GET['monat'];
+$jahr = ""; if (isset($_GET['jahr'])) $jahr = $_GET['jahr'];
 
-$reservierung = ""; if (isset($_GET['reservierung'])) $reservierung = $_GET['reservierung']; 
-$backto = ""; if (isset($_GET['backto'])) $backto = $_GET['backto']; 
-$flieger_id = ""; if (isset($_GET['flieger_id'])) $flieger_id = $_GET['flieger_id']; 
+$reservierung = ""; if (isset($_GET['reservierung'])) $reservierung = $_GET['reservierung'];
+$backto = ""; if (isset($_GET['backto'])) $backto = $_GET['backto'];
+$flieger_id = ""; if (isset($_GET['flieger_id'])) $flieger_id = $_GET['flieger_id'];
 
 $curstamp = time(); // wird einige male gebraucht
 // round up cur_time to half hour blocks
@@ -34,7 +34,7 @@ if (isset($_POST['submit']))
     // entry must be owned by this logged-in user && must be in the future still..
     // OR admin...
     // bigger than next half-hour rounded up
-    
+
     if (check_admin($mysqli))
       $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = ".$_POST['reservierung']." LIMIT 1;";
     else
@@ -54,7 +54,7 @@ if (isset($_POST['submit']))
     // den delte/trim.
     // find again all valid reservation.
     // array_diff will find occurance not found in the pre.
-    
+
     $res2 = $mysqli->query("SELECT `flieger_id` from `reservationen` WHERE `id` = ".$_POST['reservierung'].";");
     $obj2 = $res2->fetch_object();
     $flieger_id = $obj2->flieger_id;
@@ -69,7 +69,7 @@ if (isset($_POST['submit']))
     $res = $mysqli->query($query);
     $obj = $res->fetch_object();
 
-    
+
     //
     // teilloeschung
     //
@@ -117,10 +117,10 @@ if (isset($_POST['submit']))
       // ein geloescht-von 0:00-7:00  muss ein 21:00 uhr Vor-tag werden
       // ein geloescht-von > 21:00  muss ein 21:00 uhr werden (oder // fehlermeldung)
       // ein geloescht-bis >= 21:00  muss ein 7:00 uhr naechste-tag werden
-      
+
       $loeschen_stamp_von = strtotime($loeschen_datum_von);
       $loeschen_stamp_bis = strtotime($loeschen_datum_bis);
-      
+
       // 'von' ausdehnen... <=7 auf 21:00 vortag
       if (date("H:i", $loeschen_stamp_von) <= "07:00")
       {
@@ -141,7 +141,7 @@ if (isset($_POST['submit']))
         $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
         delete_reservation($mysqli, $id_tmp, $begruendung, $_SESSION['user_id']);
 
-        bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flieger_id, 
+        bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flieger_id,
                             mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
       }
       // Anfang kuerzen
@@ -199,7 +199,7 @@ if (isset($_POST['submit']))
       $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
       delete_reservation($mysqli, $id_tmp, $begruendung, $_SESSION['user_id']);
 
-      bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flieger_id, 
+      bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flieger_id,
                           mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
     }
     //
@@ -213,7 +213,7 @@ if (isset($_POST['submit']))
       //  wenn ZEIT nach >21 <7 ----> 7 nachster tag 'von'
       //  sollte nicht passieren, aber orig bis muss > sein als neues von
       $tmp_hour_min = date("H:i", strtotime($rounded_date));
-      
+
       if ($tmp_hour_min < "07:00")
       {
         // new end: 7 uhr
@@ -255,13 +255,13 @@ if (isset($_POST['submit']))
     }
 
     // send sms when a standby is green now.
-    
+
     $valid_0_after = get_valid_reserv($mysqli, $flieger_id);
 
     $new_0 = array_diff($valid_0_after, $valid_0_pre);
     if (count($new_0) > 0)
     {
-        foreach ($new_0 as $res_id) 
+        foreach ($new_0 as $res_id)
         {
           // when its the new once created by splitting.
           if ($res_id == $not_new_no_notification)
@@ -296,9 +296,9 @@ if (isset($_POST['submit']))
         }
     }
 
-    $tag = ""; if (isset($_POST['tag'])) $tag = $_POST['tag']; 
-    $monat = ""; if (isset($_POST['monat'])) $monat = $_POST['monat']; 
-    $jahr = ""; if (isset($_POST['jahr'])) $jahr = $_POST['jahr']; 
+    $tag = ""; if (isset($_POST['tag'])) $tag = $_POST['tag'];
+    $monat = ""; if (isset($_POST['monat'])) $monat = $_POST['monat'];
+    $jahr = ""; if (isset($_POST['jahr'])) $jahr = $_POST['jahr'];
 
     //TODO woher soll post'flieger_id is da wenn von res_neu.php oder?
     if (isset($_POST['backto'], $_POST['flieger_id']) && $_POST['backto'] == "res_neu.php")

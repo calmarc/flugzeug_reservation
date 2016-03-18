@@ -2,10 +2,6 @@
 
 == MAYOR ==
 
-* zaehler_eintraege duerfen nur bis x.59 sein..
-  kontrollieren.. errorhandling allenfalls
- 
-* landungseintrag editiere.. muss errormsg ausgeben...
 
 * service nicht rot.. nur zahl (tspan...)
 
@@ -14,8 +10,6 @@
 
 * bei teiloeschung werte kontrollieren.. i.e bis muss
   groesser sein als von etc.
-
-* sms nur wenn es auch natel nummer gibt.. (nicht immer der FAll)
 
 * man kann datum mehr angeben.. als was die ist.. und
   loescht..  soweit so gut.. aber sollte dann nur angeben

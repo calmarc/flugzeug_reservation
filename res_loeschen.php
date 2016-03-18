@@ -15,8 +15,8 @@ if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/in
 
 include_once ('res_loeschen.inc.php');
 
-print_html_to_body('Reservierung loeschen', ''); 
-include_once('includes/usermenu.php'); 
+print_html_to_body('Reservierung loeschen', '');
+include_once('includes/usermenu.php');
 
 ?>
 
@@ -26,7 +26,7 @@ include_once('includes/usermenu.php');
 
 echo "<h1>$h1</h1>";
 
-$query = "SELECT * FROM `reservationen` 
+$query = "SELECT * FROM `reservationen`
           LEFT JOIN `piloten` ON `piloten`.`id` = `reservationen`.`user_id`
           WHERE `reservationen`.`id` = $reservierung
           LIMIT 1";
@@ -79,7 +79,7 @@ $flugzeug = $obj2->flieger;
         <input type="hidden" name="tag" value='<?php echo $tag; ?>' />
         <input type="hidden" name="monat" value='<?php echo $monat; ?>' />
         <input type="hidden" name="jahr" value='<?php echo $jahr; ?>' />
-<?php 
+<?php
 
 if (!$trimmen)
 { ?>
@@ -121,7 +121,7 @@ if ($datum_v ==  $datum)
         <input type="hidden" name="tag" value='<?php echo $tag; ?>' />
         <input type="hidden" name="monat" value='<?php echo $monat; ?>' />
         <input type="hidden" name="jahr" value='<?php echo $jahr; ?>' />
-<?php 
+<?php
 if (! $show_2_datum)
 { ?>
         <input type="hidden" name="von_tag" value='<?php echo $von_tag; ?>' />
@@ -147,16 +147,16 @@ if ($show_2_datum)
           <td>
             <select size="1" name="von_tag" style="width: 46px;">
               <?php combobox_tag($von_tag); ?>
-            </select> <b>.</b> 
+            </select> <b>.</b>
             <select size="1" name="von_monat" style="width: 46px;">
               <?php combobox_monat($von_monat); ?>
-            </select> <b>.</b> 
+            </select> <b>.</b>
             <select size="1" name="von_jahr" style="width: 86px;">
               <?php combobox_jahr($von_jahr); ?>
             </select>
           </td>
         </tr>
-<?php 
+<?php
 }
 else
 { ?>
@@ -166,7 +166,7 @@ else
             <?php echo "$von_tag.$von_monat.$von_jahr"; ?>
           </td>
         </tr>
-<?php 
+<?php
 }
 ?>
         <tr>
@@ -180,7 +180,7 @@ else
             </select> <b>Uhr</b>
           </td>
         </tr>
-<?php 
+<?php
 if ($show_2_datum)
   { ?>
         <tr class="trblank">
@@ -191,10 +191,10 @@ if ($show_2_datum)
           <td>
             <select size="1" name="bis_tag" style="width: 46px;">
               <?php combobox_tag($bis_tag); ?>
-            </select> <b>.</b> 
+            </select> <b>.</b>
             <select size="1" name="bis_monat" style="width: 46px;">
               <?php combobox_monat($bis_monat); ?>
-            </select> <b>.</b> 
+            </select> <b>.</b>
             <select size="1" name="bis_jahr" style="width: 86px;">
               <?php combobox_jahr($bis_jahr); ?>
             </select>
@@ -217,7 +217,7 @@ if ($show_2_datum)
 <textarea id="texta2" title="3 characters minimum" style="width: 80%" <?php echo $required; ?> name="begruendung"></textarea>
 <input class="submit_button" style="margin-top: 20px;" type='submit' name='submit' value="Teillöschung"  />
 </div>
-  
+
 </form>
 </div>
   </main>

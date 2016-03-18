@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2013 peredur.net
  *
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.

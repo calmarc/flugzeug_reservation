@@ -18,7 +18,7 @@ if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
   $flieger_id = $_GET['flieger_id'];
 
   $query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
-  $res = $mysqli->query($query); 
+  $res = $mysqli->query($query);
 
   if ($res->num_rows != 1)
   {
@@ -38,58 +38,25 @@ else if (isset($_POST['submit']))
   $monat = ""; if (isset($_POST['monat'])) $monat = $_POST['monat'];
   $jahr = ""; if (isset($_POST['jahr'])) $jahr = $_POST['jahr'];
   $zaehlerstand = ""; if (isset($_POST['zaehlerstand'])) $zaehlerstand = $_POST['zaehlerstand'];
-
-  $zaehler_minute = intval($zaehlerstand) * 60;
-  $zaehler_minute += round($zaehlerstand * 100, 0, PHP_ROUND_HALF_UP) % 100;
-
   $_SESSION['flieger_id']  = $flieger_id;
   $_SESSION['tag']  = $tag;
   $_SESSION['monat']  = $monat;
   $_SESSION['jahr']  = $jahr;
 
+
+  list($zaehler_minute,$digit_minute) = computer_minute_from_zaehlerstand($zaehlerstand);
+
   $tag = str_pad($tag, 2, "0", STR_PAD_LEFT);
   $monat = str_pad($monat, 2, "0", STR_PAD_LEFT);
+  $datum = "$jahr-$monat-$tag";
 
-  $date = "$jahr-$monat-$tag";
+  $error_msg = check_zaehlerstand($zaehlerstand, $digit_minute);
 
-  $error_msg = "";
-
-  $z_max = -1;
-
-  // geht nicht.. man muss auch zwischendurch etc.
-  //$query = "SELECT MAX(`zaehler_minute`) AS 'zaehler_max' FROM `zaehle_reintraege` WHERE `flieger_id` = '$flieger_id';";
-  //$res = $mysqli->query($query); 
-
-  //if ($res->num_rows > 0)
-  //{
-    //$obj = $res->fetch_object();
-    //$z_max = intval($obj->zaehler_max);
-  //}
-  //if ($z_max >= $zaehler_minute)
-  //{
-    //$error_msg = "Der Zählerstand ($zaehlerstand) ist nicht grösser als zuvor.<br /><br />Es wurde kein Eintrag gemacht!<br />";
-  //}
-   
   if ($error_msg == "")
   {
-    if ($stmt = $mysqli->prepare("INSERT INTO `mfgcadmin_reservationen`.`zaehler_eintraege` (
-        `id` ,
-        `user_id` ,
-        `flieger_id` ,
-        `datum` ,
-        `zaehler_minute`
-        )
-        VALUES (
-        NULL , ?, ?, ?, ?
-        )"))
-    {
-      $stmt->bind_param('iisi', $_SESSION['user_id'], $flieger_id, $date, $zaehler_minute);
-      if (!$stmt->execute()) 
-      {
-          header('Location: /reservationen/login/error.php?err=Registration failure: INSERT');
-          exit;
-      }
-    }
+    $query = "INSERT INTO `mfgcadmin_reservationen`.`zaehler_eintraege` (
+              `id` , `user_id` , `flieger_id` , `datum` , `zaehler_minute`) VALUES ( NULL , ?, ?, ?, ?)";
+    mysqli_prepare_execute($mysqli, $query, 'iisi', array ($_SESSION['user_id'], $flieger_id, $datum, $zaehler_minute));
   }
 }
 else
@@ -98,8 +65,8 @@ else
   exit;
 }
 
-print_html_to_body('Landungs Eintrag', ''); 
-include_once('includes/usermenu.php'); 
+print_html_to_body('Landungs Eintrag', '');
+include_once('includes/usermenu.php');
 
 ?>
 <main>
@@ -118,11 +85,11 @@ if (isset($error_msg) && $error_msg != "")
   echo "<p><b style='color: red;'>$error_msg</b></p>";
 
 $query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
-$res = $mysqli->query($query); 
+$res = $mysqli->query($query);
 $obj = $res->fetch_object();
 $fliegertxt = $obj->flieger;
 $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
-  
+
 ?>
   <form action='landungs_eintrag.php' method='post'>
 <?php echo $hidden; ?>
@@ -141,10 +108,10 @@ $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
           <td>
             <select size="1" name="tag" style="width: 46px;">
               <?php combobox_tag($_SESSION['tag']); ?>
-            </select> <b>.</b> 
+            </select> <b>.</b>
             <select size="1" name="monat" style="width: 46px;">
               <?php combobox_monat($_SESSION['monat']); ?>
-            </select> <b>.</b> 
+            </select> <b>.</b>
             <select size="1" name="jahr" style="width: 86px;">
               <?php combobox_jahr($_SESSION['jahr']); ?>
             </select>
@@ -177,7 +144,7 @@ $query = "SELECT `zaehler_eintraege`.`id`,
                  `piloten`.`name`,
                  `zaehler_eintraege`.`zaehler_minute`,
                  `zaehler_eintraege`.`datum`
-         FROM `zaehler_eintraege` INNER JOIN `piloten` ON `piloten`.`id` = `zaehler_eintraege`.`user_id` 
+         FROM `zaehler_eintraege` INNER JOIN `piloten` ON `piloten`.`id` = `zaehler_eintraege`.`user_id`
          WHERE `flieger_id` = '".$flieger_id."'  ORDER BY `zaehler_minute` DESC LIMIT 50;";
 
 if ($res = $mysqli->query($query))

@@ -56,17 +56,17 @@ if (isset($_POST['submit']))
     $error_msg .= "Auf 7:00 Uhr kann man nicht reservieren.<br />Bitte stattdessen auf den Vortag 21:00 Uhr buchen!<br />";
 
   // CHECK LEVEL of standby
-  
+
   remove_zombies($mysqli);
 
   $level = check_level($mysqli, $flieger_id, $von_date, $bis_date) - 1;
   if ($level >= 3)
     $error_msg .= "Es hat bereits zuviele Standby's [$level] in diesem Zeitraum.<br /><br />Es wurde keine Reservierung gebucht!<br />";
-   
+
   if ($error_msg == ""){
 
-    $query = "INSERT INTO `mfgcadmin_reservationen`.`reservationen` 
-      ( `id` , `timestamp` , `user_id` , `flieger_id` , `von` , `bis`) VALUES 
+    $query = "INSERT INTO `mfgcadmin_reservationen`.`reservationen`
+      ( `id` , `timestamp` , `user_id` , `flieger_id` , `von` , `bis`) VALUES
       ( NULL , CURRENT_TIMESTAMP , '$user_id', '$flieger_id', FROM_UNIXTIME($vonstamp), FROM_UNIXTIME($bisstamp));";
 
     $mysqli->query($query);

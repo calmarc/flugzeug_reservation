@@ -8,7 +8,7 @@ if (isset($_POST['loeschen']))
   mysqli_prepare_execute($mysqli, $query, 'i', array ($pilot_id));
 
   // man hat sich selber geloesch.. delete $_SESSION (ausloggen)
-  
+
   if (intval($_SESSION['pilot_id']) ==  intval($pilot_id)) {
     header("Location: /reservationen/login/logout.php");
     exit;
@@ -46,7 +46,7 @@ if (isset($_POST['updaten']))
 
   //=====
   //  checkflug checken.. und mail scharf machen.
-   
+
   // convert into mysql-date
   if ($checkflug != "")
   {
@@ -62,7 +62,7 @@ if (isset($_POST['updaten']))
   $obj = $res->fetch_object();
 
   date_default_timezone_set("Europe/Zurich");
-  $date_t = date("Y-m-d", time()); 
+  $date_t = date("Y-m-d", time());
   date_default_timezone_set('UTC');
 
   // email scharf wenn noetig (weil wieder gut ist jetzt)
@@ -73,7 +73,7 @@ if (isset($_POST['updaten']))
   if ($password != "")
   {
     $query= "SELECT `salt` FROM `piloten` WHERE `id` = $id LIMIT 1;";
-    $res = $mysqli->query($query); 
+    $res = $mysqli->query($query);
     $obj = $res->fetch_object();
 
     $password = hash('sha512', $password);

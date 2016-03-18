@@ -14,8 +14,8 @@ if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/in
 
 include_once('landungs_edit.inc.php');
 
-print_html_to_body('Landungs-Eintrag editieren', ''); 
-include_once('includes/usermenu.php'); 
+print_html_to_body('Landungs-Eintrag editieren', '');
+include_once('includes/usermenu.php');
 
 ?>
 
@@ -26,16 +26,13 @@ include_once('includes/usermenu.php');
 
 <?php
 
-if (isset($_GET['zaehler_id']) && intval($_GET['zaehler_id']) > 0)
-{
-  $zaehler_id = $_GET['zaehler_id'];
-}
-else {
-  echo "<h3>Keine gültgie Zahler-ID erhalten. Bitte <a href='pilot_admin.php'>wiederhohlen</a> oder an mac@calmar.ws melden</h3>";
-  exit;
-}
+// print errormessage
+if (isset($error_msg) && $error_msg != "")
+  echo "<p><b style='color: red;'>$error_msg</b></p>";
+
+// wurde zwar im .inc schon abgefragt zur id-kontrolle.. aber naja..
 $query = "SELECT * FROM `zaehler_eintraege` WHERE `id` = '$zaehler_id' LIMIT 1;";
-$res = $mysqli->query($query); 
+$res = $mysqli->query($query);
 
 if ($res->num_rows != 1)
 {
@@ -69,10 +66,10 @@ list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
               <td>
                 <select size="1" name="tag" style="width: 46px;">
                   <?php combobox_tag($tag); ?>
-                </select> <b>.</b> 
+                </select> <b>.</b>
                 <select size="1" name="monat" style="width: 46px;">
                   <?php combobox_monat($monat); ?>
-                </select> <b>.</b> 
+                </select> <b>.</b>
                 <select size="1" name="jahr" style="width: 86px;">
                   <?php combobox_jahr($jahr); ?>
                 </select>

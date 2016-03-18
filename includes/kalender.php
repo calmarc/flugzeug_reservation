@@ -64,28 +64,28 @@ function draw_calendar($day, $month,$year){
   $z_monat = $month;
   $z_day = $day - 1;
 
-  if ($z_day < 1) 
-  { 
-    $z_monat--; 
+  if ($z_day < 1)
+  {
+    $z_monat--;
     if ($z_monat < 1) { $z_monat = 12; $z_jahr--; }
     $days_in_month = date('t',mktime(0,0,0,$z_monat,1,$z_jahr));
-    $z_day = $days_in_month; 
+    $z_day = $days_in_month;
   }
   $zurueck .= "<a title='Tag zurück' class='vorzurueck' href='index.php?tag=$z_day&amp;monat=$z_monat&amp;jahr=$z_jahr'><img id='lsaquo' alt='<' src='/reservationen/bilder/lsaquo.png' /></a>";
 
   // tag vor
   // --------------------------------------------------------------------------
-  
+
   $v_jahr = $year;
   $v_monat = $month;
   $v_day = $day + 1;
   $days_in_month = date('t',mktime(0,0,0,$v_monat,1,$v_jahr));
 
-  if ($v_day > $days_in_month) 
-  { 
-    $v_monat++; 
+  if ($v_day > $days_in_month)
+  {
+    $v_monat++;
     if ($v_monat > 12) { $v_monat = 1; $v_jahr++; }
-    $v_day = 1; 
+    $v_day = 1;
   }
   $vor = "<a title='Tag vor' class='vorzurueck' href='index.php?tag=$v_day&amp;monat=$v_monat&amp;jahr=$v_jahr'><img id='rsaquo' alt='<' src='/reservationen/bilder/rsaquo.png' /></a>".$vor;
 
@@ -103,7 +103,7 @@ function draw_calendar($day, $month,$year){
   $calendar .= "<td id='datum' colspan='4'>".str_pad($day, 2, "0", STR_PAD_LEFT).".".str_pad($month, 2, "0", STR_PAD_LEFT).".".str_replace("20","",$year)."</td>";
   $calendar .= "<td>$heute</td>";
   $calendar .= "<td>$vor</td></tr>";
-  
+
 
   /* table headings */
   $calendar .= '<tr class="calendar-row">';
@@ -136,8 +136,8 @@ function draw_calendar($day, $month,$year){
       $days_in_this_week++;
   }
 
-  // runterhobeln die Tage bis $days_in_month.... 
-  // Umschlagen wenn $days_in_this_week = 7 (1-7 = 7 Tage) 
+  // runterhobeln die Tage bis $days_in_month....
+  // Umschlagen wenn $days_in_this_week = 7 (1-7 = 7 Tage)
 
   for($list_day = 1; $list_day <= $days_in_month; $list_day++){
 
@@ -168,7 +168,7 @@ function draw_calendar($day, $month,$year){
           $days_in_this_week = 0;
       }
 
-      $days_in_this_week++; 
+      $days_in_this_week++;
   }
 
   // finish the rest of the days in the week

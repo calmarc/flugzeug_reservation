@@ -3,7 +3,7 @@
 include_once 'psl-config.php';
 
 function sec_session_start() {
-    $session_name = 'sec_session_id';   // Set a custom session name 
+    $session_name = 'sec_session_id';   // Set a custom session name
     $secure = SECURE;
 
     // This stops JavaScript being able to access the session id.
@@ -22,12 +22,12 @@ function sec_session_start() {
     // Sets the session name to the one set above.
     session_name($session_name);
 
-    session_start();            // Start the PHP session 
-    session_regenerate_id();    // regenerated the session, delete the old one. 
+    session_start();            // Start the PHP session
+    session_regenerate_id();    // regenerated the session, delete the old one.
 }
 
 function login($pilot_id, $password, $mysqli) {
-    // Using prepared statements means that SQL injection is not possible. 
+    // Using prepared statements means that SQL injection is not possible.
     if ($stmt = $mysqli->prepare("SELECT id, pilot_id, password, salt FROM piloten WHERE pilot_id = ? LIMIT 1")) {
         $stmt->bind_param('s', $pilot_id);  // Bind "$email" to parameter.
         $stmt->execute();    // Execute the prepared query.
@@ -44,7 +44,7 @@ function login($pilot_id, $password, $mysqli) {
             // more than 5 bad logins.. turn on captcha  - else turn off
             checkbrute($mysqli);
 
-            // Check if the password in the database matches 
+            // Check if the password in the database matches
             // the password the user submitted.
             if ($db_password == $password) {
                 // Password is correct!
@@ -61,13 +61,13 @@ function login($pilot_id, $password, $mysqli) {
                 $_SESSION['pilot_id'] = $pilot_id;
                 $_SESSION['login_string'] = hash('sha512', $password . $user_browser);
 
-                // Login successful. 
+                // Login successful.
                 return true;
             } else {
-                // Password is not correct 
-                // We record this attempt in the database 
+                // Password is not correct
+                // We record this attempt in the database
                 $now = time();
-                if (!$mysqli->query("INSERT INTO login_attempts(user_id, time) 
+                if (!$mysqli->query("INSERT INTO login_attempts(user_id, time)
                                 VALUES ('$user_id', '$now')")) {
                     header("Location: /reservationen/login/error.php?err=Database error: login_attempts");
                     exit();
@@ -76,7 +76,7 @@ function login($pilot_id, $password, $mysqli) {
                 return false;
             }
         } else {
-            // No user exists. 
+            // No user exists.
             return false;
         }
     } else {
@@ -87,7 +87,7 @@ function login($pilot_id, $password, $mysqli) {
 }
 
 function checkbrute($mysqli) {
-    // Get timestamp of current time 
+    // Get timestamp of current time
     $now = time();
 
     // cleaning up last failed attempts (60 mins)
@@ -100,7 +100,7 @@ function checkbrute($mysqli) {
 
     if ($stmt = $mysqli->prepare("SELECT time FROM login_attempts WHERE time > '$valid_attempts'")) {
 
-        // Execute the prepared query. 
+        // Execute the prepared query.
         $stmt->execute();
         $stmt->store_result();
 
@@ -109,7 +109,7 @@ function checkbrute($mysqli) {
             $mysqli->query("UPDATE `mfgcadmin_reservationen`.`captcha` SET `show` = '1' WHERE `captcha`.`id` =1;");
             return;
         } else {
-            // no 
+            // no
             $mysqli->query("UPDATE `mfgcadmin_reservationen`.`captcha` SET `show` = '0' WHERE `captcha`.`id` =1;");
             return;
         }
@@ -121,7 +121,7 @@ function checkbrute($mysqli) {
 }
 
 function login_check($mysqli) {
-    // Check if all session variables are set 
+    // Check if all session variables are set
     if (isset($_SESSION['user_id'], $_SESSION['pilot_id'], $_SESSION['login_string'])) {
         $user_id = $_SESSION['user_id'];
         $login_string = $_SESSION['login_string'];
@@ -130,10 +130,10 @@ function login_check($mysqli) {
         // Get the user-agent string of the user.
         $user_browser = $_SERVER['HTTP_USER_AGENT'];
 
-        if ($stmt = $mysqli->prepare("SELECT password 
-				      FROM piloten 
+        if ($stmt = $mysqli->prepare("SELECT password
+				      FROM piloten
 				      WHERE id = ? LIMIT 1")) {
-            // Bind "$user_id" to parameter. 
+            // Bind "$user_id" to parameter.
             $stmt->bind_param('i', $user_id);
             $stmt->execute();   // Execute the prepared query.
             $stmt->store_result();
@@ -145,14 +145,14 @@ function login_check($mysqli) {
                 $login_check = hash('sha512', $password . $user_browser);
 
                 if ($login_check == $login_string) {
-                    // Logged In!!!! 
+                    // Logged In!!!!
                     return true;
                 } else {
-                    // Not logged in 
+                    // Not logged in
                     return false;
                 }
             } else {
-                // Not logged in 
+                // Not logged in
                 return false;
             }
         } else {
@@ -161,7 +161,7 @@ function login_check($mysqli) {
             exit();
         }
     } else {
-        // Not logged in 
+        // Not logged in
         return false;
     }
 }
@@ -173,19 +173,19 @@ function esc_url($url) {
     }
 
     $url = preg_replace('|[^a-z0-9-~+_.?#=!&;,/:%@$\|*\'()\\x80-\\xff]|i', '', $url);
-    
+
     $strip = array('%0d', '%0a', '%0D', '%0A');
     $url = (string) $url;
-    
+
     $count = 1;
     while ($count) {
         $url = str_replace($strip, '', $url, $count);
     }
-    
+
     $url = str_replace(';//', '://', $url);
 
     $url = htmlentities($url);
-    
+
     $url = str_replace('&amp;', '&#038;', $url);
     $url = str_replace("'", '&#039;', $url);
 
@@ -230,14 +230,14 @@ function mysql2chtimef ($von, $bis, $raw)
 function check_admin($mysqli)
 {
   $query = "SELECT `admin` from `piloten` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
-  $res = $mysqli->query($query); 
+  $res = $mysqli->query($query);
   $obj = $res->fetch_object();
   return $obj->admin;
 }
 function check_gesperrt($mysqli)
 {
   $query = "SELECT `gesperrt` from `piloten` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
-  $res = $mysqli->query($query); 
+  $res = $mysqli->query($query);
   $obj = $res->fetch_object();
   return $obj->gesperrt;
 }
@@ -319,7 +319,7 @@ function remove_zombies($mysqli)
       else
         continue;
     }
-      
+
     // zukuenfstigste punkt der reservierungen (ganz in der zukunft)
     //
     $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '".$obj_f->id."' ORDER BY `bis` DESC LIMIT 1;";
@@ -336,7 +336,7 @@ function remove_zombies($mysqli)
 
     // it.: if booking[level][hour]=TRUE <- reserved
     $bookings = array(array(), array(), array(), array(), array());
-    
+
     // halb stunden sein 1971..
     $min_stamp = strtotime($von_extrem);
 
@@ -365,7 +365,7 @@ function remove_zombies($mysqli)
 
       #transfer time of booking into blocks (internal time measurement kinda)
       $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800);  // 1800 halbe stunde
-      $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1; 
+      $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1;
 
       $level = 0;
       for($i = $block_first; $i <= $block_last; $i++)
@@ -462,13 +462,13 @@ function check_level($mysqli, $flieger_id, $von_date, $bis_date)
   while($obj_tang = $res_tang->fetch_object())
   {
     #transfer time to blocks (1800=30min) of current booking
-    $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800); 
-    $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1; 
+    $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800);
+    $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1;
 
     // look vor level where it can fit
     $level = 0;
-    while(TRUE) 
-    { 
+    while(TRUE)
+    {
       $flag = FALSE;
       for($i = $block_first; $i <= $block_last; $i++)
       {
@@ -490,15 +490,15 @@ function check_level($mysqli, $flieger_id, $von_date, $bis_date)
   }
 
   //////////////////////////////////////////////////////////////
-  // den level ermitteln der aktuellen buchung 
+  // den level ermitteln der aktuellen buchung
   #transfer time to blocks (1800=30min) of current booking
-  $block_first = intval((strtotime($von_date) - $min_stamp) / 1800); 
-  $block_last = intval((strtotime($bis_date) - $min_stamp) / 1800)-1; 
+  $block_first = intval((strtotime($von_date) - $min_stamp) / 1800);
+  $block_last = intval((strtotime($bis_date) - $min_stamp) / 1800)-1;
 
   // look vor level where it can fit
   $level = 0;
-  while(TRUE) 
-  { 
+  while(TRUE)
+  {
     $flag = FALSE;
     for($i = $block_first; $i <= $block_last; $i++)
     {
@@ -569,17 +569,17 @@ function get_valid_reserv($mysqli, $flieger_id)
   // alle hohlen
   $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '".$flieger_id."' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
   $res_tang = $mysqli->query($query);
-  
+
   while($obj_tang = $res_tang->fetch_object())
   {
     #transfer time to blocks (1800=30min) of current booking
-    $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800); 
-    $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1; 
+    $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800);
+    $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1;
 
     // look vor level where it can fit
     $level = 0;
-    while(TRUE) 
-    { 
+    while(TRUE)
+    {
       $flag = FALSE;
       for($i = $block_first; $i <= $block_last; $i++)
       {
@@ -596,7 +596,7 @@ function get_valid_reserv($mysqli, $flieger_id)
     }
 
     //book into according level
-    
+
     for($i = $block_first; $i <= $block_last; $i++)
       $bookings[$level][$i] = TRUE;
     if ($level == 0)
@@ -609,7 +609,7 @@ function print_options($default, $t_array)
 {
   foreach ($t_array as $item)
   {
-    if (intval($default) == intval($item)) 
+    if (intval($default) == intval($item))
       echo '<option selected="selected">'.$item.'</option>';
     else
       echo '<option>'.$item.'</option>';
@@ -707,7 +707,7 @@ function delete_reservation($mysqli, $id_tmp, $begruendung, $user_id)
   $obj = $res->fetch_object();
 
   // make copy into reser_geloescht
-  $query = "INSERT INTO `mfgcadmin_reservationen`.`reser_geloescht` 
+  $query = "INSERT INTO `mfgcadmin_reservationen`.`reser_geloescht`
          (`id` , `timestamp`, `user_id`, `flieger_id`, `von`, `bis`, `loescher_id`, `grund`)
   VALUES ( NULL , NULL, ?, ?, ?, ?, ?, ?);";
 
@@ -722,7 +722,7 @@ function delete_reservation($mysqli, $id_tmp, $begruendung, $user_id)
 function reser_getrimmt_eintrag($mysqli, $obj, $user_id, $begruendung, $loeschen_datum_von, $loeschen_datum_bis)
 {
 
-  $query = "INSERT INTO `mfgcadmin_reservationen`.`reser_getrimmt` 
+  $query = "INSERT INTO `mfgcadmin_reservationen`.`reser_getrimmt`
             (`id`, `timestamp`, `user_id`, `flieger_id`, `von`, `bis`, `loescher_id`, `grund`, `getrimmt_von`, `getrimmt_bis`)
             VALUES ( NULL , NULL, ?, ?, ?, ?, ?, ?, ?, ?);";
   mysqli_prepare_execute($mysqli, $query, 'iississs', array ($obj->user_id, $obj->flieger_id, $obj->von, $obj->bis, $user_id, $begruendung, $loeschen_datum_von, $loeschen_datum_bis));
@@ -827,7 +827,7 @@ function mysqli_prepare_execute ($mysqli, $query, $bind_string, $arr)
       $stmt->bind_param($bind_string, $arr[0], $arr[1], $arr[2], $arr[3], $arr[4], $arr[5], $arr[6], $arr[7], $arr[8], $arr[9], $arr[10], $arr[11]);
 
     // Execute the prepared query.
-    if (!$stmt->execute()) 
+    if (!$stmt->execute())
     {
         header('Location: /reservationen/login/error.php?err=Registration failure: '.$query);
         exit;
@@ -840,6 +840,28 @@ function mysqli_prepare_execute ($mysqli, $query, $bind_string, $arr)
   }
   return TRUE;
 }
+function computer_minute_from_zaehlerstand($zaehlerstand)
+{
+  // 44.12 * int - 44 * 60 = minuten.
+  $zaehler_minute = intval($zaehlerstand) * 60;
+  // 44.12 * 100 4412 % 100 -> 12 minuten dazu (+=)
+  $digit_minute = round($zaehlerstand * 100, 0, PHP_ROUND_HALF_UP) % 100;
+  $zaehler_minute += $digit_minute;
+  return array($zaehler_minute, $digit_minute);
+}
+
+function check_zaehlerstand($zaehlerstand, $digit_minute)
+{
+  $error_msg = "";
+  if ($digit_minute > 59)
+    $error_msg = "Die Nachkommastelle (Minuten) muss zwischen 0 und 59 sein.";
+
+  if (floatval($zaehlerstand) <= 0)
+    $error_msg = "Die Zahl muss grösser als 0 sein.";
+
+  return $error_msg;
+}
+
 
 
 ?>

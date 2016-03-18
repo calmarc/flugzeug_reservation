@@ -1,4 +1,3 @@
-
 <?php
 // von der uebersicht
 if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
@@ -6,15 +5,14 @@ if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
   $flieger_id = $_GET['flieger_id'];
 
   $query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
-  $res = $mysqli->query($query); 
+  $res = $mysqli->query($query);
 
+  // flieger ID checken
   if ($res->num_rows != 1)
   {
     header('Location: /reservationen/index.php');
     exit;
   }
-  $flieger_id = $_GET['flieger_id'];
-  $flieger_name = $res->fetch_object()->flieger;
 
   if (isset($_GET['action'], $_GET['service_id']) && $_GET['action'] == "del" && $_GET['service_id'] > 0)
   {
@@ -24,7 +22,6 @@ if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
 }
 else if (isset($_POST['submit']))
 {
-  // TODO ziemlich double maessig mit landungs-eintrag.. 
   $flieger_id = ""; if (isset($_POST['flieger_id'])) $flieger_id = $_POST['flieger_id'];
   $tag = ""; if (isset($_POST['tag'])) $tag = $_POST['tag'];
   $monat = ""; if (isset($_POST['monat'])) $monat = $_POST['monat'];
@@ -32,44 +29,31 @@ else if (isset($_POST['submit']))
   $zaehlerstand = ""; if (isset($_POST['zaehlerstand'])) $zaehlerstand = $_POST['zaehlerstand'];
   $verantwortlich = ""; if (isset($_POST['verantwortlich'])) $verantwortlich = $_POST['verantwortlich'];
   $verantwortlich = intval($verantwortlich);
-
-  $zaehler_minute = intval($zaehlerstand) * 60;
-  $zaehler_minute += round($zaehlerstand * 100, 0, PHP_ROUND_HALF_UP) % 100;
-
   $_SESSION['flieger_id']  = $flieger_id;
   $_SESSION['tag']  = $tag;
   $_SESSION['monat']  = $monat;
   $_SESSION['jahr']  = $jahr;
 
+  list($zaehler_minute,$digit_minute) = computer_minute_from_zaehlerstand($zaehlerstand);
+
   $tag = str_pad($tag, 2, "0", STR_PAD_LEFT);
   $monat = str_pad($monat, 2, "0", STR_PAD_LEFT);
-  $date = "$jahr-$monat-$tag";
+  $datum = "$jahr-$monat-$tag";
 
-  $query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
-  $res = $mysqli->query($query); 
-  $flieger_name = $res->fetch_object()->flieger;
+  $error_msg = check_zaehlerstand($zaehlerstand, $digit_minute);
 
-  $error_msg = "";
+  $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `zaehler_eintraege` WHERE `flieger_id` = '$flieger_id';");
+  $obj_x = $res_x->fetch_object();
+  $min = $obj_x->zaehler_minute;
 
-  $z_max = -1;
-
-  if ($stmt = $mysqli->prepare("INSERT INTO `mfgcadmin_reservationen`.`service_eintraege` (
-	  `id` ,
-	  `user_id` ,
-	  `flieger_id` ,
-	  `datum` ,
-	  `zaehler_minute`
-	  )
-	  VALUES (
-	  NULL , ?, ?, ?, ?
-	  )"))
+  if ($error_msg == "")
   {
-	$stmt->bind_param('iisi', $verantwortlich, $flieger_id, $date, $zaehler_minute);
-	if (!$stmt->execute()) 
-	{
-		header('Location: /reservationen/login/error.php?err=Registration failure: INSERT');
-		exit;
-	}
+    if ($min < $zaehler_minute)
+      $error_msg = "HINWEIS: Der Service-Eintrag ist grösser als der letzte Landungseintrag!<br />Bitte korrigieren.";
+
+    $query = "INSERT INTO `mfgcadmin_reservationen`.`service_eintraege` (
+        `id` , `user_id` , `flieger_id` , `datum` , `zaehler_minute`) VALUES ( NULL , ?, ?, ?, ?)";
+    mysqli_prepare_execute($mysqli, $query, 'iisi', array ($verantwortlich, $flieger_id, $datum, $zaehler_minute));
   }
 }
 else

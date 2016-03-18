@@ -12,12 +12,12 @@ sec_session_start();
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 
-if (check_admin($mysqli) == TRUE) 
+if (check_admin($mysqli) == TRUE)
   $_SESSION['admin'] = TRUE;
 else
   $_SESSION['admin'] = FALSE;
 
-print_html_to_body('Motorfluggruppe Chur Reservierungssystem', 
+print_html_to_body('Motorfluggruppe Chur Reservierungssystem',
                    '<meta http-equiv="refresh" content="900">');
 
 
@@ -25,7 +25,7 @@ require('includes/usermenu.php');
 echo '<main>';
 require('includes/kalender.php');
 
-$monate = array("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", 
+$monate = array("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September",
 "Oktober", "November", "Dezember");
 $tage = array("Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag");
 
@@ -93,7 +93,7 @@ else
   echo "<div class='center'>";
   echo "<table id='monat_title'><tr>";
   echo "<td>";
-  echo '<a href="/reservationen/index.php?flieger_id='.$flieger_id.'&amp;show=monat&amp;monat='.$z_monat.'&amp;jahr='.$z_jahr.'&amp;tag='.$tag.'"><span>&laquo;</span></a> &nbsp; '; 
+  echo '<a href="/reservationen/index.php?flieger_id='.$flieger_id.'&amp;show=monat&amp;monat='.$z_monat.'&amp;jahr='.$z_jahr.'&amp;tag='.$tag.'"><span>&laquo;</span></a> &nbsp; ';
   echo "</td><td>";
   echo $monate[$monat-1];
   echo " $jahr";
@@ -106,7 +106,7 @@ else
   echo "<input type='hidden' name='jahr' value='$jahr' />";
   echo $select;
   echo "</td><td>";
-  echo ' &nbsp; <a href="/reservationen/index.php?flieger_id='.$flieger_id.'&amp;show=monat&amp;monat='.$v_monat.'&amp;jahr='.$v_jahr.'&amp;tag='.$tag.'">&raquo;</a> '; 
+  echo ' &nbsp; <a href="/reservationen/index.php?flieger_id='.$flieger_id.'&amp;show=monat&amp;monat='.$v_monat.'&amp;jahr='.$v_jahr.'&amp;tag='.$tag.'">&raquo;</a> ';
   echo "</td>";
   echo "</tr></table>";
   echo "</div>";
@@ -124,7 +124,7 @@ $tabs = array(); // TABS to place stuff
 for ($i = 0; $i <= 28;  $i++)
   array_push($tabs, number_format ($i * $w + $perplus, 3, '.', ''));
 
-//buchungs-colors: blue       yellow     orange     yellow     orange       red  
+//buchungs-colors: blue       yellow     orange     yellow     orange       red
 $boxcol =   array('#33ccff', '#ffff99', '#ffee99', '#ffff99', '#ffee99', '#ff6666');
 $textcol =  array('#333333', '#333333', '#333333', '#333333', '#333333', '#333333');
 

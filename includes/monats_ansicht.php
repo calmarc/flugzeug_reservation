@@ -8,8 +8,8 @@
 //   anzahl tage
 //   was ist tag am 1ten? (fuer die leocher)
 //   'jetzt ist was' (grau/gruen)
-//  
-//   a) zeichnen von 
+//
+//   a) zeichnen von
 //      . waehrend dem die offsets der tage speichern (fuer buchungen)
 //
 // 2 die buchungen reinmontieren
@@ -25,12 +25,12 @@
 //      .bis in tage teilen (fuer endtag + offset)
 //      .print_nr-on - wo die nummer reinschreiben (mitte der tage)
 //        (an dem tag (wenns kommt) - mitte ermitteln und dort reinschreiben)
-//      . gelb (level = 0) striche sonst blau 
+//      . gelb (level = 0) striche sonst blau
 //                                       rechteck.
 //                                       members infos.. fuer tooltip
 //
 //
-//      
+//
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  MAIN BUCHUNG's DRAWING LOOOOOP
@@ -48,7 +48,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
   // verschiebung) verwandelt werden // weil das ueberall so gemacht wir..
   //
   // muss quasi ueberall gemacht werden wo time() verwendet wird.
-  
+
   date_default_timezone_set("Europe/Zurich");
   $tmp_date = date("Y-m-d H:i:s", time());
   date_default_timezone_set('UTC');
@@ -127,13 +127,13 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
   while($obj_tang = $res_tang->fetch_object())
   {
     #transfer time to blocks (1800=30min) of current booking
-    $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800); 
-    $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1; 
+    $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800);
+    $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1;
 
     // look vor level where it can fit
     $level = 0;
-    while(TRUE) 
-    { 
+    while(TRUE)
+    {
       $flag = FALSE;
       for($i = $block_first; $i <= $block_last; $i++)
       {
@@ -166,7 +166,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
 
     // fuer mehrlinige buchungen
     // vorbereitungen und while{}
-    
+
     $tag_offset_von = intval($print_first / 48);
     $print_first = intval($print_first % 48);
     $tag_offset_bis = intval($print_last / 48);
@@ -206,7 +206,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
 
         $line_length = number_format ($tabs[$print_first]+$width, 3, '.', '');
         echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+16).'" x2="'.$line_length.'%" y2="'.($yoffset+16).'" style="stroke: '.$boxcol[$level].'; stroke-width: 7px;"></line>'."\n";
-        echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+13).'" x2="'.$line_length.'%" y2="'.($yoffset+13).'" style="stroke: #333333; stroke-width: 1px;"></line>'."\n"; 
+        echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+13).'" x2="'.$line_length.'%" y2="'.($yoffset+13).'" style="stroke: #333333; stroke-width: 1px;"></line>'."\n";
       }
       // normal blue booking
       else
@@ -269,7 +269,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
           $print_number_txt .=  '</a>';
         }
       }
-     
+
       $x++; // reiterate if necessary
     }
   }
@@ -398,13 +398,13 @@ function monatsansicht($mysqli, $w, $tabs, $boxcol, $textcol, $monat, $jahr, $fl
 
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height='740px' class="chart_monat">
 
-  <script type="text/ecmascript"> 
+  <script type="text/ecmascript">
   <![CDATA[
 
-	function sleep(milliseconds) 
+	function sleep(milliseconds)
     {
 	  var start = new Date().getTime();
-	  for (var i = 0; i < 1e7; i++) 
+	  for (var i = 0; i < 1e7; i++)
 	  {
 		if ((new Date().getTime() - start) > milliseconds)
 		{
@@ -412,7 +412,7 @@ function monatsansicht($mysqli, $w, $tabs, $boxcol, $textcol, $monat, $jahr, $fl
 		}
 	  }
 	}
-    function ShowTooltip(evt, name, natel, telefon, email) 
+    function ShowTooltip(evt, name, natel, telefon, email)
     {
       sleep(80);
       var x = +evt.clientX - 100;
@@ -459,7 +459,7 @@ function monatsansicht($mysqli, $w, $tabs, $boxcol, $textcol, $monat, $jahr, $fl
 
       document.getElementById("tooltip_svg").setAttributeNS(null, "height", (counter * 25) + "px");
     }
-    function HideTooltip(evt) 
+    function HideTooltip(evt)
     {
       sleep(80);
       document.getElementById("tooltip_div").setAttributeNS(null, "style", "display: none; visibility: hidden;");

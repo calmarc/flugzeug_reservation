@@ -12,7 +12,7 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
   $natel = ""; if (isset($_POST['natel'])) $natel = trim($_POST['natel']);
   $tel = ""; if (isset($_POST['tel'])) $tel = trim($_POST['tel']);
   $admin = ""; if (isset($_POST['admin'])) $admin = trim($_POST['admin']);
-  
+
   $email = ""; if (isset($_POST['email'])) $email = trim($_POST['email']);
   if ($email != "") {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
@@ -29,12 +29,12 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
 
   $prep_stmt = "SELECT id FROM piloten WHERE pilot_id = ? LIMIT 1";
   $stmt = $mysqli->prepare($prep_stmt);
-  
+
   if ($stmt) {
       $stmt->bind_param('i', $pilot_id);
       $stmt->execute();
       $stmt->store_result();
-      
+
       if ($stmt->num_rows == 1) {
           // A user with this email address already exists
           $error_msg .= '<p class="error">Ein Pilot mit dieser Nummer existiert bereits.</p>';
@@ -49,15 +49,15 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
   $password  = hash('sha512', trim($_POST['password']));
   if (strlen($password) != 128)
       $error_msg .= '<p class="error">Ungültige Passwort Konfiguration.</p>';
-    
+
   if (empty($error_msg)) {
       // Create a random salt
       $random_salt = hash('sha512', uniqid(openssl_random_pseudo_bytes(16), TRUE));
 
-      // Create salted password 
+      // Create salted password
       $password = hash('sha512', $password . $random_salt);
 
-      // Insert the new user into the database 
+      // Insert the new user into the database
       $query = "INSERT INTO piloten (pilot_id, email, password, salt, admin, name, telefon, natel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
       mysqli_prepare_execute($mysqli, $query, 'isssssss', array ($pilot_id, $email, $password, $random_salt, $admin, $name, $tel, $natel));
 

@@ -62,8 +62,8 @@ else if ($where_bereich != '')
 else if ($where_pilot != '')
   $where_txt = " WHERE $where_pilot ";
 
-print_html_to_body('Aktuelle Reservationen', ''); 
-include_once('includes/usermenu.php'); 
+print_html_to_body('Aktuelle Reservationen', '');
+include_once('includes/usermenu.php');
 
 ?>
   <main>
@@ -106,11 +106,11 @@ while ($obj = $res->fetch_object())
             <th><a href="res_momentan.php?sort=von"><b>Datum</b></a></th>
           </tr>
 
-<?php 
+<?php
 
-$query = " SELECT 
+$query = " SELECT
   `reservationen`.`timestamp` AS 'timestamp',
-  `mem1`.`name` AS 'pilot', 
+  `mem1`.`name` AS 'pilot',
   `mem1`.`pilot_id` AS 'pilot_id',
   `flieger`.`flieger` AS 'flieger',
   `reservationen`.`von` AS 'von',

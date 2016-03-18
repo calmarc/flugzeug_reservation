@@ -2,16 +2,16 @@
 
   // highlight... the active links
   $logout = "";
-  $index = ""; 
-  $index_t = ""; 
-  $index_m = ""; 
+  $index = "";
+  $index_t = "";
+  $index_m = "";
   $pass_change = "";
   $pilot_admin = "";
   $res_geloescht = "";
   $res_teilgeloescht = "";
   $res_moment = "";
-  
-  $style = 'style="color: yellow; font-weight: bold;"'; $curr_file = $_SERVER['PHP_SELF']; 
+
+  $style = 'style="color: yellow; font-weight: bold;"'; $curr_file = $_SERVER['PHP_SELF'];
 
   // switches between plan-view.
   // will switch when pressed the menu.. only - else it should deliver the same
@@ -48,7 +48,7 @@
 
   // check if admin rights
   $query = "SELECT `pilot_id`, `name`, `admin`, `gesperrt` from `piloten` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
-  $res = $mysqli->query($query); 
+  $res = $mysqli->query($query);
   $obj = $res->fetch_object();
   $admin = "";
   if ($obj->admin == TRUE && $obj->gesperrt == FALSE)
@@ -64,17 +64,17 @@
 
 ?>
 <nav>
-  <div style="float: right;"> 
-  <?php echo '['.str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT).'] <b>'.htmlentities($obj->name).'</b>'; ?> 
+  <div style="float: right;">
+  <?php echo '['.str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT).'] <b>'.htmlentities($obj->name).'</b>'; ?>
   <?php echo $gesperrt; ?>
-  : <a <?php echo $logout; ?> href= "/reservationen/login/logout.php">ausloggen</a></div> 
-  <div><span style="white-space: nowrap;">[ <a <?php echo $index_t; ?> href="/reservationen/index.php?show=tag">Tagesplan</a> 
-  | <a <?php echo $index_m; ?> href="/reservationen/index.php?show=monat">Monatsplan</a></span> <span style="white-space: nowrap;"> 
-  | <a <?php echo $pass_change; ?> href="/reservationen/pass_change.php">Passwort ändern</a> 
-  | <a href="http://www.ics.li/cfdocs/flugplragaz/admin/bewegungen.cfm">Startliste Flugplatz</a> ]</span> <?php echo $admin; ?> 
-  </div> </nav> 
+  : <a <?php echo $logout; ?> href= "/reservationen/login/logout.php">ausloggen</a></div>
+  <div><span style="white-space: nowrap;">[ <a <?php echo $index_t; ?> href="/reservationen/index.php?show=tag">Tagesplan</a>
+  | <a <?php echo $index_m; ?> href="/reservationen/index.php?show=monat">Monatsplan</a></span> <span style="white-space: nowrap;">
+  | <a <?php echo $pass_change; ?> href="/reservationen/pass_change.php">Passwort ändern</a>
+  | <a href="http://www.ics.li/cfdocs/flugplragaz/admin/bewegungen.cfm">Startliste Flugplatz</a> ]</span> <?php echo $admin; ?>
+  </div> </nav>
 
   <?php } else { ?> <nav> <div>Du bist nicht eingeloggt! [<a href="/reservationen/login/index.php">einloggen</a>]
-  </div> </nav> 
+  </div> </nav>
 <?php
 }

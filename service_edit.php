@@ -17,12 +17,15 @@ date_default_timezone_set('UTC');
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
-if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
 include_once('service_edit.inc.php');
 
-print_html_to_body('Service Eintrag', ''); 
-include_once('includes/usermenu.php'); 
+print_html_to_body('Service Eintrag', '');
+include_once('includes/usermenu.php');
+
+$query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
+$res = $mysqli->query($query);
+$flieger_name = $res->fetch_object()->flieger;
 
 ?>
 <main>
@@ -31,6 +34,10 @@ include_once('includes/usermenu.php');
   <h1>Service Liste - <span style="color: #cc3300;"><?php echo $flieger_name; ?></span></h1>
 
 <?php
+
+if (isset($error_msg) && $error_msg != "")
+  echo "<p><b style='color: red;'>$error_msg</b></p>";
+
 $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
 ?>
   <form action='/reservationen/service_edit.php' method='post'>
@@ -42,10 +49,10 @@ $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
           <td>
             <select size="1" name="tag" style="width: 46px;">
               <?php combobox_tag($_SESSION['tag']); ?>
-            </select> <b>.</b> 
+            </select> <b>.</b>
             <select size="1" name="monat" style="width: 46px;">
               <?php combobox_monat($_SESSION['monat']); ?>
-            </select> <b>.</b> 
+            </select> <b>.</b>
             <select size="1" name="jahr" style="width: 86px;">
               <?php combobox_jahr($_SESSION['jahr']); ?>
             </select>
@@ -61,9 +68,9 @@ echo '<select size="1" style="width: 15em;" name="verantwortlich">';
 while ($obj = $res->fetch_object())
 {
   $selected = "";
-  if ($_SESSION['user_id'] == $obj->pilot_id)
+  if ($_SESSION['user_id'] == $obj->id)
     $selected = "selected='selected'";
-  echo "<option $selected value='".$obj->pilot_id."'>".$obj->name."</option>";
+  echo "<option $selected value='".$obj->id."'>".$obj->name."</option>";
 }
 echo '</select>';
 
@@ -99,7 +106,7 @@ $query = "SELECT `service_eintraege`.`id`,
                  `piloten`.`name`,
                  `service_eintraege`.`zaehler_minute`,
                  `service_eintraege`.`datum`
-         FROM `service_eintraege` LEFT OUTER JOIN `piloten` ON `piloten`.`pilot_id` = `service_eintraege`.`user_id` 
+         FROM `service_eintraege` LEFT OUTER JOIN `piloten` ON `piloten`.`id` = `service_eintraege`.`user_id`
          WHERE `flieger_id` = '".$flieger_id."'  ORDER BY `zaehler_minute` DESC LIMIT 50;";
 
 $res = $mysqli->query($query);

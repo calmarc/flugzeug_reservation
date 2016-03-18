@@ -14,8 +14,8 @@ if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/in
 
 //----------------------------------------------------------------------------
 
-print_html_to_body('Benutzer Administration', ''); 
-include_once('includes/usermenu.php'); 
+print_html_to_body('Benutzer Administration', '');
+include_once('includes/usermenu.php');
 
 ?>
   <main>
@@ -24,7 +24,7 @@ include_once('includes/usermenu.php');
         <h1>Piloten Übersicht</h1>
 <?php
 $query = "SELECT * FROM `piloten` ORDER BY `pilot_id`;";
-$res = $mysqli->query($query); 
+$res = $mysqli->query($query);
 ?>
           <table class='vertical_table'>
             <tr>
@@ -62,7 +62,7 @@ while ($obj = $res->fetch_object())
 //----------------------------------------------------------------------------
 
   $checkflug_ch = shortsql2ch_date($obj->checkflug);
-    
+
   echo "\n<tr>
            <td><a href='pilot_edit.php?id=".$obj->id."'><img alt='editieren' src='/reservationen/bilder/edit.png' /></a></td>
            <td style='text-align: center;'>".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."</td>

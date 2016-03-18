@@ -23,6 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </head>
     <body>
         <h1>There was a problem</h1>
-        <p class="error"><?php echo $error; ?></p>  
+        <p class="error"><?php echo $error; ?></p>
     </body>
 </html>

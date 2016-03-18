@@ -29,12 +29,12 @@ function sendsms($natel, $txt)
   );
 
 
-  if (!is_numeric($natel) or strlen($natel) < 5) 
+  if (!is_numeric($natel) or strlen($natel) < 5)
     return FALSE;
 
   // create the aspsms object with they user_key, user_pass and options
   $aspsms = new Aspsms($user_key, $user_pass, $options);
-  if (!$aspsms->sendTextSms($txt, $recipients)) 
+  if (!$aspsms->sendTextSms($txt, $recipients))
       return $aspsms->getSendStatus();
   return TRUE;
 }

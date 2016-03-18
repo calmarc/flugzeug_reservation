@@ -20,7 +20,7 @@ $user_id = $_SESSION['user_id'];
 
 include_once('res_neu.inc.php');
 
-print_html_to_body('Flugzeug reservieren', ''); 
+print_html_to_body('Flugzeug reservieren', '');
 include_once('includes/usermenu.php'); ?>
 
 <main>
@@ -41,7 +41,7 @@ if (isset($error_msg) && $error_msg != "")
 if (isset($flieger_id))
 {
   $query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
-  $res = $mysqli->query($query); 
+  $res = $mysqli->query($query);
   $obj = $res->fetch_object();
   $fliegertxt = $obj->flieger;
   $hidden = '<input type="hidden" name="flieger_id" value="'.$flieger_id.'" />';
@@ -50,7 +50,7 @@ else
 {
   $flieger_id = "";
   $query = "SELECT * FROM `flieger`;";
-  $res = $mysqli->query($query); 
+  $res = $mysqli->query($query);
   $fliegertxt = "";
   while($obj = $res->fetch_object())
      $fliegertxt .= "<option value='".$obj->id."'>".$obj->flieger." (".$obj->id.")</option>";
@@ -92,10 +92,10 @@ if ($bis_minute == "")
           <td>
             <select size="1" name="von_tag" style="width: 46px;">
               <?php combobox_tag($_SESSION['von_tag']); ?>
-            </select> <b>.</b> 
+            </select> <b>.</b>
             <select size="1" name="von_monat" style="width: 46px;">
               <?php combobox_monat($_SESSION['von_monat']); ?>
-            </select> <b>.</b> 
+            </select> <b>.</b>
             <select size="1" name="von_jahr" style="width: 86px;">
               <?php combobox_jahr($_SESSION['von_jahr']); ?>
             </select>
@@ -117,10 +117,10 @@ if ($bis_minute == "")
           <td>
             <select size="1" name="bis_tag" style="width: 46px;">
               <?php combobox_tag($_SESSION['bis_tag']); ?>
-            </select> <b>.</b> 
+            </select> <b>.</b>
             <select size="1" name="bis_monat" style="width: 46px;">
               <?php combobox_monat($_SESSION['bis_monat']); ?>
-            </select> <b>.</b> 
+            </select> <b>.</b>
             <select size="1" name="bis_jahr" style="width: 86px;">
               <?php combobox_jahr($_SESSION['bis_jahr']); ?>
             </select>
@@ -173,7 +173,7 @@ while ($obj = $res->fetch_object())
 }
 
 $query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`flieger_id` FROM `reservationen` LEFT OUTER JOIN `flieger` ON `flieger`.`id` = `reservationen`.`flieger_id` WHERE `user_id` = $user_id AND `bis` >= '$date' ORDER BY `von` DESC;";
-$res = $mysqli->query($query); 
+$res = $mysqli->query($query);
 
 while ($obj = $res->fetch_object())
 {
@@ -194,7 +194,7 @@ while ($obj = $res->fetch_object())
 }
 
 $query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`flieger_id` FROM `reservationen` LEFT OUTER JOIN `flieger` ON `flieger`.`id` = `reservationen`.`flieger_id` WHERE `user_id` = $user_id AND `bis` < '$date' ORDER BY `von` DESC LIMIT 5;";
-$res = $mysqli->query($query); 
+$res = $mysqli->query($query);
 
 echo '<tr><td style="background-color: #99ff99;"></td><td style="background-color: #99ff99; text-align: left;" colspan="2">Vergangene:</td></tr>';
 while ($obj = $res->fetch_object())

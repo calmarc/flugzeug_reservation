@@ -23,8 +23,8 @@ if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/in
 
 include_once ('pilot_edit.inc.php');
 
-print_html_to_body('Piloten editieren - Administration', ''); 
-include_once('includes/usermenu.php'); 
+print_html_to_body('Piloten editieren - Administration', '');
+include_once('includes/usermenu.php');
 
 ?>
 
@@ -38,7 +38,7 @@ if (isset($_GET['id']))
 {
   $id = $_GET['id'];
 }
-else 
+else
 {
   echo "<h3>Keine gültgie ID erhalten. Bitte <a href='pilot_admin.php'>wiederhohlen</a> oder an mac@calmar.ws melden</h3>";
   exit;
@@ -46,14 +46,14 @@ else
 
 $query = "SELECT * FROM `piloten` WHERE `piloten`.`id` = '$id'";
 
-$res = $mysqli->query($query); 
+$res = $mysqli->query($query);
 $obj = $res->fetch_object();
 
 if ($obj->admin == 1)
   $admin_txt = "ja";
 else
   $admin_txt = "nein";
-  
+
 if ($obj->gesperrt == 1)
   $gesperrt = "ja";
 else
@@ -86,7 +86,7 @@ if ($admin_txt == "nein")
   echo "<option selected='selected'>nein</option>";
   echo "<option>ja</option>";
 }
-else 
+else
 {
   echo "<option>nein</option>";
   echo "<option selected='selected'>ja</option>";
@@ -108,7 +108,7 @@ if ($gesperrt == "nein")
   echo "<option selected='selected'>nein</option>";
   echo "<option>ja</option>";
 }
-else 
+else
 {
   echo "<option>nein</option>";
   echo "<option selected='selected'>ja</option>";

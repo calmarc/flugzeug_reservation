@@ -7,14 +7,14 @@ sec_session_start();
 
 if (login_check($mysqli) == true) { header("Location: /reservationen/index.php"); exit; }
 
-print_html_to_body('Benutzer einloggen', ''); 
-include_once('../includes/usermenu.php'); 
+print_html_to_body('Benutzer einloggen', '');
+include_once('../includes/usermenu.php');
 
 ?>
     <main>
 <?php
 
-if (isset($_GET['error'])) 
+if (isset($_GET['error']))
 {
   $err= "Pilot-ID / Passwort Kombination stimmen nicht!";
   if ($_GET['error'] == 2)
@@ -26,7 +26,7 @@ if (isset($_GET['error']))
           <h3 class='error'>$err</h3>
         </div>";
 }
-?> 
+?>
 
       <div id="formular_innen">
         <h1>Einloggen</h1>
@@ -40,7 +40,7 @@ if (isset($_GET['error']))
               <tr>
                 <td><b>Passwort:</b></td>
                 <td><input required="required"  type="password" name="password" id="password"/></td>
-              </tr> 
+              </tr>
 
 <?php
   $res = $mysqli->query("SELECT `show` FROM `mfgcadmin_reservationen`.`captcha` WHERE `captcha`.`id` =1;");
@@ -57,9 +57,9 @@ if (isset($_GET['error']))
                 <td></td>
                 <td style="text-align: center; padding-top: 50px; padding-right: 30px;"><input required="required" style="width: 20px;" type="checkbox" name="zustimmen" value="" />
                 Ich bestätige die Einhaltung<br />der <a target="_blank" href="/reservationen/reservationspraxis.pdf">Reservationspraxis</a></td>
-              </tr> 
+              </tr>
             </table>
-              <input class="submit_button" type="submit" value="Login" /> 
+              <input class="submit_button" type="submit" value="Login" />
           </form>
       </div>
   </main>

@@ -15,8 +15,8 @@ if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/in
 
 include_once 'register.inc.php';
 
-print_html_to_body('Neuen Piloten hinzufügen', ''); 
-include_once('../includes/usermenu.php'); 
+print_html_to_body('Neuen Piloten hinzufügen', '');
+include_once('../includes/usermenu.php');
 
 ?>
   <main>
@@ -34,27 +34,27 @@ if (!empty($error_msg)) {
               <table class="vtable">
                 <tr>
                    <td><b>Pilot-ID:</b></td> <td><input style="text-align: center;" required="required"
-                  <?php if (isset($_SESSION['regpilot_id'])) echo "value='".$_SESSION['regpilot_id']."'"; ?> 
+                  <?php if (isset($_SESSION['regpilot_id'])) echo "value='".$_SESSION['regpilot_id']."'"; ?>
                                    type='number' min="1" max="9999" name='pilot_id' id='pilot_id' /></td>
                 </tr>
                 <tr>
-                   <td><b>Name:</b></td> <td><input 
-                  <?php if (isset($_SESSION['regname'])) echo "value='".$_SESSION['regname']."'"; ?> 
+                   <td><b>Name:</b></td> <td><input
+                  <?php if (isset($_SESSION['regname'])) echo "value='".$_SESSION['regname']."'"; ?>
                                     type="text" name="name" id="name" /></td>
                 </tr>
                 <tr>
-                  <td><b>Natel:</b></td> <td><input 
-                <?php if (isset($_SESSION['regnatel'])) echo "value='".$_SESSION['regnatel']."'"; ?> 
+                  <td><b>Natel:</b></td> <td><input
+                <?php if (isset($_SESSION['regnatel'])) echo "value='".$_SESSION['regnatel']."'"; ?>
                                  pattern='\+{0,1}[0-9 ]+'  type="text" name="natel" id="natel" /></td>
                 </tr>
                 <tr>
-                  <td><b>Telefon:</b></td> <td><input 
-                <?php if (isset($_SESSION['regtel'])) echo "value='".$_SESSION['regtel']."'"; ?> 
+                  <td><b>Telefon:</b></td> <td><input
+                <?php if (isset($_SESSION['regtel'])) echo "value='".$_SESSION['regtel']."'"; ?>
                                  pattern='\+{0,1}[0-9 ]+'  type="text" name="tel" id="tel" /></td>
                 </tr>
                 <tr>
-                  <td><b>Email:</b></td> <td><input 
-                <?php if (isset($_SESSION['regemail'])) echo "value='".$_SESSION['regemail']."'"; ?> 
+                  <td><b>Email:</b></td> <td><input
+                <?php if (isset($_SESSION['regemail'])) echo "value='".$_SESSION['regemail']."'"; ?>
                                   type="email" name="email" id="email" /></td>
                 </tr>
                 <tr>
@@ -67,7 +67,7 @@ if (!empty($error_msg)) {
                 <tr>
                   <td><b>Passwort:</b></td> <td><input required="required" type="text" name="password" /></td>
                 </tr>
-              </table> 
+              </table>
               <input class="submit_button" type="submit" value="Hinzufügen" />
             </div>
           </form>

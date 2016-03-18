@@ -30,13 +30,13 @@ if (isset($_POST['submit']))
     $error_msg .= "<p>Bitte das Passwort bestätigen</p>";
   else if ($password != $changepwd)
     $error_msg .= "<p>Passwörter stimmen nicht überrein</p>";
-   
+
   // OK, eintragen
   if ($error_msg == "")
   {
 
     $query= "SELECT `salt` FROM `piloten` WHERE `id` = $id;";
-    $res = $mysqli->query($query); 
+    $res = $mysqli->query($query);
     $obj = $res->fetch_object();
 
     $password = hash('sha512', $password);
@@ -49,8 +49,8 @@ if (isset($_POST['submit']))
 }
 
 
-print_html_to_body('Passwort ändern', ''); 
-include_once('includes/usermenu.php'); 
+print_html_to_body('Passwort ändern', '');
+include_once('includes/usermenu.php');
 
 ?>
 
@@ -85,9 +85,9 @@ include_once('includes/usermenu.php');
           <tr>
               <td><b>Passwort bestätigen:</b></td>
               <td><input value="" required="required" type="password" name="changepwd" /></td>
-          </tr> 
+          </tr>
       </table>
-      <input class="submit_button" type="submit" name="submit" value="Ändern" /> 
+      <input class="submit_button" type="submit" name="submit" value="Ändern" />
     </form>
   </div>
 </main>

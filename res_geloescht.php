@@ -62,8 +62,8 @@ else if ($where_bereich != '')
 else if ($where_pilot != '')
   $where_txt = "WHERE $where_pilot";
 
-print_html_to_body('Geloeschte Reservationen', ''); 
-include_once('includes/usermenu.php'); 
+print_html_to_body('Geloeschte Reservationen', '');
+include_once('includes/usermenu.php');
 
 ?>
   <main>
@@ -108,11 +108,11 @@ while ($obj = $res->fetch_object())
             <th><a href="res_geloescht.php?sort=loescher_id"><b>Gelöscht durch</b></a></th>
           </tr>
 
-<?php 
+<?php
 
-$query = " SELECT 
+$query = " SELECT
   `reser_geloescht`.`timestamp` AS 'timestamp',
-  `mem1`.`name` AS 'pilot', 
+  `mem1`.`name` AS 'pilot',
   `mem1`.`pilot_id` AS 'pilot_id',
   `mem2`.`name` AS 'loescher_id',
   `flieger`.`flieger` AS 'flieger',

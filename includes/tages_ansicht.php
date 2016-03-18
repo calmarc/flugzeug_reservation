@@ -36,7 +36,7 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
     $yoffset += $planeoffset;
     echo '<text x="97.6%" y="'.($yoffset-28).'px" text-anchor="end" style="fill: #000000; font-size: 120%; font-weight: bold;">'.$obj_f->flieger.'</text>'."\n";
     echo '<text x="97.6%" y="'.($yoffset-28-26).'px" text-anchor="end" style="fill: '.$s_color.'; font-size: 90%; font-weight: bold;">[Service in '.$in.']</text>'."\n";
-    
+
     echo '<a xlink:href="res_neu.php?flieger_id='.$obj_f->id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$tag.'">';
     echo '<text x="3.6%" y="'.($yoffset-28).'px" style=" fill: #000099; font-size: 100%; font-weight: bold;">'.$obj_f->kurzname.' buchen</text>'."\n";
     echo '</a>';
@@ -64,7 +64,7 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
       if ($now_tstamp > $print_stamp)
         $color = "grey";
 
-      $minute = ($i % 2 ? 30 : 0); 
+      $minute = ($i % 2 ? 30 : 0);
       $stunde = intval(7 + ($i / 2));
 
       if ($i % 2 == 0)
@@ -185,13 +185,13 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
       // 5. goto step 4.
 
       #transfer time to blocks (1800=30min) of current booking
-      $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800); 
-      $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1; 
+      $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800);
+      $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1;
 
       // look vor level where it can fit
       $level = 0;
-      while(TRUE) 
-      { 
+      while(TRUE)
+      {
         $flag = FALSE;
         for($i = $block_first; $i <= $block_last; $i++)
         {
@@ -295,13 +295,13 @@ function tagesansicht($mysqli, $w, $tabs, $boxcol, $textcol, $planeoffset, $tag,
 
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="chart" height="560" >
 
-  <script type="text/ecmascript"> 
+  <script type="text/ecmascript">
   <![CDATA[
 
-	function sleep(milliseconds) 
+	function sleep(milliseconds)
     {
 	  var start = new Date().getTime();
-	  for (var i = 0; i < 1e7; i++) 
+	  for (var i = 0; i < 1e7; i++)
 	  {
 		if ((new Date().getTime() - start) > milliseconds)
 		{
@@ -309,7 +309,7 @@ function tagesansicht($mysqli, $w, $tabs, $boxcol, $textcol, $planeoffset, $tag,
 		}
 	  }
 	}
-    function ShowTooltip(evt, name, natel, telefon, email) 
+    function ShowTooltip(evt, name, natel, telefon, email)
     {
       sleep(80);
       var x = +evt.clientX - 100;
@@ -356,7 +356,7 @@ function tagesansicht($mysqli, $w, $tabs, $boxcol, $textcol, $planeoffset, $tag,
 
       document.getElementById("tooltip_svg").setAttributeNS(null, "height", (counter * 25) + "px");
     }
-    function HideTooltip(evt) 
+    function HideTooltip(evt)
     {
       sleep(80);
       document.getElementById("tooltip_div").setAttributeNS(null, "style", "display: none; visibility: hidden;");

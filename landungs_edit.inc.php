@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $flieger = "0";
 if (isset($_GET['flieger_id']))
@@ -7,9 +7,8 @@ if (isset($_GET['flieger_id']))
 if (isset($_POST['flieger_id']))
   $flieger_id = intval($_POST['flieger_id']);
 
-
 $query = "SELECT `flieger` FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
-$res = $mysqli->query($query); 
+$res = $mysqli->query($query);
 
 if ($res->num_rows != 1)
 {
@@ -26,7 +25,7 @@ if (isset($_POST['zaehler_id']))
   $zaehler_id = intval($_POST['zaehler_id']);
 
 $query = "SELECT * FROM `zaehler_eintraege` WHERE `id` = '$zaehler_id' LIMIT 1;";
-$res2 = $mysqli->query($query); 
+$res2 = $mysqli->query($query);
 if ($res2->num_rows != 1)
 {
   header('Location: /reservationen/index.php');
@@ -42,8 +41,7 @@ if (!check_admin($mysqli))
       exit;
     }
 }
-
-//zaehler_id ist OK
+//zaehler_id ist OK (gehoert Piloten oder Admin)
 
 $obj = $res->fetch_object();
 $flieger_txt = $obj->flieger;
@@ -53,7 +51,7 @@ if (isset($_POST['loeschen']))
   $query = "DELETE FROM `mfgcadmin_reservationen`.`zaehler_eintraege` WHERE `zaehler_eintraege`.`id` = ?";
   mysqli_prepare_execute($mysqli, $query, 'i', array ($zaehler_id));
 
-  header("Location: landungs_eintrag.php?flieger_id=$flieger_id"); 
+  header("Location: landungs_eintrag.php?flieger_id=$flieger_id");
   exit;
 }
 else if (isset($_POST['edit']))
@@ -63,19 +61,24 @@ else if (isset($_POST['edit']))
   $jahr = ""; if (isset($_POST['jahr'])) $jahr = intval($_POST['jahr']);
   $zaehlerstand = ""; if (isset($_POST['zaehlerstand'])) $zaehlerstand = $_POST['zaehlerstand'];
 
+  $zaehler_minute = intval($zaehlerstand) * 60;
+  $digit_minute = round($zaehlerstand * 100, 0, PHP_ROUND_HALF_UP) % 100;
+  $zaehler_minute += $digit_minute;
+
   $tag = str_pad($tag, 2, "0", STR_PAD_LEFT);
   $monat = str_pad($monat, 2, "0", STR_PAD_LEFT);
-
-  $zaehler_minute = intval($zaehlerstand) * 60;
-  $zaehler_minute += round($zaehlerstand * 100, 0, PHP_ROUND_HALF_UP) % 100;
-
   $datum = "$jahr-$monat-$tag";
 
-  $query = "UPDATE `mfgcadmin_reservationen`.`zaehler_eintraege` SET `datum` = ?, `zaehler_minute` = ? WHERE `zaehler_eintraege`.`id` = ?;";
-  mysqli_prepare_execute($mysqli, $query, 'sii', array ($datum, $zaehler_minute, $zaehler_id));
+  $error_msg = check_zaehlerstand($zaehlerstand, $digit_minute);
 
-  header("Location: landungs_eintrag.php?flieger_id=$flieger_id"); 
-  exit;
+  if ($error_msg == "")
+  {
+    $query = "UPDATE `mfgcadmin_reservationen`.`zaehler_eintraege` SET `datum` = ?, `zaehler_minute` = ? WHERE `zaehler_eintraege`.`id` = ?;";
+    mysqli_prepare_execute($mysqli, $query, 'sii', array ($datum, $zaehler_minute, $zaehler_id));
+
+    header("Location: landungs_eintrag.php?flieger_id=$flieger_id");
+    exit;
+  }
 }
 
 ?>
