@@ -16,9 +16,11 @@
   bis was die echte Zeit war.. oder? Oder nicht loeschen und
   warnen?
 
+* email nur senden wenns ne email hat.. (standby wurde frei)
+
 == MINOR ==
 
-* Wenn eine Buchung gelöscht wird  amathis@deep.ch,  armin.beck@dsl.li (scharf machen in der datenbank)
+* armin.beck@dsl.li,amathis@deep.ch, (bei diverses.beigeloescht reintun)
 
 * wie beim monatsplan auch pfeile fuer tag-wechsel
 
@@ -28,7 +30,7 @@
  
 * flieger managen wie user_edit und user_admin.. einfach flieger.
 
-* menu balknen auch auf natel schwarz.. wenn unten
+* menu balken auch auf natel schwarz.. wenn unten
   verschoben.
 
 

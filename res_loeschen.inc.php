@@ -294,8 +294,11 @@ if (isset($_POST['submit']))
 
           mail ($email, "MFGC Reservation vom {$res_datum} aktiviert!", $txt, implode("\r\n",$headers));
 
-          // send sms.
-          $ret_val = sendsms($mysqli, $natel, $txt);
+          // send sms and log
+          list($credits, $tracking_number, $ret_val) = sendsms($mysqli, $natel, $txt);
+
+          $pilot_id_pad = str_pad($obj3->pilot_id, 3, "0", STR_PAD_LEFT);
+          write_status_message($mysqli, "[SMS]", "An [{$pilot_id_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Credits: {$credits}; @@{$tracking_number}@@; {$ret_val} ");
         }
     }
 

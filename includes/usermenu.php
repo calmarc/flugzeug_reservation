@@ -10,8 +10,18 @@
   $res_geloescht = "";
   $res_teilgeloescht = "";
   $res_moment = "";
+  $protokoll = "";
 
-  $style = 'style="color: yellow; font-weight: bold;"'; $curr_file = $_SERVER['PHP_SELF'];
+  $curr_file = $_SERVER['PHP_SELF'];
+
+  $style = 'style="color: yellow; font-weight: bold;"'; 
+  $style2 = 'style="background-color: #000000; border: 2px #666666 solid;
+    filter: brightness(110%);
+    -webkit-filter: brightness(110%);
+    -moz-filter: brightness(110%);
+    -o-filter: brightness(110%);
+    -ms-filter: brightness(110%);
+    "';
 
   // switches between plan-view.
   // will switch when pressed the menu.. only - else it should deliver the same
@@ -34,17 +44,19 @@
       $index_t = $style;
   }
   else if ($curr_file == "/reservationen/pass_change.php")
-    $pass_change = $style;
+    $pass_change = $style2;
   else if ($curr_file == "/reservationen/pilot_admin.php")
-    $pilot_admin = $style;
+    $pilot_admin = $style2;
   else if ($curr_file == "/reservationen/pilot_edit.php")
-    $pilot_admin = $style;
+    $pilot_admin = $style2;
   else if ($curr_file == "/reservationen/res_geloescht.php")
-    $res_geloescht = $style;
+    $res_geloescht = $style2;
   else if ($curr_file == "/reservationen/res_teilgeloescht.php")
-    $res_teilgeloescht = $style;
-  else if ($curr_file == "reservationen/res_momentan.php")
-    $res_moment = $style;
+    $res_teilgeloescht = $style2;
+  else if ($curr_file == "/reservationen/res_momentan.php")
+    $res_moment = $style2;
+  else if ($curr_file == "/reservationen/protokoll.php")
+    $protokoll = $style2;
 
   // check if admin rights
   $query = "SELECT `pilot_id`, `name`, `admin`, `gesperrt` from `piloten` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
@@ -52,7 +64,14 @@
   $obj = $res->fetch_object();
   $admin = "";
   if ($obj->admin == TRUE && $obj->gesperrt == FALSE)
-    $admin = "<span style='white-space: nowrap;'>[ <a {$pilot_admin} href='/reservationen/pilot_admin.php'><span style='color: #ff3333;'>Piloten</span></a> | <a {$res_moment} href='/reservationen/res_momentan.php'><span style='color: #ff3333;'>Reservationen</span></a> | <a {$res_geloescht} href='/reservationen/res_geloescht.php'><span style='color: #ff3333;'>Gelöscht</span></a></span> <span style='white-space: nowrap;'> | <a {$res_teilgeloescht} href='/reservationen/res_teilgeloescht.php'><span style='color: #ff3333;'>Teil-gelöscht</span></a> ]</span>";
+    $admin = "
+<span style='white-space: nowrap;'>[ 
+  <a href='/reservationen/pilot_admin.php'><img {$pilot_admin} src='/reservationen/bilder/pilot.png' alt='Piloten' /></a>
+  <a href='/reservationen/res_momentan.php'><img {$res_moment} src='/reservationen/bilder/reservation.png' alt='Reservationen' /></a> 
+  <a href='/reservationen/res_geloescht.php'><img {$res_geloescht} src='/reservationen/bilder/reservation-geloescht.png' alt='gelöscht' /></a>
+  <a href='/reservationen/res_teilgeloescht.php'><img {$res_teilgeloescht} src='/reservationen/bilder/reservation-teil.png' alt='teil-gelöscht' /></a> 
+  <a href='/reservationen/protokoll.php'><img {$protokoll} src='/reservationen/bilder/log.png' alt='Protokoll' /></a> ]
+</span>";
 
   $_SESSION['name'] = htmlentities($obj->name);
 
@@ -64,17 +83,29 @@
 
 ?>
 <nav>
-  <div style="float: right;">
-  <?php echo '['.str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT).'] <b>'.htmlentities($obj->name).'</b>'; ?>
-  <?php echo $gesperrt; ?>
-  : <a <?php echo $logout; ?> href= "/reservationen/login/logout.php">ausloggen</a></div>
-  <div><span style="white-space: nowrap;">[ <a <?php echo $index_t; ?> href="/reservationen/index.php?show=tag">Tagesplan</a>
-  | <a <?php echo $index_m; ?> href="/reservationen/index.php?show=monat">Monatsplan</a></span> <span style="white-space: nowrap;">
-  | <a <?php echo $pass_change; ?> href="/reservationen/pass_change.php">Passwort ändern</a>
-  | <a href="http://www.ics.li/cfdocs/flugplragaz/admin/bewegungen.cfm">Startliste Flugplatz</a> ]</span> <?php echo $admin; ?>
-  </div> </nav>
+  <div class="user_menu">
+    <?php echo '['.str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT).'] <b>'.htmlentities($obj->name).'</b>'; ?><?php echo $gesperrt; ?>
+    <a title="Passwort ändern" href="/reservationen/pass_change.php"><img <?php echo $pass_change; ?> src="/reservationen/bilder/key.png" alt="Passwort ändern" /></a>
+    <a title="Ausloggen" href= "/reservationen/login/logout.php"><img class="always" src="/reservationen/bilder/exit.png" alt="Ausloggen" /></a>
+  </div>
+  <div>
+    <span style="white-space: nowrap;">
+      [ <a <?php echo $index_t; ?> href="/reservationen/index.php?show=tag">Tagesplan</a>
+      | <a <?php echo $index_m; ?> href="/reservationen/index.php?show=monat">Monatsplan</a>
+      | <a href="http://www.ics.li/cfdocs/flugplragaz/admin/bewegungen.cfm">Startliste Flugplatz</a> ]
+    </span> 
+   <?php echo $admin; ?>
+  </div> 
+</nav>
+<br style="clear: both;" />
 
-  <?php } else { ?> <nav> <div>Du bist nicht eingeloggt! [<a href="/reservationen/login/index.php">einloggen</a>]
-  </div> </nav>
+  <?php } else { ?> 
+<nav> 
+  <div>
+    Du bist nicht eingeloggt! [<a href="/reservationen/login/index.php">einloggen</a>]
+  </div> 
+</nav>
+<br style="clear: both;" />
+
 <?php
 }

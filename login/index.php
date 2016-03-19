@@ -54,8 +54,7 @@ if (isset($_GET['error']))
 <?php } ?>
 
               <tr>
-                <td></td>
-                <td style="text-align: center; padding-top: 50px; padding-right: 30px;"><input required="required" style="width: 20px;" type="checkbox" name="zustimmen" value="" />
+                <td colspan="2" style="text-align: center; padding-top: 50px; padding-right: 30px;"><input required="required" style="width: 20px;" type="checkbox" name="zustimmen" value="" />
                 Ich bestätige die Einhaltung<br />der <a target="_blank" href="/reservationen/reservationspraxis.pdf">Reservationspraxis</a></td>
               </tr>
             </table>

@@ -52,6 +52,13 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
           }
         }
 
+        $query= "SELECT `name`, `pilot_id` FROM `piloten` WHERE `pilot_id` = {$pilot_id};";
+        $res = $mysqli->query($query);
+        $obj = $res->fetch_object();
+        
+        $pilot_id_pad = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT);
+        write_status_message($mysqli, "[Eingeloggt]", "[{$pilot_id_pad}] {$obj->name}");
+
         header("Location: ../index.php");
         exit();
     } else {

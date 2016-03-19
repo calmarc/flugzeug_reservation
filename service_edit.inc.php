@@ -18,6 +18,7 @@ if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
   {
     $query = "DELETE FROM `mfgcadmin_reservationen`.`service_eintraege` WHERE `service_eintraege`.`id` = ?;";
     mysqli_prepare_execute($mysqli, $query, 'i', array ($_GET['service_id']));
+    write_status_message($mysqli, "[Service: Eintrag gelöscht]", "[{$_SESSION['pilot_id']}] {$_SESSION['name']}");
   }
 }
 else if (isset($_POST['submit']))
@@ -54,6 +55,9 @@ else if (isset($_POST['submit']))
     $query = "INSERT INTO `mfgcadmin_reservationen`.`service_eintraege` (
         `id` , `user_id` , `flieger_id` , `datum` , `zaehler_minute`) VALUES ( NULL , ?, ?, ?, ?)";
     mysqli_prepare_execute($mysqli, $query, 'iisi', array ($verantwortlich, $flieger_id, $datum, $zaehler_minute));
+
+    $pilot_id_pad = str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT);
+    write_status_message($mysqli, "[Service: Neuer Eintrag]", "[{$pilot_id_pad}] {$_SESSION['name']}");
   }
 }
 else

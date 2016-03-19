@@ -14,27 +14,47 @@ function sendsms($mysqli, $natel, $txt)
 
   // set optional attributes
   $options = array(
-      "AffiliateId" => "205567",
-      "Originator" => "MFGC.ch",
+      //"AffiliateId" => "205567",
+      "Originator" => "MFGC.ch"
   );
-  // array with numbers and the generated unique tracking code. You should store this informations
-  // to a database to request tracking informations later on.
-  //
-  $natel = str_replace(" ", "", $natel);
-  $natel = str_replace("'", "", $natel);
+
   $natel = str_replace("+", "00", $natel);
+  $natel = preg_replace("/[^0-9]/", "", $natel);
+
+  $tracking_number = "4565-".uniqid(microtime());
 
   $recipients = array(
-      "4565-".uniqid(microtime()) => $natel
+      $tracking_number => $natel
   );
 
-
   if (!is_numeric($natel) or strlen($natel) < 5)
-    return FALSE;
+    return array("", "", "Natel-Nummer fehlerhaft");
+
+  $ret_val = ""; // kommen nur fehler rein...
 
   // create the aspsms object with they user_key, user_pass and options
   $aspsms = new Aspsms($user_key, $user_pass, $options);
   if (!$aspsms->sendTextSms($txt, $recipients))
-      return $aspsms->getSendStatus();
-  return TRUE;
+      $ret_val =  $aspsms->getSendStatus();
+
+  $credits = $aspsms->credits();
+  return array($credits, $tracking_number, $ret_val);
+}
+
+function sms_delivery_status($mysqli, $tracking_number)
+{
+  $res = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'sms_login' LIMIT 1;");
+  $obj = $res->fetch_object();
+  $user_key = $obj->data1;
+  $user_pass = $obj->data2;
+
+  // set optional attributes
+  $options = array(
+      "Originator" => "MFGC.ch"
+  );
+
+  // create the aspsms object with they user_key, user_pass and options
+  $aspsms = new Aspsms($user_key, $user_pass, $options);
+  $delivery_status = $aspsms->deliveryStatus($tracking_number);
+  return $delivery_status;
 }
