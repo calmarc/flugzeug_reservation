@@ -2,7 +2,6 @@
 
 == MAYOR ==
 
-
 * service nicht rot.. nur zahl (tspan...)
 
 * landungseintrage fuer admins.. mit pilotenliste (oder/und
@@ -24,15 +23,12 @@
 
 * wie beim monatsplan auch pfeile fuer tag-wechsel
 
-* sms return value / erhalten etc.
- 
 * Buchung löschen:  kontrollieren clean-upen
  
 * flieger managen wie user_edit und user_admin.. einfach flieger.
 
 * menu balken auch auf natel schwarz.. wenn unten
-  verschoben.
-
+  verschoben. <- wie??
 
 
 // vim: nospell :
