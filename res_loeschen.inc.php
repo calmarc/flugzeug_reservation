@@ -292,13 +292,28 @@ if (isset($_POST['submit']))
 
           $txt = "Deine Reservation:\n\nPilot: {$pilot}\nFlugzeug: {$flieger}\nDatum: {$res_datum}\n\nwurde aktiviert!";
 
-          mail ($email, "MFGC Reservation vom {$res_datum} aktiviert!", $txt, implode("\r\n",$headers));
-
-          // send sms and log
-          list($credits, $tracking_number, $ret_val) = sendsms($mysqli, $natel, $txt);
-
           $pilot_id_pad = str_pad($obj3->pilot_id, 3, "0", STR_PAD_LEFT);
-          write_status_message($mysqli, "[SMS]", "An [{$pilot_id_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Credits: {$credits}; @@{$tracking_number}@@; {$ret_val} ");
+
+          if ($email != "")
+          {
+            if (mail ($email, "MFGC Reservation vom {$res_datum} aktiviert!", $txt, implode("\r\n",$headers)))
+              write_status_message($mysqli, "[Standby Email]", "An [{$pilot_id_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Es wurde <span style='color: green'>eine</span> Email geschickt.");
+            else
+              write_status_message($mysqli, "[Standby Email]", "An [{$pilot_id_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Es wurde <span style='color: red'>keine</span> Email geschickt.");
+          }
+          else
+              write_status_message($mysqli, "[Standby Email]", "An [{$pilot_id_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Pilot hat <span style='color: red;'>keine</span> Email angegeben.");
+
+
+          if ($natel != "")
+          {
+            // send sms and log
+            list($credits, $tracking_number, $ret_val) = sendsms($mysqli, $natel, $txt);
+
+            write_status_message($mysqli, "[Standby SMS]", "An [{$pilot_id_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Credits: {$credits}; @@{$tracking_number}@@; {$ret_val} ");
+          }
+          else
+              write_status_message($mysqli, "[Standby SMS]", "An [{$pilot_id_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Pilot hat <span style='color: red;'>keine</span> Natel-Nummer angegeben.");
         }
     }
 

@@ -55,6 +55,14 @@ function sms_delivery_status($mysqli, $tracking_number)
 
   // create the aspsms object with they user_key, user_pass and options
   $aspsms = new Aspsms($user_key, $user_pass, $options);
-  $delivery_status = $aspsms->deliveryStatus($tracking_number);
+  try 
+  {
+    $delivery_status = $aspsms->deliveryStatus($tracking_number);
+  } 
+  catch (Exception $e) 
+  {
+    return array("Fehler", $e->getMessage());
+  }
+
   return $delivery_status;
 }

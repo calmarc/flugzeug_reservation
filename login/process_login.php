@@ -39,7 +39,7 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
             //mail
             $res2 = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'bei_gesperrt';");
             $obj2 = $res2->fetch_object();
-            $to = $obj2->email;
+            $to = $obj2->data1;
             $subject = "Checkflug überfällig: '{$obj->name}' [".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."]";
 			$txt = $subject;
             $headers   = array();
@@ -48,7 +48,13 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
 			$headers[] = "From: noreply@mfgc.ch";
 
             if (mail($to, $subject, $txt, implode("\r\n",$headers)))
+            {
               mysqli_prepare_execute($mysqli, "UPDATE `mfgcadmin_reservationen`.`piloten` SET `email_gesch` = '1' WHERE `piloten`.`id` = ?;", 'i', array ($obj->id));
+              write_status_message($mysqli, "[Check-Flug Email]", "An [{$to}] <span style='color: green;'>gesendet</span>: {$subject}");
+            }
+            else
+              write_status_message($mysqli, "[Check-Flug Email]", "Es konnte <span style='color: red'>keine</span> Email an <{$to}> geschickt werden!");
+
           }
         }
 
