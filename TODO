@@ -5,7 +5,7 @@
 * service nicht rot.. nur zahl (tspan...)
 
 * landungseintrage fuer admins.. mit pilotenliste (oder/und
-  bei edit...
+  bei edit... .. und bei reservierung.
 
 * bei teiloeschung werte kontrollieren.. i.e bis muss
   groesser sein als von etc.
@@ -14,6 +14,7 @@
   loescht..  soweit so gut.. aber sollte dann nur angeben
   bis was die echte Zeit war.. oder? Oder nicht loeschen und
   warnen?
+
 
 == MINOR ==
 
@@ -27,6 +28,8 @@
 
 * menu balken auch auf natel schwarz.. wenn unten
   verschoben. <- wie??
+
+* passwort vergessen.. link
 
 
 // vim: nospell :
