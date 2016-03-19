@@ -12,6 +12,15 @@ sec_session_start();
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
+$admin_bol = check_admin($mysqli);
+
+// braucht man auch ganz unten
+$user_id = $_SESSION['user_id'];
+
+// falls admin fuer jemanden Eintraege macht.
+if (isset($_POST['user_id']))
+  $user_id = $_POST['user_id'];
+
 // von der uebersicht
 if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
 {
@@ -56,7 +65,7 @@ else if (isset($_POST['submit']))
   {
     $query = "INSERT INTO `mfgcadmin_reservationen`.`zaehler_eintraege` (
               `id` , `user_id` , `flieger_id` , `datum` , `zaehler_minute`) VALUES ( NULL , ?, ?, ?, ?)";
-    mysqli_prepare_execute($mysqli, $query, 'iisi', array ($_SESSION['user_id'], $flieger_id, $datum, $zaehler_minute));
+    mysqli_prepare_execute($mysqli, $query, 'iisi', array ($user_id, $flieger_id, $datum, $zaehler_minute));
   }
 }
 else
@@ -97,7 +106,19 @@ $hidden = "<input type='hidden' name='flieger_id' value='{$flieger_id}' />";
       <table class='vtable'>
         <tr class="trblank">
           <td><b>Pilot:</b></td>
-          <td><b>[<?php echo str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
+<?php if ($admin_bol)
+{
+  echo "<td><select size='1' style='width: 16em' name='user_id'>";
+  combobox_piloten($mysqli, $_SESSION['pilot_id']);
+  echo "</select></td>";
+}
+else
+{
+   echo "<td><b>[".str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT)."] {$_SESSION['name']}</b>";
+   echo "<input type='hidden' name='user_id' value='{$user_id}' />";
+   echo "</td>";
+}
+?>
         </tr>
         <tr class="trblank">
           <td><b>Flugzeug:</b></td>

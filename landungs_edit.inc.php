@@ -9,6 +9,8 @@ if (isset($_POST['flieger_id']))
 
 $query = "SELECT `flieger` FROM `flieger` WHERE `id` = '{$flieger_id}' LIMIT 1;";
 $res = $mysqli->query($query);
+$obj = $res->fetch_object();
+$flieger_txt = $obj->flieger;
 
 if ($res->num_rows != 1)
 {
@@ -32,7 +34,6 @@ if ($res2->num_rows != 1)
 }
 $obj2 = $res2->fetch_object();
 
-//TODO ???????????????????????? wieso nicht oben?
 if (!check_admin($mysqli))
 {
   if (intval($obj2->user_id) != intval($_SESSION['user_id']))
@@ -42,9 +43,6 @@ if (!check_admin($mysqli))
     }
 }
 //zaehler_id ist OK (gehoert Piloten oder Admin)
-
-$obj = $res->fetch_object();
-$flieger_txt = $obj->flieger;
 
 if (isset($_POST['loeschen']))
 {

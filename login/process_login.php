@@ -37,7 +37,7 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
           if ($obj->checkflug > "0000-00-00" && $obj->checkflug < $jetzt && $obj->email_gesch == FALSE)
           {
             //mail
-            $res2 = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'bei_gesperrt';");
+            $res2 = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'bei_gesperrt_email';");
             $obj2 = $res2->fetch_object();
             $to = $obj2->data1;
             $subject = "Checkflug überfällig: '{$obj->name}' [".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."]";

@@ -11,6 +11,7 @@
   $res_teilgeloescht = "";
   $res_moment = "";
   $protokoll = "";
+  $diverses = "";
 
   $curr_file = $_SERVER['PHP_SELF'];
 
@@ -57,6 +58,8 @@
     $res_moment = $style2;
   else if ($curr_file == "/reservationen/protokoll.php")
     $protokoll = $style2;
+  else if ($curr_file == "/reservationen/diverses.php")
+    $diverses = $style2;
 
   // check if admin rights
   $query = "SELECT `pilot_id`, `name`, `admin`, `gesperrt` from `piloten` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
@@ -70,7 +73,8 @@
   <a href='/reservationen/res_momentan.php'><img {$res_moment} src='/reservationen/bilder/reservation.png' alt='Reservationen' /></a> 
   <a href='/reservationen/res_geloescht.php'><img {$res_geloescht} src='/reservationen/bilder/reservation-geloescht.png' alt='gelöscht' /></a>
   <a href='/reservationen/res_teilgeloescht.php'><img {$res_teilgeloescht} src='/reservationen/bilder/reservation-teil.png' alt='teil-gelöscht' /></a> 
-  <a href='/reservationen/protokoll.php'><img {$protokoll} src='/reservationen/bilder/log.png' alt='Protokoll' /></a> ]
+  <a href='/reservationen/protokoll.php'><img {$protokoll} src='/reservationen/bilder/log.png' alt='Protokoll' /></a>
+  <a href='/reservationen/diverses.php'><img {$diverses} src='/reservationen/bilder/diverses.png' alt='Diverses' /></a> ]
 </span>";
 
   $_SESSION['name'] = htmlentities($obj->name);

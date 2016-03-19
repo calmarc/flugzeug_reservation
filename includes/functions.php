@@ -650,6 +650,22 @@ function combobox_minute($default)
   print_options($default, $t_array);
 }
 
+function combobox_piloten($mysqli, $default)
+{
+  $query = "SELECT * FROM `piloten` ORDER BY `pilot_id` ASC;";
+  $res = $mysqli->query($query);
+  $t_array = array();
+  
+  while ($obj = $res->fetch_object())
+  {
+    $pilot_id_pad = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT);
+    if ($obj->pilot_id == $default)
+      echo "<option selected='selected' value='{$obj->id}'>[{$pilot_id_pad}] {$obj->name}</option>";
+    else
+      echo "<option value='{$obj->id}'>[{$pilot_id_pad}] {$obj->name}</option>";
+  }
+}
+
 
 function legende_print($boxcol)
 { ?>
@@ -732,7 +748,7 @@ function reser_getrimmt_eintrag($mysqli, $obj, $user_id, $begruendung, $loeschen
 function bei_geloescht_email($mysqli, $subject_hint, $pilot_id, $flieger_id, $zeit, $begruendung)
 {
 
-  $res = $mysqli->query("SELECT * from `diverses` WHERE `funktion` = 'bei_geloescht';");
+  $res = $mysqli->query("SELECT * from `diverses` WHERE `funktion` = 'bei_geloescht_email';");
   $obj = $res->fetch_object();
   $to = $obj->data1;
 

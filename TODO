@@ -2,11 +2,6 @@
 
 == MAYOR ==
 
-* service nicht rot.. nur zahl (tspan...)
-
-* landungseintrage fuer admins.. mit pilotenliste (oder/und
-  bei edit... .. und bei reservierung.
-
 * bei teiloeschung werte kontrollieren.. i.e bis muss
   groesser sein als von etc.
 
@@ -18,6 +13,8 @@
 
 == MINOR ==
 
+* service nicht rot.. nur zahl (tspan...)
+ 
 * armin.beck@dsl.li,amathis@deep.ch, (bei diverses.beigeloescht reintun)
 
 * wie beim monatsplan auch pfeile fuer tag-wechsel

@@ -15,8 +15,7 @@ $curstamp = time(); // wird einige male gebraucht
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
-// braucht man auch ganz unten
-$user_id = $_SESSION['user_id'];
+$admin_bol = check_admin($mysqli);
 
 include_once('res_neu.inc.php');
 
@@ -81,7 +80,19 @@ if ($bis_minute == "")
       <table class='vtable'>
         <tr class="trblank">
           <td><b>Pilot:</b></td>
-          <td><b>[<?php echo str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT).'] '.$_SESSION['name']; ?></b></td>
+<?php if ($admin_bol)
+{
+  echo "<td><select size='1' style='width: 16em' name='user_id'>";
+  combobox_piloten($mysqli, $_SESSION['pilot_id']);
+  echo "</select></td>";
+}
+else
+{
+   echo "<td><b>[".str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT)."] {$_SESSION['name']}</b>";
+   echo "<input type='hidden' name='user_id' value='{$user_id}' />";
+   echo "</td>";
+}
+?>
         </tr>
         <tr class="trblank">
           <td><b>Flugzeug:</b></td>

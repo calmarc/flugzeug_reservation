@@ -1,5 +1,12 @@
 <?php
 
+// braucht man auch ganz unten
+$user_id = $_SESSION['user_id'];
+
+// falls admin fuer jemanden Eintraege macht.
+if (isset($_POST['user_id']))
+  $user_id = $_POST['user_id'];
+
 if (isset($_POST['submit']))
 {
   $flieger_id = ""; if (isset($_POST['flieger_id'])) $flieger_id = $_POST['flieger_id'];

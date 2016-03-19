@@ -7,7 +7,7 @@ use Aspsms\Aspsms;
 
 function sendsms($mysqli, $natel, $txt)
 {
-  $res = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'sms_login' LIMIT 1;");
+  $res = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'sms_login_aspsms_ch' LIMIT 1;");
   $obj = $res->fetch_object();
   $user_key = $obj->data1;
   $user_pass = $obj->data2;
@@ -43,7 +43,7 @@ function sendsms($mysqli, $natel, $txt)
 
 function sms_delivery_status($mysqli, $tracking_number)
 {
-  $res = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'sms_login' LIMIT 1;");
+  $res = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'sms_login_aspsms_ch' LIMIT 1;");
   $obj = $res->fetch_object();
   $user_key = $obj->data1;
   $user_pass = $obj->data2;
