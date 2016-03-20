@@ -3,15 +3,39 @@ error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors',1);
 ini_set('html_errors', 1);
 
-include_once ('includes/db_connect.php');
-include_once ('includes/functions.php');
+include_once ('../includes/db_connect.php');
+include_once ('../includes/functions.php');
 
 sec_session_start();
 
-if (login_check($mysqli) == FALSE){ header("Location: /reservationen/login/index.php"); exit; }
+$id = "";
 
-$id = $_SESSION['user_id'];
+if (isset($_POST['user_id']))
+  $id = $_POST['user_id'];
 
+$verifiziert = FALSE;
+if (isset($_GET['secret_string'], $_GET['email']))
+{
+  $pilot_id = intval($_GET['pilot_id']);
+  $query = "SELECT * FROM `password_recovery` WHERE `email` = '{$_GET['email']}' AND `secret_string` = '{$_GET['secret_string']}' AND `pilot_id` = {$pilot_id} LIMIT 1;";
+  $res = $mysqli->query($query); 
+  if ($res->num_rows == 1)
+    $verifiziert = TRUE;
+  $query = "SELECT `id` FROM `piloten` WHERE `email` = '{$_GET['email']}' AND `pilot_id` = {$pilot_id} LIMIT 1;";
+  $res = $mysqli->query($query); 
+  if ($res->num_rows != 1)
+  {
+    $error_msg = "Die Email/Piloten-ID konnte nicht gefunden werden. Das Passwort kann nicht wiederhergestellt werden.";
+  }
+  $obj = $res->fetch_object();
+  $id = $obj->id;
+}
+
+if ($id == "")
+{
+  echo "abort";
+  exit;
+}
 
 if (isset($_POST['submit']))
 {
@@ -34,7 +58,6 @@ if (isset($_POST['submit']))
   // OK, eintragen
   if ($error_msg == "")
   {
-
     $query= "SELECT `salt` FROM `piloten` WHERE `id` = {$id};";
     $res = $mysqli->query($query);
     $obj = $res->fetch_object();
@@ -49,32 +72,27 @@ if (isset($_POST['submit']))
 }
 
 print_html_to_body('Passwort ändern', '');
-include_once('includes/usermenu.php');
+include_once('../includes/usermenu.php');
 
 ?>
 
 <main>
 <div id="formular_innen">
-   <h1>Passwort ändern</h1>
+   <h1>Passwort neu setzen</h1>
 
   <?php
   if (!empty($error_msg))
     echo "<b style='color: red;'>$error_msg</b>";
   else if (isset($msg))
   {
-    // logout (delete session)
-    $_SESSION = array();
-    $params = session_get_cookie_params();
-    setcookie(session_name(),'', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
-    session_destroy();
     echo "<b style='color: green;'>$msg</b>";
-    echo "<p>Bitte neu <a href='login/index.php'>einloggen</a></p>";
+    echo "<p>Bitte neu <a href='index.php'>einloggen</a></p>";
     echo '</div></main></body></html>';
     exit;
   }
   ?>
-    <form action="pass_change.php" method="post" name="login_form"> 			
-    <input type="hidden" name="pilot_id" value="">
+    <form action="passwort_recovery.php" method="post" name="login_form"> 			
+    <input type="hidden" name="user_id" value="<?php echo $id; ?>">
       <table class="vtable" style="width: 100%;">
           <tr>
               <td><b>Neues Passwort:</b></td>

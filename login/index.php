@@ -54,12 +54,14 @@ if (isset($_GET['error']))
 <?php } ?>
 
               <tr>
-                <td colspan="2" style="text-align: center; padding-top: 50px; padding-right: 30px;"><input required="required" style="width: 20px;" type="checkbox" name="zustimmen" value="" />
-                Ich bestätige die Einhaltung<br />der <a target="_blank" href="/reservationen/reservationspraxis.pdf">Reservationspraxis</a></td>
+                <td colspan="2" style="text-align: center; padding-top: 50px; padding-right: 30px;"><input required="required" style="width: 20px;" type="checkbox" name="zustimmen" id="zustimmen" value="" />
+<label for="zustimmen">Ich bestätige die Einhaltung der</label> <a target="_blank" href="/reservationen/reservationspraxis.pdf">Reservationspraxis</a>
+                </td>
               </tr>
             </table>
               <input class="submit_button" type="submit" value="Login" />
           </form>
+        <p><br />(<a href="passwort_vergessen.php">Passwort vergessen?</a>)</p>
       </div>
   </main>
   </body>

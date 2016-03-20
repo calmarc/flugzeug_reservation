@@ -880,7 +880,6 @@ function check_zaehlerstand($zaehlerstand, $digit_minute)
 
 function write_status_message($mysqli, $subjekt, $data)
 {
-
   mysqli_prepare_execute($mysqli, "INSERT INTO `status_meldungen` (`id`, `timestamp`, `aktion`, `data`) VALUES (NULL, CURRENT_TIMESTAMP, ?, ?);", 'ss', array ($subjekt, $data));
 }
 

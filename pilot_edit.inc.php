@@ -2,14 +2,22 @@
 
 if (isset($_POST['loeschen']))
 {
-  $pilot_id = $_POST['pilot_id'];
+  $user_id = $_POST['user_id'];
+  $query = "SELECT * FROM `piloten` WHERE `id` = '{$user_id}';";
+  $res = $mysqli->query($query);
+  $obj = $res->fetch_object();
+  $name = $obj->name;
+  $pilot_id_pad = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT);
 
-  $query = "DELETE FROM `mfgcadmin_reservationen`.`piloten` WHERE `piloten`.`pilot_id` = ?;";
-  mysqli_prepare_execute($mysqli, $query, 'i', array ($pilot_id));
+  $query = "DELETE FROM `mfgcadmin_reservationen`.`piloten` WHERE `piloten`.`id` = ?;";
+  mysqli_prepare_execute($mysqli, $query, 'i', array ($user_id));
+  $query = "DELETE FROM `mfgcadmin_reservationen`.`reservationen` WHERE `reservationen`.`user_id` = ?;";
+  mysqli_prepare_execute ($mysqli, $query, 'i', array ($user_id));
+  write_status_message ($mysqli, "[Pilot gelöscht]", "[{$pilot_id_pad}] $name");
 
   // man hat sich selber geloesch.. delete $_SESSION (ausloggen)
 
-  if (intval($_SESSION['pilot_id']) ==  intval($pilot_id)) {
+  if (intval($_SESSION['user_id']) ==  intval($user_id)) {
     header("Location: /reservationen/login/logout.php");
     exit;
   }
