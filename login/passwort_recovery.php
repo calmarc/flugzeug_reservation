@@ -27,14 +27,11 @@ if (isset($_GET['secret_string'], $_GET['email']))
   {
     $error_msg = "Die Email/Piloten-ID konnte nicht gefunden werden. Das Passwort kann nicht wiederhergestellt werden.";
   }
-  $obj = $res->fetch_object();
-  $id = $obj->id;
-}
-
-if ($id == "")
-{
-  echo "abort";
-  exit;
+  else
+  {
+    $obj = $res->fetch_object();
+    $id = $obj->id;
+  }
 }
 
 if (isset($_POST['submit']))
