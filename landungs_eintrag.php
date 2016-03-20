@@ -47,7 +47,6 @@ else if (isset($_POST['submit']))
   $monat = ""; if (isset($_POST['monat'])) $monat = $_POST['monat'];
   $jahr = ""; if (isset($_POST['jahr'])) $jahr = $_POST['jahr'];
   $zaehlerstand = ""; if (isset($_POST['zaehlerstand'])) $zaehlerstand = $_POST['zaehlerstand'];
-  $zaehler_umdrehungen = 0; if (isset($_POST['zaehler_umdrehungen'])) $zaehler_umdrehungen = intval($_POST['zaehler_umdrehungen']);
 
   $_SESSION['flieger_id']  = $flieger_id;
   $_SESSION['tag']  = $tag;
@@ -67,7 +66,7 @@ else if (isset($_POST['submit']))
   {
     $query = "INSERT INTO `mfgcadmin_reservationen`.`zaehler_eintraege` (
               `id` , `user_id` , `flieger_id` , `datum` , `zaehler_minute`, `zaehler_umdrehungen`) VALUES ( NULL , ?, ?, ?, ?, ?)";
-    mysqli_prepare_execute($mysqli, $query, 'iisii', array ($user_id, $flieger_id, $datum, $zaehler_minute, $zaehler_umdrehungen));
+    mysqli_prepare_execute($mysqli, $query, 'iisii', array ($user_id, $flieger_id, $datum, $zaehler_minute, 0));
 
     list($pilot_id_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
     write_status_message($mysqli, "[Landungs-Eintrag]", "Neu: durch [{$pilot_id_pad}] {$pilot_name}");
@@ -147,15 +146,6 @@ else
           <td><b>Zählerstand:</b></td>
           <td><input name="zaehlerstand" style="width: 6em;" required="required" type="number" step="0.01" /></td>
         </tr>
-<?php 
-if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flieger_id == 4)
-{
-    echo "<tr>
-            <td><b>Motor-Zählerstand:</b></td>
-            <td><input name='zaehler_umdrehungen' style='width: 6em;' type='number' step='1' /></td>
-          </tr>";
-}
-?>
       </table>
     <input class='submit_button' type='submit' name='submit' value='Flug eintragen' />
     </div>

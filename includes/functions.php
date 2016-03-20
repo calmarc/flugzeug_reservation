@@ -887,7 +887,7 @@ function get_pilot_from_user_id($mysqli, $user_id)
 {
   $res = $mysqli->query("SELECT `pilot_id`, `name` FROM `piloten` WHERE `id` = $user_id;");
   $obj = $res->fetch_object();
-  $pilot_id_pad = str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT);
+  $pilot_id_pad = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT);
   return array($pilot_id_pad, $obj->name);
 } 
 

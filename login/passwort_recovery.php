@@ -16,22 +16,29 @@ if (isset($_POST['user_id']))
 $verifiziert = FALSE;
 if (isset($_GET['secret_string'], $_GET['email']))
 {
+
   $pilot_id = intval($_GET['pilot_id']);
   $query = "SELECT * FROM `password_recovery` WHERE `email` = '{$_GET['email']}' AND `secret_string` = '{$_GET['secret_string']}' AND `pilot_id` = {$pilot_id} LIMIT 1;";
   $res = $mysqli->query($query); 
   if ($res->num_rows == 1)
     $verifiziert = TRUE;
+
+  // OK, it's the user with the email here - now check if that combo actually exists
   $query = "SELECT `id` FROM `piloten` WHERE `email` = '{$_GET['email']}' AND `pilot_id` = {$pilot_id} LIMIT 1;";
   $res = $mysqli->query($query); 
   if ($res->num_rows != 1)
   {
-    $error_msg = "Die Email/Piloten-ID konnte nicht gefunden werden. Das Passwort kann nicht wiederhergestellt werden.";
+    $error_msg = "Die Email/Piloten-ID Kombination konnte nicht gefunden werden.<br />Das Passwort kann nicht wiederhergestellt werden.";
+    print_html_to_body('Passwort ändern', '');
+    include_once('../includes/usermenu.php');
+    echo "<div class='center'><h1>Wiederherstellungs-Fehler</h1><p><b>{$error_msg}</b></p></div></main>
+          </body> </html>";
+    $pilot_id_pad = str_pad($pilot_id, 3, "0", STR_PAD_LEFT);
+    write_status_message($mysqli, "[Passwort wiederherstellen]", "Fehlgeschlagen: [{$pilot_id_pad}]; {$_GET['email']}");
+    exit;
   }
-  else
-  {
-    $obj = $res->fetch_object();
-    $id = $obj->id;
-  }
+  $obj = $res->fetch_object();
+  $id = $obj->id;
 }
 
 if (isset($_POST['submit']))
@@ -65,6 +72,8 @@ if (isset($_POST['submit']))
     $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ? ;";
     if (mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $id)))
       $msg = "<p style='color: green;'>Das Passwort wurde geändert</p>";
+    list ($pilot_id_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $id); 
+    write_status_message($mysqli, "[Passwort wiederherstellen]", "Erfolgreich: [{$pilot_id_pad}] {$pilot_name}");
   }
 }
 
