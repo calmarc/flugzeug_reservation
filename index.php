@@ -92,8 +92,8 @@ else
   echo "<form method='get' action='index.php'>";
   echo "<div class='center'>";
   echo "<table id='monat_title'><tr>";
-  echo "<td>";
-  echo "<a href='/reservationen/index.php?flieger_id={$flieger_id}&amp;show=monat&amp;monat={$z_monat}&amp;jahr={$z_jahr}&amp;tag={$tag}'><span>&laquo;</span></a> &nbsp; ";
+  echo "<td style='padding-right: 20px;'>";
+  echo "<a href='/reservationen/index.php?flieger_id={$flieger_id}&amp;show=monat&amp;monat={$z_monat}&amp;jahr={$z_jahr}&amp;tag={$tag}'><span>&laquo;</span></a>";
   echo "</td><td>";
   echo $monate[$monat-1];
   echo " $jahr";
@@ -105,8 +105,8 @@ else
   echo "<input type='hidden' name='monat' value='{$monat}' />";
   echo "<input type='hidden' name='jahr' value='{$jahr}' />";
   echo $select;
-  echo "</td><td>";
-  echo " &nbsp; <a href='/reservationen/index.php?flieger_id={$flieger_id}&amp;show=monat&amp;monat={$v_monat}&amp;jahr={$v_jahr}&amp;tag={$tag}'>&raquo;</a> ";
+  echo "</td><td style='padding-left: 20px;'>";
+  echo "<a href='/reservationen/index.php?flieger_id={$flieger_id}&amp;show=monat&amp;monat={$v_monat}&amp;jahr={$v_jahr}&amp;tag={$tag}'>&raquo;</a>";
   echo "</td>";
   echo "</tr></table>";
   echo "</div>";

@@ -96,6 +96,8 @@
     <span style="white-space: nowrap;">
       [ <a <?php echo $index_t; ?> href="/reservationen/index.php?show=tag">Tagesplan</a>
       | <a <?php echo $index_m; ?> href="/reservationen/index.php?show=monat">Monatsplan</a>
+    </span> 
+    <span style="white-space: nowrap;">
       | <a href="http://www.ics.li/cfdocs/flugplragaz/admin/bewegungen.cfm">Startliste Flugplatz</a> ]
     </span> 
    <?php echo $admin; ?>

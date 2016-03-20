@@ -13,7 +13,7 @@ body {
 }
 
 nav {
-  position: sticky;
+  position: static;
   top: 0px;
   left: 0px;
   right: 0px;
@@ -226,6 +226,7 @@ input {
   border: 1px solid black; 
 }
 
+
 .chart {
   box-shadow: 3px 3px 3px #aaaaaa;  
 
@@ -235,6 +236,7 @@ input {
   width: 93%;
   height: 528px;
   min-width: 624px;
+  overflow: hidden;
 }
 .chart_monat {
   box-shadow: 3px 3px 3px #aaaaaa;  
@@ -245,6 +247,7 @@ input {
   width: 93%;
   height: 752px;
   min-width: 624px;
+  overflow: hidden;
 }
 
 div.legende {
@@ -262,9 +265,9 @@ svg a text:hover {
 div#tooltip_div {
   border-radius: 12px; border: 2px solid #BBBBBB;
   padding: 5px;
-  background-color: #EEEEEE;
+  background-color: #eeeeee;
   position: fixed;
-  font-size: 100%;
+  font-size: 98%;
   box-shadow: 2px 2px 2px #CCCCCC;
 }
 
@@ -311,6 +314,7 @@ select.flieger_select {
 
   body { background-image: url("/reservationen/bilder/mfgc-short.png"); }
   nav {position: sticky; font-size: 108%; }
+  main { margin-left: auto; margin-right: auto; width: 100%; overflow-x: scroll; }
   .chart, .chart_monat {width: 94%; }
   div#calendar { width: 100%; text-align: center; font-size: 90%; position: static; margin: 8px;}
   #raquo { margin-left: 20px; }
@@ -321,6 +325,7 @@ select.flieger_select {
 }
 @media only screen and (max-width: 698px) {
 
+  main { margin-left: auto; margin-right: auto; width: 100%; overflow-x: scroll; }
   nav {position: sticky; font-size: 100%; }
   div#calendar { font-size: 98%; }
   body { background-image: url("/reservationen/bilder/mfgc-logo.png"); }
