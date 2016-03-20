@@ -44,7 +44,7 @@ date_default_timezone_set("UTC");
 
 if ($_SESSION['show'] == 'tag')
 {
-  echo '<div id="calendar">';
+  echo "<div id='calendar' class='hide_on_print'>";
   echo draw_calendar($tag, $monat, $jahr);
   echo '</div>';
   echo '<div class="center">';

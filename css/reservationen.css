@@ -25,7 +25,6 @@ nav {
   font-size: 110%;
 }
 
-
 .only_on_print {
   visibility: none;
   display: none;
@@ -336,9 +335,36 @@ select.flieger_select {
   div#calendar { font-size: 92%; }
   .chart, .chart_monat {width: 98%; }
 }
-/* ----------- END mobile phones ------------------- */
+
+/* ----------- START printer ------------------- */
 
 @media print {
-body {-webkit-print-color-adjust: exact;}
+  body {
+      color: #000000;
+      /*background-color: #aaddff; */
+      /*background-color: #74c4ee; */
+      background-color: #ffffff; 
+      font-family: serif;
+      margin: 14px;
+      padding: 14px;
+      -webkit-print-color-adjust: exact; 
+      print-color-adjust: exact; 
+  }
+
+  nav {
+    visibility: none;
+    display: none;
+  }
+
+  .hide_on_print {
+    visibility: none;
+    display: none;
+  }
+  .only_on_print {
+    visibility: visible;
+    display: inline;
+  }
+
+  h1 { font-size: 115% }
 }
 

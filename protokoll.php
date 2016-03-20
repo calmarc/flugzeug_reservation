@@ -46,7 +46,7 @@ include_once('includes/send_sms.php');
         <form action='protokoll.php' method='get'>
           Löschen: <select style="width: 15em;" onchange='this.form.submit()' name='loeschen' size="1" id='loeschen'>
             <option value="9876543210">                </option>
-            <option value="loggings">In-Out-Loggin's löschen</option>
+            <option value="loggings">Ein/Aus-geloggt</option>
             <option value="365">älter als ein Jahr</option>
             <option value="182">älter als ein halbes Jahr</option>
             <option value="90">älter als 3 Monate</option>
