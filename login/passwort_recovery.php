@@ -31,10 +31,10 @@ if (isset($_GET['secret_string'], $_GET['email']))
     $error_msg = "Die Email/Piloten-ID Kombination konnte nicht gefunden werden.<br />Das Passwort kann nicht wiederhergestellt werden.";
     print_html_to_body('Passwort ändern', '');
     include_once('../includes/usermenu.php');
-    echo "<div class='center'><h1>Wiederherstellungs-Fehler</h1><p><b>{$error_msg}</b></p></div></main>
+    echo "<main><div class='center'><h1>Wiederherstellungs-Fehler</h1><p><b>{$error_msg}</b></p></div></main>
           </body> </html>";
     $pilot_id_pad = str_pad($pilot_id, 3, "0", STR_PAD_LEFT);
-    write_status_message($mysqli, "[Passwort wiederherstellen]", "Fehlgeschlagen: [{$pilot_id_pad}]; {$_GET['email']}");
+    write_status_message($mysqli, "[Passwort recovery]", "Fehlgeschlagen: [{$pilot_id_pad}]; {$_GET['email']}");
     exit;
   }
   $obj = $res->fetch_object();
@@ -73,7 +73,7 @@ if (isset($_POST['submit']))
     if (mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $id)))
       $msg = "<p style='color: green;'>Das Passwort wurde geändert</p>";
     list ($pilot_id_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $id); 
-    write_status_message($mysqli, "[Passwort wiederherstellen]", "Erfolgreich: [{$pilot_id_pad}] {$pilot_name}");
+    write_status_message($mysqli, "[Passwort recovery]", "Erfolgreich: [{$pilot_id_pad}] {$pilot_name}");
   }
 }
 

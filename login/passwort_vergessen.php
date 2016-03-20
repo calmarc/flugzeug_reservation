@@ -29,7 +29,7 @@ if (isset($_POST['submit']))
 
   if (mail ($email, $subject, $txt, implode("\r\n",$headers)))
   {
-	mysqli_prepare_execute($mysqli, "INSERT INTO `password_recovery` (`id`, `email`, `secret_string`, `pilot_id`) VALUES (NULL, ?, ?, ?);", 'ssi', array ($email, $random_string, intval($pilot_id)));
+	mysqli_prepare_execute($mysqli, "INSERT INTO `password_recovery` (`id`, `email`, `secret_string`, `pilot_id`, `timestamp`) VALUES (NULL, ?, ?, ?, NULL );", 'ssi', array ($email, $random_string, intval($pilot_id)));
 	write_status_message($mysqli, "[Passwort Recovery]", "Wurde an &lt;{$email}&gt; <span style='color: green;'>geschickt</span>");
     $status_txt = "Ein Wiederherstellungs-Link wurde an &lt;{$email}&gt; geschickt.";
   }

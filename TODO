@@ -10,8 +10,6 @@
   bis was die echte Zeit war.. oder? Oder nicht loeschen und
   warnen?
 
-* drehzahl tabelle
-
 == MINOR ==
 
 * service nicht rot.. nur zahl (tspan...)
@@ -20,12 +18,6 @@
 
 * Buchung löschen:  kontrollieren clean-upen
  
-* menu balken auch auf natel schwarz.. wenn unten
-  verschoben. <- wie??
-
-* die passwort recovery eintrage sollte hin und wieder geloescht werden.
-  evt beim einloggen.. wenn aelter als ein tag oder so.
-
 * armin.beck@dsl.li,amathis@deep.ch, (bei diverses.beigeloescht reintun)
 
 * flieger managen wie user_edit und user_admin.. einfach

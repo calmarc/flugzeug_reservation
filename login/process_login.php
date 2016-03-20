@@ -65,6 +65,12 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
         $pilot_id_pad = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT);
         write_status_message($mysqli, "[Eingeloggt]", "[{$pilot_id_pad}] {$obj->name}");
 
+        // passwort-recovery tabelle aufraeume (alles weg aelter als 4 stunden)
+        date_default_timezone_set("Europe/Zurich");
+        $local_datetime = date("Y-m-d H:i:s", time() - 60 * 60 * 4);
+        date_default_timezone_set('UTC');
+        mysqli_prepare_execute($mysqli, "DELETE FROM `password_recovery` WHERE `timestamp` < ?;", 's', array ($local_datetime));
+
         header("Location: ../index.php");
         exit();
     } else {
