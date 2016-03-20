@@ -883,5 +883,12 @@ function write_status_message($mysqli, $subjekt, $data)
   mysqli_prepare_execute($mysqli, "INSERT INTO `status_meldungen` (`id`, `timestamp`, `aktion`, `data`) VALUES (NULL, CURRENT_TIMESTAMP, ?, ?);", 'ss', array ($subjekt, $data));
 }
 
+function get_pilot_from_user_id($mysqli, $user_id)
+{
+  $res = $mysqli->query("SELECT `pilot_id`, `name` FROM `piloten` WHERE `id` = $user_id;");
+  $obj = $res->fetch_object();
+  $pilot_id_pad = str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT);
+  return array($pilot_id_pad, $obj->name);
+} 
 
 ?>

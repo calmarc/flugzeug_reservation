@@ -47,6 +47,8 @@ else if (isset($_POST['submit']))
   $monat = ""; if (isset($_POST['monat'])) $monat = $_POST['monat'];
   $jahr = ""; if (isset($_POST['jahr'])) $jahr = $_POST['jahr'];
   $zaehlerstand = ""; if (isset($_POST['zaehlerstand'])) $zaehlerstand = $_POST['zaehlerstand'];
+  $zaehler_umdrehungen = 0; if (isset($_POST['zaehler_umdrehungen'])) $zaehler_umdrehungen = intval($_POST['zaehler_umdrehungen']);
+
   $_SESSION['flieger_id']  = $flieger_id;
   $_SESSION['tag']  = $tag;
   $_SESSION['monat']  = $monat;
@@ -64,8 +66,11 @@ else if (isset($_POST['submit']))
   if ($error_msg == "")
   {
     $query = "INSERT INTO `mfgcadmin_reservationen`.`zaehler_eintraege` (
-              `id` , `user_id` , `flieger_id` , `datum` , `zaehler_minute`) VALUES ( NULL , ?, ?, ?, ?)";
-    mysqli_prepare_execute($mysqli, $query, 'iisi', array ($user_id, $flieger_id, $datum, $zaehler_minute));
+              `id` , `user_id` , `flieger_id` , `datum` , `zaehler_minute`, `zaehler_umdrehungen`) VALUES ( NULL , ?, ?, ?, ?, ?)";
+    mysqli_prepare_execute($mysqli, $query, 'iisii', array ($user_id, $flieger_id, $datum, $zaehler_minute, $zaehler_umdrehungen));
+
+    list($pilot_id_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
+    write_status_message($mysqli, "[Landungs-Eintrag]", "Neu: durch [{$pilot_id_pad}] {$pilot_name}");
   }
 }
 else
@@ -140,8 +145,17 @@ else
         </tr>
         <tr>
           <td><b>Zählerstand:</b></td>
-          <td><input name="zaehlerstand" style="width: 80px;" required="required" type="number" step="0.01" /></td>
+          <td><input name="zaehlerstand" style="width: 6em;" required="required" type="number" step="0.01" /></td>
         </tr>
+<?php 
+if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flieger_id == 4)
+{
+    echo "<tr>
+            <td><b>Motor-Zählerstand:</b></td>
+            <td><input name='zaehler_umdrehungen' style='width: 6em;' type='number' step='1' /></td>
+          </tr>";
+}
+?>
       </table>
     <input class='submit_button' type='submit' name='submit' value='Flug eintragen' />
     </div>
@@ -157,13 +171,19 @@ else
       <th>Zählerstand</th>
       <th>Dauer</th>
       <th>Pilot</th>
-  </tr>
-  <?php
+<?php 
+
+if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flieger_id == 4)
+{
+    echo "<th>Motor-Zählerstand</th>";
+}
+echo '</tr>';
 
 $query = "SELECT `zaehler_eintraege`.`id`,
                  `zaehler_eintraege`.`user_id`,
                  `piloten`.`name`,
                  `zaehler_eintraege`.`zaehler_minute`,
+                 `zaehler_eintraege`.`zaehler_umdrehungen`,
                  `zaehler_eintraege`.`datum`
          FROM `zaehler_eintraege` LEFT OUTER JOIN `piloten` ON `piloten`.`id` = `zaehler_eintraege`.`user_id`
          WHERE `flieger_id` = '{$flieger_id}'  ORDER BY `zaehler_minute` DESC LIMIT 50;";
@@ -184,6 +204,7 @@ if ($res = $mysqli->query($query))
       $zaehler_min = $obj->zaehler_minute;
       $eintrags_id = $obj->id;
       $user_id = $obj->user_id;
+      $z_umdrehungen = $obj->zaehler_umdrehungen;
 
       if ($obj = $res->fetch_object())
           list($zaehlerstand, $dauer) = zaehler_into($zaehler_min, $obj->zaehler_minute);
@@ -194,16 +215,28 @@ if ($res = $mysqli->query($query))
       }
 
       $edit_link = "";	
-      // admin + die letzten 2 zum ediditerne fuer benutzer
+      // admin + die letzten 2 zum edditieren fuer benutzer
       if (check_admin($mysqli) || ($_SESSION['user_id'] == $user_id && $edit_c < 2))
       {
         $edit_link = "<a href='landungs_edit.php?action=edit&amp;zaehler_id={$eintrags_id}&amp;flieger_id={$flieger_id}'><img alt='edit' src='bilder/edit.png' /></a>";
         $edit_c++;
       }
 
+      $umdrehungen_txt = "";
+      if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flieger_id == 4)
+      {
+        if ($z_umdrehungen == 0)
+          $z_umdrehungen = "";
+        $umdrehungen_txt = "<td style='text-align: right;'>{$z_umdrehungen}</td>";
+      }
+
       echo " <tr>
               <td>{$edit_link}</td>
-              <td>{$tag}.{$monat}.{$jahr}</td><td style='text-align: right;'>{$zaehlerstand}</td><td style='text-align: right;'>{$dauer}</td><td>{$name}</td>
+              <td>{$tag}.{$monat}.{$jahr}</td>
+              <td style='text-align: right;'>{$zaehlerstand}</td>
+              <td style='text-align: right;'>{$dauer}</td>
+              <td>{$name}</td>
+              {$umdrehungen_txt}
             </tr>";
     }
   }

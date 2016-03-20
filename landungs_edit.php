@@ -12,7 +12,7 @@ sec_session_start();
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
-// admin oder benuetzer.. wird unten kontrolliert, weil die zaehler_id zuert
+// admin oder benuetzer.. wird unten kontrolliert im .inc.php), weil die zaehler_id zuert
 // kontrolliert werden muss.
 
 include_once('landungs_edit.inc.php');
@@ -57,6 +57,8 @@ if ($res2->num_rows > 0)
   $pilot_name = $obj2->name;
 }
 
+$zaehler_umdrehungen = $obj->zaehler_umdrehungen;
+
 ?>
       <form action='landungs_edit.php' method='post'>
         <input type='hidden' name='zaehler_id' value='<?php echo $obj->id; ?>' />
@@ -87,8 +89,17 @@ if ($res2->num_rows > 0)
             </tr>
             <tr>
               <td><b>Zählerstand:</b></td>
-              <td><input value="<?php echo $zaehler_eintrag; ?>" name="zaehlerstand" style="width: 80px;" required="required" type="number" step="0.01" /></td>
+              <td><input value="<?php echo $zaehler_eintrag; ?>" name="zaehlerstand" style="width: 6em;" required="required" type="number" step="0.01" /></td>
             </tr>
+<?php 
+if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flieger_id == 4)
+{
+      echo "<tr>
+              <td><b>Motor-Zählerstand:</b></td>
+              <td><input value='{$zaehler_umdrehungen}' name='zaehler_umdrehungen' style='width: 6em;' type='number' step='1' /></td>
+            </tr>";
+}
+?>
           </table>
         <input class='submit_button' type='submit' name='edit' value='Änderungen abschicken' />
         </div>

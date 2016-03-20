@@ -34,13 +34,15 @@ if ($res2->num_rows != 1)
 }
 $obj2 = $res2->fetch_object();
 
+$admin_bol = TRUE;
 if (!check_admin($mysqli))
 {
   if (intval($obj2->user_id) != intval($_SESSION['user_id']))
-    {
-      header('Location: /reservationen/index.php');
-      exit;
-    }
+  {
+    header('Location: /reservationen/index.php');
+    exit;
+  }
+  $admin_bol = FALSE;
 }
 //zaehler_id ist OK (gehoert Piloten oder Admin)
 
@@ -48,6 +50,9 @@ if (isset($_POST['loeschen']))
 {
   $query = "DELETE FROM `mfgcadmin_reservationen`.`zaehler_eintraege` WHERE `zaehler_eintraege`.`id` = ?";
   mysqli_prepare_execute($mysqli, $query, 'i', array ($zaehler_id));
+
+  list($pilot_id_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
+  write_status_message($mysqli, "[Landungs-Eintrag]", "Gelöscht: durch [{$pilot_id_pad}] {$pilot_name}");
 
   header("Location: landungs_eintrag.php?flieger_id=$flieger_id");
   exit;
@@ -58,6 +63,7 @@ else if (isset($_POST['edit']))
   $monat = ""; if (isset($_POST['monat'])) $monat = intval($_POST['monat']);
   $jahr = ""; if (isset($_POST['jahr'])) $jahr = intval($_POST['jahr']);
   $zaehlerstand = ""; if (isset($_POST['zaehlerstand'])) $zaehlerstand = $_POST['zaehlerstand'];
+  $zaehler_umdrehungen = 0; if (isset($_POST['zaehler_umdrehungen'])) $zaehler_umdrehungen = intval($_POST['zaehler_umdrehungen']);
 
   $zaehler_minute = intval($zaehlerstand) * 60;
   $digit_minute = round($zaehlerstand * 100, 0, PHP_ROUND_HALF_UP) % 100;
@@ -71,8 +77,11 @@ else if (isset($_POST['edit']))
 
   if ($error_msg == "")
   {
-    $query = "UPDATE `mfgcadmin_reservationen`.`zaehler_eintraege` SET `datum` = ?, `zaehler_minute` = ? WHERE `zaehler_eintraege`.`id` = ?;";
-    mysqli_prepare_execute($mysqli, $query, 'sii', array ($datum, $zaehler_minute, $zaehler_id));
+    $query = "UPDATE `mfgcadmin_reservationen`.`zaehler_eintraege` SET `datum` = ?, `zaehler_minute` = ?, `zaehler_umdrehungen` = ? WHERE `zaehler_eintraege`.`id` = ?;";
+    mysqli_prepare_execute($mysqli, $query, 'siii', array ($datum, $zaehler_minute, $zaehler_umdrehungen, $zaehler_id));
+
+    list($pilot_id_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
+    write_status_message($mysqli, "[Landungs-Eintrag]", "Editiert: durch [{$pilot_id_pad}] {$pilot_name}");
 
     header("Location: landungs_eintrag.php?flieger_id={$flieger_id}");
     exit;
