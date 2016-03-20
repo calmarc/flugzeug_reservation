@@ -27,7 +27,7 @@ include_once('includes/usermenu.php');
 echo "<h1>$h1</h1>";
 
 $query = "SELECT * FROM `reservationen`
-          LEFT JOIN `piloten` ON `piloten`.`id` = `reservationen`.`user_id`
+          LEFT OUTER JOIN `piloten` ON `piloten`.`id` = `reservationen`.`user_id`
           WHERE `reservationen`.`id` = $reservierung
           LIMIT 1";
 

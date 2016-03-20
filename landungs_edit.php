@@ -48,9 +48,14 @@ $zaehler_eintrag = $std.'.'.str_pad($min, 2, "0", STR_PAD_LEFT);
 list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
 
 $res2 = $mysqli->query("SELECT * FROM `piloten` WHERE `id` = {$obj->user_id};");
-$obj2 = $res2->fetch_object();
-$pilot_id = str_pad($obj2->pilot_id, 3, "0", STR_PAD_LEFT);
-$pilot_name = $obj2->name;
+
+$pilot_id = $pilot_name = "unknown";
+if ($res2->num_rows > 0)
+{
+  $obj2 = $res2->fetch_object();
+  $pilot_id = str_pad($obj2->pilot_id, 3, "0", STR_PAD_LEFT);
+  $pilot_name = $obj2->name;
+}
 
 ?>
       <form action='landungs_edit.php' method='post'>

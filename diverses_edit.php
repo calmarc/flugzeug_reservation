@@ -31,9 +31,10 @@ include_once('includes/usermenu.php');
   <main>
     <div id="formular_innen">
 
-    <h1>Piloten editieren</h1>
+    <h1>Eintellungen editieren</h1>
 
 <?php
+
 if (isset($_GET['id']))
 {
   $id = $_GET['id'];
@@ -44,10 +45,13 @@ else
   exit;
 }
 
-$query = "SELECT * FROM `diverses` WHERE `diverses`.`id` = '{$id}'";
+$query = "SELECT * FROM `diverses` WHERE `diverses`.`id` = {$id};";
 
 $res = $mysqli->query($query);
 $obj = $res->fetch_object();
+
+if ($obj->funktion != "sms_login_aspsms_ch")
+    echo "<p>(Bei mehreren Empfängern, die Emails (in Daten1) mit jeweils einem Komma trennen)</p>";
 
 echo "
 <form action='diverses_edit.php' method='post'>

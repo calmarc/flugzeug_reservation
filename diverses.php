@@ -20,8 +20,6 @@ include_once('includes/usermenu.php');
     <div id="formular_innen">
       <div class="center">
         <h1>Einstellungen</h1>
-<p>(Bei mehreren Empfängern, die Emails (in Daten1) mit jeweils einem Komma trennen)</p>
-
           <table class='vertical_table'>
           <tr>
           <th style="background-color: #99ff99;"></th>
@@ -32,7 +30,7 @@ include_once('includes/usermenu.php');
 
 <?php
 
-$query = "SELECT * FROM `diverses` ORDER BY `id` ASC;";
+$query = "SELECT * FROM `diverses` ORDER BY `funktion` ASC;";
 
 $res = $mysqli->query($query);
 

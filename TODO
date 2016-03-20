@@ -10,25 +10,23 @@
   bis was die echte Zeit war.. oder? Oder nicht loeschen und
   warnen?
 
-
 == MINOR ==
 
 * service nicht rot.. nur zahl (tspan...)
  
-* armin.beck@dsl.li,amathis@deep.ch, (bei diverses.beigeloescht reintun)
-
 * wie beim monatsplan auch pfeile fuer tag-wechsel
 
 * Buchung löschen:  kontrollieren clean-upen
  
-* flieger managen wie user_edit und user_admin.. einfach flieger.
-
 * menu balken auch auf natel schwarz.. wenn unten
   verschoben. <- wie??
 
-* passwort vergessen.. link
-
 * die passwort recovery eintrage sollte hin und wieder geloescht werden.
   evt beim einloggen.. wenn aelter als ein tag oder so.
+
+* armin.beck@dsl.li,amathis@deep.ch, (bei diverses.beigeloescht reintun)
+
+* flieger managen wie user_edit und user_admin.. einfach
+  flieger. (oder in diverses)
 
 // vim: nospell :
