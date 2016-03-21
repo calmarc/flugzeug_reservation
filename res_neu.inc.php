@@ -55,13 +55,16 @@ if (isset($_POST['submit']))
   if ($bis_date <= $von_date)
     $error_msg .= "'Von' Zeit nicht grösser als 'bis' Zeit.<br />";
 
-  if ($bis_stunde == "21" && $bis_minuten == "30")
-    $error_msg .= "21:30 liegt ausserhalb der Grenzen. Es kann nur bis 21:00 reserviert werden.<br />";
+  if ($von_stunde == "21" && $von_minuten == "30" || $bis_stunde == "21" && $bis_minuten == "30")
+    $error_msg .= "21:30 liegt ausserhalb der Grenzen..<br />";
 
   if ($von_date <= $local_datetime)
-    $error_msg .= "Die Reservierung liegt in der Vergangenheit.<br /><br />Es wurde keine Reservierung gebucht!<br />";
+    $error_msg .= "Die Reservierung liegt in der Vergangenheit.<br />";
 
-  if (intval($bis_stunde) == 7 && intval($bis_minuten) == 0)
+  if (intval($von_stunde) == "21")
+    $error_msg .= "Ab 21:{$von_minuten} Uhr kann man nicht reservieren.<br />Bitte stattdessen den nächsten Tag verwenden!<br />";
+
+  if (intval($bis_stunde) == "07" && intval($bis_minuten) == "00")
     $error_msg .= "Auf 7:00 Uhr kann man nicht reservieren.<br />Bitte stattdessen auf den Vortag 21:00 Uhr buchen!<br />";
 
   // CHECK LEVEL of standby
@@ -78,6 +81,9 @@ if (isset($_POST['submit']))
       ( `id` , `timestamp` , `user_id` , `flieger_id` , `von` , `bis`) VALUES
       ( NULL , CURRENT_TIMESTAMP , ?, ?, ?, ?);";
     mysqli_prepare_execute ($mysqli, $query, 'iiss', array ($user_id, $flieger_id,$von_date, $bis_date));
+    list ($pilot_id_pad, $name) = get_pilot_from_user_id($mysqli, $user_id);
+    $datum = mysql2chtimef ($von_date, $bis_date, FALSE);
+    write_status_message($mysqli, "[Reservation]", "Neu: durch [{$pilot_id_pad}] $name: $datum ");
 
     if (isset($_SESSION['plan']) && $_SESSION['plan'] == 'monatsplan')
       header("Location: index.php?show=monatsplan&tag={$von_tag}&monat={$von_monat}&jahr={$von_jahr}");

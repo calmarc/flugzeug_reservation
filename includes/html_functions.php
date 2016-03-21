@@ -141,7 +141,7 @@ function print_html_to_body ($title, $special_meta)
   <link rel="stylesheet" href="/reservationen/css/reservationen.css" />
 
 <?php
-if ( isset($_SESSION['pilot_id']) && ($_SESSION['pilot_id'] == "107" || $_SESSION['pilot_id'] == "214" || $_SESSION['pilot_id'] == "444"))
+if ( isset($_SESSION['pilot_id']) && ($_SESSION['pilot_id'] == "107" || $_SESSION['pilot_id'] == "214"))
 { 
   echo "<style>body { background-color: pink; }</style>"; 
 }

@@ -2,16 +2,6 @@
 
 == MAYOR ==
 
-* bei teiloeschung werte kontrollieren.. i.e bis muss
-  groesser sein als von etc.
-  -
-  man kann datum mehr angeben.. als was die ist.. und
-  loescht..  soweit so gut.. aber sollte dann nur angeben
-  bis was die echte Zeit war.. oder? Oder nicht loeschen und
-  warnen?
-  beim trimmen: 9-12. kann man trimmen von 7-11. geht. solle
-  eher nicht..?
-
 * pfeile beim sortierne tabelle oben (rauf runter asc/desc)
 
 == MINOR ==
@@ -28,5 +18,7 @@
 
 * flieger managen wie user_edit und user_admin.. einfach
   flieger. (oder in diverses)
+
+* computer_to into compute_minute_from
 
 // vim: nospell :

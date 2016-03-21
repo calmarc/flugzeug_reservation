@@ -56,6 +56,8 @@ date_default_timezone_set("Europe/Zurich");
 $lokal_datetime = date("Y-m-d H:i:s", time());
 date_default_timezone_set("UTC");
 
+$where_bereich = '';
+
 if ($_SESSION['res_sort_bereich'] == "$-~")
 {
   $where_bereich = "`reservationen`.`bis` >= '{$lokal_datetime}'";
@@ -114,7 +116,7 @@ include_once('includes/usermenu.php');
 $res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_id`;");
 
 echo "<option value=''>alle Piloten</option>";
-echo "<option value='{$_SESSION['pilot_id']}'>[ICH]</option>";
+echo "<option value='{$_SESSION['pilot_id']}'>Eigene Reservationen</option>";
 
 while ($obj = $res->fetch_object())
 {
