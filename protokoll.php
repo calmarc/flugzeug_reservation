@@ -75,7 +75,7 @@ while ($obj = $res->fetch_object())
   // nach @@...@@ string gucken (die trackingnummer)
   // entsprechend dem resultat, ausgeben oder string ersetzen (UPDATE...)
 
-  if ($action == "[SMS]")
+  if ($action == "[Standby SMS]")
   {
     $t_arr = explode("@@", $data);
     if (count($t_arr) == 3)

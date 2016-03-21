@@ -10,3 +10,4 @@ if ($mysqli->connect_error)
 }
 
 date_default_timezone_set('UTC');
+

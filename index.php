@@ -26,7 +26,7 @@ else
 // HTML
 
 print_html_to_body('Motorfluggruppe Chur Reservierungssystem',
-                   '<meta http-equiv="refresh" content="900">');
+                   "<meta http-equiv='refresh' content='900'>");
 
 include ('includes/usermenu.php');
 echo '<main>';

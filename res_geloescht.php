@@ -14,6 +14,8 @@ sec_session_start();
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
 
+include_once ('res_geloescht.inc.php');
+
 // TODO: diese res_xy haben hier oben alle etwa das gleiche..
 // TODO: mal aussortieren in eins.. und so
 // default
@@ -105,6 +107,17 @@ while ($obj = $res->fetch_object())
                 <option <?php if ($_SESSION['res_sort_bereich'] == '365') echo 'selected="selected"'; ?> value="365">letze 365 Tage</option>
                 <option <?php if ($_SESSION['res_sort_bereich'] == '1.1') echo 'selected="selected"'; ?> value="1.1">seit Anfang Jahr </option>
               </select>
+          </form>
+
+          <form style="display: inline-block;" action='res_geloescht.php' method='get'>
+            &nbsp; Löschen: <select style="width: 15em;" onchange='this.form.submit()' name='loeschen' size="1" id='loeschen'>
+              <option value="9876543210">                </option>
+              <option value="365">älter als ein Jahr</option>
+              <option value="182">älter als ein halbes Jahr</option>
+              <option value="90">älter als 3 Monate</option>
+              <option value="30">älter als 1 Monat</option>
+              <option value="7">älter als 1 Woche</option>
+            </select>
           </form>
           <table class='vertical_table'>
           <tr>
