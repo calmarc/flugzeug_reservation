@@ -115,7 +115,7 @@ else
       <th>Zählerstand</th>
       <th>Dauer</th>
       <th>Pilot</th>
-<?php 
+<?php
 
 if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flieger_id == 4)
 {
@@ -162,7 +162,7 @@ if ($res = $mysqli->query($query))
           $flag = FALSE;
       }
 
-      $edit_link = "";	
+      $edit_link = "";
       // admin + die letzten 2 zum edditieren fuer benutzer
       if (check_admin($mysqli) || ($_SESSION['user_id'] == $user_id && $edit_c < 2))
       {

@@ -43,7 +43,7 @@ include_once('includes/usermenu.php');
     exit;
   }
   ?>
-    <form action="pass_change.php" method="post" name="login_form"> 			
+    <form action="pass_change.php" method="post" name="login_form">
     <input type="hidden" name="pilot_id" value="">
       <table class="vtable" style="width: 100%;">
           <tr>

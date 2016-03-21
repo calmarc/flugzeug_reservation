@@ -99,7 +99,7 @@ else if (isset($_POST['edit']))
 
     list($pilot_id_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
     list($pilot_id_pad2, $pilot_name2) = get_pilot_from_user_id($mysqli, $eintrag_user_id);
-    write_status_message($mysqli, "[Landungs-Eintrag]", "Editiert: durch [{$pilot_id_pad}] {$pilot_name}: von {$pilot_id_pad2}");
+    write_status_message($mysqli, "[Landungs-Eintrag]", "Editiert: durch [{$pilot_id_pad}] {$pilot_name}: von [{$pilot_id_pad2}] $pilot_name2");
 
     header("Location: landungs_eintrag.php?flieger_id={$flieger_id}");
     exit;

@@ -49,7 +49,7 @@ if (isset($_GET['sort']) && $t_old == $_GET['sort']) // glieche kolumne gedruckt
 $order_by_txt = "ORDER BY `".$_SESSION['res_sort_by']."` ".$_SESSION['res_sort_dir'];
 
 //default
-if (!isset($_SESSION['res_sort_bereich'])) $_SESSION['res_sort_bereich'] = "$-+3";
+if (!isset($_SESSION['res_sort_bereich'])) $_SESSION['res_sort_bereich'] = "$-~";
 if (isset($_GET['z_bereich']) && $_GET['z_bereich'] != '') $_SESSION['res_sort_bereich'] = $_GET['z_bereich'];
 
 date_default_timezone_set("Europe/Zurich");

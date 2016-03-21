@@ -27,6 +27,46 @@ include_once('includes/usermenu.php');
     <div id="formular_innen">
 <?php
 
+// html stuff
+
+$required = 'required="required"';
+$chars_java = "onsubmit=\"var text = document.getElementById('texta').value; if(text.length < 7) { alert('Ausführlichere Begruendung bitte!'); return false; } return true;\"";
+$chars_java2 = "onsubmit=\"var text = document.getElementById('texta2').value; if(text.length < 7) { alert('Ausführlichere Begruendung bitte!'); return false; } return true;\"";
+$optional = "";
+if (check_admin($mysqli))
+{
+  $required = '';
+  $optional = " (optional)";
+  $chars_java = "";
+  $chars_java2 = "";
+}
+
+// check if trimmer or delete for <header>
+$query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = {$reservierung} LIMIT 1;";
+$res = $mysqli->query($query);
+
+if ($res->num_rows < 1)
+{
+  header("Location: index.php?tag={$tag}&monat={$monat}&jahr={$jahr}");
+  exit;
+}
+$obj = $res->fetch_object();
+
+if (!($obj->von >= $rounded_datetime || $obj->bis <= $rounded_datetime))
+{
+	$trimmen = TRUE;
+	$h1 = "Reservation freigeben";
+    $h3 = "";
+    $button = "Ab ".date("H:i", strtotime($rounded_datetime))."h freigeben";
+}
+else
+{
+	$trimmen = FALSE;
+	$h1 = "Reservation löschen";
+    $h3 = "Begründung{$optional}";
+    $button = "Reservation löschen";
+}
+
 echo "<h1>$h1</h1>";
 
 $query = "SELECT * FROM `reservationen`
@@ -96,6 +136,9 @@ if (!$trimmen)
 <h1>Teillöschung</h1>
 
 <?php
+
+if (isset($error_msg) && $error_msg != "")
+  echo "<p><b style='color: red;'>$error_msg</b></p>";
 
 $res = $mysqli->query("SELECT * FROM `reservationen` WHERE `id` = {$reservierung};");
 $obj = $res->fetch_object();

@@ -84,7 +84,7 @@ $zaehler_umdrehungen = $obj->zaehler_umdrehungen;
               <td><b>Zählerstand:</b></td>
               <td><input value="<?php echo $zaehler_eintrag; ?>" name="zaehlerstand" style="width: 6em;" required="required" type="number" step="0.01" /></td>
             </tr>
-<?php 
+<?php
 if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flieger_id == 4)
 {
       echo "<tr>

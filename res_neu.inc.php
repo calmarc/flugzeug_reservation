@@ -49,15 +49,8 @@ if (isset($_POST['submit']))
   $local_datetime = date("Y-m-d H:i:s", time());
   date_default_timezone_set("UTC");
 
-  // TODO: check values...
-  // TODO: check values...
-  // TODO: check values...
-  // ie. 8-12 .. 7-9 works..? 8today 10tommoro 12today-7tommoro works?
-  // TODO: check values...
-  // TODO: check values...
-  // fair.
   $cur_stamp = time(); // wird einige male gebraucht
-  
+
   $error_msg = "";
   if ($bis_date <= $von_date)
     $error_msg .= "'Von' Zeit nicht grösser als 'bis' Zeit.<br />";
@@ -84,7 +77,7 @@ if (isset($_POST['submit']))
     $query = "INSERT INTO `mfgcadmin_reservationen`.`reservationen`
       ( `id` , `timestamp` , `user_id` , `flieger_id` , `von` , `bis`) VALUES
       ( NULL , CURRENT_TIMESTAMP , ?, ?, ?, ?);";
-    mysqli_prepare_execute ($mysqli, $query, 'iiss', array ($user_id, $flieger_id,$von_date, $bis_date)); 
+    mysqli_prepare_execute ($mysqli, $query, 'iiss', array ($user_id, $flieger_id,$von_date, $bis_date));
 
     if (isset($_SESSION['plan']) && $_SESSION['plan'] == 'monatsplan')
       header("Location: index.php?show=monatsplan&tag={$von_tag}&monat={$von_monat}&jahr={$von_jahr}");

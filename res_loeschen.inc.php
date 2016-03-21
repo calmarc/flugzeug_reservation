@@ -1,108 +1,133 @@
 <?php
 
-$required = 'required="required"';
-$chars_java = "onsubmit=\"var text = document.getElementById('texta').value; if(text.length < 7) { alert('Ausführlichere Begruendung bitte!'); return false; } return true;\"";
-$chars_java2 = "onsubmit=\"var text = document.getElementById('texta2').value; if(text.length < 7) { alert('Ausführlichere Begruendung bitte!'); return false; } return true;\"";
-$optional = "";
-if (check_admin($mysqli))
-{
-  $required = '';
-  $optional = " (optional)";
-  $chars_java = "";
-  $chars_java2 = "";
-}
+// wenn man kommt vom chart her kommt.. daten checken
+
 
 $tag = ""; if (isset($_GET['tag'])) $tag = $_GET['tag'];
 $monat = ""; if (isset($_GET['monat'])) $monat = $_GET['monat'];
 $jahr = ""; if (isset($_GET['jahr'])) $jahr = $_GET['jahr'];
-
 $reservierung = ""; if (isset($_GET['reservierung'])) $reservierung = $_GET['reservierung'];
 $backto = ""; if (isset($_GET['backto'])) $backto = $_GET['backto'];
 $flieger_id = ""; if (isset($_GET['flieger_id'])) $flieger_id = $_GET['flieger_id'];
 
-$curstamp = time(); // wird einige male gebraucht
-// round up cur_time to half hour blocks
-$rounded_stamp = (intval($curstamp / 1800) + 1) * 1800;
+// sonst .. brauchts auch  wenn man vom submit kommt
+
+if (isset($_POST['tag'])) $tag = $_POST['tag'];
+if (isset($_POST['monat'])) $monat = $_POST['monat'];
+if (isset($_POST['jahr'])) $jahr = $_POST['jahr'];
+if (isset($_POST['reservierung'])) $reservierung = $_POST['reservierung'];
+
+
+
+$begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
+
+
+$rounded_stamp = (intval(time() / 1800) + 1) * 1800;
 date_default_timezone_set("Europe/Zurich");
-$rounded_date = date("Y-m-d H:i:s", $rounded_stamp);
+$rounded_datetime = date("Y-m-d H:i:s", $rounded_stamp);
 date_default_timezone_set("UTC");
 
-if (isset($_POST['submit']))
+if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservierung']) > 0)
 {
-  if (isset($_POST['reservierung']) && intval($_POST['reservierung']) > 0 )
+  // id ok?
+  // daten ok + vorarbeiten
+  //   -> teilloeschung
+  //   -> komplett
+  //   -> trimmen
+  //   -> sms senden allenfalls
+  //   -> chart-seite weiterleiten
+  //   ---------------------------
+  // html...
+
+
+  //============================================================================
+  // Kontrollieren ob die ID existiert auch modifiziert werden darf vom Benutzer
+
+  if (check_admin($mysqli))
+    $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = {$_POST['reservierung']} LIMIT 1;";
+  else
+    $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = {$_POST['reservierung']} AND `user_id` = '{$_SESSION['user_id']}' AND `bis` >= '{$rounded_datetime}' LIMIT 1;";
+
+  $res = $mysqli->query($query);
+
+  if ($res->num_rows < 1)
   {
-    // entry must be owned by this logged-in user && must be in the future still..
-    // OR admin...
-    // bigger than next half-hour rounded up
+    header("Location: index.php?tag={$tag}&monat={$monat}&jahr={$jahr}");
+    exit;
+  }
 
-    if (check_admin($mysqli))
-      $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = {$_POST['reservierung']} LIMIT 1;";
-    else
-      $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = {$_POST['reservierung']} AND `user_id` = '{$_SESSION['user_id']}' AND `bis` >= '{$rounded_date}' LIMIT 1;";
+  //============================================================================
+  // preparationen (falls eingabe-fehler kommt nachher.. etwas ueberschuss (get_vali_reserv..))
 
-    $res = $mysqli->query($query);
+  $res = $mysqli->query("SELECT `flieger_id` from `reservationen` WHERE `id` = {$_POST['reservierung']};");
+  $obj = $res->fetch_object();
+  $flieger_id = $obj->flieger_id;
 
-    if ($res->num_rows < 1)
-    {
-      header("Location: index.php?tag={$tag}&monat={$monat}&jahr={$jahr}");
-      exit;
-    }
+  // vor den loeschungen die aktiven vor-speichern (differenz...-> neu aktiv)
+  $valid_0_pre = get_valid_reserv($mysqli, $flieger_id);
+  // beim splitten (zwischendrin) wird da die neue reservation gespeichert
+  // damit man da keine sms sendet daraufhin.
+  $not_new_no_notification = "";
 
-    $obj = $res->fetch_object();
+  $query = "SELECT * from `reservationen` WHERE `id` = {$reservierung} LIMIT 1;";
+  $res = $mysqli->query($query);
+  $obj = $res->fetch_object();
 
-    // find all valid reservatiions in the future and store them.
-    // den delte/trim.
-    // find again all valid reservation.
-    // array_diff will find occurance not found in the pre.
 
-    $res2 = $mysqli->query("SELECT `flieger_id` from `reservationen` WHERE `id` = {$_POST['reservierung']};");
-    $obj2 = $res2->fetch_object();
-    $flieger_id = $obj2->flieger_id;
+  $error_msg = "";
+  if ($_POST['submit'] == "Teillöschung")
+  {
+    $von_jahr = ""; if (isset($_POST['von_jahr'])) $von_jahr = $_POST['von_jahr'];
+    $von_monat = ""; if (isset($_POST['von_monat'])) $von_monat = $_POST['von_monat'];
+    $von_tag = ""; if (isset($_POST['von_tag'])) $von_tag = $_POST['von_tag'];
+    $von_stunde = ""; if (isset($_POST['von_stunde'])) $von_stunde = $_POST['von_stunde'];
+    $von_minute = ""; if (isset($_POST['von_minute'])) $von_minute = $_POST['von_minute'];
 
-    // vor den loeschungen die gueltigen speichern
-    $valid_0_pre = get_valid_reserv($mysqli, $flieger_id);
+    $bis_jahr = ""; if (isset($_POST['bis_jahr'])) $bis_jahr = $_POST['bis_jahr'];
+    $bis_monat = ""; if (isset($_POST['bis_monat'])) $bis_monat = $_POST['bis_monat'];
+    $bis_tag = ""; if (isset($_POST['bis_tag'])) $bis_tag = $_POST['bis_tag'];
+    $bis_stunde = ""; if (isset($_POST['bis_stunde'])) $bis_stunde = $_POST['bis_stunde'];
+    $bis_minute = ""; if (isset($_POST['bis_minute'])) $bis_minute = $_POST['bis_minute'];
 
-    $id_tmp = intval($_POST['reservierung']);
-    $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
+    $loeschen_datum_von = "{$von_jahr}-{$von_monat}-{$von_tag} {$von_stunde}:{$von_minute}:00";
+    $loeschen_datum_bis = "{$bis_jahr}-{$bis_monat}-{$bis_tag} {$bis_stunde}:{$bis_minute}:00";
 
-    $query = "SELECT * from `reservationen` WHERE `id` = {$id_tmp} LIMIT 1;";
-    $res = $mysqli->query($query);
-    $obj = $res->fetch_object();
+    $res_datum_von = $obj->von;
+    $res_datum_bis = $obj->bis;
 
-    // beim splitten (zwischendrin) wird da die neue reservation gespeichert
-    // damit man da keine sms sendet daraufhin.
-    $not_new_no_notification = "";
+    if ($loeschen_datum_bis <= $loeschen_datum_von)
+      $error_msg .= "Bis-Zeit muss später Von-Zeit sein.<br />";
 
-    //
-    // teilloeschung
-    //
+    if ($von_stunde == "21" && $von_minute != "00")
+      $error_msg .= "21:30 liegt ausserhalb des Bereiches.<br />";
+
+    if ($bis_stunde == "21" && $bis_minute != "00")
+      $error_msg .= "21:30 liegt ausserhalb des Bereiches.<br />";
+
+    if ($von_stunde == "21")
+      $error_msg .= "Ab 21 Uhr kann man keine Reservierung machen. Nächster Tag verwenden.<br />";
+
+    if ($bis_stunde == "07" && $bis_minute == "00")
+      $error_msg .= "Bis 7 Uhr kann man keine Reservierung machen. Vorheriger Tag verwenden.<br />";
+
+    if ($loeschen_datum_von < $res_datum_von)
+      $error_msg .= "Neue Von-Zeit darf nicht vor der ursprüngliche Von-Zeit liegen.<br />";
+
+    if ($loeschen_datum_bis > $res_datum_bis)
+      $error_msg .= "Neue Bis-Zeit darf nicht nach der ursprüngliche Bis-Zeit liegen.<br />";
+
+    if ($loeschen_datum_von < $rounded_datetime)
+      $error_msg .= "Neue Von-Zeit darf nicht in der Vergangenheit liegen.<br />";
+  }
+
+  // nur wenn nicht ( error ist da && teilloeschung
+  if (!($_POST['submit'] == "Teillöschung" && $error_msg != ""))
+  {
+    //============================================================================
+    // Teilloeschung
+
     if ($_POST['submit'] == "Teillöschung")
     {
-      $von_jahr = ""; if (isset($_POST['von_jahr'])) $von_jahr = $_POST['von_jahr'];
-      $von_monat = ""; if (isset($_POST['von_monat'])) $von_monat = $_POST['von_monat'];
-      $von_tag = ""; if (isset($_POST['von_tag'])) $von_tag = $_POST['von_tag'];
-      $von_stunde = ""; if (isset($_POST['von_stunde'])) $von_stunde = $_POST['von_stunde'];
-      $von_minute = ""; if (isset($_POST['von_minute'])) $von_minute = $_POST['von_minute'];
-
-      $bis_jahr = ""; if (isset($_POST['bis_jahr'])) $bis_jahr = $_POST['bis_jahr'];
-      $bis_monat = ""; if (isset($_POST['bis_monat'])) $bis_monat = $_POST['bis_monat'];
-      $bis_tag = ""; if (isset($_POST['bis_tag'])) $bis_tag = $_POST['bis_tag'];
-      $bis_stunde = ""; if (isset($_POST['bis_stunde'])) $bis_stunde = $_POST['bis_stunde'];
-      $bis_minute = ""; if (isset($_POST['bis_minute'])) $bis_minute = $_POST['bis_minute'];
-
-
-      //todo am besten ueberall machen.. oder halt fehlermeldung
-      //unguelties 21:30 auf 21:00 machen.
-      if ($von_stunde == "21" && $von_minute != "00")
-        $von_minute = "00";
-      if ($bis_stunde == "21" && $bis_minute != "00")
-        $bis_minute = "00";
-
-      $res_datum_von = $obj->von;
-      $res_datum_bis = $obj->bis;
-
-      $loeschen_datum_von = "$von_jahr-$von_monat-$von_tag $von_stunde:$von_minute:00";
-      $loeschen_datum_bis = "$bis_jahr-$bis_monat-$bis_tag $bis_stunde:$bis_minute:00";
 
       $loeschen_datum_von_orig =  $loeschen_datum_von;
       $loeschen_datum_bis_orig =  $loeschen_datum_bis;
@@ -138,11 +163,10 @@ if (isset($_POST['submit']))
         $loeschen_datum_bis = date("Y-m-d H:i:s", $date07 + 8 * 60 * 60);
       }
 
-      // start und endzeit = groesser reservation - komplett loeschen
+      // start und endzeit = groesser reservation -> komplett loeschen
       if ($loeschen_datum_von <= $res_datum_von && $loeschen_datum_bis >= $res_datum_bis)
       {
-        $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
-        delete_reservation($mysqli, $id_tmp, $begruendung, $_SESSION['user_id']);
+        delete_reservation($mysqli, $reservierung, $begruendung, $_SESSION['user_id']);
 
         bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flieger_id,
                             mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
@@ -152,7 +176,7 @@ if (isset($_POST['submit']))
       {
 
         $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `von` = ? WHERE `reservationen`.`id` = ?;";
-        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_bis, $id_tmp));
+        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_bis, $reservierung));
 
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
       }
@@ -160,7 +184,7 @@ if (isset($_POST['submit']))
       else if ($loeschen_datum_von > $res_datum_von && $loeschen_datum_bis >= $res_datum_bis)
       {
         $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
-        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von, $id_tmp));
+        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von, $reservierung));
 
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
       }
@@ -184,7 +208,7 @@ if (isset($_POST['submit']))
 
         // update the initial one (bis ... to loeschen_von..)
         $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
-        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von, $id_tmp));
+        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von, $reservierung));
 
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
 
@@ -193,21 +217,22 @@ if (isset($_POST['submit']))
         $not_new_no_notification = $obj_t->id;
       }
     }
-    //
-    // loeschen gedruckt
-    //
+    //============================================================================
+    // Loeschen (ganz)
+
     // TODO: nur admins! und so? sonst nur die eigenen darf man loeschen
-    else if ($obj->von >= $rounded_date || $obj->bis <= $rounded_date)
+    else if ($obj->von >= $rounded_datetime || $obj->bis <= $rounded_datetime)
     {
       $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
-      delete_reservation($mysqli, $id_tmp, $begruendung, $_SESSION['user_id']);
+      delete_reservation($mysqli, $reservierung, $begruendung, $_SESSION['user_id']);
 
       bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flieger_id,
                           mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
     }
-    //
-    // hat in der vergangenheit angefanne.. -> trimmen
-    //
+
+    //============================================================================
+    // aufs 'JETZT' trimmen
+
     else
     {
       //  braucht keine Zurich.. reine H:i Hohlung.. auf 'neutralem' string
@@ -215,28 +240,28 @@ if (isset($_POST['submit']))
 
       //  wenn ZEIT nach >21 <7 ----> 7 nachster tag 'von'
       //  sollte nicht passieren, aber orig bis muss > sein als neues von
-      $tmp_hour_min = date("H:i", strtotime($rounded_date));
+      $tmp_hour_min = date("H:i", strtotime($rounded_datetime));
 
       if ($tmp_hour_min < "07:00")
       {
         // new end: 7 uhr
-        $date07 = strtotime(date("Y-m-d", strtotime($rounded_date))." 07:00:00");
+        $date07 = strtotime(date("Y-m-d", strtotime($rounded_datetime))." 07:00:00");
         $new_end_date = date("Y-m-d H:i:s", $date07);
       }
       else if ($tmp_hour_min >= "21:00")
       {
         // new end: 7 uhr next day
-        $date07 = strtotime(date("Y-m-d", strtotime($rounded_date))." 23:00:00");
+        $date07 = strtotime(date("Y-m-d", strtotime($rounded_datetime))." 23:00:00");
         $new_end_date = date("Y-m-d H:i:s", $date07 + 8 * 60 * 60);
       }
       else
       {
         // new end: now rounded up half hour
-        $new_end_date = $rounded_date;
+        $new_end_date = $rounded_datetime;
       }
 
       $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
-      mysqli_prepare_execute($mysqli, $query, 'si', array ($new_end_date, $id_tmp));
+      mysqli_prepare_execute($mysqli, $query, 'si', array ($new_end_date, $reservierung));
 
       // fuer den eintrag . muss alles auf  21:00 zurueck.. falls "07:00"
       // loeschen bis ende abend.. quasi..
@@ -251,13 +276,11 @@ if (isset($_POST['submit']))
 
       // TODO stimmt noch nicht..
       // TODO stimmt noch nicht..
-      // TODO stimmt noch nicht..
-      // TODO stimmt noch nicht..
-      // TODO stimmt noch nicht..
 
     }
 
-    // send sms when a standby is green now.
+    //============================================================================
+    // Eventuell standy jetzt gueltig - sms + email senden.
 
     $valid_0_after = get_valid_reserv($mysqli, $flieger_id);
 
@@ -317,44 +340,12 @@ if (isset($_POST['submit']))
         }
     }
 
-    $tag = ""; if (isset($_POST['tag'])) $tag = $_POST['tag'];
-    $monat = ""; if (isset($_POST['monat'])) $monat = $_POST['monat'];
-    $jahr = ""; if (isset($_POST['jahr'])) $jahr = $_POST['jahr'];
+    //============================================================================
+    // alles erledigt.. zueruck von wo man hergekommen ist
 
-    //TODO woher soll post'flieger_id is da wenn von res_neu.php oder?
-    if (isset($_POST['backto'], $_POST['flieger_id']) && $_POST['backto'] == "res_neu.php")
-    {
-       header("Location: /reservationen/res_neu.php?tag={$tag}&monat={$monat}&jahr={$jahr}&flieger_id={$_POST['flieger_id']}");
-    }
-    else
-       header("Location: index.php?tag={$tag}&monat={$monat}&jahr={$jahr}");
+    header("Location: index.php?tag={$tag}&monat={$monat}&jahr={$jahr}");
+    exit;
   }
-}
-
-// check if trimmer or delete
-$query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = {$reservierung} LIMIT 1;";
-$res = $mysqli->query($query);
-
-if ($res->num_rows < 1)
-{
-  header("Location: index.php?tag={$tag}&monat={$monat}&jahr={$jahr}");
-  exit;
-}
-$obj = $res->fetch_object();
-
-if (!($obj->von >= $rounded_date || $obj->bis <= $rounded_date))
-{
-	$trimmen = TRUE;	
-	$h1 = "Reservation freigeben";
-    $h3 = "";
-    $button = "Ab ".date("H:i", strtotime($rounded_date))."h freigeben";
-}
-else
-{
-	$trimmen = FALSE;	
-	$h1 = "Reservation löschen";
-    $h3 = "Begründung{$optional}";
-    $button = "Reservation löschen";
 }
 
 ?>
