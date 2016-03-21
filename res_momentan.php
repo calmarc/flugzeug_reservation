@@ -93,7 +93,6 @@ while ($obj = $res->fetch_object())
 ?>
               </select>
           </form>
-
           <form style="display: inline-block;" action="res_momentan.php" method='get'>
               <select size="1" onchange='this.form.submit()' style="width: 12em;" name = "z_bereich">
                 <option <?php if ($_SESSION['res_sort_bereich'] == '0') echo 'selected="selected"'; ?> value="0">alle</option>
@@ -106,6 +105,7 @@ while ($obj = $res->fetch_object())
           </form>
           <table class='vertical_table'>
           <tr>
+          <th style="background-color: #99ff99;"></th>
           <th><a href="res_momentan.php?sort=timestamp"><b>Am</b></a></th>
             <th><a href="res_momentan.php?sort=pilot_id"><b>Pilot</b></a></th>
             <th><a href="res_momentan.php?sort=flieger"><b>Flieger</b></a></th>
@@ -134,7 +134,14 @@ while ($obj = $res->fetch_object())
   $tmp = explode("-", $tag);
   $stamp_datum = $tmp[2].'.'.$tmp[1].'.'.$tmp[0];
 
+  list( $g_datum, $zeit) = explode(" ", $obj->von);
+  list( $g_jahr, $g_monat, $g_tag) = explode("-", $g_datum);
+  $g_jahr = intval($g_jahr);
+  $g_monat = intval($g_monat);
+  $g_tag = intval($g_tag);
+
   echo "\n<tr>
+           <td class='trblank'><a href='index.php?show=tag&amp;tag={$g_tag}&amp;monat={$g_monat}&amp;jahr={$g_jahr}'>[zeig]</a></td>
            <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>{$stamp_datum}</td>
            <td>[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
            <td>{$obj->flieger}</td>
