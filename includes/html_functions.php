@@ -139,7 +139,6 @@ function print_html_to_body ($title, $special_meta)
   <?php echo $special_meta; ?>
   <link rel="shortcut icon" href="http://www.mfgc.ch/flugschule/bilder/icon.png" />
   <link rel="stylesheet" href="/reservationen/css/reservationen.css" />
-</head>
 
 <?php
 if ( isset($_SESSION['pilot_id']) && ($_SESSION['pilot_id'] == "107" || $_SESSION['pilot_id'] == "214" || $_SESSION['pilot_id'] == "444"))
@@ -154,6 +153,7 @@ if ( isset($_SESSION['pilot_id']) && ($_SESSION['pilot_id'] == "107" || $_SESSIO
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 
+</head>
 <body>
 <?php
 }

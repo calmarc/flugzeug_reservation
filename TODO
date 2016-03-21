@@ -4,8 +4,8 @@
 
 * bei teiloeschung werte kontrollieren.. i.e bis muss
   groesser sein als von etc.
-
-* man kann datum mehr angeben.. als was die ist.. und
+  -
+  man kann datum mehr angeben.. als was die ist.. und
   loescht..  soweit so gut.. aber sollte dann nur angeben
   bis was die echte Zeit war.. oder? Oder nicht loeschen und
   warnen?
@@ -14,13 +14,11 @@
   beim trimmen: 9-12. kann man trimmen von 7-11. geht. solle
   eher nicht..?
 
-* beim reservieren stimmt die zeit nicht - eine stunde zuvor
-
-* pilot admin.. uebernimmt die aenderungen nicht mehr
+* current time kontrollieren.
 
 == MINOR ==
 
-* farben: bettina:  rosarot
+* loeschen combobox einheitlich  mit > < etc. (auch filter)
 
 * service nicht rot.. nur zahl (tspan...)
  

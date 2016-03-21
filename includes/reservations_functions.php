@@ -358,4 +358,17 @@ function reser_getrimmt_eintrag($mysqli, $obj, $user_id, $begruendung, $loeschen
   mysqli_prepare_execute($mysqli, $query, 'iississs', array ($obj->user_id, $obj->flieger_id, $obj->von, $obj->bis, $user_id, $begruendung, $loeschen_datum_von, $loeschen_datum_bis));
 }
 
+function get_all_valid_reservations($mysqli)
+{
+  $res = $mysqli->query("SELECT `id` FROM `flieger`;");
+  $valid_res = array(array(), array(), array(), array(), array());
+  $x = 0;
+  while ($obj = $res->fetch_object())
+  {
+    $valid_res[$x] = get_valid_reserv($mysqli, $obj->id);
+    $x++;
+  }
+  return $valid_res;
+}
+
 ?>

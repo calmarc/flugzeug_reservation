@@ -68,13 +68,12 @@
   $admin = "";
   if ($obj->admin == TRUE && $obj->gesperrt == FALSE)
     $admin = "
-<span style='white-space: nowrap;'>[ 
-  <a href='/reservationen/res_momentan.php'><img {$res_moment} src='/reservationen/bilder/reservation.png' alt='Reservationen' /></a>
-  <a href='/reservationen/res_geloescht.php'><img {$res_geloescht} src='/reservationen/bilder/reservation-geloescht.png' alt='gelöscht' /></a>
-  <a href='/reservationen/res_teilgeloescht.php'><img {$res_teilgeloescht} src='/reservationen/bilder/reservation-teil.png' alt='teil-gelöscht' /></a>
-  <a href='/reservationen/pilot_admin.php'><img {$pilot_admin} src='/reservationen/bilder/pilot.png' alt='Piloten' /></a>
-  <a href='/reservationen/protokoll.php'><img {$protokoll} src='/reservationen/bilder/log.png' alt='Protokoll' /></a>
-  <a href='/reservationen/diverses.php'><img {$diverses} src='/reservationen/bilder/diverses.png' alt='Diverses' /></a> ]
+  <span style='white-space: nowrap;'>[
+      <a href='/reservationen/res_geloescht.php'><img {$res_geloescht} src='/reservationen/bilder/reservation-geloescht.png' alt='gelöscht' /></a>
+      <a href='/reservationen/res_teilgeloescht.php'><img {$res_teilgeloescht} src='/reservationen/bilder/reservation-teil.png' alt='teil-gelöscht' /></a>
+      <a href='/reservationen/pilot_admin.php'><img {$pilot_admin} src='/reservationen/bilder/pilot.png' alt='Piloten' /></a>
+      <a href='/reservationen/protokoll.php'><img {$protokoll} src='/reservationen/bilder/log.png' alt='Protokoll' /></a>
+      <a href='/reservationen/diverses.php'><img {$diverses} src='/reservationen/bilder/diverses.png' alt='Diverses' /></a> ]
 </span>";
 
   $_SESSION['name'] = htmlentities($obj->name);
@@ -97,8 +96,9 @@
       [ <a <?php echo $index_t; ?> href="/reservationen/index.php?show=tag">Tagesplan</a>
       | <a <?php echo $index_m; ?> href="/reservationen/index.php?show=monat">Monatsplan</a>
     </span> 
-    <span style="white-space: nowrap;">
-      | <a href="http://www.ics.li/cfdocs/flugplragaz/admin/bewegungen.cfm">Startliste Flugplatz</a> ]
+    <span style='white-space: nowrap;'>
+    | <a href='/reservationen/res_momentan.php'><img <?php echo $res_moment; ?> src='/reservationen/bilder/reservation.png' alt='Reservationen' /></a>
+      |  <a href="http://www.ics.li/cfdocs/flugplragaz/admin/bewegungen.cfm">Startliste Flugplatz</a> ]
     </span> 
    <?php echo $admin; ?>
   </div> 

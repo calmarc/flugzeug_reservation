@@ -167,21 +167,13 @@ date_default_timezone_set("Europe/Zurich");
 $date = date("Y-m-d H:i:s", time());
 date_default_timezone_set('UTC');
 
-remove_zombies($mysqli);
 
+// clean up
+remove_zombies($mysqli);
 // get all valid reservation
 // later: see if there is an entry.. if not.. yellow (standby)
-
-$res = $mysqli->query("SELECT `id` FROM `flieger`;");
-
-$valid_res = array(array(), array(), array(), array(), array());
-
-$x = 0;
-while ($obj = $res->fetch_object())
-{
-  $valid_res[$x] = get_valid_reserv($mysqli, $obj->id);
-  $x++;
-}
+// array(array(flugi1) array (flugi2)...
+$valid_res = get_all_valid_reservations($mysqli);
 
 $query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flieger`.`flieger`, `reservationen`.`flieger_id` FROM `reservationen` LEFT OUTER JOIN `flieger` ON `flieger`.`id` = `reservationen`.`flieger_id` WHERE `user_id` = {$user_id} AND `bis` >= '{$date}' ORDER BY `von` DESC;";
 $res = $mysqli->query($query);
