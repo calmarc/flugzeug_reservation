@@ -49,8 +49,8 @@ if (isset($_GET['sort']) && $t_old == $_GET['sort']) // glieche kolumne gedruckt
 $order_by_txt = "ORDER BY `".$_SESSION['res_sort_by']."` ".$_SESSION['res_sort_dir'];
 
 //default
-if (!isset($_SESSION['res_sort_bereich'])) $_SESSION['res_sort_bereich'] = "$-~";
-if (isset($_GET['z_bereich']) && $_GET['z_bereich'] != '') $_SESSION['res_sort_bereich'] = $_GET['z_bereich'];
+if (!isset($_SESSION['res_sort_bereich_res'])) $_SESSION['res_sort_bereich_res'] = "$-~";
+if (isset($_GET['z_bereich']) && $_GET['z_bereich'] != '') $_SESSION['res_sort_bereich_res'] = $_GET['z_bereich'];
 
 date_default_timezone_set("Europe/Zurich");
 $lokal_datetime = date("Y-m-d H:i:s", time());
@@ -58,25 +58,25 @@ date_default_timezone_set("UTC");
 
 $where_bereich = '';
 
-if ($_SESSION['res_sort_bereich'] == "$-~")
+if ($_SESSION['res_sort_bereich_res'] == "$-~")
 {
   $where_bereich = "`reservationen`.`bis` >= '{$lokal_datetime}'";
 }
-else if ($_SESSION['res_sort_bereich'] == "-12-$")
+else if ($_SESSION['res_sort_bereich_res'] == "-12-$")
 {
   date_default_timezone_set("Europe/Zurich");
   $von_datetime = date("Y-m-d H:i:s", time() - 60 * 60 * 24 * 365);
   date_default_timezone_set("UTC");
   $where_bereich = "`reservationen`.`bis` > '{$von_datetime}' AND `reservationen`.`von` <= '{$lokal_datetime}'";
 }
-else if ($_SESSION['res_sort_bereich'] == "$-+3")
+else if ($_SESSION['res_sort_bereich_res'] == "$-+3")
 {
   date_default_timezone_set("Europe/Zurich");
   $bis_datetime = date("Y-m-d H:i:s", time() + 60 * 60 * 24 * 93);
   date_default_timezone_set("UTC");
   $where_bereich = "`reservationen`.`bis` >= '{$lokal_datetime}' AND `reservationen`.`von` <= '{$bis_datetime}' ";
 }
-else if ($_SESSION['res_sort_bereich'] == "-1-+1")
+else if ($_SESSION['res_sort_bereich_res'] == "-1-+1")
 {
   date_default_timezone_set("Europe/Zurich");
   $von_datetime = date("Y-m-d H:i:s", time() - 60 * 60 * 24 * 31);
@@ -84,7 +84,7 @@ else if ($_SESSION['res_sort_bereich'] == "-1-+1")
   date_default_timezone_set("UTC");
   $where_bereich = "`reservationen`.`bis` >= '{$von_datetime}' AND `reservationen`.`von` <= '{$bis_datetime}' ";
 }
-else if ($_SESSION['res_sort_bereich'] == "-12-~")
+else if ($_SESSION['res_sort_bereich_res'] == "-12-~")
 {
   date_default_timezone_set("Europe/Zurich");
   $von_datetime = date("Y-m-d H:i:s", time() - 60 * 60 * 24 * 365);
@@ -108,7 +108,7 @@ include_once('includes/usermenu.php');
   <main>
     <div id="formular_innen">
       <div class="center">
-        <h1>Reservationen</h1>
+          <h1>Reservationen <a href="javascript:window.print()"><img alt="Ausdrucken" src="/reservationen/bilder/print-out.png" /></a></h1>
 
           <form style="display: inline-block;" action="res_momentan.php" method='get'>
               <select size="1" onchange='this.form.submit()' style="width: 16em;" name = "pilot_id">
@@ -131,11 +131,11 @@ while ($obj = $res->fetch_object())
           </form>
           <form style="display: inline-block;" action="res_momentan.php" method='get'>
               <select size="1" onchange='this.form.submit()' style="width: 12em;" name = "z_bereich">
-                <option <?php if ($_SESSION['res_sort_bereich'] == '$-~') echo 'selected="selected"'; ?> value="$-~">&gt; jetzt</option>
-                <option <?php if ($_SESSION['res_sort_bereich'] == '-12-$') echo 'selected="selected"'; ?> value="-12-$">&lt; jetzt</option>
-                <option <?php if ($_SESSION['res_sort_bereich'] == '$-+3') echo 'selected="selected"'; ?> value="$-+3">jetzt bis +3 Mt.</option>
-                <option <?php if ($_SESSION['res_sort_bereich'] == '-1-+1') echo 'selected="selected"'; ?> value="-1-+1">-1 Mt. bis +1 Mt.</option>
-                <option <?php if ($_SESSION['res_sort_bereich'] == '-12-~') echo 'selected="selected"'; ?> value="-12-~">alle</option>
+                <option <?php if ($_SESSION['res_sort_bereich_res'] == '$-~') echo 'selected="selected"'; ?> value="$-~">&gt; jetzt</option>
+                <option <?php if ($_SESSION['res_sort_bereich_res'] == '-12-$') echo 'selected="selected"'; ?> value="-12-$">&lt; jetzt</option>
+                <option <?php if ($_SESSION['res_sort_bereich_res'] == '$-+3') echo 'selected="selected"'; ?> value="$-+3">jetzt bis +3 Mt.</option>
+                <option <?php if ($_SESSION['res_sort_bereich_res'] == '-1-+1') echo 'selected="selected"'; ?> value="-1-+1">-1 Mt. bis +1 Mt.</option>
+                <option <?php if ($_SESSION['res_sort_bereich_res'] == '-12-~') echo 'selected="selected"'; ?> value="-12-~">alle</option>
               </select>
           </form>
           <table class='vertical_table'>
@@ -143,7 +143,7 @@ while ($obj = $res->fetch_object())
           <th style="background-color: #99ff99;"></th>
           <!--<th><a href="res_momentan.php?sort=timestamp"><b>Eingegeben</b></a></th>-->
             <th><a href="res_momentan.php?sort=pilot_id"><b>Pilot</b></a></th>
-            <th><a href="res_momentan.php?sort=flieger"><b>Flieger</b></a></th>
+            <th><a href="res_momentan.php?sort=flieger"><b>Flugzeug</b></a></th>
             <th><a href="res_momentan.php?sort=von"><b>Datum</b></a></th>
           </tr>
 <?php

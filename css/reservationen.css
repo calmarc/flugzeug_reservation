@@ -30,7 +30,7 @@ nav {
   display: none;
 }
 
-h1 { text-shadow: 2px 2px 1px #9ff, 3px 3px 2px #aaaa00; }
+h1 { padding-top: 0; margin-top: 0.1em; text-shadow: 2px 2px 1px #9ff, 3px 3px 2px #aaaa00; }
 
 h1#h1tag { margin: 0px; padding: 0px; line-height: 40%; }
 h1#h1monat { margin: 0px; padding: 0px; line-height: 40%; }
@@ -65,10 +65,9 @@ nav a:hover { color: white;}
 nav a:visited { color: white;}
 nav div span {  display: inline-block; }
 nav img { 
-
-  display: display: inline-block;
-  
+  display: inline-block;
   border: 2px #000000 solid;
+
   filter: brightness(80%);
   -webkit-filter: brightness(80%);
   -moz-filter: brightness(80%);
@@ -81,6 +80,7 @@ nav img.always {
   -moz-filter: brightness(130%);
   -o-filter: brightness(130%);
   -ms-filter: brightness(130%);
+  filter: hue-rotate(0deg) 
 }
 nav img:hover {
   filter: brightness(150%);
@@ -98,17 +98,16 @@ table.formular_eingabe td:nth-child(1) { text-align: right;}
 table.formular_eingabe td:nth-child(2) { text-align: left; padding-left: 8px;}
 table.formular_eingabe td:nth-child(2) input { width: 90%;}
 
-main { 
+main {
     margin-top: 0px; 
     margin-left: auto; 
     margin-right: auto; 
     text-align: center; 
-    /*position:absolute; top: 4em; left:0px; right:0px; bottom:0px; overflow-x:scroll;        */
 }
 
 form.login_form input { width: 80%; }
 
-div#formular_innen { margin-top: 100px; display: inline-block; margin-left: auto; margin-right: auto; text-align: center; border-radius: 25px; border: 2px solid #73AD21; padding: 20px;  background-color: #99ff99; }
+div#formular_innen { margin: 1em auto 1em auto; padding: 1em 2em 1em 2em;  display: inline-block;  text-align: center; border-radius: 25px; border: 2px solid #73AD21;  background-color: #99ff99; }
 
 /* center-stuff */
 .center {
@@ -355,6 +354,9 @@ select.flieger_select {
   nav {
     visibility: none;
     display: none;
+  }
+  div#formular_innen {
+    background-color: #ffffff;
   }
 
   .hide_on_print {

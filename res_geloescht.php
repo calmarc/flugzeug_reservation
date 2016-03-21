@@ -45,14 +45,8 @@ $order_by_txt = "ORDER BY `".$_SESSION['res_sort_by']."` ".$_SESSION['res_sort_d
 if (!isset($_SESSION['res_sort_bereich'])) $_SESSION['res_sort_bereich'] = "0";
 if (isset($_GET['z_bereich']) && $_GET['z_bereich'] != '') $_SESSION['res_sort_bereich'] = $_GET['z_bereich'];
 
-if ($_SESSION['res_sort_bereich'] == "1.1")
-{
-  date_default_timezone_set("Europe/Zurich");
-  $since_date = date("Y", time());
-  date_default_timezone_set("UTC");
-  $where_bereich = "`reser_geloescht`.`von` > '$since_date-01-01'";
-}
-else if ($_SESSION['res_sort_bereich'] == "0")
+
+if ($_SESSION['res_sort_bereich'] == "0")
 {
   $where_bereich = '';
 }
@@ -103,9 +97,7 @@ while ($obj = $res->fetch_object())
                 <option <?php if ($_SESSION['res_sort_bereich'] == '0') echo 'selected="selected"'; ?> value="0">alle</option>
                 <option <?php if ($_SESSION['res_sort_bereich'] == '30') echo 'selected="selected"'; ?> value="30">letze 30 Tage</option>
                 <option <?php if ($_SESSION['res_sort_bereich'] == '90') echo 'selected="selected"'; ?>value="90">letze 90 Tage</option>
-                <option <?php if ($_SESSION['res_sort_bereich'] == '180') echo 'selected="selected"'; ?> value="180">letze 180 Tage</option>
                 <option <?php if ($_SESSION['res_sort_bereich'] == '365') echo 'selected="selected"'; ?> value="365">letze 365 Tage</option>
-                <option <?php if ($_SESSION['res_sort_bereich'] == '1.1') echo 'selected="selected"'; ?> value="1.1">seit Anfang Jahr </option>
               </select>
           </form>
 
@@ -123,7 +115,7 @@ while ($obj = $res->fetch_object())
           <tr>
           <th><a href="res_geloescht.php?sort=timestamp"><b>Am</b></a></th>
             <th><a href="res_geloescht.php?sort=pilot_id"><b>Pilot</b></a></th>
-            <th><a href="res_geloescht.php?sort=flieger"><b>Flieger</b></a></th>
+            <th><a href="res_geloescht.php?sort=flieger"><b>Flugzeug</b></a></th>
             <th><a href="res_geloescht.php?sort=von"><b>Datum</b></a></th>
             <th><b>Grund</b></th>
             <th><a href="res_geloescht.php?sort=loescher_id"><b>Gelöscht durch</b></a></th>
