@@ -1,6 +1,12 @@
 <?php
 
+error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors',1);
+ini_set('html_errors', 1);
+
 include_once ('includes/db_connect.php');
+include_once ('includes/user_functions.php');
+include_once ('includes/html_functions.php');
 include_once ('includes/functions.php');
 
 sec_session_start();
@@ -8,6 +14,8 @@ sec_session_start();
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
 
+// TODO: diese res_xy haben hier oben alle etwa das gleiche..
+// TODO: mal aussortieren in eins.. und so
 // default
 if (!isset($_SESSION['res_sort_dir'])) $_SESSION['res_sort_dir'] = "DESC";
 if (!isset($_SESSION['res_sort_by'])) $_SESSION['res_sort_by'] = "timestamp";
@@ -23,7 +31,7 @@ if ($_SESSION['res_sort_pilot'] != "")
 $t_old = $_SESSION['res_sort_by'];
 if (isset($_GET['sort']) && $_GET['sort'] != '') $_SESSION['res_sort_by'] = $_GET['sort'];
 
-if ($t_old == $_GET['sort']) // glieche kolumne gedruckt - also dir wechsel
+if (isset($_GET['sort']) && $t_old == $_GET['sort']) // glieche kolumne gedruckt - also dir wechsel
   if ($_SESSION['res_sort_dir'] == "ASC")
       $_SESSION['res_sort_dir'] = "DESC";
   else

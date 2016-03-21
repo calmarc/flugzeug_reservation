@@ -5,6 +5,8 @@ ini_set('display_errors',1);
 ini_set('html_errors', 1);
 
 include_once ('includes/db_connect.php');
+include_once ('includes/user_functions.php');
+include_once ('includes/html_functions.php');
 include_once ('includes/functions.php');
 
 sec_session_start();
@@ -16,27 +18,25 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
 if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
-//----------------------------------------------------------------------------
-
 //============================================================================
 // loeschen form wurde gedrueckt
 
 include_once ('pilot_edit.inc.php');
 
+//============================================================================
+// HTML
+
 print_html_to_body('Piloten editieren - Administration', '');
 include_once('includes/usermenu.php');
-
 ?>
-
   <main>
     <div id="formular_innen">
 
     <h1>Piloten editieren</h1>
-
 <?php
 if (isset($_GET['id']))
 {
-  $id = $_GET['id'];
+  $user_id = $_GET['id'];
 }
 else
 {
@@ -44,7 +44,7 @@ else
   exit;
 }
 
-$query = "SELECT * FROM `piloten` WHERE `piloten`.`id` = '{$id}'";
+$query = "SELECT * FROM `piloten` WHERE `piloten`.`id` = '{$user_id}'";
 
 $res = $mysqli->query($query);
 $obj = $res->fetch_object();
@@ -61,7 +61,7 @@ else
 
 echo "
 <form action='pilot_edit.php' method='post'>
-  <input type='hidden' name='id' value='{$obj->id}' />
+  <input type='hidden' name='user_id' value='{$obj->id}' />
     <div class='center'>
     <table class='vtable'>
       <tr>
@@ -124,14 +124,17 @@ echo "  </select>
     <input class='submit_button' type='submit' name='updaten' value='Aenderungen abschicken' />
   </div>
 </form>";
+
+$pilot_id_pad = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT);
+
 ?>
 
       <hr style="margin: 52px 10px 84px 10px;" />
 
-      <form action='pilot_edit.php' method='post' onsubmit="return confirm('Wirklich Pilot-ID [<?php echo $obj->pilot_id; ?>] löschen?\nAlle verbundenen Reservierungen\nwerden ebenfalls gelöscht!');">
+      <form action='pilot_edit.php' method='post' onsubmit="return confirm('Wirklich Pilot-ID <?php echo "[{$pilot_id_pad}] {$obj->name}"; ?> löschen?\nAlle verbundenen Reservierungen\nwerden ebenfalls gelöscht!');">
       <input type="hidden" name="user_id" value="<?php echo $obj->id; ?>" />
         <div class="center">
-          <p><b>Pilot: [<?php echo str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] ".$obj->name; ?></b></p>
+          <p><b>Pilot: <?php echo "[{$pilot_id_pad}] {$obj->name}"; ?></b></p>
           <p><input class="sub_loeschen" type='submit' name='loeschen' value='LÖSCHEN' /></p>
         </div>
       </form>

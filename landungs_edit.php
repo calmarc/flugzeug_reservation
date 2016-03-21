@@ -5,17 +5,24 @@ ini_set('display_errors',1);
 ini_set('html_errors', 1);
 
 include_once ('includes/db_connect.php');
+include_once ('includes/user_functions.php');
+include_once ('includes/html_functions.php');
 include_once ('includes/functions.php');
 
 sec_session_start();
+
+//============================================================================
+// Berechtigungen pruefen
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
 // admin oder benuetzer.. wird unten kontrolliert im .inc.php), weil die zaehler_id zuert
 // kontrolliert werden muss.
-
 include_once('landungs_edit.inc.php');
+
+//============================================================================
+// HTML
 
 print_html_to_body('Landungs-Eintrag editieren', '');
 include_once('includes/usermenu.php');
@@ -26,19 +33,13 @@ include_once('includes/usermenu.php');
     <h1>Flug-Eintrag editieren</h1>
 <?php
 
-// print errormessage
+// print error (>59 die digits)
 if (isset($error_msg) && $error_msg != "")
   echo "<p><b style='color: red;'>$error_msg</b></p>";
 
-// wurde zwar im .inc schon abgefragt zur id-kontrolle.. aber naja..
+// Zaehler_eintrage daten hohlen und als default nehmen
 $query = "SELECT * FROM `zaehler_eintraege` WHERE `id` = '{$zaehler_id}' LIMIT 1;";
 $res = $mysqli->query($query);
-
-if ($res->num_rows != 1)
-{
-  header("Location: /reservationen/landungs_eintrag.php?flieger_id={$flieger_id}");
-  exit;
-}
 $obj = $res->fetch_object();
 
 $min = intval($obj->zaehler_minute) % 60;
@@ -47,15 +48,7 @@ $zaehler_eintrag = $std.'.'.str_pad($min, 2, "0", STR_PAD_LEFT);
 
 list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
 
-$res2 = $mysqli->query("SELECT * FROM `piloten` WHERE `id` = {$obj->user_id};");
-
-$pilot_id = $pilot_name = "unknown";
-if ($res2->num_rows > 0)
-{
-  $obj2 = $res2->fetch_object();
-  $pilot_id = str_pad($obj2->pilot_id, 3, "0", STR_PAD_LEFT);
-  $pilot_name = $obj2->name;
-}
+list($pilot_id_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $obj->user_id);
 
 $zaehler_umdrehungen = $obj->zaehler_umdrehungen;
 
@@ -67,7 +60,7 @@ $zaehler_umdrehungen = $obj->zaehler_umdrehungen;
           <table class='vtable two_standard'>
             <tr class="trblank">
               <td><b>Pilot</b></td>
-              <td><b>[<?php echo $pilot_id.'] '.$pilot_name; ?></b></td>
+              <td><b>[<?php echo $pilot_id_pad.'] '.$pilot_name; ?></b></td>
             </tr>
             <tr class="trblank">
               <td><b>Flieger</b></td>

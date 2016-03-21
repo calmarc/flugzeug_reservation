@@ -5,6 +5,8 @@ ini_set('display_errors',1);
 ini_set('html_errors', 1);
 
 include_once ('includes/db_connect.php');
+include_once ('includes/user_functions.php');
+include_once ('includes/html_functions.php');
 include_once ('includes/functions.php');
 
 sec_session_start();
@@ -16,11 +18,9 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
 if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
-//----------------------------------------------------------------------------
 
 //============================================================================
 // loeschen form wurde gedrueckt
-
 include_once ('diverses_edit.inc.php');
 
 print_html_to_body('Piloten editieren - Administration', '');

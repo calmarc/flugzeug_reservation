@@ -9,17 +9,17 @@ if (isset($_POST['user_id']))
 
 if (isset($_POST['submit']))
 {
-  $flieger_id = ""; if (isset($_POST['flieger_id'])) $flieger_id = $_POST['flieger_id'];
-  $von_tag = ""; if (isset($_POST['von_tag'])) $von_tag = $_POST['von_tag'];
-  $von_monat = ""; if (isset($_POST['von_monat'])) $von_monat = $_POST['von_monat'];
-  $von_jahr = ""; if (isset($_POST['von_jahr'])) $von_jahr = $_POST['von_jahr'];
-  $von_stunde = ""; if (isset($_POST['von_stunde'])) $von_stunde = $_POST['von_stunde'];
-  $von_minuten = ""; if (isset($_POST['von_minuten'])) $von_minuten = $_POST['von_minuten'];
-  $bis_tag = ""; if (isset($_POST['bis_tag'])) $bis_tag = $_POST['bis_tag'];
-  $bis_monat = ""; if (isset($_POST['bis_monat'])) $bis_monat = $_POST['bis_monat'];
-  $bis_jahr = ""; if (isset($_POST['bis_jahr'])) $bis_jahr = $_POST['bis_jahr'];
-  $bis_stunde = ""; if (isset($_POST['bis_stunde'])) $bis_stunde = $_POST['bis_stunde'];
-  $bis_minuten = ""; if (isset($_POST['bis_minuten'])) $bis_minuten = $_POST['bis_minuten'];
+  $flieger_id = $_POST['flieger_id'];
+  $von_tag = $_POST['von_tag'];
+  $von_monat = $_POST['von_monat'];
+  $von_jahr = $_POST['von_jahr'];
+  $von_stunde = $_POST['von_stunde'];
+  $von_minuten = $_POST['von_minuten'];
+  $bis_tag = $_POST['bis_tag'];
+  $bis_monat = $_POST['bis_monat'];
+  $bis_jahr = $_POST['bis_jahr'];
+  $bis_stunde = $_POST['bis_stunde'];
+  $bis_minuten = $_POST['bis_minuten'];
 
   $_SESSION['flieger_id']  = $flieger_id;
   $_SESSION['von_tag']  = $von_tag;
@@ -42,41 +42,49 @@ if (isset($_POST['submit']))
   $bis_stunde = str_pad($bis_stunde, 2, "0", STR_PAD_LEFT);
   $bis_minuten = str_pad($bis_minuten, 2, "0", STR_PAD_LEFT);
 
-  $von_date = "$von_jahr-$von_monat-$von_tag $von_stunde:$von_minuten";
-  $bis_date = "$bis_jahr-$bis_monat-$bis_tag $bis_stunde:$bis_minuten";
+  $von_date = "$von_jahr-$von_monat-$von_tag $von_stunde:$von_minuten:00";
+  $bis_date = "$bis_jahr-$bis_monat-$bis_tag $bis_stunde:$bis_minuten:00";
 
-  $vonstamp = strtotime($von_date);
-  $bisstamp = strtotime($bis_date);
+  date_default_timezone_set("Europe/Zurich");
+  $local_datetime = date("Y-m-d H:i:s", time());
+  date_default_timezone_set("UTC");
 
   // TODO: check values...
+  // TODO: check values...
+  // TODO: check values...
+  // ie. 8-12 .. 7-9 works..? 8today 10tommoro 12today-7tommoro works?
+  // TODO: check values...
+  // TODO: check values...
+  // fair.
+  $cur_stamp = time(); // wird einige male gebraucht
+  
   $error_msg = "";
-  if ($bisstamp <= $vonstamp)
+  if ($bis_date <= $von_date)
     $error_msg .= "'Von' Zeit nicht grösser als 'bis' Zeit.<br />";
 
   if ($bis_stunde == "21" && $bis_minuten == "30")
     $error_msg .= "21:30 liegt ausserhalb der Grenzen. Es kann nur bis 21:00 reserviert werden.<br />";
 
-  if ($vonstamp <= $curstamp)
+  if ($von_date <= $local_datetime)
     $error_msg .= "Die Reservierung liegt in der Vergangenheit.<br /><br />Es wurde keine Reservierung gebucht!<br />";
 
   if (intval($bis_stunde) == 7 && intval($bis_minuten) == 0)
     $error_msg .= "Auf 7:00 Uhr kann man nicht reservieren.<br />Bitte stattdessen auf den Vortag 21:00 Uhr buchen!<br />";
 
   // CHECK LEVEL of standby
-
   remove_zombies($mysqli);
 
   $level = check_level($mysqli, $flieger_id, $von_date, $bis_date) - 1;
   if ($level >= 3)
     $error_msg .= "Es hat bereits zuviele Standby's [$level] in diesem Zeitraum.<br /><br />Es wurde keine Reservierung gebucht!<br />";
 
-  if ($error_msg == ""){
-
+  if ($error_msg == "")
+  {
+    // CURRENT_TIMESTAMP =  Zurich = server-local seems to
     $query = "INSERT INTO `mfgcadmin_reservationen`.`reservationen`
       ( `id` , `timestamp` , `user_id` , `flieger_id` , `von` , `bis`) VALUES
-      ( NULL , CURRENT_TIMESTAMP , '{$user_id}', '{$flieger_id}', FROM_UNIXTIME({$vonstamp}), FROM_UNIXTIME({$bisstamp}));";
-
-    $mysqli->query($query);
+      ( NULL , CURRENT_TIMESTAMP , ?, ?, ?, ?);";
+    mysqli_prepare_execute ($mysqli, $query, 'iiss', array ($user_id, $flieger_id,$von_date, $bis_date)); 
 
     if (isset($_SESSION['plan']) && $_SESSION['plan'] == 'monatsplan')
       header("Location: index.php?show=monatsplan&tag={$von_tag}&monat={$von_monat}&jahr={$von_jahr}");

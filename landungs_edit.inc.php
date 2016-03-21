@@ -1,9 +1,14 @@
 <?php
 
-$flieger = "0";
+
+//============================================================================
+// falls vom 'flug eintragen' edit link
+// damit man beim gleichen flieger bleibt (evt in session tun lieber?)
+
 if (isset($_GET['flieger_id']))
   $flieger_id = intval($_GET['flieger_id']);
 
+// edit oder loeschen wurde gedrueckt
 if (isset($_POST['flieger_id']))
   $flieger_id = intval($_POST['flieger_id']);
 
@@ -19,7 +24,6 @@ if ($res->num_rows != 1)
 }
 //flieger_id ist OK
 
-$zaehler_id = "0";
 if (isset($_GET['zaehler_id']))
   $zaehler_id = intval($_GET['zaehler_id']);
 
@@ -32,12 +36,16 @@ if ($res2->num_rows != 1)
 {
   header('Location: /reservationen/index.php');
 }
+//zaehler_id ist auch ok. (eigentlich mit flieger kombinieren? Egal)
 $obj2 = $res2->fetch_object();
+$eintrag_user_id = $obj2->user_id;
+
+// admin_bol setzen und zusaetzlich das oder user_id muss mit eintrag entsprechen
 
 $admin_bol = TRUE;
 if (!check_admin($mysqli))
 {
-  if (intval($obj2->user_id) != intval($_SESSION['user_id']))
+  if (intval($eintrag_user_id) != intval($_SESSION['user_id']))
   {
     header('Location: /reservationen/index.php');
     exit;
@@ -46,23 +54,32 @@ if (!check_admin($mysqli))
 }
 //zaehler_id ist OK (gehoert Piloten oder Admin)
 
+//============================================================================
+// Loeschen wurde gedrueckt
+
 if (isset($_POST['loeschen']))
 {
   $query = "DELETE FROM `mfgcadmin_reservationen`.`zaehler_eintraege` WHERE `zaehler_eintraege`.`id` = ?";
   mysqli_prepare_execute($mysqli, $query, 'i', array ($zaehler_id));
 
   list($pilot_id_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
-  write_status_message($mysqli, "[Landungs-Eintrag]", "Gelöscht: durch [{$pilot_id_pad}] {$pilot_name}");
+  list($pilot_id_pad2, $pilot_name2) = get_pilot_from_user_id($mysqli, $eintrag_user_id);
+  write_status_message($mysqli, "[Landungs-Eintrag]", "Gelöscht: durch [{$pilot_id_pad}] {$pilot_name}: von {$pilot_id_pad2}");
 
   header("Location: landungs_eintrag.php?flieger_id=$flieger_id");
   exit;
 }
+
+//============================================================================
+// Neue Daten aktualieren und auf landungs_eintrag gehen.
+
 else if (isset($_POST['edit']))
 {
-  $tag = ""; if (isset($_POST['tag'])) $tag = intval($_POST['tag']);
-  $monat = ""; if (isset($_POST['monat'])) $monat = intval($_POST['monat']);
-  $jahr = ""; if (isset($_POST['jahr'])) $jahr = intval($_POST['jahr']);
-  $zaehlerstand = ""; if (isset($_POST['zaehlerstand'])) $zaehlerstand = $_POST['zaehlerstand'];
+  $tag = intval($_POST['tag']);
+  $monat = intval($_POST['monat']);
+  $jahr = intval($_POST['jahr']);
+  $zaehlerstand = $_POST['zaehlerstand'];
+  // IST nicht immer der Fall! nur bei der tecnam
   $zaehler_umdrehungen = 0; if (isset($_POST['zaehler_umdrehungen'])) $zaehler_umdrehungen = intval($_POST['zaehler_umdrehungen']);
 
   $zaehler_minute = intval($zaehlerstand) * 60;
@@ -81,7 +98,8 @@ else if (isset($_POST['edit']))
     mysqli_prepare_execute($mysqli, $query, 'siii', array ($datum, $zaehler_minute, $zaehler_umdrehungen, $zaehler_id));
 
     list($pilot_id_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
-    write_status_message($mysqli, "[Landungs-Eintrag]", "Editiert: durch [{$pilot_id_pad}] {$pilot_name}");
+    list($pilot_id_pad2, $pilot_name2) = get_pilot_from_user_id($mysqli, $eintrag_user_id);
+    write_status_message($mysqli, "[Landungs-Eintrag]", "Editiert: durch [{$pilot_id_pad}] {$pilot_name}: von {$pilot_id_pad2}");
 
     header("Location: landungs_eintrag.php?flieger_id={$flieger_id}");
     exit;

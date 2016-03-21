@@ -1,15 +1,27 @@
 <?php
 
+//============================================================================
+// spezielle funtion: nimmt aus GET or heute
+
 function get_date(){
 
-  //date_default_timezone_set("Europe/Berlin");
-  //TODO....
-  //setlocale(LC_ALL, 'de_DE');
+  date_default_timezone_set("Europe/Berlin");
 
   // default = today month/year else.. $_GET()
-  if (isset($_GET["tag"])) $tag = intval($_GET["tag"]); else $tag = intval(date("j"));
-  if (isset($_GET["monat"])) $monat = intval($_GET["monat"]); else $monat = intval(date("n"));
-  if (isset($_GET["jahr"])) $jahr = intval($_GET["jahr"]); else $jahr = intval(date("Y"));
+  // $_GET is a superglobal - available everywhere
+  
+  if (isset($_GET["tag"])) 
+    $tag = intval($_GET["tag"]); 
+  else 
+    $tag = intval(date("j"));
+  if (isset($_GET["monat"])) 
+    $monat = intval($_GET["monat"]); 
+  else 
+    $monat = intval(date("n"));
+  if (isset($_GET["jahr"])) 
+    $jahr = intval($_GET["jahr"]); 
+  else 
+    $jahr = intval(date("Y"));
 
   if ($jahr < 2010 || $jahr > intval(date("Y")+2))
   {
@@ -32,7 +44,9 @@ function get_date(){
 }
 
 
-/* draws a calendar */
+//============================================================================
+// draws a calendar
+
 function draw_calendar($day, $month,$year){
 
   date_default_timezone_set("Europe/Zurich");

@@ -1,6 +1,12 @@
 <?php
 
+error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors',1);
+ini_set('html_errors', 1);
+
 include_once ('includes/db_connect.php');
+include_once ('includes/user_functions.php');
+include_once ('includes/html_functions.php');
 include_once ('includes/functions.php');
 
 sec_session_start();
@@ -23,7 +29,7 @@ if ($_SESSION['res_sort_pilot'] != "")
 $t_old = $_SESSION['res_sort_by'];
 if (isset($_GET['sort']) && $_GET['sort'] != '') $_SESSION['res_sort_by'] = $_GET['sort'];
 
-if ($t_old == $_GET['sort']) // glieche kolumne gedruckt - also dir wechsel
+if (isset($_GET['sort']) && $t_old == $_GET['sort']) // glieche kolumne gedruckt - also dir wechsel
   if ($_SESSION['res_sort_dir'] == "ASC")
       $_SESSION['res_sort_dir'] = "DESC";
   else
@@ -105,7 +111,6 @@ while ($obj = $res->fetch_object())
             <th><a href="res_momentan.php?sort=flieger"><b>Flieger</b></a></th>
             <th><a href="res_momentan.php?sort=von"><b>Datum</b></a></th>
           </tr>
-
 <?php
 
 $query = " SELECT
@@ -124,19 +129,13 @@ $res = $mysqli->query($query);
 
 while ($obj = $res->fetch_object())
 {
-
-  $gel_datum = $obj->timestamp;
+  $stamp_datum = $obj->timestamp;
   list( $tag, $zeit) = explode(" ", $obj->timestamp);
   $tmp = explode("-", $tag);
-  $gel_datum = $tmp[2].'.'.$tmp[1].'.'.$tmp[0];
-
-  if ($obj->loescher_id == $obj->pilot)
-    $loescher_id = "<span style='color: #999999'>".$obj->loescher_id."</span>";
-  else
-    $loescher_id = $obj->loescher_id;
+  $stamp_datum = $tmp[2].'.'.$tmp[1].'.'.$tmp[0];
 
   echo "\n<tr>
-           <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>{$gel_datum}</td>
+           <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>{$stamp_datum}</td>
            <td>[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
            <td>{$obj->flieger}</td>
            <td>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>

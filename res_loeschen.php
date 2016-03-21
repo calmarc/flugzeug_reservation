@@ -5,6 +5,9 @@ ini_set('display_errors',1);
 ini_set('html_errors', 1);
 
 include_once ('includes/db_connect.php');
+include_once ('includes/user_functions.php');
+include_once ('includes/html_functions.php');
+include_once ('includes/reservations_functions.php');
 include_once ('includes/functions.php');
 include_once ('includes/send_sms.php');
 

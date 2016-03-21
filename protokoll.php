@@ -5,33 +5,20 @@ ini_set('display_errors',1);
 ini_set('html_errors', 1);
 
 include_once ('includes/db_connect.php');
+include_once ('includes/user_functions.php');
+include_once ('includes/html_functions.php');
 include_once ('includes/functions.php');
 
 sec_session_start();
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
+if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
-if (isset($_GET['loeschen']) && $_GET['loeschen'] != 9876543210)
-{
-  if ($_GET['loeschen'] == "loggings")
-  {
-    $query = "DELETE FROM `status_meldungen`  WHERE `status_meldungen`.`aktion` = ? OR `status_meldungen`.`aktion` = ?;";
-    mysqli_prepare_execute($mysqli, $query, 'ss', array("[Eingeloggt]", "[Ausgeloggt]"));
-  }
-  else
-  {
-    $time_stamp = time();
-    $time_stamp = $time_stamp - intval($_GET['loeschen']) * 60 * 60 * 24; // tage
+///////////////////////////////////////////////////////////////////////////
+//  GET loeschen machen
 
-    date_default_timezone_set("Europe/Zurich");
-    $now_string = date("Y-m-d H:i:s", $time_stamp);
-    date_default_timezone_set('UTC');
-
-    $query = "DELETE FROM `status_meldungen`  WHERE `status_meldungen`.`timestamp` < ?";
-    mysqli_prepare_execute($mysqli, $query, 's', array($now_string));
-  }
-}
+include_once ('protokoll.inc.php');
 
 print_html_to_body('Log Daten', '');
 include_once('includes/usermenu.php');
@@ -73,7 +60,7 @@ $res = $mysqli->query($query);
 while ($obj = $res->fetch_object())
 {
 
-  // to LOKAL zeit.. TODO funktion?
+  // to LOKAL zeit.. TODO funktion machen von dem - wo noch?
   $lokal_datum = $obj->timestamp;
   list( $tag, $zeit) = explode(" ", $obj->timestamp);
   $tmp = explode("-", $tag);
@@ -82,6 +69,11 @@ while ($obj = $res->fetch_object())
 
   $action = $obj->aktion;
   $data = $obj->data;
+
+
+  //============================================================================
+  // nach @@...@@ string gucken (die trackingnummer)
+  // entsprechend dem resultat, ausgeben oder string ersetzen (UPDATE...)
 
   if ($action == "[SMS]")
   {

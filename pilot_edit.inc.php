@@ -1,18 +1,18 @@
 <?php
 
+//============================================================================
+// Loeschen gedruckt
+
 if (isset($_POST['loeschen']))
 {
   $user_id = $_POST['user_id'];
-  $query = "SELECT * FROM `piloten` WHERE `id` = '{$user_id}';";
-  $res = $mysqli->query($query);
-  $obj = $res->fetch_object();
-  $name = $obj->name;
-  $pilot_id_pad = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT);
 
   $query = "DELETE FROM `mfgcadmin_reservationen`.`piloten` WHERE `piloten`.`id` = ?;";
   mysqli_prepare_execute($mysqli, $query, 'i', array ($user_id));
   $query = "DELETE FROM `mfgcadmin_reservationen`.`reservationen` WHERE `reservationen`.`user_id` = ?;";
   mysqli_prepare_execute ($mysqli, $query, 'i', array ($user_id));
+
+  list($pilot_id_pad, $name) = get_pilot_from_user_id($mysqli, $user_id);
   write_status_message ($mysqli, "[Pilot gelöscht]", "[{$pilot_id_pad}] $name");
 
   // man hat sich selber geloesch.. delete $_SESSION (ausloggen)
@@ -25,13 +25,13 @@ if (isset($_POST['loeschen']))
   header("Location: pilot_admin.php");
   exit;
 }
-//----------------------------------------------------------------------------
+
 //============================================================================
 // Daten der Piloten updaten
 
 if (isset($_POST['updaten']))
 {
-  $id = intval($_POST['id']);
+  $user_id = intval($_POST['user_id']);
   $pilot_id = intval($_POST['pilot_id']);
   $name = trim($_POST['name']);
   $natel = trim($_POST['natel']);
@@ -66,7 +66,7 @@ if (isset($_POST['updaten']))
   else
     $checkflug = "0000-00-00";
 
-  $res = $mysqli->query("SELECT * FROM `piloten` WHERE `piloten`.`id` = {$id} LIMIT 1;");
+  $res = $mysqli->query("SELECT * FROM `piloten` WHERE `piloten`.`id` = {$user_id} LIMIT 1;");
   $obj = $res->fetch_object();
 
   date_default_timezone_set("Europe/Zurich");
@@ -75,12 +75,12 @@ if (isset($_POST['updaten']))
 
   // email scharf wenn noetig (weil wieder gut ist jetzt)
   if ($obj->email_gesch == TRUE && ($checkflug > $date_t || $checkflug == "0000-00-00"))
-    mysqli_prepare_execute($mysqli, "UPDATE `mfgcadmin_reservationen`.`piloten` SET `email_gesch` = '0' WHERE `piloten`.`id` = ?;", 'i', array ($id));
+    mysqli_prepare_execute($mysqli, "UPDATE `mfgcadmin_reservationen`.`piloten` SET `email_gesch` = '0' WHERE `piloten`.`id` = ?;", 'i', array ($user_id));
 
   // passwort mit salt.. generieren.. und eintragen
   if ($password != "")
   {
-    $query= "SELECT `salt` FROM `piloten` WHERE `id` = {$id} LIMIT 1;";
+    $query= "SELECT `salt` FROM `piloten` WHERE `id` = {$user_id} LIMIT 1;";
     $res = $mysqli->query($query);
     $obj = $res->fetch_object();
 
@@ -88,12 +88,12 @@ if (isset($_POST['updaten']))
     $password = hash('sha512', $password . $obj->salt);
 
     $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ?; ";
-    mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $id));
+    mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $user_id));
   }
 
-  // UPDATE USER DATA
+  // UPDATE user data
   $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `pilot_id` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ?, `checkflug` = ?, `gesperrt` = ? WHERE `piloten`.`id` = ?; ";
-  mysqli_prepare_execute($mysqli, $query, 'isissssii', array ($pilot_id, $email, $admin_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $id));
+  mysqli_prepare_execute($mysqli, $query, 'isissssii', array ($pilot_id, $email, $admin_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $user_id));
 
   header("Location: pilot_admin.php");
   exit;

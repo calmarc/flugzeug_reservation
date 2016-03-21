@@ -10,43 +10,11 @@ sec_session_start();
 
 if (login_check($mysqli) == FALSE){ header("Location: /reservationen/login/index.php"); exit; }
 
-$id = $_SESSION['user_id'];
+//============================================================================
+// Neues passwort verarbeiten (submit)
 
+include_once('pass_change.inc.php');
 
-if (isset($_POST['submit']))
-{
-  $password = ""; if (isset($_POST['password'])) $password = trim($_POST['password']);
-  $changepwd = ""; if (isset($_POST['changepwd'])) $changepwd = trim($_POST['changepwd']);
-
-  $error_msg = "";
-
-  if ($password == "")
-    $error_msg .= "<p>Bitte ein Passwort eingeben</p>";
-
-  if (strlen($password) < 4)
-    $error_msg .= "<p>Muss mind. 4 Zeichen lang sein</p>";
-
-  if ($changepwd == "")
-    $error_msg .= "<p>Bitte das Passwort bestätigen</p>";
-  else if ($password != $changepwd)
-    $error_msg .= "<p>Passwörter stimmen nicht überrein</p>";
-
-  // OK, eintragen
-  if ($error_msg == "")
-  {
-
-    $query= "SELECT `salt` FROM `piloten` WHERE `id` = {$id};";
-    $res = $mysqli->query($query);
-    $obj = $res->fetch_object();
-
-    $password = hash('sha512', $password);
-    $password = hash('sha512', $password . $obj->salt);
-
-    $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ? ;";
-    if (mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $id)))
-      $msg = "<p style='color: green;'>Das Passwort wurde geändert</p>";
-  }
-}
 
 print_html_to_body('Passwort ändern', '');
 include_once('includes/usermenu.php');
@@ -60,14 +28,14 @@ include_once('includes/usermenu.php');
   <?php
   if (!empty($error_msg))
     echo "<b style='color: red;'>$error_msg</b>";
-  else if (isset($msg))
+  else if (isset($geandert_msg))
   {
     // logout (delete session)
     $_SESSION = array();
     $params = session_get_cookie_params();
     setcookie(session_name(),'', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
     session_destroy();
-    echo "<b style='color: green;'>$msg</b>";
+    echo "<b style='color: green;'>$geandert_msg</b>";
     echo "<p>Bitte neu <a href='login/index.php'>einloggen</a></p>";
     echo '</div></main></body></html>';
     exit;

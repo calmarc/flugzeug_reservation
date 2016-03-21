@@ -5,12 +5,12 @@ ini_set('display_errors',1);
 ini_set('html_errors', 1);
 
 include_once ('includes/db_connect.php');
+include_once ('includes/user_functions.php');
+include_once ('includes/html_functions.php');
+include_once ('includes/reservations_functions.php');
 include_once ('includes/functions.php');
 
 sec_session_start();
-
-// TODO ? muss zurich sein..
-$curstamp = time(); // wird einige male gebraucht
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
