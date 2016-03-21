@@ -166,7 +166,7 @@ if ($res = $mysqli->query($query))
       // admin + die letzten 2 zum edditieren fuer benutzer
       if (check_admin($mysqli) || ($_SESSION['user_id'] == $user_id && $edit_c < 2))
       {
-        $edit_link = "<a href='landungs_edit.php?action=edit&amp;zaehler_id={$eintrags_id}&amp;flieger_id={$flieger_id}'><img alt='edit' src='bilder/edit.png' /></a>";
+        $edit_link = "<a href='landungs_edit.php?action=edit&amp;zaehler_id={$eintrags_id}&amp;flieger_id={$flieger_id}'>[edit]</a>";
         $edit_c++;
       }
 

@@ -127,7 +127,7 @@ while ($obj = $res->fetch_object())
   $service_id = $obj->id;
   $user_id = $obj->user_id;
 
-  $edit_link = '<a onclick="return confirm(\'Service-Eintrag wirklich löschen?\')" href="service_edit.php?action=del&amp;service_id='.$service_id.'&amp;flieger_id='.$flieger_id.'"><img src="/reservationen/bilder/delete.png" alt="loeschen" /></a>';
+  $edit_link = '<a onclick="return confirm(\'Service-Eintrag wirklich löschen?\')" href="service_edit.php?action=del&amp;service_id='.$service_id.'&amp;flieger_id='.$flieger_id.'">[löschen]</a>';
 
   echo " <tr>
           <td>{$edit_link}</td>
