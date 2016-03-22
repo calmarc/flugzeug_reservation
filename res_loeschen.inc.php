@@ -7,7 +7,7 @@ $monat = ""; if (isset($_GET['monat'])) $monat = $_GET['monat'];
 $jahr = ""; if (isset($_GET['jahr'])) $jahr = $_GET['jahr'];
 $reservierung = ""; if (isset($_GET['reservierung'])) $reservierung = $_GET['reservierung'];
 $backto = ""; if (isset($_GET['backto'])) $backto = $_GET['backto'];
-$flieger_id = ""; if (isset($_GET['flieger_id'])) $flieger_id = $_GET['flieger_id'];
+$flugzeug_id = ""; if (isset($_GET['flugzeug_id'])) $flugzeug_id = $_GET['flugzeug_id'];
 
 // sonst .. brauchts auch wenn man vom submit kommt
 
@@ -55,12 +55,12 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
   //============================================================================
   // preparationen (falls eingabe-fehler kommt nachher.. etwas ueberschuss diese get_vali_reserv.. anu
 
-  $res = $mysqli->query("SELECT `flieger_id` from `reservationen` WHERE `id` = {$_POST['reservierung']};");
+  $res = $mysqli->query("SELECT `flugzeug_id` from `reservationen` WHERE `id` = {$_POST['reservierung']};");
   $obj = $res->fetch_object();
-  $flieger_id = $obj->flieger_id;
+  $flugzeug_id = $obj->flugzeug_id;
 
   // vor den loeschungen die aktiven vor-speichern (differenz...-> neu aktiv)
-  $valid_0_pre = get_valid_reserv($mysqli, $flieger_id);
+  $valid_0_pre = get_valid_reserv($mysqli, $flugzeug_id);
   // beim splitten (zwischendrin) wird da die neue reservation gespeichert
   // damit man da keine sms sendet daraufhin.
   $not_new_no_notification = "";
@@ -164,7 +164,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
         $datum = mysql2chtimef ($loeschen_datum_von, $loeschen_datum_bis, FALSE);
         write_status_message($mysqli, "[Reservation]", "Gelöscht: durch [{$pilot_nr_pad}] $name: $datum ");
 
-        bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flieger_id,
+        bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flugzeug_id,
                             mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
       }
       // Anfang kuerzen
@@ -196,10 +196,10 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
       {
         // eintrag 'fast-clonen' (inklusive timestamp - ohne ID und mit neuem bis
         $query = "INSERT INTO `mfgcadmin_reservationen`.`reservationen` (
-        `id` , `timestamp` , `user_id` , `flieger_id` , `von` , `bis`)
+        `id` , `timestamp` , `user_id` , `flugzeug_id` , `von` , `bis`)
         VALUES (NULL ,? ,? ,? ,? ,?);";
 
-        mysqli_prepare_execute($mysqli, $query, 'siiss', array ($obj->timestamp, $obj->user_id, $obj->flieger_id, $loeschen_datum_bis, $obj->bis));
+        mysqli_prepare_execute($mysqli, $query, 'siiss', array ($obj->timestamp, $obj->user_id, $obj->flugzeug_id, $loeschen_datum_bis, $obj->bis));
 
         // update the initial one (bis ... to loeschen_von..)
         $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
@@ -229,7 +229,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
       $datum = mysql2chtimef ($obj->von, $obj->bis, FALSE);
       write_status_message($mysqli, "[Reservation]", "Gelöscht: durch [{$pilot_nr_pad}] $name: $datum ");
 
-      bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flieger_id,
+      bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flugzeug_id,
                           mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
     }
 
@@ -287,7 +287,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
     //============================================================================
     // Eventuell standy jetzt gueltig - sms + email senden.
 
-    $valid_0_after = get_valid_reserv($mysqli, $flieger_id);
+    $valid_0_after = get_valid_reserv($mysqli, $flugzeug_id);
 
     $new_0 = array_diff($valid_0_after, $valid_0_pre);
     if (count($new_0) > 0)
@@ -312,17 +312,17 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
           $res_datum_raw = mysql2chtimef($obj3->von, $obj3->bis, TRUE);
           $res_datum = mysql2chtimef($obj3->von, $obj3->bis, FALSE);
 
-          // TODO get_flieger_from_id() ?
-          $res4 = $mysqli->query("SELECT * FROM `flieger` WHERE `id` = {$obj3->flieger_id} ;");
+          // TODO get_flugzeug_from_id() ?
+          $res4 = $mysqli->query("SELECT * FROM `flugzeug` WHERE `id` = {$obj3->flugzeug_id} ;");
           $obj4 = $res4->fetch_object();
-          $flieger = $obj4->flieger;
+          $flugzeug = $obj4->flugzeug;
 
           $headers   = array();
           $headers[] = "MIME-Version: 1.0";
           $headers[] = "Content-type: text/plain; charset=utf-8";
           $headers[] = "From: noreply@mfgc.ch";
 
-          $txt = "Deine Reservation:\n\nPilot: {$pilot}\nFlugzeug: {$flieger}\nDatum: {$res_datum_raw}\n\nwurde aktiviert!";
+          $txt = "Deine Reservation:\n\nPilot: {$pilot}\nFlugzeug: {$flugzeug}\nDatum: {$res_datum_raw}\n\nwurde aktiviert!";
 
           $pilot_nr_pad = str_pad($obj3->pilot_nr, 3, "0", STR_PAD_LEFT);
 

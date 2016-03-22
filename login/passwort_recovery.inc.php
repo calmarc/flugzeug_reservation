@@ -9,8 +9,8 @@ if (isset($_GET['secret_string'], $_GET['email']))
 {
 
   $verifiziert = FALSE;
-  $pilot_id = intval($_GET['pilot_id']);
-  $query = "SELECT * FROM `password_recovery` WHERE `email` = '{$_GET['email']}' AND `secret_string` = '{$_GET['secret_string']}' AND `pilot_id` = {$pilot_id} LIMIT 1;";
+  $pilot_nr = intval($_GET['pilot_nr']);
+  $query = "SELECT * FROM `password_recovery` WHERE `email` = '{$_GET['email']}' AND `secret_string` = '{$_GET['secret_string']}' AND `pilot_nr` = {$pilot_nr} LIMIT 1;";
   $res = $mysqli->query($query); 
   if ($res->num_rows == 1)
     $verifiziert = TRUE;
@@ -18,7 +18,7 @@ if (isset($_GET['secret_string'], $_GET['email']))
   // OK, it's the user with the email here - now check if that combo actually exists
   if ($verifiziert)
   {
-    $query = "SELECT `id` FROM `piloten` WHERE `email` = '{$_GET['email']}' AND `pilot_id` = {$pilot_id} LIMIT 1;";
+    $query = "SELECT `id` FROM `piloten` WHERE `email` = '{$_GET['email']}' AND `pilot_nr` = {$pilot_nr} LIMIT 1;";
     $res = $mysqli->query($query); 
     if ($res->num_rows != 1)
       $verifiziert = FALSE;
@@ -34,8 +34,8 @@ if (isset($_GET['secret_string'], $_GET['email']))
     include_once('../includes/usermenu.php');
     echo "<main><div class='center'><h1>Wiederherstellungs-Fehler</h1><p><b>{$error_msg}</b></p></div></main>
           </body> </html>";
-    $pilot_id_pad = str_pad($pilot_id, 3, "0", STR_PAD_LEFT);
-    write_status_message($mysqli, "[Passwort recovery]", "Fehlgeschlagen: [{$pilot_id_pad}]; {$_GET['email']}");
+    $pilot_nr_pad = str_pad($pilot_nr, 3, "0", STR_PAD_LEFT);
+    write_status_message($mysqli, "[Passwort recovery]", "Fehlgeschlagen: [{$pilot_nr_pad}]; {$_GET['email']}");
     exit;
   }
   $obj = $res->fetch_object();
@@ -81,8 +81,8 @@ if (isset($_POST['submit']))
     $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ? ;";
     if (mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $id)))
       $msg = "<p style='color: green;'>Das Passwort wurde geändert</p>";
-    list ($pilot_id_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $id); 
-    write_status_message($mysqli, "[Passwort recovery]", "Erfolgreich: [{$pilot_id_pad}] {$pilot_name}");
+    list ($pilot_nr_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $id); 
+    write_status_message($mysqli, "[Passwort recovery]", "Erfolgreich: [{$pilot_nr_pad}] {$pilot_name}");
   }
 }
 

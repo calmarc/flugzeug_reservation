@@ -16,7 +16,7 @@
 //   :requirements:
 //   von .. und bis (letztes bis)range ermitteln relvanter buchungen
 //
-//   a) flieger in dieser range drucken
+//   a) flugzeug in dieser range drucken
 //      .halbe stund bloecke ermitteln (in range)
 //      .die speichern wo gedruckt, fuer standbyes (bookings..)
 //      .gucken ob in die tabelle passt (>1ster_monat-block < +blocks im monat)
@@ -36,7 +36,7 @@
 //  MAIN BUCHUNG's DRAWING LOOOOOP
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function monatsplan_navigation($mysqli, $flieger_id, $jahr, $monat, $jahr, $monate, $tag)
+function monatsplan_navigation($mysqli, $flugzeug_id, $jahr, $monat, $jahr, $monate, $tag)
 {
   // Monatsnavigation
   $z_jahr = $jahr;
@@ -51,7 +51,7 @@ function monatsplan_navigation($mysqli, $flieger_id, $jahr, $monat, $jahr, $mona
   echo "<div class='center'>";
   echo "<table id='monat_title'><tr>";
   echo "<td style='padding-right: 20px;'>";
-  echo "<a href='/reservationen/index.php?flieger_id={$flieger_id}&amp;show=monat&amp;monat={$z_monat}&amp;jahr={$z_jahr}&amp;tag={$tag}'><span>&laquo;</span></a>";
+  echo "<a href='/reservationen/index.php?flugzeug_id={$flugzeug_id}&amp;show=monat&amp;monat={$z_monat}&amp;jahr={$z_jahr}&amp;tag={$tag}'><span>&laquo;</span></a>";
   echo "</td><td>";
   echo $monate[$monat-1];
   echo " $jahr";
@@ -62,18 +62,18 @@ function monatsplan_navigation($mysqli, $flieger_id, $jahr, $monat, $jahr, $mona
   echo "<input type='hidden' name='tag' value='{$tag}' />";
   echo "<input type='hidden' name='monat' value='{$monat}' />";
   echo "<input type='hidden' name='jahr' value='{$jahr}' />";
-  echo "<select size='1' style='width: 10em;' class='flieger_select' name='flieger_id'  onchange='this.form.submit()' >";
-  combobox_flieger($mysqli, $flieger_id);
+  echo "<select size='1' style='width: 10em;' class='flugzeug_select' name='flugzeug_id'  onchange='this.form.submit()' >";
+  combobox_flugzeug($mysqli, $flugzeug_id);
   echo "</select>";
   echo "</td><td style='padding-left: 20px;'>";
-  echo "<a href='/reservationen/index.php?flieger_id={$flieger_id}&amp;show=monat&amp;monat={$v_monat}&amp;jahr={$v_jahr}&amp;tag={$tag}'>&raquo;</a>";
+  echo "<a href='/reservationen/index.php?flugzeug_id={$flugzeug_id}&amp;show=monat&amp;monat={$v_monat}&amp;jahr={$v_jahr}&amp;tag={$tag}'>&raquo;</a>";
   echo "</td>";
   echo "</tr></table>";
   echo "</div>";
   echo "</form>";
 }
 
-function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $monat, $tabs, $w, $tag_v_offset)
+function print_buchungen_monat($mysqli, $flugzeug_id, $boxcol, $textcol, $jahr, $monat, $tabs, $w, $tag_v_offset)
 {
 
   // round up cur_time to half hour blocks um zu gucken ob nummer
@@ -107,7 +107,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
 
   // NUR ein halbes jahr zurueck gucken. hats ueberhaupt reservationen?
   // sonst Zeit markieren als $von_extrem
-  $query = "SELECT `von` FROM `reservationen` WHERE `flieger_id` = '$flieger_id' AND `von` > '$date_xmonth_back'  ORDER BY `von` ASC LIMIT 1;";
+  $query = "SELECT `von` FROM `reservationen` WHERE `flugzeug_id` = '$flugzeug_id' AND `von` > '$date_xmonth_back'  ORDER BY `von` ASC LIMIT 1;";
   if ($res = $mysqli->query($query))
   {
     if ($res->num_rows > 0)
@@ -121,7 +121,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
 
   // die max-zukunfstigste (bis)-datum gucken
   // zeit markieren ($bis_extrem)
-  $query = "SELECT `bis` FROM `reservationen` WHERE `flieger_id` = '$flieger_id' ORDER BY `bis` DESC LIMIT 1;";
+  $query = "SELECT `bis` FROM `reservationen` WHERE `flugzeug_id` = '$flugzeug_id' ORDER BY `bis` DESC LIMIT 1;";
   if ($res = $mysqli->query($query))
   {
     if ($res->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
@@ -150,7 +150,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
   $print_number_txt = ""; // at the end for highest z-index
 
   // alle hohlen
-  $query = "SELECT * FROM `reservationen` WHERE `flieger_id` = '$flieger_id' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
+  $query = "SELECT * FROM `reservationen` WHERE `flugzeug_id` = '$flugzeug_id' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
   $res_tang = $mysqli->query($query);
 
   // 1. order(ed) them by timestamp
@@ -319,7 +319,7 @@ function print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
+function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flugzeug_id)
 {
   $tag_v_offset = array();
 
@@ -410,7 +410,7 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
       if ($i % 2 == 0)
       {
         if ($color == 'gruen')
-          echo '<a xlink:href="res_neu.php?&amp;flieger_id='.$flieger_id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$day_counter.'&amp;stunde='.$t_std.'&amp;minute='.$t_min.'">';
+          echo '<a xlink:href="res_neu.php?&amp;flugzeug_id='.$flugzeug_id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$day_counter.'&amp;stunde='.$t_std.'&amp;minute='.$t_min.'">';
         echo '<rect x="'.$tabs[$i].'%" y="'.($yoffset).'" width="'.$w.'%" height="20" style="fill:url(#'.$color.'1); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
         if ($color == 'gruen')
           echo '</a>';
@@ -418,7 +418,7 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
       else
       {
         if ($color == 'gruen')
-          echo '<a xlink:href="res_neu.php?flieger_id='.$flieger_id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$day_counter.'&amp;stunde='.$t_std.'&amp;minute='.$t_min.'">';
+          echo '<a xlink:href="res_neu.php?flugzeug_id='.$flugzeug_id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$day_counter.'&amp;stunde='.$t_std.'&amp;minute='.$t_min.'">';
         echo '<rect x="'.$tabs[$i].'%" y="'.($yoffset).'" width="'.$w.'%" height="20" style="fill:url(#'.$color.'2); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
         if ($color == 'gruen')
           echo '</a>';
@@ -429,7 +429,7 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id)
   return $tag_v_offset;
 }
 
-function monatsansicht($mysqli, $w, $tabs, $boxcol, $textcol, $monat, $jahr, $flieger_id)
+function monatsansicht($mysqli, $w, $tabs, $boxcol, $textcol, $monat, $jahr, $flugzeug_id)
 {
 ?>
 
@@ -533,10 +533,10 @@ function monatsansicht($mysqli, $w, $tabs, $boxcol, $textcol, $monat, $jahr, $fl
 
   // print GREEN etc (lowest layer) stuff
 
-  $tag_v_offset = print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flieger_id);
+  $tag_v_offset = print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flugzeug_id);
 
   // TODO colors etc into defines? konstats etc?
-  print_buchungen_monat($mysqli, $flieger_id, $boxcol, $textcol, $jahr, $monat, $tabs, $w, $tag_v_offset);
+  print_buchungen_monat($mysqli, $flugzeug_id, $boxcol, $textcol, $jahr, $monat, $tabs, $w, $tag_v_offset);
 
   echo '</g></svg>';
 

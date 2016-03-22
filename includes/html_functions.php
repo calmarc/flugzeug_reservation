@@ -11,15 +11,15 @@ function print_options($default, $t_array)
   }
 }
 
-function combobox_flieger($mysqli, $default)
+function combobox_flugzeug($mysqli, $default)
 {
-  $res = $mysqli->query("SELECT * FROM `flieger`;");
+  $res = $mysqli->query("SELECT * FROM `flugzeug`;");
   while ($obj = $res->fetch_object())
   {
     if ($obj->id == $default)
-      echo "<option selected='selected' value='{$obj->id}'>{$obj->flieger}</option>";
+      echo "<option selected='selected' value='{$obj->id}'>{$obj->flugzeug}</option>";
     else
-      echo "<option value='{$obj->id}'>{$obj->flieger}</option>";
+      echo "<option value='{$obj->id}'>{$obj->flugzeug}</option>";
   }
 }
 

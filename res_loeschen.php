@@ -80,11 +80,11 @@ $query = "SELECT * FROM `reservationen`
 $res = $mysqli->query($query);
 $obj = $res->fetch_object();
 
-// todo: get_flieger_from_id
-$flugzeug = $obj->flieger_id;
-$res2 = $mysqli->query("SELECT `flieger` FROM `flieger` where `id` = {$flugzeug};");
+// todo: get_flugzeug_from_id
+$flugzeug = $obj->flugzeug_id;
+$res2 = $mysqli->query("SELECT `flugzeug` FROM `flugzeug` where `id` = {$flugzeug};");
 $obj2 = $res2->fetch_object();
-$flugzeug = $obj2->flieger;
+$flugzeug = $obj2->flugzeug;
 
 // infos ueber die buchugn ausgeben:
 ?>

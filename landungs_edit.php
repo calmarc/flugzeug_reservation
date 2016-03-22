@@ -55,7 +55,7 @@ $zaehler_umdrehungen = $obj->zaehler_umdrehungen;
 ?>
       <form action='landungs_edit.php' method='post'>
         <input type='hidden' name='zaehler_id' value='<?php echo $obj->id; ?>' />
-        <input type="hidden" name="flieger_id" value="<?php echo $flieger_id; ?>" />
+        <input type="hidden" name="flugzeug_id" value="<?php echo $flugzeug_id; ?>" />
         <div class='center'>
           <table class='vtable two_standard'>
             <tr class="trblank">
@@ -63,8 +63,8 @@ $zaehler_umdrehungen = $obj->zaehler_umdrehungen;
               <td><b>[<?php echo $pilot_nr_pad.'] '.$pilot_name; ?></b></td>
             </tr>
             <tr class="trblank">
-              <td><b>Flieger</b></td>
-              <td><b><?php echo $flieger_txt; ?></b></td>
+              <td><b>flugzeug</b></td>
+              <td><b><?php echo $flugzeug_txt; ?></b></td>
             </tr>
             <tr>
               <td><b>Datum:</b></td>
@@ -85,7 +85,7 @@ $zaehler_umdrehungen = $obj->zaehler_umdrehungen;
               <td><input value="<?php echo $zaehler_eintrag; ?>" name="zaehlerstand" style="width: 6em;" required="required" type="number" step="0.01" /></td>
             </tr>
 <?php
-if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flieger_id == 4)
+if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flugzeug_id == 4)
 {
       echo "<tr>
               <td><b>Motor-Zählerstand:</b></td>
@@ -102,7 +102,7 @@ if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flieger_id == 4)
 
       <form action='landungs_edit.php' method='post' onsubmit="return confirm('Eintrag wirklich löschen?');">
       <input type="hidden" name="zaehler_id" value="<?php echo $zaehler_id; ?>" />
-      <input type="hidden" name="flieger_id" value="<?php echo $flieger_id; ?>" />
+      <input type="hidden" name="flugzeug_id" value="<?php echo $flugzeug_id; ?>" />
         <div class="center">
           <p><input class="sub_loeschen" type='submit' name='loeschen' value='EINTRAG LÖSCHEN' /></p>
         </div>

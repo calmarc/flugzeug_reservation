@@ -1,14 +1,14 @@
 <?php
 
 //============================================================================
-// von der Chart-Uebersicht. flieger id checken etc.
+// von der Chart-Uebersicht. flugzeug id checken etc.
 // SESSION tag, monat und jahr von heute speicher (default spaeter)
 
-if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
+if (isset($_GET['flugzeug_id']) && $_GET['flugzeug_id'] > 0)
 {
-  $flieger_id = $_GET['flieger_id'];
+  $flugzeug_id = $_GET['flugzeug_id'];
 
-  $query = "SELECT * FROM `flieger` WHERE `id` = '{$flieger_id}' LIMIT 1;";
+  $query = "SELECT * FROM `flugzeug` WHERE `id` = '{$flugzeug_id}' LIMIT 1;";
   $res = $mysqli->query($query);
 
   if ($res->num_rows != 1)
@@ -28,7 +28,7 @@ if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
 
 else if (isset($_POST['submit']))
 {
-  $flieger_id = $_POST['flieger_id'];
+  $flugzeug_id = $_POST['flugzeug_id'];
   $tag = $_POST['tag'];
   $monat = $_POST['monat'];
   $jahr = $_POST['jahr'];
@@ -36,7 +36,7 @@ else if (isset($_POST['submit']))
 
   // Neu setzen (neues Default)
 
-  $_SESSION['flieger_id']  = $flieger_id;
+  $_SESSION['flugzeug_id']  = $flugzeug_id;
   $_SESSION['tag']  = $tag;
   $_SESSION['monat']  = $monat;
   $_SESSION['jahr']  = $jahr;
@@ -52,8 +52,8 @@ else if (isset($_POST['submit']))
   if ($error_msg == "")
   {
     $query = "INSERT INTO `mfgcadmin_reservationen`.`zaehler_eintraege` (
-              `id` , `user_id` , `flieger_id` , `datum` , `zaehler_minute`, `zaehler_umdrehungen`) VALUES ( NULL , ?, ?, ?, ?, ?)";
-    mysqli_prepare_execute($mysqli, $query, 'iisii', array ($user_id, $flieger_id, $datum, $zaehler_minute, 0));
+              `id` , `user_id` , `flugzeug_id` , `datum` , `zaehler_minute`, `zaehler_umdrehungen`) VALUES ( NULL , ?, ?, ?, ?, ?)";
+    mysqli_prepare_execute($mysqli, $query, 'iisii', array ($user_id, $flugzeug_id, $datum, $zaehler_minute, 0));
 
     list($pilot_nr_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
     write_status_message($mysqli, "[Landungs-Eintrag]", "Neu: durch [{$pilot_nr_pad}] {$pilot_name}");

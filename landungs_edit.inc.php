@@ -2,26 +2,26 @@
 
 //============================================================================
 // falls vom 'flug eintragen' edit link
-// damit man beim gleichen flieger bleibt (evt in session tun lieber?)
+// damit man beim gleichen flugzeug bleibt (evt in session tun lieber?)
 
-if (isset($_GET['flieger_id']))
-  $flieger_id = intval($_GET['flieger_id']);
+if (isset($_GET['flugzeug_id']))
+  $flugzeug_id = intval($_GET['flugzeug_id']);
 
 // edit oder loeschen wurde gedrueckt
-if (isset($_POST['flieger_id']))
-  $flieger_id = intval($_POST['flieger_id']);
+if (isset($_POST['flugzeug_id']))
+  $flugzeug_id = intval($_POST['flugzeug_id']);
 
-$query = "SELECT `flieger` FROM `flieger` WHERE `id` = '{$flieger_id}' LIMIT 1;";
+$query = "SELECT `flugzeug` FROM `flugzeug` WHERE `id` = '{$flugzeug_id}' LIMIT 1;";
 $res = $mysqli->query($query);
 $obj = $res->fetch_object();
-$flieger_txt = $obj->flieger;
+$flugzeug_txt = $obj->flugzeug;
 
 if ($res->num_rows != 1)
 {
   header('Location: /reservationen/index.php');
   exit;
 }
-//flieger_id ist OK
+//flugzeug_id ist OK
 
 if (isset($_GET['zaehler_id']))
   $zaehler_id = intval($_GET['zaehler_id']);
@@ -35,7 +35,7 @@ if ($res2->num_rows != 1)
 {
   header('Location: /reservationen/index.php');
 }
-//zaehler_id ist auch ok. (eigentlich mit flieger kombinieren? Egal)
+//zaehler_id ist auch ok. (eigentlich mit flugzeug kombinieren? Egal)
 $obj2 = $res2->fetch_object();
 $eintrag_user_id = $obj2->user_id;
 
@@ -65,7 +65,7 @@ if (isset($_POST['loeschen']))
   list($pilot_nr_pad2, $pilot_name2) = get_pilot_from_user_id($mysqli, $eintrag_user_id);
   write_status_message($mysqli, "[Landungs-Eintrag]", "Gelöscht: durch [{$pilot_nr_pad}] {$pilot_name}: von {$pilot_nr_pad2}");
 
-  header("Location: landungs_eintrag.php?flieger_id=$flieger_id");
+  header("Location: landungs_eintrag.php?flugzeug_id=$flugzeug_id");
   exit;
 }
 
@@ -100,7 +100,7 @@ else if (isset($_POST['edit']))
     list($pilot_nr_pad2, $pilot_name2) = get_pilot_from_user_id($mysqli, $eintrag_user_id);
     write_status_message($mysqli, "[Landungs-Eintrag]", "Editiert: durch [{$pilot_nr_pad}] {$pilot_name}: von [{$pilot_nr_pad2}] $pilot_name2");
 
-    header("Location: landungs_eintrag.php?flieger_id={$flieger_id}");
+    header("Location: landungs_eintrag.php?flugzeug_id={$flugzeug_id}");
     exit;
   }
 }

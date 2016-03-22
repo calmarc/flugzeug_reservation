@@ -9,7 +9,7 @@ if (isset($_POST['user_id']))
 
 if (isset($_POST['submit']))
 {
-  $flieger_id = $_POST['flieger_id'];
+  $flugzeug_id = $_POST['flugzeug_id'];
   $von_tag = $_POST['von_tag'];
   $von_monat = $_POST['von_monat'];
   $von_jahr = $_POST['von_jahr'];
@@ -21,7 +21,7 @@ if (isset($_POST['submit']))
   $bis_stunde = $_POST['bis_stunde'];
   $bis_minuten = $_POST['bis_minuten'];
 
-  $_SESSION['flieger_id']  = $flieger_id;
+  $_SESSION['flugzeug_id']  = $flugzeug_id;
   $_SESSION['von_tag']  = $von_tag;
   $_SESSION['von_monat']  = $von_monat;
   $_SESSION['von_jahr']  = $von_jahr;
@@ -69,7 +69,7 @@ if (isset($_POST['submit']))
   // CHECK LEVEL of standby
   remove_zombies($mysqli);
 
-  $level = check_level($mysqli, $flieger_id, $von_date, $bis_date) - 1;
+  $level = check_level($mysqli, $flugzeug_id, $von_date, $bis_date) - 1;
   if ($level >= 3)
     $error_msg .= "Es hat bereits zuviele Standby's [$level] in diesem Zeitraum.<br /><br />Es wurde keine Reservierung gebucht!<br />";
 
@@ -77,9 +77,9 @@ if (isset($_POST['submit']))
   {
     // CURRENT_TIMESTAMP =  Zurich = server-local seems to
     $query = "INSERT INTO `mfgcadmin_reservationen`.`reservationen`
-      ( `id` , `timestamp` , `user_id` , `flieger_id` , `von` , `bis`) VALUES
+      ( `id` , `timestamp` , `user_id` , `flugzeug_id` , `von` , `bis`) VALUES
       ( NULL , CURRENT_TIMESTAMP , ?, ?, ?, ?);";
-    mysqli_prepare_execute ($mysqli, $query, 'iiss', array ($user_id, $flieger_id,$von_date, $bis_date));
+    mysqli_prepare_execute ($mysqli, $query, 'iiss', array ($user_id, $flugzeug_id,$von_date, $bis_date));
     list ($pilot_nr_pad, $name) = get_pilot_from_user_id($mysqli, $user_id);
     $datum = mysql2chtimef ($von_date, $bis_date, FALSE);
     write_status_message($mysqli, "[Reservation]", "Neu: durch [{$pilot_nr_pad}] $name: $datum ");
@@ -93,14 +93,14 @@ if (isset($_POST['submit']))
 // vom Chart.. die werte mal in die sesseion eintragen.. damit die comboes damit
 // gefuellt werden koennen.
 
-else if (isset($_GET['flieger_id']) && isset($_GET['tag']) && isset($_GET['monat']) && isset($_GET['jahr']))
+else if (isset($_GET['flugzeug_id']) && isset($_GET['tag']) && isset($_GET['monat']) && isset($_GET['jahr']))
 {
 
   $_SESSION['von_stunde'] = ""; if (isset($_GET['stunde'])) $_SESSION['von_stunde'] = $_GET['stunde'];
   $_SESSION['von_minuten'] = ""; if (isset($_GET['minute'])) $_SESSION['von_minuten'] = $_GET['minute'];
 
-  $_SESSION['flieger_id']  = $_GET['flieger_id'];
-  $flieger_id = $_SESSION['flieger_id'];
+  $_SESSION['flugzeug_id']  = $_GET['flugzeug_id'];
+  $flugzeug_id = $_SESSION['flugzeug_id'];
   $_SESSION['von_tag']  = $_GET['tag'];
   $_SESSION['von_monat']  = $_GET['monat'];
   $_SESSION['von_jahr']  = $_GET['jahr'];

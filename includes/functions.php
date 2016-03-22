@@ -70,7 +70,7 @@ function zaehler_into($zaehler_minute, $zaehler_minute_vor)
 }
 
 // schreibt ein email wenn eintrag geloescht wurde an .. 'diverses'...
-function bei_geloescht_email($mysqli, $subject_hint, $pilot_nr, $flieger_id, $zeit, $begruendung)
+function bei_geloescht_email($mysqli, $subject_hint, $pilot_nr, $flugzeug_id, $zeit, $begruendung)
 {
   $res = $mysqli->query("SELECT * from `diverses` WHERE `funktion` = 'bei_geloescht_email';");
   $obj = $res->fetch_object();
@@ -80,16 +80,16 @@ function bei_geloescht_email($mysqli, $subject_hint, $pilot_nr, $flieger_id, $ze
   $obj = $res->fetch_object();
   $pilot = str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT). " (".$obj->name.")";
 
-  $res = $mysqli->query("SELECT * from `flieger` WHERE `id` = $flieger_id;");
+  $res = $mysqli->query("SELECT * from `flugzeug` WHERE `id` = $flugzeug_id;");
   $obj = $res->fetch_object();
-  $flieger = $obj->flieger;
+  $flugzeug = $obj->flugzeug;
 
   $subject = "Reservation $subject_hint: $pilot: $zeit";
   $txt = "Bei der Motorfluggruppe Chur wurde folgende Flugzeug-Reservation {$subject_hint}:";
   $txt .= "\n\n";
   $txt .= "Pilot: {$pilot}";
   $txt .= "\n";
-  $txt .= "Flugzeug: {$flieger}";
+  $txt .= "Flugzeug: {$flugzeug}";
   $txt .= "\n";
   $txt .= "Buchungszeit: {$zeit}";
   $txt .= "\n\n";

@@ -11,9 +11,9 @@ include_once ('../includes/functions.php');
 
 sec_session_start(); // Our custom secure way of starting a PHP session.
 
-if (isset($_POST['pilot_id'], $_POST['password'])) 
+if (isset($_POST['pilot_nr'], $_POST['password'])) 
 {
-  $pilot_id = $_POST['pilot_id'];
+  $pilot_nr = $_POST['pilot_nr'];
   $password = hash('sha512', $_POST['password']);
 
 
@@ -30,7 +30,7 @@ if (isset($_POST['pilot_id'], $_POST['password']))
     }
   }
 
-  if (login($pilot_id, $password, $mysqli) == true) 
+  if (login($pilot_nr, $password, $mysqli) == true) 
   {
     // Login success
 
@@ -42,7 +42,7 @@ if (isset($_POST['pilot_id'], $_POST['password']))
     $jetzt = date('Y-m-d', time());
     date_default_timezone_set('UTC');
 
-    $query= "SELECT `name`, `id`, `pilot_id`, `checkflug`, `email_gesch` FROM `piloten`;";
+    $query= "SELECT `name`, `id`, `pilot_nr`, `checkflug`, `email_gesch` FROM `piloten`;";
     $res = $mysqli->query($query);
 
     while ($obj = $res->fetch_object())
@@ -53,7 +53,7 @@ if (isset($_POST['pilot_id'], $_POST['password']))
         $res2 = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'bei_gesperrt_email';");
         $obj2 = $res2->fetch_object();
         $to = $obj2->data1;
-        $subject = "Checkflug überfällig: '{$obj->name}' [".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."]";
+        $subject = "Checkflug überfällig: '{$obj->name}' [".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."]";
         $txt = $subject;
         $headers   = array();
         $headers[] = "MIME-Version: 1.0";
@@ -74,12 +74,12 @@ if (isset($_POST['pilot_id'], $_POST['password']))
     //============================================================================
     // Status loggins.
 
-    $query= "SELECT `name`, `pilot_id` FROM `piloten` WHERE `pilot_id` = {$pilot_id};";
+    $query= "SELECT `name`, `pilot_nr` FROM `piloten` WHERE `pilot_nr` = {$pilot_nr};";
     $res = $mysqli->query($query);
     $obj = $res->fetch_object();
     
-    $pilot_id_pad = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT);
-    write_status_message($mysqli, "[Eingeloggt]", "[{$pilot_id_pad}] {$obj->name}");
+    $pilot_nr_pad = str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT);
+    write_status_message($mysqli, "[Eingeloggt]", "[{$pilot_nr_pad}] {$obj->name}");
 
     //============================================================================
     // passwort-recovery tabelle aufraeume (alles weg aelter als 4 stunden)

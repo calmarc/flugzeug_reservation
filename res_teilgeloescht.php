@@ -111,7 +111,7 @@ while ($obj = $res->fetch_object())
           <tr>
           <th><a href="res_teilgeloescht.php?sort=timestamp"><b>Am</b></a></th>
             <th><a href="res_teilgeloescht.php?sort=pilot_nr"><b>Pilot</b></a></th>
-            <th><a href="res_teilgeloescht.php?sort=flieger"><b>Flugzeug</b></a></th>
+            <th><a href="res_teilgeloescht.php?sort=flugzeug"><b>Flugzeug</b></a></th>
             <th><a href="res_teilgeloescht.php?sort=von"><b>Datum</b></a></th>
             <th><b>Gelöscht</b></th>
             <th><b>Grund</b></th>
@@ -125,7 +125,7 @@ $query = " SELECT
   `mem1`.`name` AS 'pilot',
   `mem1`.`pilot_nr` AS 'pilot_nr',
   `mem2`.`name` AS 'loescher_id',
-  `flieger`.`flieger` AS 'flieger',
+  `flugzeug`.`flugzeug` AS 'flugzeug',
   `reser_getrimmt`.`von` AS 'von',
   `reser_getrimmt`.`bis` AS 'bis',
   `reser_getrimmt`.`grund` AS 'grund',
@@ -134,7 +134,7 @@ $query = " SELECT
       FROM `reser_getrimmt`
           LEFT OUTER JOIN `piloten` AS `mem1` ON `reser_getrimmt`.`user_id` = `mem1`.`id`
           LEFT OUTER JOIN `piloten` AS `mem2` ON `reser_getrimmt`.`loescher_id` = `mem2`.`id`
-          LEFT OUTER JOIN `flieger` AS `flieger` ON `reser_getrimmt`.`flieger_id` = `flieger`.`id`
+          LEFT OUTER JOIN `flugzeug` AS `flugzeug` ON `reser_getrimmt`.`flugzeug_id` = `flugzeug`.`id`
   {$where_txt} {$order_by_txt} LIMIT 600;";
 
 $res = $mysqli->query($query);
@@ -155,7 +155,7 @@ while ($obj = $res->fetch_object())
   echo "\n<tr>
            <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>{$gel_datum}</td>
            <td>[".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
-           <td>{$obj->flieger}</td>
+           <td>{$obj->flugzeug}</td>
            <td>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>
            <td>".mysql2chtimef($obj->getrimmt_von, $obj->getrimmt_bis, FALSE)."</td>
            <td style='font-weight: bold; color #333333;'>".nl2br($obj->grund)."</td>

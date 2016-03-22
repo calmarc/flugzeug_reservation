@@ -29,23 +29,23 @@ include_once('service_edit.inc.php');
 print_html_to_body('Service Eintrag', '');
 include_once('includes/usermenu.php');
 
-// TODO: get_flieger_from_id() function?
-$query = "SELECT * FROM `flieger` WHERE `id` = '{$flieger_id}' LIMIT 1;";
+// TODO: get_flugzeug_from_id() function?
+$query = "SELECT * FROM `flugzeug` WHERE `id` = '{$flugzeug_id}' LIMIT 1;";
 $res = $mysqli->query($query);
-$flieger_name = $res->fetch_object()->flieger;
+$flugzeug_name = $res->fetch_object()->flugzeug;
 
 ?>
 <main>
   <div id="formular_innen">
 
-  <h1>Service Liste - <span style="color: #cc3300;"><?php echo $flieger_name; ?></span></h1>
+  <h1>Service Liste - <span style="color: #cc3300;"><?php echo $flugzeug_name; ?></span></h1>
 
 <?php
 
 if (isset($error_msg) && $error_msg != "")
   echo "<p><b style='color: red;'>{$error_msg}</b></p>";
 
-$hidden = "<input type='hidden' name='flieger_id' value='{$flieger_id}' />";
+$hidden = "<input type='hidden' name='flugzeug_id' value='{$flugzeug_id}' />";
 ?>
   <form action='/reservationen/service_edit.php' method='post'>
 <?php echo $hidden; ?>
@@ -97,7 +97,7 @@ echo '</select>';
     <br />
     <hr />
     <br />
-    <h3><span style="color: #cc0000;"><?php echo $flieger_name; ?></span> Service-Einträge</h3>
+    <h3><span style="color: #cc0000;"><?php echo $flugzeug_name; ?></span> Service-Einträge</h3>
 
   <div class='center'>
     <table class='vertical_table'>
@@ -115,7 +115,7 @@ $query = "SELECT `service_eintraege`.`id`,
                  `service_eintraege`.`zaehler_minute`,
                  `service_eintraege`.`datum`
          FROM `service_eintraege` LEFT OUTER JOIN `piloten` ON `piloten`.`id` = `service_eintraege`.`user_id`
-         WHERE `flieger_id` = '{$flieger_id}'  ORDER BY `zaehler_minute` DESC LIMIT 50;";
+         WHERE `flugzeug_id` = '{$flugzeug_id}'  ORDER BY `zaehler_minute` DESC LIMIT 50;";
 
 $res = $mysqli->query($query);
 
@@ -134,7 +134,7 @@ while ($obj = $res->fetch_object())
   $service_id = $obj->id;
   $user_id = $obj->user_id;
 
-  $edit_link = '<a onclick="return confirm(\'Service-Eintrag wirklich löschen?\')" href="service_edit.php?action=del&amp;service_id='.$service_id.'&amp;flieger_id='.$flieger_id.'">[löschen]</a>';
+  $edit_link = '<a onclick="return confirm(\'Service-Eintrag wirklich löschen?\')" href="service_edit.php?action=del&amp;service_id='.$service_id.'&amp;flugzeug_id='.$flugzeug_id.'">[löschen]</a>';
 
   echo " <tr>
           <td>{$edit_link}</td>

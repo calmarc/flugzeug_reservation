@@ -68,17 +68,17 @@ if ($_SESSION['show'] == 'tag')
 
 else
 {
-  // wenns im  GET.. speicherer in die sesssion (neuer flieger default monat)
-  $flieger_id = 1; // default bei erstem Aufruf
-  if (isset($_GET['flieger_id']))
+  // wenns im  GET.. speicherer in die sesssion (neuer flugzeug default monat)
+  $flugzeug_id = 1; // default bei erstem Aufruf
+  if (isset($_GET['flugzeug_id']))
   {
-    $flieger_id = $_GET['flieger_id'];
-    $_SESSION['flieger_id'] = $flieger_id;
+    $flugzeug_id = $_GET['flugzeug_id'];
+    $_SESSION['flugzeug_id'] = $flugzeug_id;
   }
-  else if (isset($_SESSION['flieger_id']))
-    $flieger_id = $_SESSION['flieger_id'];
+  else if (isset($_SESSION['flugzeug_id']))
+    $flugzeug_id = $_SESSION['flugzeug_id'];
 
-  monatsplan_navigation($mysqli, $flieger_id, $jahr, $monat, $jahr, $monate, $tag);
+  monatsplan_navigation($mysqli, $flugzeug_id, $jahr, $monat, $jahr, $monate, $tag);
 
 }
 
@@ -103,7 +103,7 @@ $textcol =  array('#333333', '#333333', '#333333', '#333333', '#333333', '#33333
 remove_zombies($mysqli);
 
 if ($_SESSION['show'] == 'monat')
-  monatsansicht($mysqli, $tab_width, $tabs, $boxcol, $textcol, $monat, $jahr, $flieger_id);
+  monatsansicht($mysqli, $tab_width, $tabs, $boxcol, $textcol, $monat, $jahr, $flugzeug_id);
 else
   tagesansicht($mysqli, $tab_width, $tabs, $boxcol, $textcol, 123, $tag, $monat, $jahr, $date, $admin_bol);
 ?>

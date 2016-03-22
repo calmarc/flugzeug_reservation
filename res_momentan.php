@@ -104,11 +104,11 @@ else if ($where_pilot != '')
   $where_txt = " WHERE {$where_pilot} ";
 
 // set accoridng arrow on what it's sorted
-$datum_img = $pilot_img = $flieger_img = "";
+$datum_img = $pilot_img = $flugzeug_img = "";
 if ($_SESSION['res_sort_by'] == 'pilot_nr')
   $pilot_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
-else if ($_SESSION['res_sort_by'] == 'flieger')
-  $flieger_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
+else if ($_SESSION['res_sort_by'] == 'flugzeug')
+  $flugzeug_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
 else if ($_SESSION['res_sort_by'] == 'von')
   $datum_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
 
@@ -154,7 +154,7 @@ while ($obj = $res->fetch_object())
           <th class="hide_on_print" style="background-color: #99ff99;"></th>
           <!--<th><a href="res_momentan.php?sort=timestamp"><b>Eingegeben</b></a></th>-->
             <th><a href="res_momentan.php?sort=pilot_nr"><b>Pilot</b><?php echo $pilot_img; ?></a></th>
-            <th><a href="res_momentan.php?sort=flieger"><b>Flugzeug</b><?php echo $flieger_img; ?></a></th>
+            <th><a href="res_momentan.php?sort=flugzeug"><b>Flugzeug</b><?php echo $flugzeug_img; ?></a></th>
             <th><a href="res_momentan.php?sort=von"><b>Datum</b><?php echo $datum_img; ?></a></th>
           </tr>
 <?php
@@ -164,13 +164,13 @@ $query = " SELECT
   `reservationen`.`timestamp` AS 'timestamp',
   `mem1`.`name` AS 'pilot',
   `mem1`.`pilot_nr` AS 'pilot_nr',
-  `flieger`.`flieger` AS 'flieger',
-  `flieger`.`id` AS 'flieger_id',
+  `flugzeug`.`flugzeug` AS 'flugzeug',
+  `flugzeug`.`id` AS 'flugzeug_id',
   `reservationen`.`von` AS 'von',
   `reservationen`.`bis` AS 'bis'
       FROM `reservationen`
           LEFT OUTER JOIN `piloten` AS `mem1` ON `reservationen`.`user_id` = `mem1`.`id`
-          LEFT OUTER JOIN `flieger` AS `flieger` ON `reservationen`.`flieger_id` = `flieger`.`id`
+          LEFT OUTER JOIN `flugzeug` AS `flugzeug` ON `reservationen`.`flugzeug_id` = `flugzeug`.`id`
       {$where_txt} {$order_by_txt} LIMIT 150;";
 
 $res = $mysqli->query($query);
@@ -178,7 +178,7 @@ $res = $mysqli->query($query);
 while ($obj = $res->fetch_object())
 {
   $yellow = '';
-  if (! in_array(strval($obj->id), $valid_res[$obj->flieger_id - 1]))
+  if (! in_array(strval($obj->id), $valid_res[$obj->flugzeug_id - 1]))
     $yellow = 'style="background-color: #ffff99; color: #ff6600 !important;"';
 
   $stamp_datum = $obj->timestamp;
@@ -196,7 +196,7 @@ while ($obj = $res->fetch_object())
            <td class='trblank hide_on_print'><a href='index.php?show=tag&amp;tag={$g_tag}&amp;monat={$g_monat}&amp;jahr={$g_jahr}'>[zeigen]</a></td>
            <!--<td style='text-align: left; background-color: transparent; color: #333333;'>{$stamp_datum}</td>-->
            <td {$yellow}>[".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
-           <td {$yellow}>{$obj->flieger}</td>
+           <td {$yellow}>{$obj->flugzeug}</td>
            <td {$yellow}>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>
         </tr>";
 }

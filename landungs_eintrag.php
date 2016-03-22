@@ -52,14 +52,14 @@ include_once('includes/usermenu.php');
 if (isset($error_msg) && $error_msg != "")
   echo "<p><b style='color: red;'>$error_msg</b></p>";
 
-$query = "SELECT * FROM `flieger` WHERE `id` = '{$flieger_id}' LIMIT 1;";
+$query = "SELECT * FROM `flugzeug` WHERE `id` = '{$flugzeug_id}' LIMIT 1;";
 $res = $mysqli->query($query);
 $obj = $res->fetch_object();
-$fliegertxt = $obj->flieger;
+$flugzeugtxt = $obj->flugzeug;
 
 ?>
   <form action='landungs_eintrag.php' method='post'>
-  <input type='hidden' name='flieger_id' value='<?php echo $flieger_id; ?>' />
+  <input type='hidden' name='flugzeug_id' value='<?php echo $flugzeug_id; ?>' />
     <div class='center'>
       <table class='vtable'>
         <tr class="trblank">
@@ -82,7 +82,7 @@ else
         </tr>
         <tr class="trblank">
           <td><b>Flugzeug:</b></td>
-          <td><b><?php echo $fliegertxt; ?></b></td>
+          <td><b><?php echo $flugzeugtxt; ?></b></td>
         </tr>
         <tr>
           <td><b>Datum:</b></td>
@@ -119,7 +119,7 @@ else
       <th>Pilot</th>
 <?php
 
-if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flieger_id == 4)
+if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flugzeug_id == 4)
 {
     echo "<th>Motor-Zählerstand</th>";
 }
@@ -137,7 +137,7 @@ $query = "SELECT `zaehler_eintraege`.`id`,
                  `zaehler_eintraege`.`zaehler_umdrehungen`,
                  `zaehler_eintraege`.`datum`
          FROM `zaehler_eintraege` LEFT OUTER JOIN `piloten` ON `piloten`.`id` = `zaehler_eintraege`.`user_id`
-         WHERE `flieger_id` = '{$flieger_id}'  ORDER BY `zaehler_minute` DESC, `id` DESC LIMIT 30;";
+         WHERE `flugzeug_id` = '{$flugzeug_id}'  ORDER BY `zaehler_minute` DESC, `id` DESC LIMIT 30;";
 
 if ($res = $mysqli->query($query))
 {
@@ -168,12 +168,12 @@ if ($res = $mysqli->query($query))
       // admin + die letzten 2 zum edditieren fuer benutzer
       if (check_admin($mysqli) || ($_SESSION['user_id'] == $user_id && $edit_c < 2))
       {
-        $edit_link = "<a href='landungs_edit.php?action=edit&amp;zaehler_id={$eintrags_id}&amp;flieger_id={$flieger_id}'>[edit]</a>";
+        $edit_link = "<a href='landungs_edit.php?action=edit&amp;zaehler_id={$eintrags_id}&amp;flugzeug_id={$flugzeug_id}'>[edit]</a>";
         $edit_c++;
       }
 
       $umdrehungen_txt = "";
-      if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flieger_id == 4)
+      if (($_SESSION['name'] == 'Airplus' || $admin_bol) && $flugzeug_id == 4)
       {
         if ($z_umdrehungen == 0)
           $z_umdrehungen = "";

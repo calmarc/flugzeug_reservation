@@ -2,15 +2,15 @@
 
 // von der uebersicht
 
-if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
+if (isset($_GET['flugzeug_id']) && $_GET['flugzeug_id'] > 0)
 {
-  $flieger_id = $_GET['flieger_id'];
+  $flugzeug_id = $_GET['flugzeug_id'];
 
-  // todo: eventuell fliegercheck. function
-  $query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
+  // todo: eventuell flugzeugcheck. function
+  $query = "SELECT * FROM `flugzeug` WHERE `id` = '$flugzeug_id' LIMIT 1;";
   $res = $mysqli->query($query);
 
-  // flieger ID checken
+  // flugzeug ID checken
   if ($res->num_rows != 1)
   {
     header('Location: /reservationen/index.php');
@@ -26,7 +26,7 @@ if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
 }
 else if (isset($_POST['submit']))
 {
-  $flieger_id = $_POST['flieger_id'];
+  $flugzeug_id = $_POST['flugzeug_id'];
   $tag = $_POST['tag'];
   $monat = $_POST['monat'];
   $jahr = $_POST['jahr'];
@@ -35,7 +35,7 @@ else if (isset($_POST['submit']))
 
   // TODO werden fuer die defautls gebraucht. Besser andere woerter nehmen da
   // das eher nach return values fuer chart toenen
-  $_SESSION['flieger_id']  = $flieger_id;
+  $_SESSION['flugzeug_id']  = $flugzeug_id;
   $_SESSION['tag']  = $tag;
   $_SESSION['monat']  = $monat;
   $_SESSION['jahr']  = $jahr;
@@ -49,7 +49,7 @@ else if (isset($_POST['submit']))
   $error_msg = check_zaehlerstand($zaehlerstand, $digit_minute);
 
   // ueberpruefen ob mit service eintrag mit zaehlereintrag ok..
-  $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `zaehler_eintraege` WHERE `flieger_id` = '{$flieger_id}';");
+  $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `zaehler_eintraege` WHERE `flugzeug_id` = '{$flugzeug_id}';");
   $obj_x = $res_x->fetch_object();
   $min = $obj_x->zaehler_minute;
 
@@ -59,8 +59,8 @@ else if (isset($_POST['submit']))
       $error_msg = "HINWEIS: Der Service-Eintrag ist grösser als der letzte Landungseintrag!<br />Allenfall korrigieren.";
 
     $query = "INSERT INTO `mfgcadmin_reservationen`.`service_eintraege` (
-        `id` , `user_id` , `flieger_id` , `datum` , `zaehler_minute`) VALUES ( NULL , ?, ?, ?, ?)";
-    mysqli_prepare_execute($mysqli, $query, 'iisi', array ($verantwortlich, $flieger_id, $datum, $zaehler_minute));
+        `id` , `user_id` , `flugzeug_id` , `datum` , `zaehler_minute`) VALUES ( NULL , ?, ?, ?, ?)";
+    mysqli_prepare_execute($mysqli, $query, 'iisi', array ($verantwortlich, $flugzeug_id, $datum, $zaehler_minute));
 
     $pilot_nr_pad = str_pad($_SESSION['pilot_nr'], 3, "0", STR_PAD_LEFT);
     write_status_message($mysqli, "[Service: Neuer Eintrag]", "[{$pilot_nr_pad}] {$_SESSION['name']}");
