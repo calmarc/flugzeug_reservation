@@ -58,7 +58,7 @@ a:hover, a:active {
 }
 
 nav div { display: inline-block;  vertical-align: middle; margin: 0px; padding: 12px; font-size: 120%; }
-nav div img {  display: inline; vertical-align: middle; margin: 0px; padding: 0px; }
+nav div img { display: inline; vertical-align: middle; margin: 0px; padding: 0px; }
 nav a:link { color: white; }
 nav a:link { color: white; }
 nav a:hover { color: white;}
@@ -89,7 +89,6 @@ nav img:hover {
   -o-filter: brightness(150%);
   -ms-filter: brightness(150%);
 }
-
 
 div.user_menu { float: right; margin-top: 0px;  }
 /*div.user_menu img { display: inline; vertical-align: middle; margin: 0px; padding: 0px; }*/
@@ -163,6 +162,18 @@ td#datum {
   font-weight: bold;
 }
 
+
+table.th_filter th a {
+ display: inline; 
+ vertical-align: middle;
+}
+
+table.th_filter th img{
+ display: inline; 
+ vertical-align: middle;
+ margin-left: 5px;
+}
+
 table.vertical_table { border-style: none; border-width: 0; border-collapse: collapse; }
 table.vertical_table th { padding: 10px;}
 table.vertical_table td { padding: 5px 12px 5px 16px; text-align: left; margin: 0px;}
@@ -226,7 +237,6 @@ input {
   padding: 3px;
   border: 1px solid black; 
 }
-
 
 .chart {
   box-shadow: 3px 3px 3px #aaaaaa;  
@@ -349,6 +359,11 @@ select.flieger_select {
       padding: 14px;
       -webkit-print-color-adjust: exact; 
       print-color-adjust: exact; 
+      font-size: 95%;
+  }
+
+  main {
+      font-size: 95%;
   }
 
   nav {
@@ -368,6 +383,6 @@ select.flieger_select {
     display: inline;
   }
 
-  h1 { font-size: 115% }
+  h1 { font-size: 105% }
 }
 

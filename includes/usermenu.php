@@ -16,7 +16,7 @@
   $curr_file = $_SERVER['PHP_SELF'];
 
   $style = 'style="color: yellow; font-weight: bold;"'; 
-  $style2 = 'style="background-color: #000000; border: 2px #666666 solid;
+  $style2 = 'style="background-color: #333300; border: 2px #999900 solid;
     filter: brightness(110%);
     -webkit-filter: brightness(110%);
     -moz-filter: brightness(110%);

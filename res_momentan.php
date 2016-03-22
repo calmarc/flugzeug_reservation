@@ -28,6 +28,8 @@ else
 
 if (!isset($_SESSION['res_sort_dir'])) $_SESSION['res_sort_dir'] = "DESC";
 if (!isset($_SESSION['res_sort_by'])) $_SESSION['res_sort_by'] = "timestamp";
+
+// highlight pilot in combo box
 if (!isset($_SESSION['res_sort_pilot'])) $_SESSION['res_sort_pilot'] = $pilot_id;
 
 if (isset($_GET['pilot_id']))
@@ -101,6 +103,15 @@ else if ($where_bereich != '')
 else if ($where_pilot != '')
   $where_txt = " WHERE {$where_pilot} ";
 
+// set accoridng arrow on what it's sorted
+$datum_img = $pilot_img = $flieger_img = "";
+if ($_SESSION['res_sort_by'] == 'pilot_id')
+  $pilot_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
+else if ($_SESSION['res_sort_by'] == 'flieger')
+  $flieger_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
+else if ($_SESSION['res_sort_by'] == 'von')
+  $datum_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
+
 print_html_to_body('Aktuelle Reservationen', '');
 include_once('includes/usermenu.php');
 
@@ -138,13 +149,13 @@ while ($obj = $res->fetch_object())
                 <option <?php if ($_SESSION['res_sort_bereich_res'] == '-12-~') echo 'selected="selected"'; ?> value="-12-~">alle</option>
               </select>
           </form>
-          <table class='vertical_table'>
+          <table class='vertical_table th_filter'>
           <tr>
-          <th style="background-color: #99ff99;"></th>
+          <th class="hide_on_print" style="background-color: #99ff99;"></th>
           <!--<th><a href="res_momentan.php?sort=timestamp"><b>Eingegeben</b></a></th>-->
-            <th><a href="res_momentan.php?sort=pilot_id"><b>Pilot</b></a></th>
-            <th><a href="res_momentan.php?sort=flieger"><b>Flugzeug</b></a></th>
-            <th><a href="res_momentan.php?sort=von"><b>Datum</b></a></th>
+            <th><a href="res_momentan.php?sort=pilot_id"><b>Pilot</b><?php echo $pilot_img; ?></a></th>
+            <th><a href="res_momentan.php?sort=flieger"><b>Flugzeug</b><?php echo $flieger_img; ?></a></th>
+            <th><a href="res_momentan.php?sort=von"><b>Datum</b><?php echo $datum_img; ?></a></th>
           </tr>
 <?php
 
@@ -182,7 +193,7 @@ while ($obj = $res->fetch_object())
   $g_tag = intval($g_tag);
 
   echo "\n<tr>
-           <td class='trblank'><a href='index.php?show=tag&amp;tag={$g_tag}&amp;monat={$g_monat}&amp;jahr={$g_jahr}'>[zeigen]</a></td>
+           <td class='trblank hide_on_print'><a href='index.php?show=tag&amp;tag={$g_tag}&amp;monat={$g_monat}&amp;jahr={$g_jahr}'>[zeigen]</a></td>
            <!--<td style='text-align: left; background-color: transparent; color: #333333;'>{$stamp_datum}</td>-->
            <td {$yellow}>[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
            <td {$yellow}>{$obj->flieger}</td>

@@ -103,7 +103,7 @@ while ($obj = $res->fetch_object())
 
           <form style="display: inline-block;" action='res_geloescht.php' method='get'>
             &nbsp; Löschen: <select style="width: 8em;" onchange='this.form.submit()' name='loeschen' size="1" id='loeschen'>
-              <option value="9876543210">                </option>
+              <option value="9876543210">&nbsp;</option>
               <option value="365">&gt; 12 Monate</option>
               <option value="182">&gt; 6 Monate</option>
               <option value="90">&gt; 3 Monate</option>
