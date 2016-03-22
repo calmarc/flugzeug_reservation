@@ -50,6 +50,7 @@ function get_date(){
 function draw_calendar($day, $month,$year){
 
   date_default_timezone_set("Europe/Zurich");
+
   // --------------------------------------------------------
   // START Vor / back arrows
   // --------------------------------------------------------
@@ -197,4 +198,5 @@ function draw_calendar($day, $month,$year){
   date_default_timezone_set('UTC');
   return $calendar;
 }
+
 ?>

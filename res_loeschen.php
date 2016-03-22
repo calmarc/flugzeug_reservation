@@ -92,7 +92,7 @@ $flugzeug = $obj2->flieger;
       <table class="vtable">
         <tr class="trblank">
           <td><b>Pilot:</b></td>
-          <td><?php echo "[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] ".$obj->name; ?></td>
+          <td><?php echo "[".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."] ".$obj->name; ?></td>
         </tr>
         <?php if ($obj->telefon != "") {?>
         <tr class="trblank">
@@ -152,6 +152,7 @@ $obj = $res->fetch_object();
 $von = $obj->von;
 $bis = $obj->bis;
 
+// gucken ob die tage gleich sind -> andere eingabefelder
 list ($datum, $zeit) =  explode(" ", $obj->von, 2);
 list ($von_jahr, $von_monat, $von_tag) = explode("-", $datum, 3);
 list ($von_stunde, $von_minute) = explode(":", $zeit, 3);
@@ -175,6 +176,8 @@ if ($datum_v ==  $datum)
         <input type="hidden" name="monat" value='<?php echo $monat; ?>' />
         <input type="hidden" name="jahr" value='<?php echo $jahr; ?>' />
 <?php
+
+// 'blind' durchgeben diese daten.. da in der form nicht angezeigt
 if (! $show_2_datum)
 { ?>
         <input type="hidden" name="von_tag" value='<?php echo $von_tag; ?>' />
@@ -189,6 +192,7 @@ if (! $show_2_datum)
 <div class="center">
       <table class="vtable">
 <?php
+// datum zum editiere, oder fixes angeben
 if ($show_2_datum)
 { ?>
 
@@ -234,6 +238,7 @@ else
           </td>
         </tr>
 <?php
+// datum zum editiere, oder nichts
 if ($show_2_datum)
   { ?>
         <tr class="trblank">
@@ -254,6 +259,7 @@ if ($show_2_datum)
           </td>
         </tr>
 <?php } ?>
+
         <tr>
           <td><b>Zeit bis:</b></td>
           <td>

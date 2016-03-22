@@ -30,7 +30,7 @@ include_once('includes/usermenu.php');
       <div class="center">
         <h1>Piloten Übersicht</h1>
 <?php
-$query = "SELECT * FROM `piloten` ORDER BY `pilot_id`;";
+$query = "SELECT * FROM `piloten` ORDER BY `pilot_nr`;";
 $res = $mysqli->query($query);
 ?>
           <table class='vertical_table'>
@@ -74,7 +74,7 @@ while ($obj = $res->fetch_object())
 
   echo "\n<tr>
            <td><a href='pilot_edit.php?id={$obj->id}'>[edit]</a></td>
-           <td style='text-align: center;'>".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."</td>
+           <td style='text-align: center;'>".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."</td>
            <td>{$obj->name}</td>
            <td><span style='white-space: nowrap;'>{$obj->natel}</span></td>
            <td><span style='white-space: nowrap;'>{$obj->telefon}</span></td>

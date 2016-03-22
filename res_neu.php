@@ -49,12 +49,12 @@ $fliegertxt = $obj->flieger;
 <?php if ($admin_bol)
 {
   echo "<td><select size='1' style='width: 16em' name='user_id'>";
-  combobox_piloten($mysqli, $_SESSION['pilot_id']);
+  combobox_piloten($mysqli, $_SESSION['pilot_nr']);
   echo "</select></td>";
 }
 else
 {
-   echo "<td><b>[".str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT)."] {$_SESSION['name']}</b>";
+   echo "<td><b>[".str_pad($_SESSION['pilot_nr'], 3, "0", STR_PAD_LEFT)."] {$_SESSION['name']}</b>";
    echo "<input type='hidden' name='user_id' value='{$user_id}' />";
    echo "</td>";
 }
@@ -121,7 +121,7 @@ else
     <br />
     <div class='center'>
       <h1 class="hide_on_print">Reservationen <a href="javascript:window.print()"><img alt="Ausdrucken" src="/reservationen/bilder/print-out.png" /></a></h1>
-      <h1 class="only_on_print">Kommende MFGC Reservationen<br />von: <?php echo "[".str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT)."] ".$_SESSION['name']; ?><br />&nbsp; &nbsp;</h1>
+      <h1 class="only_on_print">Kommende MFGC Reservationen<br />von: <?php echo "[".str_pad($_SESSION['pilot_nr'], 3, "0", STR_PAD_LEFT)."] ".$_SESSION['name']; ?><br />&nbsp; &nbsp;</h1>
     </div>
 
     <div class='center'>

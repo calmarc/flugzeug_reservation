@@ -65,16 +65,16 @@ $fliegertxt = $obj->flieger;
         <tr class="trblank">
           <td><b>Pilot:</b></td>
 
-<?php 
+<?php
 if ($admin_bol)
 {
   echo "<td><select size='1' style='width: 16em' name='user_id'>";
-  combobox_piloten($mysqli, $_SESSION['pilot_id']);
+  combobox_piloten($mysqli, $_SESSION['pilot_nr']);
   echo "</select></td>";
 }
 else
 {
-   echo "<td><b>[".str_pad($_SESSION['pilot_id'], 3, "0", STR_PAD_LEFT)."] {$_SESSION['name']}</b>";
+   echo "<td><b>[".str_pad($_SESSION['pilot_nr'], 3, "0", STR_PAD_LEFT)."] {$_SESSION['name']}</b>";
    echo "<input type='hidden' name='user_id' value='{$user_id}' />";
    echo "</td>";
 }

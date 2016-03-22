@@ -7,6 +7,7 @@ use Aspsms\Aspsms;
 
 function sendsms($mysqli, $natel, $txt)
 {
+  // get login data
   $res = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'sms_login_aspsms_ch' LIMIT 1;");
   $obj = $res->fetch_object();
   $user_key = $obj->data1;
@@ -21,7 +22,7 @@ function sendsms($mysqli, $natel, $txt)
   $natel = str_replace("+", "00", $natel);
   $natel = preg_replace("/[^0-9]/", "", $natel);
 
-  $tracking_number = "4565-".uniqid(microtime());
+  $tracking_number = "7802-".uniqid(microtime());
 
   $recipients = array(
       $tracking_number => $natel
@@ -43,6 +44,7 @@ function sendsms($mysqli, $natel, $txt)
 
 function sms_delivery_status($mysqli, $tracking_number)
 {
+  //login daten
   $res = $mysqli->query("SELECT * FROM `diverses` WHERE `funktion` = 'sms_login_aspsms_ch' LIMIT 1;");
   $obj = $res->fetch_object();
   $user_key = $obj->data1;

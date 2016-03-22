@@ -71,7 +71,7 @@ $hidden = "<input type='hidden' name='flieger_id' value='{$flieger_id}' />";
 <?php
 
 // nur admins.. genuegt.. (combobox).
-$res = $mysqli->query("SELECT * FROM `piloten` WHERE `admin` > 0 ORDER BY `pilot_id` ASC;");
+$res = $mysqli->query("SELECT * FROM `piloten` WHERE `admin` > 0 ORDER BY `pilot_nr` ASC;");
 echo '<select size="1" style="width: 15em;" name="verantwortlich">';
 while ($obj = $res->fetch_object())
 {

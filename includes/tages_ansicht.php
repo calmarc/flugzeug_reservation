@@ -239,7 +239,7 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
         if ($res_id->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
         {
           $obj_id = $res_id->fetch_object();
-          $t_id = str_pad($obj_id->pilot_id, 3, "0", STR_PAD_LEFT);
+          $t_id = str_pad($obj_id->pilot_nr, 3, "0", STR_PAD_LEFT);
         }
         else
           continue;

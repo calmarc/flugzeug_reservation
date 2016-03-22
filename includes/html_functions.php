@@ -59,17 +59,17 @@ function combobox_minute($default)
 
 function combobox_piloten($mysqli, $default)
 {
-  $query = "SELECT * FROM `piloten` ORDER BY `pilot_id` ASC;";
+  $query = "SELECT * FROM `piloten` ORDER BY `pilot_nr` ASC;";
   $res = $mysqli->query($query);
   $t_array = array();
   
   while ($obj = $res->fetch_object())
   {
-    $pilot_id_pad = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT);
-    if ($obj->pilot_id == $default)
-      echo "<option selected='selected' value='{$obj->id}'>[{$pilot_id_pad}] {$obj->name}</option>";
+    $pilot_nr_pad = str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT);
+    if ($obj->pilot_nr == $default)
+      echo "<option selected='selected' value='{$obj->id}'>[{$pilot_nr_pad}] {$obj->name}</option>";
     else
-      echo "<option value='{$obj->id}'>[{$pilot_id_pad}] {$obj->name}</option>";
+      echo "<option value='{$obj->id}'>[{$pilot_nr_pad}] {$obj->name}</option>";
   }
 }
 
@@ -122,6 +122,7 @@ function tooltip_print()
 <?php
 }
 
+// TODO $special_meta wird nicht gebraucht glaube ich
 function print_html_to_body ($title, $special_meta)
 { ?>
 
@@ -141,11 +142,11 @@ function print_html_to_body ($title, $special_meta)
   <link rel="stylesheet" href="/reservationen/css/reservationen.css" />
 
 <?php
-if ( isset($_SESSION['pilot_id']) && ($_SESSION['pilot_id'] == "107"))
+// fuer die madam
+if ( isset($_SESSION['pilot_nr']) && ($_SESSION['pilot_nr'] == "107"))
 { 
   echo "<style>body { background-color: pink; }</style>"; 
 }
-
 
 ?>
 

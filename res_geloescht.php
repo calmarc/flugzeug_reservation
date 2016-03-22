@@ -23,12 +23,12 @@ if (!isset($_SESSION['res_sort_dir'])) $_SESSION['res_sort_dir'] = "DESC";
 if (!isset($_SESSION['res_sort_by'])) $_SESSION['res_sort_by'] = "timestamp";
 if (!isset($_SESSION['res_sort_pilot'])) $_SESSION['res_sort_pilot'] = "";
 
-if (isset($_GET['pilot_id']))
-  $_SESSION['res_sort_pilot'] = $_GET['pilot_id'];
+if (isset($_GET['pilot_nr']))
+  $_SESSION['res_sort_pilot'] = $_GET['pilot_nr'];
 
 $where_pilot = "";
 if ($_SESSION['res_sort_pilot'] != "")
-  $where_pilot = "`mem1`.`pilot_id` = ".intval($_SESSION['res_sort_pilot']);
+  $where_pilot = "`mem1`.`pilot_nr` = ".intval($_SESSION['res_sort_pilot']);
 
 $t_old = $_SESSION['res_sort_by'];
 if (isset($_GET['sort']) && $_GET['sort'] != '') $_SESSION['res_sort_by'] = $_GET['sort'];
@@ -76,17 +76,17 @@ include_once('includes/usermenu.php');
         <h1>Gelöschte Reservationen</h1>
 
           <form style="display: inline-block;" action="res_geloescht.php" method='get'>
-              <select size="1"  onchange='this.form.submit()' style="width: 12em;" name = "pilot_id">
+              <select size="1"  onchange='this.form.submit()' style="width: 12em;" name = "pilot_nr">
 <?php
-$res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_id`;");
+$res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_nr`;");
 
 echo '<option value="">alle Piloten</option>';
 while ($obj = $res->fetch_object())
 {
   $selected = "";
-  if ($obj->pilot_id == $_SESSION['res_sort_pilot'])
+  if ($obj->pilot_nr == $_SESSION['res_sort_pilot'])
     $selected = 'selected="selected"';
-  echo '<option '.$selected.' value="'.$obj->pilot_id.'">['.str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT).'] '.$obj->name.'</option>';
+  echo '<option '.$selected.' value="'.$obj->pilot_nr.'">['.str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT).'] '.$obj->name.'</option>';
 }
 ?>
               </select>
@@ -114,7 +114,7 @@ while ($obj = $res->fetch_object())
           <table class='vertical_table'>
           <tr>
           <th><a href="res_geloescht.php?sort=timestamp"><b>Am</b></a></th>
-            <th><a href="res_geloescht.php?sort=pilot_id"><b>Pilot</b></a></th>
+            <th><a href="res_geloescht.php?sort=pilot_nr"><b>Pilot</b></a></th>
             <th><a href="res_geloescht.php?sort=flieger"><b>Flugzeug</b></a></th>
             <th><a href="res_geloescht.php?sort=von"><b>Datum</b></a></th>
             <th><b>Grund</b></th>
@@ -126,7 +126,7 @@ while ($obj = $res->fetch_object())
 $query = " SELECT
   `reser_geloescht`.`timestamp` AS 'timestamp',
   `mem1`.`name` AS 'pilot',
-  `mem1`.`pilot_id` AS 'pilot_id',
+  `mem1`.`pilot_nr` AS 'pilot_nr',
   `mem2`.`name` AS 'loescher_id',
   `flieger`.`flieger` AS 'flieger',
   `reser_geloescht`.`von` AS 'von',
@@ -155,7 +155,7 @@ while ($obj = $res->fetch_object())
 
   echo "\n<tr>
            <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>{$gel_datum}</td>
-           <td>[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
+           <td>[".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
            <td>{$obj->flieger}</td>
            <td>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>
            <td style='font-weight: bold; color #333333;'>".nl2br($obj->grund)."</td>

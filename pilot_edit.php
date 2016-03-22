@@ -66,7 +66,7 @@ echo "
     <div class='center'>
     <table class='vtable'>
       <tr>
-        <td><b>Pilot-ID:</b></td><td><input type='text' name='pilot_id' value='".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."'></td></tr>
+        <td><b>Pilot-ID:</b></td><td><input type='text' name='pilot_nr' value='".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."'></td></tr>
       <tr>
         <td><b>Name:</b></td><td><input type='text' name='name' value='{$obj->name}'></td>
       </tr>
@@ -129,16 +129,16 @@ echo "  </select>
 //============================================================================
 // pilot loeschen button unten
 
-$pilot_id_pad = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT);
+$pilot_nr_pad = str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT);
 
 ?>
 
       <hr style="margin: 52px 10px 84px 10px;" />
 
-      <form action='pilot_edit.php' method='post' onsubmit="return confirm('Wirklich Pilot-ID <?php echo "[{$pilot_id_pad}] {$obj->name}"; ?> löschen?\nAlle verbundenen Reservierungen\nwerden ebenfalls gelöscht!');">
+      <form action='pilot_edit.php' method='post' onsubmit="return confirm('Wirklich Pilot-ID <?php echo "[{$pilot_nr_pad}] {$obj->name}"; ?> löschen?\nAlle verbundenen Reservierungen\nwerden ebenfalls gelöscht!');">
       <input type="hidden" name="user_id" value="<?php echo $obj->id; ?>" />
         <div class="center">
-          <p><b>Pilot: <?php echo "[{$pilot_id_pad}] {$obj->name}"; ?></b></p>
+          <p><b>Pilot: <?php echo "[{$pilot_nr_pad}] {$obj->name}"; ?></b></p>
           <p><input class="sub_loeschen" type='submit' name='loeschen' value='LÖSCHEN' /></p>
         </div>
       </form>

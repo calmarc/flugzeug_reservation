@@ -12,8 +12,8 @@ if (isset($_POST['loeschen']))
   $query = "DELETE FROM `mfgcadmin_reservationen`.`reservationen` WHERE `reservationen`.`user_id` = ?;";
   mysqli_prepare_execute ($mysqli, $query, 'i', array ($user_id));
 
-  list($pilot_id_pad, $name) = get_pilot_from_user_id($mysqli, $user_id);
-  write_status_message ($mysqli, "[Pilot gelöscht]", "[{$pilot_id_pad}] $name");
+  list($pilot_nr_pad, $name) = get_pilot_from_user_id($mysqli, $user_id);
+  write_status_message ($mysqli, "[Pilot gelöscht]", "[{$pilot_nr_pad}] $name");
 
   // man hat sich selber geloesch.. delete $_SESSION (ausloggen)
 
@@ -32,7 +32,7 @@ if (isset($_POST['loeschen']))
 if (isset($_POST['updaten']))
 {
   $user_id = intval($_POST['user_id']);
-  $pilot_id = intval($_POST['pilot_id']);
+  $pilot_nr = intval($_POST['pilot_nr']);
   $name = trim($_POST['name']);
   $natel = trim($_POST['natel']);
   $telefon = trim($_POST['telefon']);
@@ -94,9 +94,9 @@ if (isset($_POST['updaten']))
   }
 
   // UPDATE user data
-  $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `pilot_id` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ?, `checkflug` = ?, `gesperrt` = ? WHERE `piloten`.`id` = ?; ";
-  $_SESSION['pilot_id'] = $pilot_id;
-  mysqli_prepare_execute($mysqli, $query, 'isissssii', array ($pilot_id, $email, $admin_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $user_id));
+  $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `pilot_nr` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ?, `checkflug` = ?, `gesperrt` = ? WHERE `piloten`.`id` = ?; ";
+  $_SESSION['pilot_nr'] = $pilot_nr;
+  mysqli_prepare_execute($mysqli, $query, 'isissssii', array ($pilot_nr, $email, $admin_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $user_id));
 
   header("Location: pilot_admin.php");
   exit;

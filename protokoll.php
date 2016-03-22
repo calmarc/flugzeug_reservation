@@ -59,7 +59,7 @@ $res = $mysqli->query($query);
 while ($obj = $res->fetch_object())
 {
 
-  // to LOKAL zeit.. 
+  // to LOKAL zeit..
   // TODO funktion machen von dem - wo noch?
 
   $lokal_datum = $obj->timestamp;

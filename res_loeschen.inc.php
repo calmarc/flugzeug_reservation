@@ -160,9 +160,9 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
       {
         delete_reservation($mysqli, $reservierung, $begruendung, $_SESSION['user_id']);
 
-        list ($pilot_id_pad, $name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
+        list ($pilot_nr_pad, $name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
         $datum = mysql2chtimef ($loeschen_datum_von, $loeschen_datum_bis, FALSE);
-        write_status_message($mysqli, "[Reservation]", "Gelöscht: durch [{$pilot_id_pad}] $name: $datum ");
+        write_status_message($mysqli, "[Reservation]", "Gelöscht: durch [{$pilot_nr_pad}] $name: $datum ");
 
         bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flieger_id,
                             mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
@@ -174,9 +174,9 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
         $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `von` = ? WHERE `reservationen`.`id` = ?;";
         mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_bis, $reservierung));
 
-        list ($pilot_id_pad, $name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
+        list ($pilot_nr_pad, $name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
         $datum = mysql2chtimef ($loeschen_datum_von, $loeschen_datum_bis, FALSE);
-        write_status_message($mysqli, "[Reservation]", "Teilgelöscht: durch [{$pilot_id_pad}] $name: $datum ");
+        write_status_message($mysqli, "[Reservation]", "Teilgelöscht: durch [{$pilot_nr_pad}] $name: $datum ");
 
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
       }
@@ -186,9 +186,9 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
         $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
         mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von, $reservierung));
 
-        list ($pilot_id_pad, $name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
+        list ($pilot_nr_pad, $name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
         $datum = mysql2chtimef ($loeschen_datum_von, $loeschen_datum_bis, FALSE);
-        write_status_message($mysqli, "[Reservation]", "Teilgelöscht: durch [{$pilot_id_pad}] $name: $datum ");
+        write_status_message($mysqli, "[Reservation]", "Teilgelöscht: durch [{$pilot_nr_pad}] $name: $datum ");
 
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
       }
@@ -207,9 +207,9 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
 
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
 
-        list ($pilot_id_pad, $name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
+        list ($pilot_nr_pad, $name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
         $datum = mysql2chtimef ($loeschen_datum_von, $loeschen_datum_bis, FALSE);
-        write_status_message($mysqli, "[Reservation]", "Teilgelöscht: durch [{$pilot_id_pad}] $name: $datum ");
+        write_status_message($mysqli, "[Reservation]", "Teilgelöscht: durch [{$pilot_nr_pad}] $name: $datum ");
 
         $res_t = $mysqli->query("SELECT `id` FROM `reservationen` ORDER BY `id` DESC LIMIT 1;");
         $obj_t = $res_t->fetch_object();
@@ -225,9 +225,9 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
       $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
       delete_reservation($mysqli, $reservierung, $begruendung, $_SESSION['user_id']);
 
-      list ($pilot_id_pad, $name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
+      list ($pilot_nr_pad, $name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
       $datum = mysql2chtimef ($obj->von, $obj->bis, FALSE);
-      write_status_message($mysqli, "[Reservation]", "Gelöscht: durch [{$pilot_id_pad}] $name: $datum ");
+      write_status_message($mysqli, "[Reservation]", "Gelöscht: durch [{$pilot_nr_pad}] $name: $datum ");
 
       bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flieger_id,
                           mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
@@ -277,9 +277,9 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
         $new_end_date = date("Y-m-d H:i:s", strtotime($new_end_date) - 10 * 60 * 60);
       }
 
-      list ($pilot_id_pad, $name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
+      list ($pilot_nr_pad, $name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
       $datum = mysql2chtimef ($loeschen_datum_von, $loeschen_datum_bis, FALSE);
-      write_status_message($mysqli, "[Reservation]", "Freigegeben: durch [{$pilot_id_pad}] $name: $datum ");
+      write_status_message($mysqli, "[Reservation]", "Freigegeben: durch [{$pilot_nr_pad}] $name: $datum ");
 
       reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $obj->von , $new_end_date);
     }
@@ -324,18 +324,18 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
 
           $txt = "Deine Reservation:\n\nPilot: {$pilot}\nFlugzeug: {$flieger}\nDatum: {$res_datum_raw}\n\nwurde aktiviert!";
 
-          $pilot_id_pad = str_pad($obj3->pilot_id, 3, "0", STR_PAD_LEFT);
+          $pilot_nr_pad = str_pad($obj3->pilot_nr, 3, "0", STR_PAD_LEFT);
 
           if ($email != "")
           {
             if (mail ($email, "MFGC Reservation vom {$res_datum_raw} aktiviert!", $txt, implode("\r\n",$headers)))
 
-              write_status_message($mysqli, "[Standby Email]", "An [{$pilot_id_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Es wurde <span style='color: green'>eine</span> Email geschickt.");
+              write_status_message($mysqli, "[Standby Email]", "An [{$pilot_nr_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Es wurde <span style='color: green'>eine</span> Email geschickt.");
             else
-              write_status_message($mysqli, "[Standby Email]", "An [{$pilot_id_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Es wurde <span style='color: red'>keine</span> Email geschickt.");
+              write_status_message($mysqli, "[Standby Email]", "An [{$pilot_nr_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Es wurde <span style='color: red'>keine</span> Email geschickt.");
           }
           else
-              write_status_message($mysqli, "[Standby Email]", "An [{$pilot_id_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Pilot hat <span style='color: red;'>keine</span> Email angegeben.");
+              write_status_message($mysqli, "[Standby Email]", "An [{$pilot_nr_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Pilot hat <span style='color: red;'>keine</span> Email angegeben.");
 
 
           if ($natel != "")
@@ -343,10 +343,10 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
             // send sms and log
             list($credits, $tracking_number, $ret_val) = sendsms($mysqli, $natel, $txt);
 
-            write_status_message($mysqli, "[Standby SMS]", "An [{$pilot_id_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Credits: {$credits}; @@{$tracking_number}@@; {$ret_val} ");
+            write_status_message($mysqli, "[Standby SMS]", "An [{$pilot_nr_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Credits: {$credits}; @@{$tracking_number}@@; {$ret_val} ");
           }
           else
-              write_status_message($mysqli, "[Standby SMS]", "An [{$pilot_id_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Pilot hat <span style='color: red;'>keine</span> Natel-Nummer angegeben.");
+              write_status_message($mysqli, "[Standby SMS]", "An [{$pilot_nr_pad}] {$pilot}: Reservation vom: {$res_datum}<br />Pilot hat <span style='color: red;'>keine</span> Natel-Nummer angegeben.");
         }
     }
 

@@ -70,15 +70,15 @@ function zaehler_into($zaehler_minute, $zaehler_minute_vor)
 }
 
 // schreibt ein email wenn eintrag geloescht wurde an .. 'diverses'...
-function bei_geloescht_email($mysqli, $subject_hint, $pilot_id, $flieger_id, $zeit, $begruendung)
+function bei_geloescht_email($mysqli, $subject_hint, $pilot_nr, $flieger_id, $zeit, $begruendung)
 {
   $res = $mysqli->query("SELECT * from `diverses` WHERE `funktion` = 'bei_geloescht_email';");
   $obj = $res->fetch_object();
   $to = $obj->data1;
 
-  $res = $mysqli->query("SELECT * from `piloten` WHERE `id` = $pilot_id;");
+  $res = $mysqli->query("SELECT * from `piloten` WHERE `id` = $pilot_nr;");
   $obj = $res->fetch_object();
-  $pilot = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT). " (".$obj->name.")";
+  $pilot = str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT). " (".$obj->name.")";
 
   $res = $mysqli->query("SELECT * from `flieger` WHERE `id` = $flieger_id;");
   $obj = $res->fetch_object();
@@ -181,12 +181,12 @@ function write_status_message($mysqli, $subjekt, $data)
 
 function get_pilot_from_user_id($mysqli, $user_id)
 {
-  $res = $mysqli->query("SELECT `pilot_id`, `name` FROM `piloten` WHERE `id` = $user_id LIMIT 1;");
+  $res = $mysqli->query("SELECT `pilot_nr`, `name` FROM `piloten` WHERE `id` = $user_id LIMIT 1;");
   if ($res->num_rows > 0)
   {
     $obj = $res->fetch_object();
-    $pilot_id_pad = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT);
-    return array($pilot_id_pad, $obj->name);
+    $pilot_nr_pad = str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT);
+    return array($pilot_nr_pad, $obj->name);
   }
     return array("unkown", "unknown");
 } 

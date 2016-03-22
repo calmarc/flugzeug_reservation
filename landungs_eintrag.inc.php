@@ -55,8 +55,8 @@ else if (isset($_POST['submit']))
               `id` , `user_id` , `flieger_id` , `datum` , `zaehler_minute`, `zaehler_umdrehungen`) VALUES ( NULL , ?, ?, ?, ?, ?)";
     mysqli_prepare_execute($mysqli, $query, 'iisii', array ($user_id, $flieger_id, $datum, $zaehler_minute, 0));
 
-    list($pilot_id_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
-    write_status_message($mysqli, "[Landungs-Eintrag]", "Neu: durch [{$pilot_id_pad}] {$pilot_name}");
+    list($pilot_nr_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
+    write_status_message($mysqli, "[Landungs-Eintrag]", "Neu: durch [{$pilot_nr_pad}] {$pilot_name}");
   }
 }
 else

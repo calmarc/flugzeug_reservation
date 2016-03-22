@@ -21,23 +21,23 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 $valid_res = get_all_valid_reservations($mysqli);
 
 // default
-if (!isset($_SESSION['pilot_id']))
-  $pilot_id = "";
+if (!isset($_SESSION['pilot_nr']))
+  $pilot_nr = "";
 else
-  $pilot_id = $_SESSION['pilot_id'];
+  $pilot_nr = $_SESSION['pilot_nr'];
 
 if (!isset($_SESSION['res_sort_dir'])) $_SESSION['res_sort_dir'] = "DESC";
 if (!isset($_SESSION['res_sort_by'])) $_SESSION['res_sort_by'] = "timestamp";
 
 // highlight pilot in combo box
-if (!isset($_SESSION['res_sort_pilot'])) $_SESSION['res_sort_pilot'] = $pilot_id;
+if (!isset($_SESSION['res_sort_pilot'])) $_SESSION['res_sort_pilot'] = $pilot_nr;
 
-if (isset($_GET['pilot_id']))
-  $_SESSION['res_sort_pilot'] = $_GET['pilot_id'];
+if (isset($_GET['pilot_nr']))
+  $_SESSION['res_sort_pilot'] = $_GET['pilot_nr'];
 
 $where_pilot = "";
 if ($_SESSION['res_sort_pilot'] != "")
-  $where_pilot = "`mem1`.`pilot_id` = ".intval($_SESSION['res_sort_pilot']);
+  $where_pilot = "`mem1`.`pilot_nr` = ".intval($_SESSION['res_sort_pilot']);
 
 $t_old = $_SESSION['res_sort_by'];
 if (isset($_GET['sort']) && $_GET['sort'] != '') $_SESSION['res_sort_by'] = $_GET['sort'];
@@ -105,7 +105,7 @@ else if ($where_pilot != '')
 
 // set accoridng arrow on what it's sorted
 $datum_img = $pilot_img = $flieger_img = "";
-if ($_SESSION['res_sort_by'] == 'pilot_id')
+if ($_SESSION['res_sort_by'] == 'pilot_nr')
   $pilot_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
 else if ($_SESSION['res_sort_by'] == 'flieger')
   $flieger_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
@@ -122,19 +122,19 @@ include_once('includes/usermenu.php');
           <h1>Reservationen <a href="javascript:window.print()"><img alt="Ausdrucken" src="/reservationen/bilder/print-out.png" /></a></h1>
 
           <form style="display: inline-block;" action="res_momentan.php" method='get'>
-              <select size="1" onchange='this.form.submit()' style="width: 16em;" name = "pilot_id">
+              <select size="1" onchange='this.form.submit()' style="width: 16em;" name = "pilot_nr">
 <?php
-$res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_id`;");
+$res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_nr`;");
 
 echo "<option value=''>alle Piloten</option>";
-echo "<option value='{$_SESSION['pilot_id']}'>Eigene Reservationen</option>";
+echo "<option value='{$_SESSION['pilot_nr']}'>Eigene Reservationen</option>";
 
 while ($obj = $res->fetch_object())
 {
   $selected = "";
-  if ($obj->pilot_id == $_SESSION['res_sort_pilot'])
+  if ($obj->pilot_nr == $_SESSION['res_sort_pilot'])
     $selected = 'selected="selected"';
-  echo '<option '.$selected.' value="'.$obj->pilot_id.'">['.str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT).'] '.$obj->name.'</option>';
+  echo '<option '.$selected.' value="'.$obj->pilot_nr.'">['.str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT).'] '.$obj->name.'</option>';
 }
 
 ?>
@@ -153,7 +153,7 @@ while ($obj = $res->fetch_object())
           <tr>
           <th class="hide_on_print" style="background-color: #99ff99;"></th>
           <!--<th><a href="res_momentan.php?sort=timestamp"><b>Eingegeben</b></a></th>-->
-            <th><a href="res_momentan.php?sort=pilot_id"><b>Pilot</b><?php echo $pilot_img; ?></a></th>
+            <th><a href="res_momentan.php?sort=pilot_nr"><b>Pilot</b><?php echo $pilot_img; ?></a></th>
             <th><a href="res_momentan.php?sort=flieger"><b>Flugzeug</b><?php echo $flieger_img; ?></a></th>
             <th><a href="res_momentan.php?sort=von"><b>Datum</b><?php echo $datum_img; ?></a></th>
           </tr>
@@ -163,7 +163,7 @@ $query = " SELECT
   `reservationen`.`id` AS 'id',
   `reservationen`.`timestamp` AS 'timestamp',
   `mem1`.`name` AS 'pilot',
-  `mem1`.`pilot_id` AS 'pilot_id',
+  `mem1`.`pilot_nr` AS 'pilot_nr',
   `flieger`.`flieger` AS 'flieger',
   `flieger`.`id` AS 'flieger_id',
   `reservationen`.`von` AS 'von',
@@ -195,7 +195,7 @@ while ($obj = $res->fetch_object())
   echo "\n<tr>
            <td class='trblank hide_on_print'><a href='index.php?show=tag&amp;tag={$g_tag}&amp;monat={$g_monat}&amp;jahr={$g_jahr}'>[zeigen]</a></td>
            <!--<td style='text-align: left; background-color: transparent; color: #333333;'>{$stamp_datum}</td>-->
-           <td {$yellow}>[".str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
+           <td {$yellow}>[".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
            <td {$yellow}>{$obj->flieger}</td>
            <td {$yellow}>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>
         </tr>";

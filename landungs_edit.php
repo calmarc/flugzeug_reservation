@@ -48,7 +48,7 @@ $zaehler_eintrag = $std.'.'.str_pad($min, 2, "0", STR_PAD_LEFT);
 
 list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
 
-list($pilot_id_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $obj->user_id);
+list($pilot_nr_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $obj->user_id);
 
 $zaehler_umdrehungen = $obj->zaehler_umdrehungen;
 
@@ -60,7 +60,7 @@ $zaehler_umdrehungen = $obj->zaehler_umdrehungen;
           <table class='vtable two_standard'>
             <tr class="trblank">
               <td><b>Pilot</b></td>
-              <td><b>[<?php echo $pilot_id_pad.'] '.$pilot_name; ?></b></td>
+              <td><b>[<?php echo $pilot_nr_pad.'] '.$pilot_name; ?></b></td>
             </tr>
             <tr class="trblank">
               <td><b>Flieger</b></td>

@@ -33,17 +33,17 @@ function sec_session_start()
   session_regenerate_id();    // regenerated the session, delete the old one.
 }
 
-function login($pilot_id, $password, $mysqli) 
+function login($pilot_nr, $password, $mysqli) 
 {
   // Using prepared statements means that SQL injection is not possible.
-  if ($stmt = $mysqli->prepare("SELECT id, pilot_id, password, salt FROM piloten WHERE pilot_id = ? LIMIT 1")) 
+  if ($stmt = $mysqli->prepare("SELECT id, pilot_nr, password, salt FROM piloten WHERE pilot_nr = ? LIMIT 1")) 
   {
-    $stmt->bind_param('s', $pilot_id);  // Bind "$email" to parameter.
+    $stmt->bind_param('s', $pilot_nr);  // Bind "$email" to parameter.
     $stmt->execute();    // Execute the prepared query.
     $stmt->store_result();
 
     // get variables from result.
-    $stmt->bind_result($user_id, $pilot_id, $db_password, $salt);
+    $stmt->bind_result($user_id, $pilot_nr, $db_password, $salt);
     $stmt->fetch();
 
     $password = hash('sha512', $password . $salt);
@@ -66,9 +66,9 @@ function login($pilot_id, $password, $mysqli)
           $_SESSION['user_id'] = $user_id;
 
           // XSS protection as we might print this value
-          $pilot_id = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $pilot_id);
+          $pilot_nr = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $pilot_nr);
 
-          $_SESSION['pilot_id'] = $pilot_id;
+          $_SESSION['pilot_nr'] = $pilot_nr;
           $_SESSION['login_string'] = hash('sha512', $password . $user_browser);
 
           // Login successful.
@@ -149,11 +149,11 @@ function checkbrute($mysqli)
 function login_check($mysqli) 
 {
   // Check if all session variables are set
-  if (isset($_SESSION['user_id'], $_SESSION['pilot_id'], $_SESSION['login_string'])) 
+  if (isset($_SESSION['user_id'], $_SESSION['pilot_nr'], $_SESSION['login_string'])) 
   {
     $user_id = $_SESSION['user_id'];
     $login_string = $_SESSION['login_string'];
-    $pilot_id = $_SESSION['pilot_id'];
+    $pilot_nr = $_SESSION['pilot_nr'];
 
     // Get the user-agent string of the user.
     $user_browser = $_SERVER['HTTP_USER_AGENT'];

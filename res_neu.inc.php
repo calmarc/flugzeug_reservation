@@ -80,9 +80,9 @@ if (isset($_POST['submit']))
       ( `id` , `timestamp` , `user_id` , `flieger_id` , `von` , `bis`) VALUES
       ( NULL , CURRENT_TIMESTAMP , ?, ?, ?, ?);";
     mysqli_prepare_execute ($mysqli, $query, 'iiss', array ($user_id, $flieger_id,$von_date, $bis_date));
-    list ($pilot_id_pad, $name) = get_pilot_from_user_id($mysqli, $user_id);
+    list ($pilot_nr_pad, $name) = get_pilot_from_user_id($mysqli, $user_id);
     $datum = mysql2chtimef ($von_date, $bis_date, FALSE);
-    write_status_message($mysqli, "[Reservation]", "Neu: durch [{$pilot_id_pad}] $name: $datum ");
+    write_status_message($mysqli, "[Reservation]", "Neu: durch [{$pilot_nr_pad}] $name: $datum ");
 
     if (isset($_SESSION['plan']) && $_SESSION['plan'] == 'monatsplan')
       header("Location: index.php?show=monatsplan&tag={$von_tag}&monat={$von_monat}&jahr={$von_jahr}");

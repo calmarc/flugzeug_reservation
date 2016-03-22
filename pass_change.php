@@ -43,7 +43,7 @@ include_once('includes/usermenu.php');
   }
   ?>
     <form action="pass_change.php" method="post" name="login_form">
-    <input type="hidden" name="pilot_id" value="">
+    <input type="hidden" name="pilot_nr" value="">
       <table class="vtable" style="width: 100%;">
           <tr>
               <td><b>Neues Passwort:</b></td>

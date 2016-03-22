@@ -2,15 +2,17 @@
 
 == MAYOR ==
 
-* pfeile beim sortierne tabelle oben (rauf runter asc/desc)
+* zu kontrollieren.  die includes...
+     "includes/monats_ansicht.php"  line 56
+     "includes/reservations_functions.php" line 13
+     "includes/tages_ansicht.php"   line 306
 
-* zu kontrollieren.
-	   16      "res_geloescht.inc.php"        line 0
-	   19 %a   "res_loeschen.php"             line 146
-  die includes...
+* replace pilot_id mit pilot_nr
 
 
 == MINOR ==
+
+* ueberall pfeile beim sortierne tabelle oben (rauf runter asc/desc)
 
 * die res_anzeige dinger.. ausgliedern noetig etc.
 
