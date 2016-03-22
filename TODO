@@ -7,10 +7,9 @@
      "includes/reservations_functions.php" line 13
      "includes/tages_ansicht.php"   line 306
 
-* replace pilot_id mit pilot_nr
-
-
 == MINOR ==
+
+. TODO in den texten (wobei sind alles harmlose)
 
 * ueberall pfeile beim sortierne tabelle oben (rauf runter asc/desc)
 

@@ -150,8 +150,7 @@ function mysqli_prepare_execute ($mysqli, $query, $bind_string, $arr)
 }
 
 // fuer die service eintraege etc
-// TODO compute. . nicht computer
-function computer_minute_from_zaehlerstand($zaehlerstand)
+function compute_minute_from_zaehlerstand($zaehlerstand)
 {
   // 44.12 * int - 44 * 60 = minuten.
   $zaehler_minute = intval($zaehlerstand) * 60;

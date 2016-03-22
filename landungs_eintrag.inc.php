@@ -41,7 +41,7 @@ else if (isset($_POST['submit']))
   $_SESSION['monat']  = $monat;
   $_SESSION['jahr']  = $jahr;
 
-  list($zaehler_minute,$digit_minute) = computer_minute_from_zaehlerstand($zaehlerstand);
+  list($zaehler_minute,$digit_minute) = compute_minute_from_zaehlerstand($zaehlerstand);
 
   $tag = str_pad($tag, 2, "0", STR_PAD_LEFT);
   $monat = str_pad($monat, 2, "0", STR_PAD_LEFT);

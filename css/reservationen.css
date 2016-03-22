@@ -282,7 +282,7 @@ div#tooltip_div {
   box-shadow: 2px 2px 2px #CCCCCC;
 }
 
-select.flieger_select {
+select.flugzeug_select {
   vertical-align: middle; 
   font-size: 100%; 
   border-right: 0px solid #ffff00; 
