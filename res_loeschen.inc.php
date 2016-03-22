@@ -2,7 +2,6 @@
 
 // wenn man kommt vom chart her kommt.. daten checken
 
-
 $tag = ""; if (isset($_GET['tag'])) $tag = $_GET['tag'];
 $monat = ""; if (isset($_GET['monat'])) $monat = $_GET['monat'];
 $jahr = ""; if (isset($_GET['jahr'])) $jahr = $_GET['jahr'];
@@ -10,17 +9,14 @@ $reservierung = ""; if (isset($_GET['reservierung'])) $reservierung = $_GET['res
 $backto = ""; if (isset($_GET['backto'])) $backto = $_GET['backto'];
 $flieger_id = ""; if (isset($_GET['flieger_id'])) $flieger_id = $_GET['flieger_id'];
 
-// sonst .. brauchts auch  wenn man vom submit kommt
+// sonst .. brauchts auch wenn man vom submit kommt
 
 if (isset($_POST['tag'])) $tag = $_POST['tag'];
 if (isset($_POST['monat'])) $monat = $_POST['monat'];
 if (isset($_POST['jahr'])) $jahr = $_POST['jahr'];
 if (isset($_POST['reservierung'])) $reservierung = $_POST['reservierung'];
 
-
-
 $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
-
 
 $rounded_stamp = (intval(time() / 1800) + 1) * 1800;
 date_default_timezone_set("Europe/Zurich");
@@ -41,7 +37,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
 
 
   //============================================================================
-  // Kontrollieren ob die ID existiert auch modifiziert werden darf vom Benutzer
+  // Kontrollieren ob die ID existiert und auch modifiziert werden darf
 
   if (check_admin($mysqli))
     $query = "SELECT `von`, `bis` FROM `reservationen` WHERE `id` = {$_POST['reservierung']} LIMIT 1;";
@@ -57,7 +53,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
   }
 
   //============================================================================
-  // preparationen (falls eingabe-fehler kommt nachher.. etwas ueberschuss (get_vali_reserv..))
+  // preparationen (falls eingabe-fehler kommt nachher.. etwas ueberschuss diese get_vali_reserv.. anu
 
   $res = $mysqli->query("SELECT `flieger_id` from `reservationen` WHERE `id` = {$_POST['reservierung']};");
   $obj = $res->fetch_object();
@@ -120,7 +116,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
       $error_msg .= "Neue Von-Zeit darf nicht in der Vergangenheit liegen.<br />";
   }
 
-  // nur wenn nicht ( error ist da && teilloeschung
+  // nur wenn: nicht (teilloeschung aber mit error)
   if (!($_POST['submit'] == "Teillöschung" && $error_msg != ""))
   {
     //============================================================================
@@ -131,9 +127,6 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
 
       $loeschen_datum_von_orig =  $loeschen_datum_von;
       $loeschen_datum_bis_orig =  $loeschen_datum_bis;
-
-      // brute force.. korrigieren... (in den Bereich draengen)
-      // TODO: besser warnung ausgeben und nichts machen.
 
       // |7---------21|7-----------21|7-----------21|7----------21|
       //               **************
@@ -158,13 +151,12 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
       //  'bis' ausdehnen...  >=21 -->  7:00 naechster tag
       if (date("H:i", $loeschen_stamp_bis) >= "21:00")
       {
-        echo "wir sind drinnen <br />";
         $date07 = strtotime(date("Y-m-d", $loeschen_stamp_bis)." 23:00:00");
         $loeschen_datum_bis = date("Y-m-d H:i:s", $date07 + 8 * 60 * 60);
       }
 
       // start und endzeit = groesser reservation -> komplett loeschen
-      if ($loeschen_datum_von <= $res_datum_von && $loeschen_datum_bis >= $res_datum_bis)
+      if ($loeschen_datum_von == $res_datum_von && $loeschen_datum_bis == $res_datum_bis)
       {
         delete_reservation($mysqli, $reservierung, $begruendung, $_SESSION['user_id']);
 
@@ -176,7 +168,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
                             mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
       }
       // Anfang kuerzen
-      else if ($loeschen_datum_von <= $res_datum_von && $loeschen_datum_bis < $res_datum_bis)
+      else if ($loeschen_datum_von == $res_datum_von && $loeschen_datum_bis < $res_datum_bis)
       {
 
         $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `von` = ? WHERE `reservationen`.`id` = ?;";
@@ -189,7 +181,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
       }
       // Ende kuerzen
-      else if ($loeschen_datum_von > $res_datum_von && $loeschen_datum_bis >= $res_datum_bis)
+      else if ($loeschen_datum_von > $res_datum_von && $loeschen_datum_bis == $res_datum_bis)
       {
         $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
         mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von, $reservierung));
@@ -200,23 +192,14 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
 
         reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
       }
-      else
+      else // liegt wo dazwischen
       {
-        // eintrag clonen (inklusive timestamp - ohne ID)
-        //
+        // eintrag 'fast-clonen' (inklusive timestamp - ohne ID und mit neuem bis
         $query = "INSERT INTO `mfgcadmin_reservationen`.`reservationen` (
-        `id` ,
-        `timestamp` ,
-        `user_id` ,
-        `flieger_id` ,
-        `von` ,
-        `bis`
-        )
-        VALUES (
-        NULL , '".$obj->timestamp."', '".$obj->user_id."', '".$obj->flieger_id."', '".$loeschen_datum_bis."', '".$obj->bis."'
-        );";
+        `id` , `timestamp` , `user_id` , `flieger_id` , `von` , `bis`)
+        VALUES (NULL ,? ,? ,? ,? ,?);";
 
-        $mysqli->query($query);
+        mysqli_prepare_execute($mysqli, $query, 'siiss', array ($obj->timestamp, $obj->user_id, $obj->flieger_id, $loeschen_datum_bis, $obj->bis));
 
         // update the initial one (bis ... to loeschen_von..)
         $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
@@ -233,10 +216,10 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
         $not_new_no_notification = $obj_t->id;
       }
     }
+
     //============================================================================
     // Loeschen (ganz)
 
-    // TODO: nur admins! und so? sonst nur die eigenen darf man loeschen
     else if ($obj->von >= $rounded_datetime || $obj->bis <= $rounded_datetime)
     {
       $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
@@ -256,10 +239,11 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
     else
     {
       //  braucht keine Zurich.. reine H:i Hohlung.. auf 'neutralem' string
-      //  zurich wurde aber auch gehen.. egal
+      //  zurich wurde aber auch gehen.. sofern bei beiden.
 
       //  wenn ZEIT nach >21 <7 ----> 7 nachster tag 'von'
       //  sollte nicht passieren, aber orig bis muss > sein als neues von
+      //  TODO function? validate_22_7_time or so?
       $tmp_hour_min = date("H:i", strtotime($rounded_datetime));
 
       if ($tmp_hour_min < "07:00")
@@ -283,8 +267,9 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
       $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
       mysqli_prepare_execute($mysqli, $query, 'si', array ($new_end_date, $reservierung));
 
-      // fuer den eintrag . muss alles auf  21:00 zurueck.. falls "07:00"
+      // fuer den eintrag . muss alles auf  21:00 zurueck.. falls "07:00" freigegeben
       // loeschen bis ende abend.. quasi..
+
       $tmp_d = date("H:i", strtotime($new_end_date));
 
       if ($tmp_d == "07:00")
@@ -297,10 +282,6 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
       write_status_message($mysqli, "[Reservation]", "Freigegeben: durch [{$pilot_id_pad}] $name: $datum ");
 
       reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $obj->von , $new_end_date);
-
-      // TODO stimmt noch nicht..
-      // TODO stimmt noch nicht..
-
     }
 
     //============================================================================
@@ -330,9 +311,12 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
 
           $res_datum_raw = mysql2chtimef($obj3->von, $obj3->bis, TRUE);
           $res_datum = mysql2chtimef($obj3->von, $obj3->bis, FALSE);
+
+          // TODO get_flieger_from_id() ?
           $res4 = $mysqli->query("SELECT * FROM `flieger` WHERE `id` = {$obj3->flieger_id} ;");
           $obj4 = $res4->fetch_object();
           $flieger = $obj4->flieger;
+
           $headers   = array();
           $headers[] = "MIME-Version: 1.0";
           $headers[] = "Content-type: text/plain; charset=utf-8";

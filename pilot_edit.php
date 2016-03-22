@@ -49,6 +49,7 @@ $query = "SELECT * FROM `piloten` WHERE `piloten`.`id` = '{$user_id}'";
 $res = $mysqli->query($query);
 $obj = $res->fetch_object();
 
+// TODO function?
 if ($obj->admin == 1)
   $admin_txt = "ja";
 else
@@ -124,6 +125,9 @@ echo "  </select>
     <input class='submit_button' type='submit' name='updaten' value='Aenderungen abschicken' />
   </div>
 </form>";
+
+//============================================================================
+// pilot loeschen button unten
 
 $pilot_id_pad = str_pad($obj->pilot_id, 3, "0", STR_PAD_LEFT);
 

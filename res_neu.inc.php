@@ -1,6 +1,6 @@
 <?php
 
-// braucht man auch ganz unten
+// braucht man auch ganz unten HTML
 $user_id = $_SESSION['user_id'];
 
 // falls admin fuer jemanden Eintraege macht.
@@ -49,8 +49,7 @@ if (isset($_POST['submit']))
   $local_datetime = date("Y-m-d H:i:s", time());
   date_default_timezone_set("UTC");
 
-  $cur_stamp = time(); // wird einige male gebraucht
-
+  // TODO mit teilloeschung check kombinieren?
   $error_msg = "";
   if ($bis_date <= $von_date)
     $error_msg .= "'Von' Zeit nicht grösser als 'bis' Zeit.<br />";
@@ -91,6 +90,9 @@ if (isset($_POST['submit']))
       header("Location: index.php?tag={$von_tag}&monat={$von_monat}&jahr={$von_jahr}");
   }
 }
+// vom Chart.. die werte mal in die sesseion eintragen.. damit die comboes damit
+// gefuellt werden koennen.
+
 else if (isset($_GET['flieger_id']) && isset($_GET['tag']) && isset($_GET['monat']) && isset($_GET['jahr']))
 {
 
@@ -112,7 +114,7 @@ else if (isset($_GET['flieger_id']) && isset($_GET['tag']) && isset($_GET['monat
 else
 {
   header('Location: /reservationen/index.php');
-  // else nothing to do so
+  // else nothing to do here
 }
 
 ?>

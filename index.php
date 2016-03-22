@@ -44,13 +44,12 @@ $t = str_pad($tag, 2, "0", STR_PAD_LEFT);
 
 $date = "$j-$m-$t";
 
-
 date_default_timezone_set("Europe/Berlin");
 $wochentag_i = date("w", strtotime($date));
 date_default_timezone_set("UTC");
 
 //============================================================================
-// Tagesansicht title + Kalender
+// Tagesansicht -> title + Kalender
 
 if ($_SESSION['show'] == 'tag')
 {
@@ -65,7 +64,7 @@ if ($_SESSION['show'] == 'tag')
 }
 
 //============================================================================
-// Monatsansicht title + navigation
+// Monatsansicht -> title + navigation
 
 else
 {

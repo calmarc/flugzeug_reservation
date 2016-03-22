@@ -1,6 +1,5 @@
 <?php
 
-
 //============================================================================
 // falls vom 'flug eintragen' edit link
 // damit man beim gleichen flieger bleibt (evt in session tun lieber?)

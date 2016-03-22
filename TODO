@@ -4,7 +4,15 @@
 
 * pfeile beim sortierne tabelle oben (rauf runter asc/desc)
 
+* zu kontrollieren.
+	   16      "res_geloescht.inc.php"        line 0
+	   19 %a   "res_loeschen.php"             line 146
+  die includes...
+
+
 == MINOR ==
+
+* die res_anzeige dinger.. ausgliedern noetig etc.
 
 * loeschen combobox einheitlich  mit > < etc. (auch filter)
 

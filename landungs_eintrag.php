@@ -64,7 +64,9 @@ $fliegertxt = $obj->flieger;
       <table class='vtable'>
         <tr class="trblank">
           <td><b>Pilot:</b></td>
-<?php if ($admin_bol)
+
+<?php 
+if ($admin_bol)
 {
   echo "<td><select size='1' style='width: 16em' name='user_id'>";
   combobox_piloten($mysqli, $_SESSION['pilot_id']);

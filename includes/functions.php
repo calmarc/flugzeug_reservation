@@ -69,6 +69,7 @@ function zaehler_into($zaehler_minute, $zaehler_minute_vor)
   return array($zaehlerstand, $dauer);
 }
 
+// schreibt ein email wenn eintrag geloescht wurde an .. 'diverses'...
 function bei_geloescht_email($mysqli, $subject_hint, $pilot_id, $flieger_id, $zeit, $begruendung)
 {
   $res = $mysqli->query("SELECT * from `diverses` WHERE `funktion` = 'bei_geloescht_email';");
@@ -147,6 +148,9 @@ function mysqli_prepare_execute ($mysqli, $query, $bind_string, $arr)
   }
   return TRUE;
 }
+
+// fuer die service eintraege etc
+// TODO compute. . nicht computer
 function computer_minute_from_zaehlerstand($zaehlerstand)
 {
   // 44.12 * int - 44 * 60 = minuten.
@@ -157,6 +161,7 @@ function computer_minute_from_zaehlerstand($zaehlerstand)
   return array($zaehler_minute, $digit_minute);
 }
 
+// darf nur zwishcn x.00 und z.59 liegen
 function check_zaehlerstand($zaehlerstand, $digit_minute)
 {
   $error_msg = "";

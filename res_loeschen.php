@@ -22,7 +22,6 @@ print_html_to_body('Reservierung loeschen', '');
 include_once('includes/usermenu.php');
 
 ?>
-
   <main>
     <div id="formular_innen">
 <?php
@@ -33,6 +32,8 @@ $required = 'required="required"';
 $chars_java = "onsubmit=\"var text = document.getElementById('texta').value; if(text.length < 7) { alert('Ausführlichere Begruendung bitte!'); return false; } return true;\"";
 $chars_java2 = "onsubmit=\"var text = document.getElementById('texta2').value; if(text.length < 7) { alert('Ausführlichere Begruendung bitte!'); return false; } return true;\"";
 $optional = "";
+
+// no begruendung required for admins.
 if (check_admin($mysqli))
 {
   $required = '';
@@ -52,6 +53,8 @@ if ($res->num_rows < 1)
 }
 $obj = $res->fetch_object();
 
+// Reservation ist am Rand - nur. - gegenteil: = liegt drinnen
+// wieso einfach wenns auch kompliziert geht
 if (!($obj->von >= $rounded_datetime || $obj->bis <= $rounded_datetime))
 {
 	$trimmen = TRUE;
@@ -77,11 +80,13 @@ $query = "SELECT * FROM `reservationen`
 $res = $mysqli->query($query);
 $obj = $res->fetch_object();
 
+// todo: get_flieger_from_id
 $flugzeug = $obj->flieger_id;
 $res2 = $mysqli->query("SELECT `flieger` FROM `flieger` where `id` = {$flugzeug};");
 $obj2 = $res2->fetch_object();
 $flugzeug = $obj2->flieger;
 
+// infos ueber die buchugn ausgeben:
 ?>
     <div class="center">
       <table class="vtable">
@@ -113,6 +118,7 @@ $flugzeug = $obj2->flieger;
         </tr>
       </table>
     </div>
+
 <!-- <p>Hinweis: Es ist nicht möglich Reservierungen für bereits vergangene Tage zu löschen.</p> -->
 
 <h3><?php echo $h3; ?></h3>
@@ -136,6 +142,7 @@ if (!$trimmen)
 <h1>Teillöschung</h1>
 
 <?php
+// TODO kontrollieren was das unten macht
 
 if (isset($error_msg) && $error_msg != "")
   echo "<p><b style='color: red;'>$error_msg</b></p>";

@@ -17,7 +17,6 @@ if (login_check($mysqli) == FALSE){ header("Location: /reservationen/login/index
 
 include_once('pass_change.inc.php');
 
-
 print_html_to_body('Passwort ändern', '');
 include_once('includes/usermenu.php');
 

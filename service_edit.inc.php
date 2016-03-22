@@ -1,9 +1,12 @@
 <?php
+
 // von der uebersicht
+
 if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
 {
   $flieger_id = $_GET['flieger_id'];
 
+  // todo: eventuell fliegercheck. function
   $query = "SELECT * FROM `flieger` WHERE `id` = '$flieger_id' LIMIT 1;";
   $res = $mysqli->query($query);
 
@@ -23,13 +26,15 @@ if (isset($_GET['flieger_id']) && $_GET['flieger_id'] > 0)
 }
 else if (isset($_POST['submit']))
 {
-  $flieger_id = ""; if (isset($_POST['flieger_id'])) $flieger_id = $_POST['flieger_id'];
-  $tag = ""; if (isset($_POST['tag'])) $tag = $_POST['tag'];
-  $monat = ""; if (isset($_POST['monat'])) $monat = $_POST['monat'];
-  $jahr = ""; if (isset($_POST['jahr'])) $jahr = $_POST['jahr'];
-  $zaehlerstand = ""; if (isset($_POST['zaehlerstand'])) $zaehlerstand = $_POST['zaehlerstand'];
-  $verantwortlich = ""; if (isset($_POST['verantwortlich'])) $verantwortlich = $_POST['verantwortlich'];
-  $verantwortlich = intval($verantwortlich);
+  $flieger_id = $_POST['flieger_id'];
+  $tag = $_POST['tag'];
+  $monat = $_POST['monat'];
+  $jahr = $_POST['jahr'];
+  $zaehlerstand = $_POST['zaehlerstand'];
+  $verantwortlich = intval($_POST['verantwortlich']);
+
+  // TODO werden fuer die defautls gebraucht. Besser andere woerter nehmen da
+  // das eher nach return values fuer chart toenen
   $_SESSION['flieger_id']  = $flieger_id;
   $_SESSION['tag']  = $tag;
   $_SESSION['monat']  = $monat;
@@ -43,6 +48,7 @@ else if (isset($_POST['submit']))
 
   $error_msg = check_zaehlerstand($zaehlerstand, $digit_minute);
 
+  // ueberpruefen ob mit service eintrag mit zaehlereintrag ok..
   $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `zaehler_eintraege` WHERE `flieger_id` = '{$flieger_id}';");
   $obj_x = $res_x->fetch_object();
   $min = $obj_x->zaehler_minute;
@@ -50,7 +56,7 @@ else if (isset($_POST['submit']))
   if ($error_msg == "")
   {
     if ($min < $zaehler_minute)
-      $error_msg = "HINWEIS: Der Service-Eintrag ist grösser als der letzte Landungseintrag!<br />Bitte korrigieren.";
+      $error_msg = "HINWEIS: Der Service-Eintrag ist grösser als der letzte Landungseintrag!<br />Allenfall korrigieren.";
 
     $query = "INSERT INTO `mfgcadmin_reservationen`.`service_eintraege` (
         `id` , `user_id` , `flieger_id` , `datum` , `zaehler_minute`) VALUES ( NULL , ?, ?, ?, ?)";

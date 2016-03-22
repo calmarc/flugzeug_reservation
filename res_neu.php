@@ -28,58 +28,24 @@ include_once('includes/usermenu.php'); ?>
   <h1 class="hide_on_print">Flugzeug reservieren</h1>
 
 <?php
-if (isset($msg) && $msg != "")
-{
-  echo "$msg</div></main></body></html>";
-  exit;
-}
 
 if (isset($error_msg) && $error_msg != "")
   echo "<p><b style='color: red;'>$error_msg</b></p>";
 
-if (isset($flieger_id))
-{
-  $query = "SELECT * FROM `flieger` WHERE `id` = '{$flieger_id}' LIMIT 1;";
-  $res = $mysqli->query($query);
-  $obj = $res->fetch_object();
-  $fliegertxt = $obj->flieger;
-  $hidden = "<input type='hidden' name='flieger_id' value='{$flieger_id}' />";
-}
-else
-{
-  $flieger_id = "";
-  $query = "SELECT * FROM `flieger`;";
-  $res = $mysqli->query($query);
-  $fliegertxt = "";
-  while($obj = $res->fetch_object())
-     $fliegertxt .= "<option value='{$obj->id}'>{$obj->flieger} ({$obj->id})</option>";
-   $fliegertxt = "<select size='1' name='flieger_id'>{$fliegertxt}<select>";
-  $hidden = "";
-}
-
-$von_stunde = $_SESSION['von_stunde'];
-if ($von_stunde == "")
-  $von_stunde = "7";
-
-$von_minute = $_SESSION['von_minuten'];
-if ($von_minute == "")
-  $von_minute = "0";
-
-$bis_stunde = $_SESSION['bis_stunde'];
-if ($bis_stunde == "")
-  $bis_stunde = "7";
-
-$bis_minute = $_SESSION['bis_minuten'];
-if ($bis_minute == "")
-  $bis_minute = "0";
+// TODO: get_flieger_from_id(0
+$query = "SELECT * FROM `flieger` WHERE `id` = '{$flieger_id}' LIMIT 1;";
+$res = $mysqli->query($query);
+$obj = $res->fetch_object();
+$fliegertxt = $obj->flieger;
 
 ?>
   <form action='res_neu.php' method='post'>
-<?php echo $hidden; ?>
+  <input type='hidden' name='flieger_id' value='<?php echo $flieger_id; ?>' />";
     <div class='center hide_on_print'>
       <table class='vtable'>
         <tr class="trblank">
           <td><b>Pilot:</b></td>
+
 <?php if ($admin_bol)
 {
   echo "<td><select size='1' style='width: 16em' name='user_id'>";
@@ -168,7 +134,7 @@ $date = date("Y-m-d H:i:s", time());
 date_default_timezone_set('UTC');
 
 
-// clean up
+// TODO: clean up and combine with res_momentan somehow?
 remove_zombies($mysqli);
 // get all valid reservation
 // later: see if there is an entry.. if not.. yellow (standby)

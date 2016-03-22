@@ -20,6 +20,9 @@ include_once('../includes/usermenu.php');
     <main>
 <?php
 
+//============================================================================
+// Fehler ausgeben (process_login hat error 1 gegeben .. oder halt 2
+
 if (isset($_GET['error']))
 {
   $err= "Pilot-ID / Passwort Kombination stimmen nicht!";
@@ -61,7 +64,7 @@ if (isset($_GET['error']))
 
               <tr>
                 <td colspan="2" style="text-align: center; padding-top: 50px; padding-right: 30px;"><input required="required" style="width: 20px;" type="checkbox" name="zustimmen" id="zustimmen" value="" />
-<label for="zustimmen">Ich bestätige die Einhaltung der</label> <a target="_blank" href="/reservationen/reservationspraxis.pdf">Reservationspraxis</a>
+<label for="zustimmen">Ich bestätige die Einhaltung der</label><br /><a target="_blank" href="/reservationen/reservationspraxis.pdf">Reservationspraxis</a>
                 </td>
               </tr>
             </table>

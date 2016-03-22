@@ -5,6 +5,7 @@ $error_msg = "";
 if (isset($_POST['pilot_id'], $_POST['password'])) {
 
   // Sanitize and validate the data passed in
+
   $pilot_id = intval(trim($_POST['pilot_id']));
   $password = trim($_POST['password']);
 
@@ -20,6 +21,9 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
         $error_msg .= '<p class="error">Die eingegebene Email ist nicht gültig</p>';
   }
 
+  //============================================================================
+  // zum wieder die input boxen auffuellen mit den vorhanden werten
+
   $_SESSION['regpilotid'] = $pilot_id;
   $_SESSION['regname'] = $name;
   $_SESSION['regnatel'] = $natel;
@@ -27,21 +31,30 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
   $_SESSION['regemail'] = $email;
   $_SESSION['regadmin'] = $admin;
 
+  //============================================================================
+  // Existiert der Benutzer bereits?
+
   $prep_stmt = "SELECT id FROM piloten WHERE pilot_id = ? LIMIT 1";
   $stmt = $mysqli->prepare($prep_stmt);
 
-  if ($stmt) {
-      $stmt->bind_param('i', $pilot_id);
-      $stmt->execute();
-      $stmt->store_result();
+  if ($stmt) 
+  {
+    $stmt->bind_param('i', $pilot_id);
+    $stmt->execute();
+    $stmt->store_result();
 
-      if ($stmt->num_rows == 1) {
-          // A user with this email address already exists
-          $error_msg .= '<p class="error">Ein Pilot mit dieser Nummer existiert bereits.</p>';
-      }
-  } else {
+    if ($stmt->num_rows == 1) 
+    {
+        // A user with this email address already exists
+        $error_msg .= '<p class="error">Ein Pilot mit dieser Nummer existiert bereits.</p>';
+    }
+  } 
+  else 
+  {
       $error_msg .= '<p class="error">Datenbank Fehler</p>';
   }
+
+  // minumum 4 zeichen
 
   if (strlen(trim($_POST['password'])) < 4)
       $error_msg .= '<p class="error">Passwort muss mindestens 4 Zeichen lang sein</p>';
@@ -50,6 +63,7 @@ if (isset($_POST['pilot_id'], $_POST['password'])) {
   if (strlen($password) != 128)
       $error_msg .= '<p class="error">Ungültige Passwort Konfiguration.</p>';
 
+  // alles ok - neuer user/piloten eintragen
   if (empty($error_msg)) {
       // Create a random salt
       $random_salt = hash('sha512', uniqid(openssl_random_pseudo_bytes(16), TRUE));

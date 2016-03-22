@@ -18,7 +18,6 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
 if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
-
 //============================================================================
 // loeschen form wurde gedrueckt
 include_once ('diverses_edit.inc.php');
@@ -41,7 +40,7 @@ if (isset($_GET['id']))
 }
 else
 {
-  echo "<h3>Keine gültgie ID erhalten. Bitte <a href='pilot_admin.php'>wiederhohlen</a> oder an mac@calmar.ws melden</h3>";
+  echo "<h3>Keine gültgie ID erhalten. Bitte wiederhohlen</a> oder an mac@calmar.ws melden</h3>";
   exit;
 }
 

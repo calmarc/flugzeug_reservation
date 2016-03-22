@@ -76,8 +76,10 @@ if (isset($_POST['updaten']))
   // email scharf wenn noetig (weil wieder gut ist jetzt)
   if ($obj->email_gesch == TRUE && ($checkflug > $date_t || $checkflug == "0000-00-00"))
     mysqli_prepare_execute($mysqli, "UPDATE `mfgcadmin_reservationen`.`piloten` SET `email_gesch` = '0' WHERE `piloten`.`id` = ?;", 'i', array ($user_id));
+    // TODO status message ausgeben - pilot nicht mehr gesperrt oder so
 
-  // passwort mit salt.. generieren.. und eintragen
+  // passwort mit salt.. generieren.. und seperat eintragen
+  // TODO: evt function schreiben fuer das passwort gezinkel.
   if ($password != "")
   {
     $query= "SELECT `salt` FROM `piloten` WHERE `id` = {$user_id} LIMIT 1;";

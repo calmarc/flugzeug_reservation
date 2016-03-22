@@ -50,7 +50,6 @@ include_once('includes/send_sms.php');
             <th><b>Aktion</b></th>
             <th><b>Data</b></th>
           </tr>
-
 <?php
 
 $query = "SELECT * FROM `status_meldungen` ORDER BY `timestamp` DESC;";
@@ -60,7 +59,9 @@ $res = $mysqli->query($query);
 while ($obj = $res->fetch_object())
 {
 
-  // to LOKAL zeit.. TODO funktion machen von dem - wo noch?
+  // to LOKAL zeit.. 
+  // TODO funktion machen von dem - wo noch?
+
   $lokal_datum = $obj->timestamp;
   list( $tag, $zeit) = explode(" ", $obj->timestamp);
   $tmp = explode("-", $tag);
@@ -69,7 +70,6 @@ while ($obj = $res->fetch_object())
 
   $action = $obj->aktion;
   $data = $obj->data;
-
 
   //============================================================================
   // nach @@...@@ string gucken (die trackingnummer)
@@ -80,6 +80,7 @@ while ($obj = $res->fetch_object())
     $t_arr = explode("@@", $data);
     if (count($t_arr) == 3)
     {
+      // Daten von der tracking nummer
       $t_arr2 = sms_delivery_status($mysqli, $t_arr[1]);
 
       if (count($t_arr2) == 2) // eine Exception wurde ausgeloest (falsche tracking . normalerweise)

@@ -11,6 +11,10 @@ include_once ('includes/functions.php');
 
 sec_session_start();
 
+//============================================================================
+// um die formular starteintrage und so.
+
+// TODO evt andere default werte namen nehme: tag_combo etc.
 date_default_timezone_set("Europe/Zurich");
 if (!isset($_SESSION['tag'])) $_SESSION['tag'] = date('d', time());
 if (!isset($_SESSION['monat'])) $_SESSION['monat'] = date('m', time());
@@ -25,6 +29,7 @@ include_once('service_edit.inc.php');
 print_html_to_body('Service Eintrag', '');
 include_once('includes/usermenu.php');
 
+// TODO: get_flieger_from_id() function?
 $query = "SELECT * FROM `flieger` WHERE `id` = '{$flieger_id}' LIMIT 1;";
 $res = $mysqli->query($query);
 $flieger_name = $res->fetch_object()->flieger;
@@ -65,6 +70,7 @@ $hidden = "<input type='hidden' name='flieger_id' value='{$flieger_id}' />";
           <td>
 <?php
 
+// nur admins.. genuegt.. (combobox).
 $res = $mysqli->query("SELECT * FROM `piloten` WHERE `admin` > 0 ORDER BY `pilot_id` ASC;");
 echo '<select size="1" style="width: 15em;" name="verantwortlich">';
 while ($obj = $res->fetch_object())
@@ -113,6 +119,7 @@ $query = "SELECT `service_eintraege`.`id`,
 
 $res = $mysqli->query($query);
 
+// die daten ausgeben als liste
 while ($obj = $res->fetch_object())
 {
   list ($jahr, $monat, $tag) = preg_split('/[- ]/', $obj->datum);
