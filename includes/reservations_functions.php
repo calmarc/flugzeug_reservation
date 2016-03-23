@@ -90,15 +90,16 @@ function remove_zombies($mysqli)
       continue;
 
     //============================================================================
-    // dieser block gibts auch 3 mal.. aber OK so.
-    // halb stunden bloecke differenz unserer reservierngen
+    // $bookings initialisieren
+    //
+    // halb stunden bloecke differenz unserer reservierngen zur initalisierung
     $min_stamp = strtotime($von_extrem);
-    $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 60 / 60 * 2)+1;
+    $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 1800);
 
     // it.: if booking[level][hour]=TRUE <- reserved
     $bookings = array(array(), array(), array(), array(), array());
     for ($x = 0; $x < 5; $x++) // initialise with FALSE = free.
-      for ($i = 0; $i < $half_hour_tot+1; $i++)
+      for ($i = 0; $i < $half_hour_tot; $i++)
         $bookings[$x][$i] = FALSE;
     //----------------------------------------------------------------------------
 
@@ -120,12 +121,20 @@ function remove_zombies($mysqli)
       // 4. accordingly 'book' that into the level-variable
       // 5. goto step 3.
 
-      #transfer time of booking into blocks (internal time measurement kinda)
+      //transfer time of booking into blocks (internal time measurement kinda)
+      // Z.B.: 8 Uhr - 8:30 - gibt nur eine Total. unixtime 7:00 = 0
+      // $min_stamp = 3600 (8 uhr)
+      // $block_first = 3600 - 3600 = 0;
+      // block_last = 5400 (8:30) - 3600 = 1800 -> 1
+      // ergibt eine iteration.. wo gebucht wird
+      // 
+
+
       $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800);  // 1800 halbe stunde
-      $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1;
+      $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800);
 
       $level = 0;
-      for($i = $block_first; $i <= $block_last; $i++)
+      for($i = $block_first; $i < $block_last; $i++)
       {
         if ($bookings[$level][$i] == TRUE)
         {
@@ -140,7 +149,7 @@ function remove_zombies($mysqli)
         array_push ($delete_id, $obj_tang->id);
       else
         //book into level 0 only - enough for this procedure
-        for($i = $block_first; $i <= $block_last; $i++)
+        for($i = $block_first; $i < $block_last; $i++)
           $bookings[$level][$i] = TRUE;
     }
 
@@ -179,35 +188,39 @@ function check_level($mysqli, $flugzeug_id, $von_date, $bis_date)
   if ($bis_extrem < $bis_date) //new has to get included into that
     $bis_extrem = $bis_date;
 
-  //============================================================================
-  // dieser block gibts auch 3 mal.. aber OK so.
-  // halbe stunde blocks ganz links nach ganz rechts.
-  $min_stamp = strtotime($von_extrem);
-  $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 60 / 60 * 2)+1;
+    //============================================================================
+    // $bookings initialisieren
+    //
+    // halb stunden bloecke differenz unserer reservierngen zur initalisierung
+    $min_stamp = strtotime($von_extrem);
+    $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 1800);
 
-  // if booking[level][hour]=TRUE <- reserved
-  $bookings = array(array(), array(), array(), array(), array(), array());
-  for ($x = 0; $x < 6; $x++) // initialise with FALSE = free.
-    for ($i = 0; $i < $half_hour_tot+1; $i++)
-      $bookings[$x][$i] = FALSE;
-  //----------------------------------------------------------------------------
+    // it.: if booking[level][hour]=TRUE <- reserved
+    $bookings = array(array(), array(), array(), array(), array());
+    for ($x = 0; $x < 5; $x++) // initialise with FALSE = free.
+      for ($i = 0; $i < $half_hour_tot; $i++)
+        $bookings[$x][$i] = FALSE;
+    //----------------------------------------------------------------------------
 
   // alle hohlen
   $query = "SELECT * FROM `reservationen` WHERE `flugzeug_id` = '{$flugzeug_id}' AND `von` >= '{$von_extrem}'  ORDER BY `timestamp` ASC;";
   $res_tang = $mysqli->query($query);
 
+  //============================================================================
+  // alle aktuellen buchungen speichern mal.... in bookings
+
   while($obj_tang = $res_tang->fetch_object())
   {
-    #transfer time to blocks (1800=30min) of current booking
+    //transfer time to blocks (1800=30min) of current booking
     $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800);
-    $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1;
+    $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800);
 
     // look vor level where it can fit
     $level = 0;
     while(TRUE)
     {
       $flag = FALSE;
-      for($i = $block_first; $i <= $block_last; $i++)
+      for($i = $block_first; $i < $block_last; $i++)
       {
         if ($bookings[$level][$i] == TRUE)
         {
@@ -222,7 +235,7 @@ function check_level($mysqli, $flugzeug_id, $von_date, $bis_date)
     }
 
     //book into according level
-    for($i = $block_first; $i <= $block_last; $i++)
+    for($i = $block_first; $i < $block_last; $i++)
       $bookings[$level][$i] = TRUE;
   }
 
@@ -231,14 +244,14 @@ function check_level($mysqli, $flugzeug_id, $von_date, $bis_date)
   // transfer time to blocks (1800=30min) of current booking
 
   $block_first = intval((strtotime($von_date) - $min_stamp) / 1800);
-  $block_last = intval((strtotime($bis_date) - $min_stamp) / 1800)-1;
+  $block_last = intval((strtotime($bis_date) - $min_stamp) / 1800);
 
   // look vor level where it can fit
   $level = 0;
   while(TRUE)
   {
     $flag = FALSE;
-    for($i = $block_first; $i <= $block_last; $i++)
+    for($i = $block_first; $i < $block_last; $i++)
     {
       if ($bookings[$level][$i] == TRUE)
       {
@@ -267,18 +280,19 @@ function get_list_active_reserv($mysqli, $flugzeug_id)
   if ($von_extrem == 0 || $bis_extrem == 0)
     return $level_0;
 
-  //============================================================================
-  // dieser block gibts auch 3 mal.. aber OK so.
-  // halbe stunde blocks von ganz links nach ganz rechts.
-  $min_stamp = strtotime($von_extrem);
-  $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 60 / 60 * 2)+1;
+    //============================================================================
+    // $bookings initialisieren
+    //
+    // halb stunden bloecke differenz unserer reservierngen zur initalisierung
+    $min_stamp = strtotime($von_extrem);
+    $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 1800);
 
-  // if booking[level][hour]=TRUE <- reserved
-  $bookings = array(array(), array(), array(), array(), array(), array(), array());
-  for ($x = 0; $x < 7; $x++) // initialise with FALSE = free.
-    for ($i = 0; $i < $half_hour_tot+1; $i++)
-      $bookings[$x][$i] = FALSE;
-  //----------------------------------------------------------------------------
+    // it.: if booking[level][hour]=TRUE <- reserved
+    $bookings = array(array(), array(), array(), array(), array());
+    for ($x = 0; $x < 5; $x++) // initialise with FALSE = free.
+      for ($i = 0; $i < $half_hour_tot; $i++)
+        $bookings[$x][$i] = FALSE;
+    //----------------------------------------------------------------------------
 
   // alle hohlen
   $query = "SELECT * FROM `reservationen` WHERE `flugzeug_id` = '{$flugzeug_id}' AND `von` >= '{$von_extrem}'  ORDER BY `timestamp` ASC;";
@@ -286,16 +300,16 @@ function get_list_active_reserv($mysqli, $flugzeug_id)
 
   while($obj_tang = $res_tang->fetch_object())
   {
-    #transfer time to blocks (1800=30min) of current booking
+    //transfer time to blocks (1800=30min) of current booking
     $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800);
-    $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1;
+    $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800);
 
     // look vor level where it can fit
     $level = 0;
     while(TRUE)
     {
       $flag = FALSE;
-      for($i = $block_first; $i <= $block_last; $i++)
+      for($i = $block_first; $i < $block_last; $i++)
       {
         if ($bookings[$level][$i] == TRUE)
         {
@@ -311,7 +325,7 @@ function get_list_active_reserv($mysqli, $flugzeug_id)
 
     //book into according level
 
-    for($i = $block_first; $i <= $block_last; $i++)
+    for($i = $block_first; $i < $block_last; $i++)
       $bookings[$level][$i] = TRUE;
     if ($level == 0)
       array_push($level_0, $obj_tang->id);
