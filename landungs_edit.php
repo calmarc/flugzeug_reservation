@@ -28,9 +28,9 @@ print_html_to_body('Landungs-Eintrag editieren', '');
 include_once('includes/usermenu.php');
 ?>
   <main>
+    <h1>&laquo;Eintrag nach Landung&raquo; editieren</h1>
     <div id="formular_innen">
 
-    <h1>Flug-Eintrag editieren</h1>
 <?php
 
 // print error (>59 die digits)

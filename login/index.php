@@ -18,6 +18,7 @@ include_once('../includes/usermenu.php');
 
 ?>
     <main>
+      <h1>Einloggen</h1>
 <?php
 
 //============================================================================
@@ -38,10 +39,10 @@ if (isset($_GET['error']))
 ?>
 
       <div id="formular_innen">
-        <h1>Einloggen</h1>
+      <br /><br />
 
           <form action="process_login.php" method="post" name="login_form" class="login_form"> 			
-            <table class="formular_eingabe" style="width: 100%;">
+            <table class="formular_eingabe">
               <tr>
                 <td><b>Pilot-ID:</b></td>
                 <td ><input required="required" type="number"  min="1" max="999" name="pilot_nr" /></td>

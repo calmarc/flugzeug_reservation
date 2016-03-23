@@ -30,9 +30,9 @@ print_html_to_body('Piloten editieren - Administration', '');
 include_once('includes/usermenu.php');
 ?>
   <main>
+    <h1>Piloten editieren</h1>
     <div id="formular_innen">
 
-    <h1>Piloten editieren</h1>
 <?php
 if (isset($_GET['id']))
 {

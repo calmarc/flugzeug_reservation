@@ -36,9 +36,8 @@ $flugzeug_name = $res->fetch_object()->flugzeug;
 
 ?>
 <main>
-  <div id="formular_innen">
-
   <h1>Service Liste - <span style="color: #cc3300;"><?php echo $flugzeug_name; ?></span></h1>
+  <div id="formular_innen">
 
 <?php
 

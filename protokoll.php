@@ -26,9 +26,9 @@ include_once('includes/send_sms.php');
 
 ?>
   <main>
+    <h1>Protokoll</h1>
     <div id="formular_innen">
       <div class="center">
-        <h1>Protokoll</h1>
 
         <form action='protokoll.php' method='get'>
           Löschen: <select style="width: 15em;" onchange='this.form.submit()' name='loeschen' size="1" id='loeschen'>

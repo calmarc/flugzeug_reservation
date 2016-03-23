@@ -68,9 +68,9 @@ include_once('includes/usermenu.php');
 
 ?>
   <main>
+    <h1>Teil-gelöschte Reservationen</h1>
     <div id="formular_innen">
       <div class="center">
-        <h1>Teil-gelöschte Reservationen</h1>
 
           <form style="display: inline-block;" action="res_teilgeloescht.php" method='get'>
               <select size="1"  onchange='this.form.submit()' style="width: 16em;" name = "pilot_nr">

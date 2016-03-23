@@ -1,12 +1,11 @@
 /* THEME_COLOR */
-/* THEME_COLOR */
 body {
   color: #333333;
   /*background-color: #aaddff; */
   /*background-color: #74c4ee; */
   /*background-color: #7dc8f0; */
   /* THEME_COLOR */
-  background-color: #eeeeee; 
+  background-color: #E5E4E2; 
 
   font-family: sans-serif;
   margin: 0px;
@@ -36,7 +35,7 @@ nav {
   display: none;
 }
 
-h1 { padding-top: 0; margin-top: 0.1em; text-shadow: 2px 2px 1px #cccccc, 3px 3px 2px #eeeeee; }
+h1 { font-size: 180%; padding: 0.3em 1em 0.5em 1em; margin: 0 0 0 0; text-shadow: 2px 2px 1px #cccccc, 3px 3px 2px #eeeeee; }
 
 h1#h1tag { margin: 0px; padding: 0px; line-height: 40%; }
 h1#h1monat { margin: 0px; padding: 0px; line-height: 40%; }
@@ -135,8 +134,8 @@ main {
 form.login_form input { width: 80%; }
 
 div#formular_innen { 
-  margin: 1em auto 1em auto; 
-  padding: 1em 2em 1em 2em;  
+  margin: 0em auto 1em auto; 
+  padding: 2em 2em 2em 2em;  
   display: inline-block;  
   text-align: center; 
   border-radius: 1px; 
@@ -242,8 +241,8 @@ table.vertical_table td:nth-child(1) { padding-left: 1em; text-align: right; bac
 
 table.vertical_table td:nth-child(2) { text-align: left;}
 
-table.vertical_table tr:nth-child(even) { background-color: #eee; }
-table.vertical_table tr:nth-child(odd) { background-color: #fff; }
+table.vertical_table tr:nth-child(even) { background-color: #ffffff; }
+table.vertical_table tr:nth-child(odd) { background-color: #eeeeee; }
 
 /* THEME_COLOR*/
 table.vertical_table th { color: white; background-color: #666666; } 
@@ -271,8 +270,18 @@ table.vtable th { color: white; background-color: #555555; }
 .sub_loeschen:hover { border: 2px solid #ee3300; background-color: #ee3300;}
 
 /* THEME_COLOR */
-select#flugzeug_select {
-  background: #99eeff url(../bilder/select-arrow.png) no-repeat 90% center;
+/*select#flugzeug_select {*/
+  /*background: #99eeff url(../bilder/select-arrow.png) no-repeat 90% center;*/
+/*}*/
+
+a#printer {
+  display: inline-block; 
+}
+a#printer img {
+  display: inline-block; 
+  height: 1em; 
+  margin:0px; 
+  padding: 0px;
 }
 
 select {

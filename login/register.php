@@ -23,8 +23,8 @@ include_once('../includes/usermenu.php');
 
 ?>
   <main>
+      <h1>Neuen Piloten hinzufügen</h1>
       <div id="formular_innen">
-        <h1>Neuen Piloten hinzufügen</h1>
 
 <?php
 if (!empty($error_msg)) {

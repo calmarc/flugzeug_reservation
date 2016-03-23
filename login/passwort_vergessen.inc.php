@@ -41,8 +41,8 @@ if (isset($_POST['submit']))
   include_once('../includes/usermenu.php');
   echo "
           <main>
+            <h1>Passwort zurücksetzen</h1>
             <div id='formular_innen'>
-              <h1>Passwort zurücksetzen</h1>
             <p>{$status_txt}</p>
             </div>
           </main>

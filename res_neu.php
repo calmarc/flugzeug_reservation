@@ -23,9 +23,9 @@ print_html_to_body('Flugzeug reservieren', '');
 include_once('includes/usermenu.php'); ?>
 
 <main>
+  <h1 class="hide_on_print">Flugzeug reservieren</h1>
   <div id="formular_innen">
 
-  <h1 class="hide_on_print">Flugzeug reservieren</h1>
 
 <?php
 
@@ -120,8 +120,8 @@ else
   </form>
     <br />
     <div class='center'>
-      <h1 class="hide_on_print">Reservationen <a href="javascript:window.print()"><img alt="Ausdrucken" src="/reservationen/bilder/print-out.png" /></a></h1>
-      <h1 class="only_on_print">Kommende MFGC Reservationen<br />von: <?php echo "[".str_pad($_SESSION['pilot_nr'], 3, "0", STR_PAD_LEFT)."] ".$_SESSION['name']; ?><br />&nbsp; &nbsp;</h1>
+      <h2 class="hide_on_print">Reservationen <a id="printer" href="javascript:window.print()"><img alt="Ausdrucken" src="/reservationen/bilder/print-out.png" /></a></h2>
+      <h2 class="only_on_print">Kommende MFGC Reservationen<br />von: <?php echo "[".str_pad($_SESSION['pilot_nr'], 3, "0", STR_PAD_LEFT)."] ".$_SESSION['name']; ?><br />&nbsp; &nbsp;</h2>
     </div>
 
     <div class='center'>

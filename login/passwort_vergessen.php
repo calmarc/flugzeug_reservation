@@ -18,9 +18,9 @@ include_once('../includes/usermenu.php');
 
 ?>
     <main>
+      <h1>Passwort zurücksetzen</h1>
       <div id="formular_innen">
-        <h1>Passwort zurücksetzen</h1>
-
+      <br />
           <form action="passwort_vergessen.php" method="post" class="login_form"> 			
             <table class="formular_eingabe" style="width: 100%;">
               <tr>
@@ -34,6 +34,7 @@ include_once('../includes/usermenu.php');
             </table>
             <input class="submit_button" type="submit" name="submit" value="Email-Link schicken" />
           </form>
+      <br />
       </div>
   </main>
   </body>

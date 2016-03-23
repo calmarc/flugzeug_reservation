@@ -117,9 +117,9 @@ include_once('includes/usermenu.php');
 
 ?>
   <main>
+    <h1>Reservationen <a id="printer" href="javascript:window.print()"><img alt="Ausdrucken" src="/reservationen/bilder/print-out.png" /></a></h1>
     <div id="formular_innen">
       <div class="center">
-          <h1>Reservationen <a href="javascript:window.print()"><img alt="Ausdrucken" src="/reservationen/bilder/print-out.png" /></a></h1>
 
           <form style="display: inline-block;" action="res_momentan.php" method='get'>
               <select size="1" onchange='this.form.submit()' style="width: 19em;" name = "pilot_nr">

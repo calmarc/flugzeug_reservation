@@ -21,11 +21,6 @@ include_once ('res_loeschen.inc.php');
 print_html_to_body('Reservierung loeschen', '');
 include_once('includes/usermenu.php');
 
-?>
-  <main>
-    <div id="formular_innen">
-<?php
-
 // html stuff
 
 $required = 'required="required"';
@@ -70,7 +65,9 @@ else
     $button = "Reservation löschen";
 }
 
+echo " <main> ";
 echo "<h1>$h1</h1>";
+echo "    <div id='formular_innen'>";
 
 $query = "SELECT * FROM `reservationen`
           LEFT OUTER JOIN `piloten` ON `piloten`.`id` = `reservationen`.`user_id`
@@ -139,7 +136,7 @@ if (!$trimmen)
 
 <br />
 <hr />
-<h1>Teillöschung</h1>
+<h2>Teillöschung</h2>
 
 <?php
 // TODO kontrollieren was das unten macht

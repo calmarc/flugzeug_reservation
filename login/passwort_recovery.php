@@ -25,8 +25,8 @@ include_once('../includes/usermenu.php');
 ?>
 
 <main>
+<h1>Passwort neu setzen</h1>
 <div id="formular_innen">
-   <h1>Passwort neu setzen</h1>
 
   <?php
   if (!empty($error_msg))

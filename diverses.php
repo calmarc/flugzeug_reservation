@@ -19,9 +19,9 @@ include_once('includes/usermenu.php');
 
 ?>
   <main>
+    <h1>Einstellungen</h1>
     <div id="formular_innen">
       <div class="center">
-        <h1>Einstellungen</h1>
           <table class='vertical_table'>
           <tr>
           <th class="formular_zelle"></th>

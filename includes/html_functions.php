@@ -145,7 +145,7 @@ function print_html_to_body ($title, $special_meta)
 // fuer die madam
 if ( isset($_SESSION['pilot_nr']) && ($_SESSION['pilot_nr'] == "107"))
 { 
-  echo "<style>body { background-color: pink; }</style>"; 
+  echo "<style>body { background-color: #ffebf8; }</style>"; 
 }
 
 ?>

@@ -26,9 +26,9 @@ include_once('includes/usermenu.php');
 
 ?>
   <main>
+    <h1>Piloten Übersicht</h1>
     <div id="formular_innen">
       <div class="center">
-        <h1>Piloten Übersicht</h1>
 <?php
 $query = "SELECT * FROM `piloten` ORDER BY `pilot_nr`;";
 $res = $mysqli->query($query);
