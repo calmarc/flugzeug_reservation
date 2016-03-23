@@ -170,10 +170,11 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
     $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 1800);
 
     // it.: if booking[level][hour]=TRUE <- reserved
-    $bookings = array(array(), array(), array(), array(), array());
-    for ($x = 0; $x < 5; $x++) // initialise with FALSE = free.
-      for ($i = 0; $i < $half_hour_tot; $i++)
-        $bookings[$x][$i] = FALSE;
+    $bookings = array(array_fill(0, $half_hour_tot, FALSE),
+                      array_fill(0, $half_hour_tot, FALSE),
+                      array_fill(0, $half_hour_tot, FALSE),
+                      array_fill(0, $half_hour_tot, FALSE),
+                      array_fill(0, $half_hour_tot, FALSE));
     //----------------------------------------------------------------------------
 
     // today's 7h

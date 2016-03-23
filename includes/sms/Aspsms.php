@@ -276,7 +276,9 @@ class Aspsms
                 if (count($errorExplode) !== 2) {
                     throw new Exception("Something went wrong while working with the deliveryStatus response. Response: \"{$response}\"");
                 } else {
-                    throw new Exception($this->sendStatusCodes[$errorExplode[1]]);
+                    //throw new Exception($this->sendStatusCodes[$errorExplode[1]]);
+                    // CALMAR WAS HERE
+                    throw new Exception("Fehler..... einlogg?");
                 }
             }
             // set default value for reasoncode
