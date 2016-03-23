@@ -134,10 +134,10 @@ function check_level($mysqli, $flugzeug_id, $von_date, $bis_date)
   // TODO: identischer code bald 3 mal... in function reintun!
   // habes jahr zureuck
   date_default_timezone_set("Europe/Zurich");
-  $date_xmonth_back = date("Y-m-d H:i:s", time()-20736000);
+  $date_xmonth_back = date("Y-m-d H:i:s", time()-5456800); // 60*60*24*62
   date_default_timezone_set('UTC');
 
-  // NUR ein halbes jahr zurueck gucken. hats ueberhaupt reservationen?
+  // NUR 2 monate zurueck gucken (1monats reservationen sind maximum). hats ueberhaupt reservationen?
   // sonst Zeit markieren als $von_extrem
   $query = "SELECT `von` FROM `reservationen` WHERE `flugzeug_id` = '{$flugzeug_id}' AND `von` > '{$date_xmonth_back}'  ORDER BY `von` ASC LIMIT 1;";
 
@@ -249,10 +249,10 @@ function get_valid_reserv($mysqli, $flugzeug_id)
   $level_0 = array();
 
   date_default_timezone_set("Europe/Zurich");
-  $date_xmonth_back = date("Y-m-d H:i:s", time()-20736000);
+  $date_xmonth_back = date("Y-m-d H:i:s", time()-5456800); // 60*60*24*62
   date_default_timezone_set('UTC');
 
-  // NUR ein halbes jahr zurueck gucken. hats ueberhaupt reservationen?
+  // 2 monate zurueck gucken (max reservierung 1 monat). hats ueberhaupt reservationen?
   // sonst Zeit markieren als $von_extrem
   $query = "SELECT `von` FROM `reservationen` WHERE `flugzeug_id` = '{$flugzeug_id}' AND `von` > '{$date_xmonth_back}'  ORDER BY `von` ASC LIMIT 1;";
 
