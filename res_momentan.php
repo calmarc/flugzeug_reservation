@@ -151,7 +151,8 @@ while ($obj = $res->fetch_object())
           </form>
           <table class='vertical_table th_filter'>
           <tr>
-          <th class="hide_on_print" style="background-color: #99ff99;"></th>
+          <!--<th class="hide_on_print formular_zelle"></th>-->
+          <th class='formular_zelle'></th>
           <!--<th><a href="res_momentan.php?sort=timestamp"><b>Eingegeben</b></a></th>-->
             <th><a href="res_momentan.php?sort=pilot_nr"><b>Pilot</b><?php echo $pilot_img; ?></a></th>
             <th><a href="res_momentan.php?sort=flugzeug"><b>Flugzeug</b><?php echo $flugzeug_img; ?></a></th>

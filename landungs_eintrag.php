@@ -112,7 +112,7 @@ else
     <br />
     <table class='vertical_table'>
     <tr>
-      <th style="background-color: #99ff99;"></th>
+      <th class="formular_zelle"></th>
       <th>Datum</th>
       <th>Zählerstand</th>
       <th>Dauer</th>

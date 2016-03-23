@@ -165,7 +165,7 @@ while ($obj = $res->fetch_object())
 $query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flugzeug`.`flugzeug`, `reservationen`.`flugzeug_id` FROM `reservationen` LEFT OUTER JOIN `flugzeug` ON `flugzeug`.`id` = `reservationen`.`flugzeug_id` WHERE `user_id` = {$user_id} AND `bis` < '{$date}' ORDER BY `von` DESC LIMIT 5;";
 $res = $mysqli->query($query);
 
-echo '<tr><td style="background-color: #99ff99;"></td><td style="background-color: #99ff99; text-align: left;" colspan="2">Vergangene:</td></tr>';
+echo '<tr><td class="formular_zelle"></td><td class="formular_zelle" style="text-align: left;" colspan="2">Vergangene:</td></tr>';
 while ($obj = $res->fetch_object())
 {
   $datum = mysql2chtimef($obj->von, $obj->bis, FALSE);

@@ -3,39 +3,9 @@
 if (isset($_SESSION['pilot_nr'])) 
 {
   // highlight... the active links
-  $logout = "";
-  $index = "";
-  $index_t = "";
-  $index_m = "";
-  $pass_change = "";
-  $pilot_admin = "";
-  $res_geloescht = "";
-  $res_teilgeloescht = "";
-  $res_moment = "";
-  $protokoll = "";
-  $diverses = "";
+  $logout =  $index = $index_t = $index_m = $pass_change = $pilot_admin = $res_geloescht = $res_teilgeloescht = $res_moment = $protokoll = $diverses = "";
 
   $curr_file = $_SERVER['PHP_SELF'];
-
-  // selected -> for text 
-  $style = 'style="color: yellow; font-weight: bold;"'; 
-
-  // selected -> for images
-  $style2 = 'style="background-color: #333300; border: 2px #999900 solid;
-    filter: brightness(110%);
-    -webkit-filter: brightness(110%);
-    -moz-filter: brightness(110%);
-    -o-filter: brightness(110%);
-    -ms-filter: brightness(110%);
-    "';
-
-  $style_mfgc = 'style="background-color: transparent; border: 2px transparent solid;
-    filter: brightness(100%);
-    -webkit-filter: brightness(100%);
-    -moz-filter: brightness(100%);
-    -o-filter: brightness(100%);
-    -ms-filter: brightness(100%);
-    "';
 
   // switches between plan-view.
   // will switch when pressed the menu.. only - else it should deliver the same
@@ -54,26 +24,26 @@ if (isset($_SESSION['pilot_nr']))
   if ($curr_file == "/reservationen/index.php")
   {
     if ($_SESSION['show'] == 'monat')
-      $index_m = $style;
+      $index_m = "class='menu_text_selected'";
     else
-      $index_t = $style;
+      $index_t = "class='menu_text_selected'";
   }
   else if ($curr_file == "/reservationen/pass_change.php")
-    $pass_change = $style2;
+    $pass_change = "class='menu_image_selected'";
   else if ($curr_file == "/reservationen/pilot_admin.php")
-    $pilot_admin = $style2;
+    $pilot_admin = "class='menu_image_selected'";
   else if ($curr_file == "/reservationen/pilot_edit.php")
-    $pilot_admin = $style2;
+    $pilot_admin = "class='menu_image_selected'";
   else if ($curr_file == "/reservationen/res_geloescht.php")
-    $res_geloescht = $style2;
+    $res_geloescht = "class='menu_image_selected'";
   else if ($curr_file == "/reservationen/res_teilgeloescht.php")
-    $res_teilgeloescht = $style2;
+    $res_teilgeloescht = "class='menu_image_selected'";
   else if ($curr_file == "/reservationen/res_momentan.php")
-    $res_moment = $style2;
+    $res_moment = "class='menu_image_selected'";
   else if ($curr_file == "/reservationen/protokoll.php")
-    $protokoll = $style2;
+    $protokoll = "class='menu_image_selected'";
   else if ($curr_file == "/reservationen/diverses.php")
-    $diverses = $style2;
+    $diverses = "class='menu_image_selected'";
 
   // check if admin rights etc and prepare admin menu items
   $query = "SELECT `pilot_nr`, `name`, `admin`, `gesperrt` from `piloten` where `id` = ".$_SESSION['user_id']." LIMIT 1;";
@@ -103,7 +73,7 @@ if (isset($_SESSION['pilot_nr']))
 ?>
 <nav>
   <div class="user_menu">
-    <a title="mfgc.ch" href="http://www.mfgc.ch/"><img <?php echo $style_mfgc; ?> src="/reservationen/bilder/mfgc_icon.png" alt="mfgc.ch" /></a>
+    <a title="mfgc.ch" href="http://www.mfgc.ch/"><img class="style_mfgc" src="/reservationen/bilder/mfgc_icon.png" alt="mfgc.ch" /></a>
     <?php echo '['.str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT).'] <b>'.htmlentities($obj->name).'</b>'; ?><?php echo $gesperrt; ?>
     <a title="Passwort ändern" href="/reservationen/pass_change.php"><img <?php echo $pass_change; ?> src="/reservationen/bilder/key.png" alt="Passwort ändern" /></a>
     <a title="Ausloggen" href= "/reservationen/login/logout.php"><img class="always" src="/reservationen/bilder/exit.png" alt="Ausloggen" /></a>

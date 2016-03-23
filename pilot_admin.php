@@ -35,7 +35,7 @@ $res = $mysqli->query($query);
 ?>
           <table class='vertical_table'>
             <tr>
-              <th style="background-color: #99ff99;"></th>
+              <th class="formular_zelle"></th>
               <th><b>Pilot-ID</b></th>
               <th><b>Name</b></th>
               <th><b>Natel</b></th>
@@ -85,7 +85,7 @@ while ($obj = $res->fetch_object())
 ?>
           </table>
           <div style="text-align: left; margin-left: 5em;">
-            <p><a href="login/register.php"><span style="background-color: #99ff99;">+ neuen Piloten hinzufügen</span></a></p>
+            <p><a href="login/register.php"><span class="formular_zelle">+ neuen Piloten hinzufügen</span></a></p>
           </div>
         </div>
     </div>

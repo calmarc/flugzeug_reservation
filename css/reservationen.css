@@ -1,8 +1,13 @@
+/* THEME_COLOR */
+/* THEME_COLOR */
 body {
   color: #333333;
   /*background-color: #aaddff; */
   /*background-color: #74c4ee; */
-  background-color: #7dc8f0; 
+  /*background-color: #7dc8f0; */
+  /* THEME_COLOR */
+  background-color: #eeeeee; 
+
   font-family: sans-serif;
   margin: 0px;
   padding: 0px;
@@ -18,7 +23,8 @@ nav {
   left: 0px;
   right: 0px;
   width: 100%;
-  background-color: #000000;
+/* THEME_COLOR */
+  background-color: #333333;
   padding: 0px;
   margin: 0px;
   color: #ffff00;
@@ -30,7 +36,7 @@ nav {
   display: none;
 }
 
-h1 { padding-top: 0; margin-top: 0.1em; text-shadow: 2px 2px 1px #9ff, 3px 3px 2px #aaaa00; }
+h1 { padding-top: 0; margin-top: 0.1em; text-shadow: 2px 2px 1px #cccccc, 3px 3px 2px #eeeeee; }
 
 h1#h1tag { margin: 0px; padding: 0px; line-height: 40%; }
 h1#h1monat { margin: 0px; padding: 0px; line-height: 40%; }
@@ -66,7 +72,7 @@ nav a:visited { color: white;}
 nav div span {  display: inline-block; }
 nav img { 
   display: inline-block;
-  border: 2px #000000 solid;
+  border: 2px transparent solid;
 
   filter: brightness(80%);
   -webkit-filter: brightness(80%);
@@ -90,6 +96,28 @@ nav img:hover {
   -ms-filter: brightness(150%);
 }
 
+nav img.img_mfgc {
+  background-color: transparent; border: 2px transparent solid;
+  filter: brightness(100%);
+  -webkit-filter: brightness(100%);
+  -moz-filter: brightness(100%);
+  -o-filter: brightness(100%);
+  -ms-filter: brightness(100%);
+}
+
+nav a.menu_text_selected {
+ color: yellow; font-weight: bold;
+}
+
+nav img.menu_image_selected {
+  background-color: #333300; border: 2px #999900 solid;
+  filter: brightness(110%);
+  -webkit-filter: brightness(110%);
+  -moz-filter: brightness(110%);
+  -o-filter: brightness(110%);
+  -ms-filter: brightness(110%);
+}
+
 div.user_menu { float: right; margin-top: 0px;  }
 /*div.user_menu img { display: inline; vertical-align: middle; margin: 0px; padding: 0px; }*/
 
@@ -106,7 +134,37 @@ main {
 
 form.login_form input { width: 80%; }
 
-div#formular_innen { margin: 1em auto 1em auto; padding: 1em 2em 1em 2em;  display: inline-block;  text-align: center; border-radius: 25px; border: 2px solid #73AD21;  background-color: #99ff99; }
+div#formular_innen { 
+  margin: 1em auto 1em auto; 
+  padding: 1em 2em 1em 2em;  
+  display: inline-block;  
+  text-align: center; 
+  border-radius: 1px; 
+
+/* THEME_COLOR */
+  /*border: 2px solid #73AD21;  */
+  border: 1px solid #000000;  
+
+  /*background-color: #99ff99; */
+  background-color: #ffffff; 
+  box-shadow: 2px 2px 2px #bbbbbb; 
+}
+
+/* THEME_COLOR */
+
+/* spezielle table hintergrund .. dinger (wie innendings) */
+/* TODO.. important sollte nicht noetig sein */
+.formular_zelle {background-color: #ffffff ! important;}
+
+/*tr.trblank td:nth-child(1) { background-color: #99ff99; color: black; }*/
+/*tr.trblank td:nth-child(2) { background-color: #ccffcc; color: black; }*/
+
+/*tr.trblank td:nth-child(1) { background-color: #eeeeee;}*/
+/*tr.trblank td:nth-child(2) { background-color: #eeeeee;}*/
+
+tr.trblank td:nth-child(1) { background-color: #eeeeee;}
+tr.trblank td:nth-child(2) { background-color: #eeeeee;}
+
 
 /* center-stuff */
 .center {
@@ -178,14 +236,17 @@ table.vertical_table { border-style: none; border-width: 0; border-collapse: col
 table.vertical_table th { padding: 10px;}
 table.vertical_table td { padding: 5px 12px 5px 16px; text-align: left; margin: 0px;}
 
-/*table.vertical_table td:nth-child(1) { padding-left: 2em; text-align: right; background-color: #99ff99;}*/
-table.vertical_table td:nth-child(1) { padding-left: 1em; text-align: right; background-color: #99ff99;}
-table.vertical_table td:nth-child(1) a { background-color: #99ff99;}
+/* THEME_COLOR*/
+/*table.vertical_table td:nth-child(1) { padding-left: 1em; text-align: right; background-color: #99ff99;}*/
+table.vertical_table td:nth-child(1) { padding-left: 1em; text-align: right; background-color: #ffffff;}
+
 table.vertical_table td:nth-child(2) { text-align: left;}
 
 table.vertical_table tr:nth-child(even) { background-color: #eee; }
 table.vertical_table tr:nth-child(odd) { background-color: #fff; }
-table.vertical_table th { color: white; background-color: #336633; } 
+
+/* THEME_COLOR*/
+table.vertical_table th { color: white; background-color: #666666; } 
 
 table.vertical_table th a { color: white; text-decoration: underline; } 
 table.vertical_table td a { color: #000099; text-decoration: underline; } 
@@ -202,12 +263,6 @@ table.vtable tr:nth-child(odd) { background-color: #ffffff; }
 table.vtable th { color: white; background-color: #555555; } 
 
 
-/*tr.trblank td:nth-child(1) { background-color: #99ff99; color: black; }*/
-/*tr.trblank td:nth-child(2) { background-color: #ccffcc; color: black; }*/
-
-tr.trblank td:nth-child(1) { background-color: #eeeeee; color: black; }
-tr.trblank td:nth-child(2) { background-color: #eeeeee; color: black; }
-
 /*table input[type="text"] { background-color: #eeee00;}*/
 .submit_button { padding: 5px; border: 2px solid #339933; margin-top: 20px; font-weight: bold; font-size: 110%; background-color: #009900; color: white; }
 .submit_button:hover { border: 2px solid #ee3300; background-color: #ee3300;}
@@ -215,13 +270,28 @@ tr.trblank td:nth-child(2) { background-color: #eeeeee; color: black; }
 .sub_loeschen { border: 2px solid #000000; margin-top: 20px; font-size: 110%; font-weight: bold; background-color: #aa0000; color: white; }
 .sub_loeschen:hover { border: 2px solid #ee3300; background-color: #ee3300;}
 
+/* THEME_COLOR */
+select#flugzeug_select {
+  background: #99eeff url(../bilder/select-arrow.png) no-repeat 90% center;
+}
+
 select {
+  /*background: #bbffbb url(../bilder/select-arrow.png) no-repeat 90% center;*/
+/* THEME_COLOR */
+
+  background: #ddffdd url(../bilder/select-arrow.png) no-repeat 90% center;
+  vertical-align: middle; 
+  font-size: 100%; 
+  border-right: 0px solid #ffff00; 
+  border-left: 0px solid #ffff00; 
+  border-top: 0px solid #ffff00; 
+  border-bottom: 0px solid #ffff00;
+
   border: 0 !important;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance:none;
-  /*background: #ffff33 url(../bilder/select-arrow.png) no-repeat 90% center;*/
-  background: #bbffbb url(../bilder/select-arrow.png) no-repeat 90% center;
+
   width: 10px; /* Width of select dropdown to give space for arrow image */
   text-indent: 0.01px; /* Removes default arrow from firefox */
   text-overflow: "";  /* Removes default arrow from firefox */
@@ -230,9 +300,12 @@ select {
   padding: 3px;
   box-shadow: inset 0 0 5px rgba(000,000,000, 0.5);
 }
+
 input {
   border-radius: 5px;
-  background: #bbffbb;
+  /*background: #bbffbb;*/
+/* THEME_COLOR */
+  background: #ddffdd;
   border-style: none;
   padding: 3px;
   border: 1px solid black; 
@@ -282,15 +355,6 @@ div#tooltip_div {
   box-shadow: 2px 2px 2px #CCCCCC;
 }
 
-select.flugzeug_select {
-  vertical-align: middle; 
-  font-size: 100%; 
-  border-right: 0px solid #ffff00; 
-  border-left: 0px solid #ffff00; 
-  border-top: 0px solid #ffff00; 
-  border-bottom: 0px solid #ffff00;
-  border: 3px solid #44ff00;
-}
 
 /* ----------- START mobile phones ------------------- */
 

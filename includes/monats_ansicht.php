@@ -62,7 +62,7 @@ function monatsplan_navigation($mysqli, $flugzeug_id, $jahr, $monat, $jahr, $mon
   echo "<input type='hidden' name='tag' value='{$tag}' />";
   echo "<input type='hidden' name='monat' value='{$monat}' />";
   echo "<input type='hidden' name='jahr' value='{$jahr}' />";
-  echo "<select size='1' style='width: 10em;' class='flugzeug_select' name='flugzeug_id'  onchange='this.form.submit()' >";
+  echo "<select size='1' style='width: 10em;' id='flugzeug_select' name='flugzeug_id'  onchange='this.form.submit()' >";
   combobox_flugzeug($mysqli, $flugzeug_id);
   echo "</select>";
   echo "</td><td style='padding-left: 20px;'>";

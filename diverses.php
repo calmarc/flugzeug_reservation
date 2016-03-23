@@ -24,7 +24,7 @@ include_once('includes/usermenu.php');
         <h1>Einstellungen</h1>
           <table class='vertical_table'>
           <tr>
-          <th style="background-color: #99ff99;"></th>
+          <th class="formular_zelle"></th>
           <th><b>Aktion</b></th>
             <th><b>Daten1</b></th>
             <th><b>Daten2</b></th>
