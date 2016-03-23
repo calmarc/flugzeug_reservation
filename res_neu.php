@@ -40,7 +40,7 @@ $flugzeugtxt = $obj->flugzeug;
 
 ?>
   <form action='res_neu.php' method='post'>
-  <input type='hidden' name='flugzeug_id' value='<?php echo $flugzeug_id; ?>' />";
+  <input type='hidden' name='flugzeug_id' value='<?php echo $flugzeug_id; ?>' />
     <div class='center hide_on_print'>
       <table class='vtable'>
         <tr class="trblank">

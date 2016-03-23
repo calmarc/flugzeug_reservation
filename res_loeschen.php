@@ -164,8 +164,13 @@ list ($bis_jahr, $bis_monat, $bis_tag) = explode("-", $datum, 3);
 list ($bis_stunde, $bis_minute) = explode(":", $zeit, 3);
 
 $show_2_datum = TRUE;
+$summary_text = "Zeit";
 if ($datum_v ==  $datum)
+{
   $show_2_datum = FALSE;
+  $summary_text = "Löschen";
+}
+
 
 ?>
 
@@ -227,7 +232,7 @@ else
 }
 ?>
         <tr>
-          <td><b>Zeit von:</b></td>
+          <td><b><?php echo $summary_text; ?> von:</b></td>
           <td>
             <select size="1" name="von_stunde" style="width: 46px;">
               <?php combobox_stunde($von_stunde); ?>
@@ -261,7 +266,7 @@ if ($show_2_datum)
 <?php } ?>
 
         <tr>
-          <td><b>Zeit bis:</b></td>
+          <td><b><?php echo $summary_text; ?> bis:</b></td>
           <td>
             <select size="1" name="bis_stunde" style="width: 46px;">
               <?php combobox_stunde($bis_stunde); ?>

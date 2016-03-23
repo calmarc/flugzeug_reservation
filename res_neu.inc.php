@@ -55,7 +55,7 @@ if (isset($_POST['submit']))
     $error_msg .= "'Von' Zeit nicht grösser als 'bis' Zeit.<br />";
 
   if ($von_stunde == "21" && $von_minuten == "30" || $bis_stunde == "21" && $bis_minuten == "30")
-    $error_msg .= "21:30 liegt ausserhalb der Grenzen..<br />";
+    $error_msg .= "21:30 liegt ausserhalb der Grenzen.<br />";
 
   if ($von_date <= $local_datetime)
     $error_msg .= "Die Reservierung liegt in der Vergangenheit.<br />";
@@ -65,6 +65,10 @@ if (isset($_POST['submit']))
 
   if (intval($bis_stunde) == "07" && intval($bis_minuten) == "00")
     $error_msg .= "Auf 7:00 Uhr kann man nicht reservieren.<br />Bitte stattdessen auf den Vortag 21:00 Uhr buchen!<br />";
+
+  if (strtotime($bis_date) - strtotime($von_date) > 60 * 60 * 24 * 31)
+    $error_msg .= "Eine Reservation darf nicht länger als 31 Tage dauern.<br />";
+
 
   // CHECK LEVEL of standby
   remove_zombies($mysqli);

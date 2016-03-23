@@ -45,7 +45,7 @@ include_once('includes/usermenu.php');
 <main>
   <div id="formular_innen">
 
-  <h1>Flug eintragen</h1>
+  <h1>Eintrag nach Landung</h1>
 
 <?php
 
@@ -103,7 +103,7 @@ else
           <td><input name="zaehlerstand" style="width: 6em;" required="required" type="number" step="0.01" /></td>
         </tr>
       </table>
-    <input class='submit_button' type='submit' name='submit' value='Flug eintragen' />
+    <input class='submit_button' type='submit' name='submit' value='Zählerstand eintragen' />
     </div>
   </form>
   <div class='center'>
