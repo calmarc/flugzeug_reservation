@@ -29,6 +29,14 @@ if (isset($_SESSION['pilot_nr']))
     -ms-filter: brightness(110%);
     "';
 
+  $style_mfgc = 'style="background-color: transparent; border: 2px transparent solid;
+    filter: brightness(100%);
+    -webkit-filter: brightness(100%);
+    -moz-filter: brightness(100%);
+    -o-filter: brightness(100%);
+    -ms-filter: brightness(100%);
+    "';
+
   // switches between plan-view.
   // will switch when pressed the menu.. only - else it should deliver the same
 
@@ -95,6 +103,7 @@ if (isset($_SESSION['pilot_nr']))
 ?>
 <nav>
   <div class="user_menu">
+    <a title="mfgc.ch" href="http://www.mfgc.ch/"><img <?php echo $style_mfgc; ?> src="/reservationen/bilder/mfgc_icon.png" alt="mfgc.ch" /></a>
     <?php echo '['.str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT).'] <b>'.htmlentities($obj->name).'</b>'; ?><?php echo $gesperrt; ?>
     <a title="Passwort ändern" href="/reservationen/pass_change.php"><img <?php echo $pass_change; ?> src="/reservationen/bilder/key.png" alt="Passwort ändern" /></a>
     <a title="Ausloggen" href= "/reservationen/login/logout.php"><img class="always" src="/reservationen/bilder/exit.png" alt="Ausloggen" /></a>

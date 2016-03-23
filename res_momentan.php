@@ -26,8 +26,8 @@ if (!isset($_SESSION['pilot_nr']))
 else
   $pilot_nr = $_SESSION['pilot_nr'];
 
-if (!isset($_SESSION['res_sort_dir'])) $_SESSION['res_sort_dir'] = "DESC";
-if (!isset($_SESSION['res_sort_by'])) $_SESSION['res_sort_by'] = "timestamp";
+if (!isset($_SESSION['res_sort_dir'])) $_SESSION['res_sort_dir'] = "ASC";
+if (!isset($_SESSION['res_sort_by'])) $_SESSION['res_sort_by'] = "von";
 
 // highlight pilot in combo box
 if (!isset($_SESSION['res_sort_pilot'])) $_SESSION['res_sort_pilot'] = $pilot_nr;
@@ -122,7 +122,7 @@ include_once('includes/usermenu.php');
           <h1>Reservationen <a href="javascript:window.print()"><img alt="Ausdrucken" src="/reservationen/bilder/print-out.png" /></a></h1>
 
           <form style="display: inline-block;" action="res_momentan.php" method='get'>
-              <select size="1" onchange='this.form.submit()' style="width: 16em;" name = "pilot_nr">
+              <select size="1" onchange='this.form.submit()' style="width: 19em;" name = "pilot_nr">
 <?php
 $res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_nr`;");
 

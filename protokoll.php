@@ -46,7 +46,8 @@ include_once('includes/send_sms.php');
 
           <table class='vertical_table'>
           <tr>
-          <th><b>Am</b></th>
+          <th><b>Zeit-Stempel</b></th>
+            <th><b>Durch</b></th>
             <th><b>Aktion</b></th>
             <th><b>Data</b></th>
           </tr>
@@ -58,17 +59,13 @@ $res = $mysqli->query($query);
 
 while ($obj = $res->fetch_object())
 {
-
   // to LOKAL zeit..
   // TODO funktion machen von dem - wo noch?
 
-  $lokal_datum = $obj->timestamp;
-  list( $tag, $zeit) = explode(" ", $obj->timestamp);
-  $tmp = explode("-", $tag);
-  $tmp2 = explode(":", $zeit);
-  $lokal_datum = "{$tmp[2]}.{$tmp[1]}.{$tmp[0]} {$tmp2[0]}:{$tmp2[1]}";
+  $lokal_datum = mysql_stamp_to_ch($mysqli, $obj->timestamp);
 
   $action = $obj->aktion;
+  $durch = $obj->durch;
   $data = $obj->data;
 
   //============================================================================
@@ -109,7 +106,8 @@ while ($obj = $res->fetch_object())
   }
 
   echo "\n<tr>
-           <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>{$lokal_datum}</td>
+           <td style='text-align: left; background-color: transparent; color: #333333;'>{$lokal_datum}</td>
+           <td>{$durch}</td>
            <td>{$action}</td>
            <td>{$data}</td>
         </tr>";

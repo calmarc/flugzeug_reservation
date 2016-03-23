@@ -19,16 +19,17 @@ include_once ('res_geloescht.inc.php');
 // TODO: diese res_xy haben hier oben alle etwa das gleiche..
 // TODO: mal aussortieren in eins.. und so
 // default
+
 if (!isset($_SESSION['res_sort_dir'])) $_SESSION['res_sort_dir'] = "DESC";
 if (!isset($_SESSION['res_sort_by'])) $_SESSION['res_sort_by'] = "timestamp";
-if (!isset($_SESSION['res_sort_pilot'])) $_SESSION['res_sort_pilot'] = "";
+if (!isset($_SESSION['geloescht_default_pilot'])) $_SESSION['geloescht_default_pilot'] = "";
 
 if (isset($_GET['pilot_nr']))
-  $_SESSION['res_sort_pilot'] = $_GET['pilot_nr'];
+  $_SESSION['geloescht_default_pilot'] = $_GET['pilot_nr'];
 
 $where_pilot = "";
-if ($_SESSION['res_sort_pilot'] != "")
-  $where_pilot = "`mem1`.`pilot_nr` = ".intval($_SESSION['res_sort_pilot']);
+if ($_SESSION['geloescht_default_pilot'] != "")
+  $where_pilot = "`mem1`.`pilot_nr` = ".intval($_SESSION['geloescht_default_pilot']);
 
 $t_old = $_SESSION['res_sort_by'];
 if (isset($_GET['sort']) && $_GET['sort'] != '') $_SESSION['res_sort_by'] = $_GET['sort'];
@@ -76,7 +77,7 @@ include_once('includes/usermenu.php');
         <h1>Gelöschte Reservationen</h1>
 
           <form style="display: inline-block;" action="res_geloescht.php" method='get'>
-              <select size="1"  onchange='this.form.submit()' style="width: 12em;" name = "pilot_nr">
+              <select size="1"  onchange='this.form.submit()' style="width: 16em;" name = "pilot_nr">
 <?php
 $res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_nr`;");
 
@@ -84,7 +85,7 @@ echo '<option value="">alle Piloten</option>';
 while ($obj = $res->fetch_object())
 {
   $selected = "";
-  if ($obj->pilot_nr == $_SESSION['res_sort_pilot'])
+  if ($obj->pilot_nr == $_SESSION['geloescht_default_pilot'])
     $selected = 'selected="selected"';
   echo '<option '.$selected.' value="'.$obj->pilot_nr.'">['.str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT).'] '.$obj->name.'</option>';
 }
@@ -113,7 +114,7 @@ while ($obj = $res->fetch_object())
           </form>
           <table class='vertical_table'>
           <tr>
-          <th><a href="res_geloescht.php?sort=timestamp"><b>Am</b></a></th>
+          <th><a href="res_geloescht.php?sort=timestamp"><b>Zeit-Stempel</b></a></th>
             <th><a href="res_geloescht.php?sort=pilot_nr"><b>Pilot</b></a></th>
             <th><a href="res_geloescht.php?sort=flugzeug"><b>Flugzeug</b></a></th>
             <th><a href="res_geloescht.php?sort=von"><b>Datum</b></a></th>
@@ -142,11 +143,7 @@ $res = $mysqli->query($query);
 
 while ($obj = $res->fetch_object())
 {
-
-  $gel_datum = $obj->timestamp;
-  list( $tag, $zeit) = explode(" ", $obj->timestamp);
-  $tmp = explode("-", $tag);
-  $gel_datum = $tmp[2].'.'.$tmp[1].'.'.$tmp[0];
+  $gel_datum = mysql_stamp_to_ch($mysqli, $obj->timestamp);
 
   if ($obj->loescher_id == $obj->pilot)
     $loescher_id = "<span style='color: #999999'>".$obj->loescher_id."</span>";
@@ -154,7 +151,7 @@ while ($obj = $res->fetch_object())
     $loescher_id = $obj->loescher_id;
 
   echo "\n<tr>
-           <td style='text-align: left; background-color: transparent; color: #333333; font-weight: bold;'>{$gel_datum}</td>
+           <td style='text-align: left; background-color: transparent; color: #333333;'>{$gel_datum}</td>
            <td>[".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
            <td>{$obj->flugzeug}</td>
            <td>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>

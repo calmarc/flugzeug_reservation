@@ -63,10 +63,10 @@ if (isset($_POST['pilot_nr'], $_POST['password']))
         if (mail($to, $subject, $txt, implode("\r\n",$headers)))
         {
           mysqli_prepare_execute($mysqli, "UPDATE `mfgcadmin_reservationen`.`piloten` SET `email_gesch` = '1' WHERE `piloten`.`id` = ?;", 'i', array ($obj->id));
-          write_status_message($mysqli, "[Check-Flug Email]", "An [{$to}] <span style='color: green;'>gesendet</span>: {$subject}");
+          write_status_message($mysqli, "[Check-Flug Email]", "System", "An [{$to}] <span style='color: green;'>gesendet</span>: {$subject}");
         }
         else
-          write_status_message($mysqli, "[Check-Flug Email]", "Es konnte <span style='color: red'>keine</span> Email an <{$to}> geschickt werden!");
+          write_status_message($mysqli, "[Check-Flug Email]", "System", "Es konnte <span style='color: red'>keine</span> Email an <{$to}> geschickt werden!");
 
       }
     }
@@ -78,8 +78,7 @@ if (isset($_POST['pilot_nr'], $_POST['password']))
     $res = $mysqli->query($query);
     $obj = $res->fetch_object();
     
-    $pilot_nr_pad = str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT);
-    write_status_message($mysqli, "[Eingeloggt]", "[{$pilot_nr_pad}] {$obj->name}");
+    write_status_message($mysqli, "[Eingeloggt]", $_SESSION['user_id'], "");
 
     //============================================================================
     // passwort-recovery tabelle aufraeume (alles weg aelter als 4 stunden)

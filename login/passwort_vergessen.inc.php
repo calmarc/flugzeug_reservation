@@ -28,12 +28,12 @@ if (isset($_POST['submit']))
   if (mail ($email, $subject, $txt, implode("\r\n",$headers)))
   {
 	mysqli_prepare_execute($mysqli, "INSERT INTO `password_recovery` (`id`, `email`, `secret_string`, `pilot_nr`, `timestamp`) VALUES (NULL, ?, ?, ?, NULL );", 'ssi', array ($email, $random_string, intval($pilot_nr)));
-	write_status_message($mysqli, "[Passwort Recovery]", "Wurde an &lt;{$email}&gt; <span style='color: green;'>geschickt</span>");
+	write_status_message($mysqli, "[Passwort Recovery]", "System", "Wurde an &lt;{$email}&gt; <span style='color: green;'>geschickt</span>");
     $status_txt = "Ein Wiederherstellungs-Link wurde an &lt;{$email}&gt; geschickt.";
   }
   else
   {
-	write_status_message($mysqli, "[Passwort Recovery]", "Konnte <span style='color: red;'>nicht</span> an &lt;{$email}&gt; gesendet werden.");
+	write_status_message($mysqli, "[Passwort Recovery]", "System", "Konnte <span style='color: red;'>nicht</span> an &lt;{$email}&gt; gesendet werden.");
     $status_txt = "Leider konnte kein Wiederherstellungs-Link an &lt;{$email}&gt; gesendet werden.";
   }
 

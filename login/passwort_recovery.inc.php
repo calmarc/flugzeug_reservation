@@ -35,7 +35,7 @@ if (isset($_GET['secret_string'], $_GET['email']))
     echo "<main><div class='center'><h1>Wiederherstellungs-Fehler</h1><p><b>{$error_msg}</b></p></div></main>
           </body> </html>";
     $pilot_nr_pad = str_pad($pilot_nr, 3, "0", STR_PAD_LEFT);
-    write_status_message($mysqli, "[Passwort recovery]", "Fehlgeschlagen: [{$pilot_nr_pad}]; {$_GET['email']}");
+    write_status_message($mysqli, "[Passwort recovery]", "System", "Fehlgeschlagen: [{$pilot_nr_pad}]; {$_GET['email']}");
     exit;
   }
   $obj = $res->fetch_object();
@@ -82,7 +82,7 @@ if (isset($_POST['submit']))
     if (mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $id)))
       $msg = "<p style='color: green;'>Das Passwort wurde geändert</p>";
     list ($pilot_nr_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $id); 
-    write_status_message($mysqli, "[Passwort recovery]", "Erfolgreich: [{$pilot_nr_pad}] {$pilot_name}");
+    write_status_message($mysqli, "[Passwort recovery]", "System", "Erfolgreich: [{$pilot_nr_pad}] {$pilot_name}");
   }
 }
 

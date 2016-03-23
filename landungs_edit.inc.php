@@ -61,9 +61,8 @@ if (isset($_POST['loeschen']))
   $query = "DELETE FROM `mfgcadmin_reservationen`.`zaehler_eintraege` WHERE `zaehler_eintraege`.`id` = ?";
   mysqli_prepare_execute($mysqli, $query, 'i', array ($zaehler_id));
 
-  list($pilot_nr_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
   list($pilot_nr_pad2, $pilot_name2) = get_pilot_from_user_id($mysqli, $eintrag_user_id);
-  write_status_message($mysqli, "[Landungs-Eintrag]", "Gelöscht: durch [{$pilot_nr_pad}] {$pilot_name}: von {$pilot_nr_pad2}");
+  write_status_message($mysqli, "[Landungs-Eintrag]", $_SESSION['user_id'], "Gelöscht von [{$pilot_nr_pad2}] {$pilot_name2}");
 
   header("Location: landungs_eintrag.php?flugzeug_id=$flugzeug_id");
   exit;
@@ -96,9 +95,8 @@ else if (isset($_POST['edit']))
     $query = "UPDATE `mfgcadmin_reservationen`.`zaehler_eintraege` SET `datum` = ?, `zaehler_minute` = ?, `zaehler_umdrehungen` = ? WHERE `zaehler_eintraege`.`id` = ?;";
     mysqli_prepare_execute($mysqli, $query, 'siii', array ($datum, $zaehler_minute, $zaehler_umdrehungen, $zaehler_id));
 
-    list($pilot_nr_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $_SESSION['user_id']);
     list($pilot_nr_pad2, $pilot_name2) = get_pilot_from_user_id($mysqli, $eintrag_user_id);
-    write_status_message($mysqli, "[Landungs-Eintrag]", "Editiert: durch [{$pilot_nr_pad}] {$pilot_name}: von [{$pilot_nr_pad2}] $pilot_name2");
+    write_status_message($mysqli, "[Landungs-Eintrag]", $_SESSION['user_id'], "Editiert von [{$pilot_nr_pad2}] $pilot_name2");
 
     header("Location: landungs_eintrag.php?flugzeug_id={$flugzeug_id}");
     exit;

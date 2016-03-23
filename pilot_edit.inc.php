@@ -12,8 +12,8 @@ if (isset($_POST['loeschen']))
   $query = "DELETE FROM `mfgcadmin_reservationen`.`reservationen` WHERE `reservationen`.`user_id` = ?;";
   mysqli_prepare_execute ($mysqli, $query, 'i', array ($user_id));
 
-  list($pilot_nr_pad, $name) = get_pilot_from_user_id($mysqli, $user_id);
-  write_status_message ($mysqli, "[Pilot gelöscht]", "[{$pilot_nr_pad}] $name");
+  list($pilot_nr_pad2, $name2) = get_pilot_from_user_id($mysqli, $user_id);
+  write_status_message ($mysqli, "[Pilot gelöscht]", $_SESSION['user_id'], "[{$pilot_nr_pad2}] $name2");
 
   // man hat sich selber geloesch.. delete $_SESSION (ausloggen)
 

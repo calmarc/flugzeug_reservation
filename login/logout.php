@@ -11,8 +11,7 @@ include_once ('../includes/functions.php');
 
 sec_session_start();
 
-$pilot_nr_pad = str_pad($_SESSION['pilot_nr'], 3, "0", STR_PAD_LEFT);
-write_status_message($mysqli, "[Ausgeloggt]", "[{$pilot_nr_pad}] {$_SESSION['name']}");
+write_status_message($mysqli, "[Ausgeloggt]", $_SESSION['user_id'], "");
 
 // Unset all session values
 $_SESSION = array();

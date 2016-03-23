@@ -51,6 +51,14 @@ function shortsql2ch_date ($sql_date)
   return $checkflug_ch;
 }
 
+function mysql_stamp_to_ch($mysqli, $mysqli_stamp)
+{
+  list( $tag, $zeit) = explode(" ", $mysqli_stamp);
+  $datum = explode("-", $tag);
+  $zeit = explode(":", $zeit);
+  return "{$datum[2]}.{$datum[1]}.{$datum[0]} {$zeit[0]}:{$zeit[1]}";
+}
+
 //============================================================================
 // aus 2 service-zaehler: in stunden + differenz
 function zaehler_into($zaehler_minute, $zaehler_minute_vor)
@@ -173,9 +181,17 @@ function check_zaehlerstand($zaehlerstand, $digit_minute)
   return $error_msg;
 }
 
-function write_status_message($mysqli, $subjekt, $data)
+function write_status_message($mysqli, $subjekt, $user_id, $data)
 {
-  mysqli_prepare_execute($mysqli, "INSERT INTO `status_meldungen` (`id`, `timestamp`, `aktion`, `data`) VALUES (NULL, CURRENT_TIMESTAMP, ?, ?);", 'ss', array ($subjekt, $data));
+  if (!intval($user_id) > 0)
+    $durch_txt = $user_id;
+  else
+  {
+    list($pilot_nr_pad, $name) = get_pilot_from_user_id($mysqli, $user_id);
+    $durch_txt = "[{$pilot_nr_pad}] {$name}";
+  }
+
+  mysqli_prepare_execute($mysqli, "INSERT INTO `status_meldungen` (`id`, `timestamp`, `aktion`, `durch`, `data`) VALUES (NULL, CURRENT_TIMESTAMP, ?, ?, ?);", 'sss', array ($subjekt, $durch_txt, $data));
 }
 
 function get_pilot_from_user_id($mysqli, $user_id)
