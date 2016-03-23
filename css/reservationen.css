@@ -245,7 +245,7 @@ table.vertical_table tr:nth-child(even) { background-color: #ffffff; }
 table.vertical_table tr:nth-child(odd) { background-color: #eeeeee; }
 
 /* THEME_COLOR*/
-table.vertical_table th { color: white; background-color: #666666; } 
+table.vertical_table th { color: white; background-color: #959492; padding: 3px;} 
 
 table.vertical_table th a { color: white; text-decoration: underline; } 
 table.vertical_table td a { color: #000099; text-decoration: underline; } 

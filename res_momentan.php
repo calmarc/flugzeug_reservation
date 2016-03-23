@@ -18,7 +18,7 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 // alle 'gueltigen' ermitteln (der rest dann yellow (standby markieren)
 // TODO: identisch wie in res_neu .. auslagern
 
-$valid_res = get_all_valid_reservations($mysqli);
+$valid_res = get_all_list_active_reserv($mysqli);
 
 // default
 if (!isset($_SESSION['pilot_nr']))

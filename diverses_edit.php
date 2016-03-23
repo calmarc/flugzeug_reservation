@@ -28,10 +28,8 @@ include_once('includes/usermenu.php');
 ?>
 
   <main>
-    <div id="formular_innen">
-
     <h1>Eintellungen editieren</h1>
-
+    <div id="formular_innen">
 <?php
 
 if (isset($_GET['id']))

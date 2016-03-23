@@ -139,7 +139,7 @@ remove_zombies($mysqli);
 // get all valid reservation
 // later: see if there is an entry.. if not.. yellow (standby)
 // array(array(flugi1) array (flugi2)...
-$valid_res = get_all_valid_reservations($mysqli);
+$valid_res = get_all_list_active_reserv($mysqli);
 
 $query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flugzeug`.`flugzeug`, `reservationen`.`flugzeug_id` FROM `reservationen` LEFT OUTER JOIN `flugzeug` ON `flugzeug`.`id` = `reservationen`.`flugzeug_id` WHERE `user_id` = {$user_id} AND `bis` >= '{$date}' ORDER BY `von` DESC;";
 $res = $mysqli->query($query);

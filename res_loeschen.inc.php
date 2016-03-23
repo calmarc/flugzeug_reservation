@@ -60,7 +60,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
   $flugzeug_id = $obj->flugzeug_id;
 
   // vor den loeschungen die aktiven vor-speichern (differenz...-> neu aktiv)
-  $valid_0_pre = get_valid_reserv($mysqli, $flugzeug_id);
+  $valid_0_pre = get_list_active_reserv($mysqli, $flugzeug_id);
   // beim splitten (zwischendrin) wird da die neue reservation gespeichert
   // damit man da keine sms sendet daraufhin.
   $not_new_no_notification = "";
@@ -281,7 +281,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
     //============================================================================
     // Eventuell standy jetzt gueltig - sms + email senden.
 
-    $valid_0_after = get_valid_reserv($mysqli, $flugzeug_id);
+    $valid_0_after = get_list_active_reserv($mysqli, $flugzeug_id);
 
     $new_0 = array_diff($valid_0_after, $valid_0_pre);
     if (count($new_0) > 0)

@@ -1,5 +1,45 @@
 <?php
 
+
+// Man koennte gewisse Sachen noch  rausmontieren - viel identischer code,
+// aber ist schon ok so.. auch am 'billigsten'.
+
+// hilfsfunktion um den ersten punkt (von_extrem) und letzten punkt der
+// reservationen zu erhalten
+
+function get_range_of_reservation($mysqli, $flugzeug_id, $date_xmonth_back)
+{
+  $query = "SELECT `von` FROM `reservationen` WHERE `flugzeug_id` = '{$flugzeug_id}' AND `von` > '{$date_xmonth_back}'  ORDER BY `von` ASC LIMIT 1;";
+
+  if ($res = $mysqli->query($query))
+  {
+    if ($res->num_rows > 0)
+    {
+      $obj = $res->fetch_object();
+      $von_extrem = $obj->von;
+    }
+    else
+      return array(0, 0); // buchung ok.. hat noch keine
+  }
+
+  // die max-zukunfstigste (bis)-datum gucken
+  // zeit markieren ($bis_extrem)
+  $query = "SELECT `bis` FROM `reservationen` WHERE `flugzeug_id` = '{$flugzeug_id}' ORDER BY `bis` DESC LIMIT 1;";
+  if ($res = $mysqli->query($query))
+  {
+    if ($res->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
+    {
+      $obj = $res->fetch_object();
+      $bis_extrem = $obj->bis;
+    }
+    else
+      return array(0, 0); // buchung ok.. hat noch keine
+  }
+
+  return array($von_extrem, $bis_extrem);
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ZOMBIES ENTFERNEN = alle buchungen in der vergangenheit.. welche nicht aktiv
 // wuerden...
@@ -21,62 +61,53 @@
 
 function remove_zombies($mysqli)
 {
-
+  // wird gebraucht zum loeschen testen.. von < jetzt -> zombie
   date_default_timezone_set("Europe/Zurich");
   $now_string = date("Y-m-d H:i:s");
   date_default_timezone_set('UTC');
+
+  // 3 Monate in der Vergangenheit nur gucken.
+  // wenn niemand einloggt/reserviert 3 monate. koennte eine standby da
+  // durchgeben, aber das waere dann ja eh nicht mehr relevant, da die mit
+  // maximal 1monat dauer nicht ins jetzt gucken kann.
+  // (1 monat wuerde also theoretisch genuegen)
+
+  $date_xmonth_back = strtotime($now_string);
+  $date_xmonth_back = date("Y-m-d H:i:s", $date_xmonth_back - 8035200); //  61 * 60 * 24 * 93
+
+  //============================================================================
+  // ueber die flieger iterieren jeweils
+
   $query = "SELECT * FROM `flugzeug`;";
   $res_f = $mysqli->query($query);
 
   while($obj_f = $res_f->fetch_object())
   {
-    // TODO: ich nehmen mal alle.. aber eigentlich alte.. oder 'gute' (geflogen // actually) nicht??
-    // TODO: auf ein jahr reduzieren in der vergangenheit...
-    //
-    // zurueckreichenste punkt allers reservierungen (ganz in der vergangenheit)
-    $query = "SELECT `von` FROM `reservationen` WHERE `flugzeug_id` = '{$obj_f->id}' ORDER BY `von` ASC LIMIT 1;";
-    if ($res = $mysqli->query($query))
-    {
-      if ($res->num_rows > 0)
-      {
-        $obj = $res->fetch_object();
-        $von_extrem = $obj->von;
-      }
-      else
-        continue;
-    }
+    // zurueckreichenste punkt ($von_extrem) allers reservierungen (ganz in der vergangenheit - LIMIT siehe oben)
 
-    // zukuenfstigste punkt der reservierungen (ganz in der zukunft)
-    //
-    $query = "SELECT `bis` FROM `reservationen` WHERE `flugzeug_id` = '{$obj_f->id}' ORDER BY `bis` DESC LIMIT 1;";
-    if ($res = $mysqli->query($query))
-    {
-      if ($res->num_rows > 0)
-      {
-        $obj = $res->fetch_object();
-        $bis_extrem = $obj->bis;
-      }
-      else
-        continue;
-    }
+    list($von_extrem, $bis_extrem) = get_range_of_reservation($mysqli, $obj_f->id, $date_xmonth_back);
+    if ($von_extrem == 0 || $bis_extrem == 0)
+      continue;
+
+    //============================================================================
+    // dieser block gibts auch 3 mal.. aber OK so.
+    // halb stunden bloecke differenz unserer reservierngen
+    $min_stamp = strtotime($von_extrem);
+    $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 60 / 60 * 2)+1;
 
     // it.: if booking[level][hour]=TRUE <- reserved
     $bookings = array(array(), array(), array(), array(), array());
-
-    // halb stunden sein 1971..
-    $min_stamp = strtotime($von_extrem);
-
-    // halb stunden bloecke differenz unserer reservierngen
-    $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 60 / 60 * 2)+1;
-
     for ($x = 0; $x < 5; $x++) // initialise with FALSE = free.
       for ($i = 0; $i < $half_hour_tot+1; $i++)
         $bookings[$x][$i] = FALSE;
+    //----------------------------------------------------------------------------
 
+    // hier kommen die zu loeschenen zombies rein
     $delete_id = array();
 
-    // jetzt alle reservierungen hohlen
-    $query = "SELECT * FROM `reservationen` WHERE `flugzeug_id` = '{$obj_f->id}' AND ( `bis` > '{$von_extrem}' AND `von` < '{$bis_extrem}') ORDER BY `timestamp` ASC;";
+    // jetzt alle reservierungen hohlen im von_extrem - bis_extrem bereich
+    //$query = "SELECT * FROM `reservationen` WHERE `flugzeug_id` = '{$obj_f->id}' AND ( `bis` > '{$von_extrem}' AND `von` < '{$bis_extrem}') ORDER BY `timestamp` ASC;";
+    $query = "SELECT * FROM `reservationen` WHERE `flugzeug_id` = '{$obj_f->id}' AND `von` >= '{$von_extrem}'  ORDER BY `timestamp` ASC;";
 
     $res_tang = $mysqli->query($query);
     while($obj_tang = $res_tang->fetch_object())
@@ -131,55 +162,35 @@ function remove_zombies($mysqli)
 
 function check_level($mysqli, $flugzeug_id, $von_date, $bis_date)
 {
-  // TODO: identischer code bald 3 mal... in function reintun!
-  // habes jahr zureuck
+  // 2 monate zureuck
   date_default_timezone_set("Europe/Zurich");
   $date_xmonth_back = date("Y-m-d H:i:s", time()-5456800); // 60*60*24*62
   date_default_timezone_set('UTC');
 
   // NUR 2 monate zurueck gucken (1monats reservationen sind maximum). hats ueberhaupt reservationen?
   // sonst Zeit markieren als $von_extrem
-  $query = "SELECT `von` FROM `reservationen` WHERE `flugzeug_id` = '{$flugzeug_id}' AND `von` > '{$date_xmonth_back}'  ORDER BY `von` ASC LIMIT 1;";
 
-  if ($res = $mysqli->query($query))
-  {
-    if ($res->num_rows > 0)
-    {
-      $obj = $res->fetch_object();
-      $von_extrem = $obj->von;
-      if ($von_extrem > $von_date) //new has to get included into that
-        $von_extrem = $von_date;
-    }
-    else
-      return 0; // buchung ok.. hat noch keine
-  }
+  list($von_extrem, $bis_extrem) = get_range_of_reservation($mysqli, $flugzeug_id, $date_xmonth_back);
+  if ($von_extrem == 0 || $bis_extrem == 0)
+    return 0;
 
-  // die max-zukunfstigste (bis)-datum gucken
-  // zeit markieren ($bis_extrem)
-  $query = "SELECT `bis` FROM `reservationen` WHERE `flugzeug_id` = '{$flugzeug_id}' ORDER BY `bis` DESC LIMIT 1;";
-  if ($res = $mysqli->query($query))
-  {
-    if ($res->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
-    {
-      $obj = $res->fetch_object();
-      $bis_extrem = $obj->bis;
-      if ($bis_extrem < $bis_date) //new has to get included into that
-        $bis_extrem = $bis_date;
-    }
-    else
-      return 0; // buchung ok.. hat noch keine
-  }
+  if ($von_extrem > $von_date) //new has to get included into that range
+    $von_extrem = $von_date;
+  if ($bis_extrem < $bis_date) //new has to get included into that
+    $bis_extrem = $bis_date;
 
+  //============================================================================
+  // dieser block gibts auch 3 mal.. aber OK so.
   // halbe stunde blocks ganz links nach ganz rechts.
   $min_stamp = strtotime($von_extrem);
   $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 60 / 60 * 2)+1;
 
   // if booking[level][hour]=TRUE <- reserved
-  $bookings = array(array(), array(), array(), array(), array(), array(), array());
-
-  for ($x = 0; $x < 7; $x++) // initialise with FALSE = free.
+  $bookings = array(array(), array(), array(), array(), array(), array());
+  for ($x = 0; $x < 6; $x++) // initialise with FALSE = free.
     for ($i = 0; $i < $half_hour_tot+1; $i++)
       $bookings[$x][$i] = FALSE;
+  //----------------------------------------------------------------------------
 
   // alle hohlen
   $query = "SELECT * FROM `reservationen` WHERE `flugzeug_id` = '{$flugzeug_id}' AND `von` >= '{$von_extrem}'  ORDER BY `timestamp` ASC;";
@@ -217,7 +228,8 @@ function check_level($mysqli, $flugzeug_id, $von_date, $bis_date)
 
   //////////////////////////////////////////////////////////////
   // den level ermitteln der aktuellen buchung
-  #transfer time to blocks (1800=30min) of current booking
+  // transfer time to blocks (1800=30min) of current booking
+
   $block_first = intval((strtotime($von_date) - $min_stamp) / 1800);
   $block_last = intval((strtotime($bis_date) - $min_stamp) / 1800)-1;
 
@@ -242,55 +254,31 @@ function check_level($mysqli, $flugzeug_id, $von_date, $bis_date)
   return $level; // this is the level it would be put in
 }
 
-function get_valid_reserv($mysqli, $flugzeug_id)
+// gibt die Liste aller aktive Reservierungen (pro flugzeug)
+function get_list_active_reserv($mysqli, $flugzeug_id)
 {
-  // TODO: identischer code bald 3 mal... in function reintun!
-  // habes jahr zureuck
   $level_0 = array();
 
   date_default_timezone_set("Europe/Zurich");
   $date_xmonth_back = date("Y-m-d H:i:s", time()-5456800); // 60*60*24*62
   date_default_timezone_set('UTC');
 
-  // 2 monate zurueck gucken (max reservierung 1 monat). hats ueberhaupt reservationen?
-  // sonst Zeit markieren als $von_extrem
-  $query = "SELECT `von` FROM `reservationen` WHERE `flugzeug_id` = '{$flugzeug_id}' AND `von` > '{$date_xmonth_back}'  ORDER BY `von` ASC LIMIT 1;";
+  list($von_extrem, $bis_extrem) = get_range_of_reservation($mysqli, $flugzeug_id, $date_xmonth_back);
+  if ($von_extrem == 0 || $bis_extrem == 0)
+    return $level_0;
 
-  if ($res = $mysqli->query($query))
-  {
-    if ($res->num_rows > 0)
-    {
-      $obj = $res->fetch_object();
-      $von_extrem = $obj->von;
-    }
-    else
-      return $level_0;
-  }
-
-  // die max-zukunfstigste (bis)-datum gucken
-  // zeit markieren ($bis_extrem)
-  $query = "SELECT `bis` FROM `reservationen` WHERE `flugzeug_id` = '{$flugzeug_id}' ORDER BY `bis` DESC LIMIT 1;";
-  if ($res = $mysqli->query($query))
-  {
-    if ($res->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
-    {
-      $obj = $res->fetch_object();
-      $bis_extrem = $obj->bis;
-    }
-    else
-      return $level_0;
-  }
-
-  // halbe stunde blocks ganz links nach ganz rechts.
+  //============================================================================
+  // dieser block gibts auch 3 mal.. aber OK so.
+  // halbe stunde blocks von ganz links nach ganz rechts.
   $min_stamp = strtotime($von_extrem);
   $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 60 / 60 * 2)+1;
 
   // if booking[level][hour]=TRUE <- reserved
   $bookings = array(array(), array(), array(), array(), array(), array(), array());
-
   for ($x = 0; $x < 7; $x++) // initialise with FALSE = free.
     for ($i = 0; $i < $half_hour_tot+1; $i++)
       $bookings[$x][$i] = FALSE;
+  //----------------------------------------------------------------------------
 
   // alle hohlen
   $query = "SELECT * FROM `reservationen` WHERE `flugzeug_id` = '{$flugzeug_id}' AND `von` >= '{$von_extrem}'  ORDER BY `timestamp` ASC;";
@@ -344,8 +332,6 @@ function delete_reservation($mysqli, $id_tmp, $begruendung, $user_id)
 
   mysqli_prepare_execute($mysqli, $query, 'iissis', array ($obj->user_id, $obj->flugzeug_id, $obj->von, $obj->bis, $user_id, $begruendung));
 
-  // komplett loeschen da komplett in der zukunft oder komplett in der
-  // vergangenheit
   $query = "DELETE FROM `mfgcadmin_reservationen`.`reservationen` WHERE `reservationen`.`id` = ? ;";
   mysqli_prepare_execute($mysqli, $query, 'i', array ($id_tmp));
 }
@@ -358,14 +344,15 @@ function reser_getrimmt_eintrag($mysqli, $obj, $user_id, $begruendung, $loeschen
   mysqli_prepare_execute($mysqli, $query, 'iississs', array ($obj->user_id, $obj->flugzeug_id, $obj->von, $obj->bis, $user_id, $begruendung, $loeschen_datum_von, $loeschen_datum_bis));
 }
 
-function get_all_valid_reservations($mysqli)
+//function get_all_valid_reservations($mysqli)
+function get_all_list_active_reserv($mysqli)
 {
   $res = $mysqli->query("SELECT `id` FROM `flugzeug`;");
   $valid_res = array(array(), array(), array(), array(), array());
   $x = 0;
   while ($obj = $res->fetch_object())
   {
-    $valid_res[$x] = get_valid_reserv($mysqli, $obj->id);
+    $valid_res[$x] = get_list_active_reserv($mysqli, $obj->id);
     $x++;
   }
   return $valid_res;
