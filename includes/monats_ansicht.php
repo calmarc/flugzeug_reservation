@@ -94,59 +94,39 @@ function print_buchungen_monat($mysqli, $flugzeug_id, $boxcol, $textcol, $jahr, 
 
   // habes jahr zureuck
   date_default_timezone_set("Europe/Zurich");
-  $date_xmonth_back = date("Y-m-d H:i:s", time()-20736000);
+  $date_xmonth_back = date("Y-m-d H:i:s", time()-5456800); // 62 tage in sekunden
   $monat_2 = str_pad($monat, 2, "0", STR_PAD_LEFT);
   $anzahl_tage = date("t", strtotime("$jahr-$monat_2-01"));
   date_default_timezone_set('UTC');
 
+  // ganzer monats bereich.. 01 - anzahlt_tage
   $stamp_print_minimum = strtotime("$jahr-$monat_2-01 07:00:00");
   $stamp_print_maximum = strtotime("$jahr-$monat_2-$anzahl_tage 20:59:59");
-  // half hour blocks
-  $block_print_maximum = intval(($stamp_print_maximum - $stamp_print_minimum) / (60 * 30));
-
+  // half hour blocks total in dem monat
+  $block_print_maximum = intval(($stamp_print_maximum - $stamp_print_minimum) / 1800);
 
   // NUR ein halbes jahr zurueck gucken. hats ueberhaupt reservationen?
   // sonst Zeit markieren als $von_extrem
-  $query = "SELECT `von` FROM `reservationen` WHERE `flugzeug_id` = '$flugzeug_id' AND `von` > '$date_xmonth_back'  ORDER BY `von` ASC LIMIT 1;";
-  if ($res = $mysqli->query($query))
-  {
-    if ($res->num_rows > 0)
-    {
-      $obj = $res->fetch_object();
-      $von_extrem = $obj->von;
-    }
-    else
-      return;
-  }
 
-  // die max-zukunfstigste (bis)-datum gucken
-  // zeit markieren ($bis_extrem)
-  $query = "SELECT `bis` FROM `reservationen` WHERE `flugzeug_id` = '$flugzeug_id' ORDER BY `bis` DESC LIMIT 1;";
-  if ($res = $mysqli->query($query))
-  {
-    if ($res->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
-    {
-      $obj = $res->fetch_object();
-      $bis_extrem = $obj->bis;
-    }
-    else
-      return;
-  }
+  list($von_extrem, $bis_extrem) = get_range_of_reservation($mysqli, $flugzeug_id, $date_xmonth_back);
+  if ($von_extrem == 0 || $bis_extrem == 0)
+    return;
 
-  // halbe stunde blocks ganz links nach ganz rechts.
+  //============================================================================
+  // $bookings initialisieren
+  //
+  // halb stunden bloecke differenz unserer reservierngen zur initalisierung
   $min_stamp = strtotime($von_extrem);
-  $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 60 / 60 * 2)+1;
+  $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 1800);
 
-  $shift_1ster_monat_block =  intval(($stamp_print_minimum - $min_stamp) / 60 / 60 * 2);
-
-  // only 3 or 4 allowed
   // it.: if booking[level][hour]=TRUE <- reserved
-  $bookings = array(array(), array(), array(), array(), array(), array());
-
-  for ($x = 0; $x < 6; $x++) // initialise with FALSE = free.
-    for ($i = 0; $i < $half_hour_tot+1; $i++)
+  $bookings = array(array(), array(), array(), array(), array());
+  for ($x = 0; $x < 5; $x++) // initialise with FALSE = free.
+    for ($i = 0; $i < $half_hour_tot; $i++)
       $bookings[$x][$i] = FALSE;
+  //----------------------------------------------------------------------------
 
+  $shift_1ster_monat_block =  intval(($stamp_print_minimum - $min_stamp) / 1800);
   $print_number_txt = ""; // at the end for highest z-index
 
   // alle hohlen
@@ -325,16 +305,17 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flugzeug_id)
 
   $monat_2 = str_pad($monat, 2, "0", STR_PAD_LEFT);
 
-  $laufender_stamp = strtotime("$jahr-$monat_2-01 00:00 UTC"); // minus tag - addiert sich dazu
+  $laufender_stamp = strtotime("$jahr-$monat_2-01 00:00 UTC"); // die 7 kommen spaeter dazu
 
   // needs real user (RAGAZ) time.
   date_default_timezone_set("Europe/Zurich");
   $now_date = date("Y-m-d H:i:s", time());
   $anzahl_tage = date("t", $laufender_stamp);
-  $erster_wochentag = date("N", $laufender_stamp); // 1(Mon)-7(Son) TODO: evt zusammen mit oben
+  $erster_wochentag = date("N", $laufender_stamp); // 1(Mon)-7(Son)
   $heute_monats_tag = date ("d", time());
   date_default_timezone_set('UTC');
-  // wieso das hier draussen sein muss - keine ahnung.
+  // muss draussen sein, weil jetzt date in utc stamp verwandelt wurd damit..
+  // und so wird auch nacher gerechnet
   $now_tstamp = strtotime($now_date);
 
   $day_counter = 0;
@@ -394,7 +375,7 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flugzeug_id)
     echo '<text  text-anchor="end" x="2.8%" y="'.($yoffset+16).'" style="fill: '.$color.'; font-size: 80%; font-weight: bold;">'.str_pad($day_counter, 2, "0", STR_PAD_LEFT).'</text>'."\n";
     echo '</a>';
 
-    array_push($tag_v_offset, $yoffset); // todo: may fine tune.. (needs on buchungen print)
+    array_push($tag_v_offset, $yoffset); // (needs on buchungen print)
 
     for ($i = 0; $i < 28; $i++)
     {
@@ -402,29 +383,37 @@ function print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flugzeug_id)
       if ($laufender_stamp >= $now_tstamp)
         $color = "gruen";
       // wieso nicht oben.. keine ahnung, aber 'passt' so scheins.. grr
-      $laufender_stamp += 30 * 60; // halbe stunde hinzu
+      $laufender_stamp += 1800; // halbe stunde hinzu
 
-      $t_std = 7+intval($i/2);
+      $t_std = 7 + intval ($i / 2);
       $t_min = ($i % 2) * 30;
 
       if ($i % 2 == 0)
       {
+        // link
         if ($color == 'gruen')
           echo '<a xlink:href="res_neu.php?&amp;flugzeug_id='.$flugzeug_id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$day_counter.'&amp;stunde='.$t_std.'&amp;minute='.$t_min.'">';
+
         echo '<rect x="'.$tabs[$i].'%" y="'.($yoffset).'" width="'.$w.'%" height="20" style="fill:url(#'.$color.'1); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+
+        // link
         if ($color == 'gruen')
           echo '</a>';
       }
       else
       {
+        // link
         if ($color == 'gruen')
           echo '<a xlink:href="res_neu.php?flugzeug_id='.$flugzeug_id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$day_counter.'&amp;stunde='.$t_std.'&amp;minute='.$t_min.'">';
         echo '<rect x="'.$tabs[$i].'%" y="'.($yoffset).'" width="'.$w.'%" height="20" style="fill:url(#'.$color.'2); stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+
+        // link
         if ($color == 'gruen')
           echo '</a>';
       }
     }
   }
+  // letzte kleine linie ganz unten links. under letzem tag
   echo '<line x1="1.0%" y1="'.($yoffset+20).'" x2="'.$tabs[0].'%" y2="'.($yoffset+20).'" style="stroke:#000000; stroke-width: 1px;" />'."\n";
   return $tag_v_offset;
 }

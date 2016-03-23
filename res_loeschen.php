@@ -83,7 +83,7 @@ $res2 = $mysqli->query("SELECT `flugzeug` FROM `flugzeug` where `id` = {$flugzeu
 $obj2 = $res2->fetch_object();
 $flugzeug = $obj2->flugzeug;
 
-// infos ueber die buchugn ausgeben:
+// infos ueber die buchung ausgeben:
 ?>
     <div class="center">
       <table class="vtable">
@@ -167,7 +167,6 @@ if ($datum_v ==  $datum)
   $show_2_datum = FALSE;
   $summary_text = "Löschen";
 }
-
 
 ?>
 

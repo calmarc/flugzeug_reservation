@@ -152,6 +152,7 @@ function remove_zombies($mysqli)
         for($i = $block_first; $i < $block_last; $i++)
           $bookings[$level][$i] = TRUE;
     }
+    //----------------------------------------------------------------------------
 
     // sodali.. jetzt haben wir bookings welche nicht auf gruen sind...
     // von diesen jene loeschen welche 'vor' dem jetzt sind.

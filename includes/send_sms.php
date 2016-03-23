@@ -34,11 +34,21 @@ function sendsms($mysqli, $natel, $txt)
   $ret_val = ""; // kommen nur fehler rein...
 
   // create the aspsms object with they user_key, user_pass and options
-  $aspsms = new Aspsms($user_key, $user_pass, $options);
-  if (!$aspsms->sendTextSms($txt, $recipients))
-      $ret_val =  $aspsms->getSendStatus();
+  try 
+  {
+    $aspsms = new Aspsms($user_key, $user_pass, $options);
+  } 
+  catch (Exception $e) { return array("Fehler", "Login-Fehler?", $e->getMessage()); }
 
-  $credits = $aspsms->credits();
+
+  try 
+  {
+    if (!$aspsms->sendTextSms($txt, $recipients))
+        $ret_val =  $aspsms->getSendStatus();
+    $credits = $aspsms->credits();
+  } 
+  catch (Exception $e) { return array("Fehler", "Login-Fehler?", $e->getMessage()); }
+
   return array($credits, $tracking_number, $ret_val);
 }
 
@@ -56,9 +66,9 @@ function sms_delivery_status($mysqli, $tracking_number)
   );
 
   // create the aspsms object with they user_key, user_pass and options
-  $aspsms = new Aspsms($user_key, $user_pass, $options);
   try 
   {
+    $aspsms = new Aspsms($user_key, $user_pass, $options);
     $delivery_status = $aspsms->deliveryStatus($tracking_number);
   } 
   catch (Exception $e) 

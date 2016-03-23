@@ -125,8 +125,10 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
     if ($_POST['submit'] == "Teillöschung")
     {
 
-      $loeschen_datum_von_orig =  $loeschen_datum_von;
-      $loeschen_datum_bis_orig =  $loeschen_datum_bis;
+      // back_21 und vor_7 werden fuer die buchungen gebraucht.
+      // um ausserhab der 'nacht' zu bleiben.
+      $loeschen_datum_von_back_21 = $loeschen_datum_von;
+      $loeschen_datum_bis_vor_7 = $loeschen_datum_bis;
 
       // |7---------21|7-----------21|7-----------21|7----------21|
       //               **************
@@ -145,14 +147,14 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
       // 'von' ausdehnen... <=7 auf 21:00 vortag
       if (date("H:i", $loeschen_stamp_von) <= "07:00")
       {
-        $date22 = strtotime(date("Y-m-d", $loeschen_stamp_von)." 00:00:00");
-        $loeschen_datum_von = date("Y-m-d H:i:s", $date22 - 3 * 60 * 60);
+        $date21 = strtotime(date("Y-m-d", $loeschen_stamp_von)." 00:00:00");
+        $loeschen_datum_von_back_21 = date("Y-m-d H:i:s", $date21 - 3 * 60 * 60);
       }
       //  'bis' ausdehnen...  >=21 -->  7:00 naechster tag
       if (date("H:i", $loeschen_stamp_bis) >= "21:00")
       {
         $date07 = strtotime(date("Y-m-d", $loeschen_stamp_bis)." 23:00:00");
-        $loeschen_datum_bis = date("Y-m-d H:i:s", $date07 + 8 * 60 * 60);
+        $loeschen_datum_bis_vor_7 = date("Y-m-d H:i:s", $date07 + 8 * 60 * 60);
       }
 
       // start und endzeit = groesser reservation -> komplett loeschen
@@ -160,34 +162,35 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
       {
         delete_reservation($mysqli, $reservierung, $begruendung, $_SESSION['user_id']);
 
-        $datum = mysql2chtimef ($loeschen_datum_von, $loeschen_datum_bis, FALSE);
+        $datum = mysql2chtimef ($loeschen_datum_von_back_21, $loeschen_datum_bis_vor_7, FALSE);
         write_status_message($mysqli, "[Reservation]", $_SESSION['user_id'], "Gelöscht: {$datum}");
 
         bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flugzeug_id,
                             mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
       }
-      // Anfang kuerzen
+      // Anfang wegschneiden
       else if ($loeschen_datum_von == $res_datum_von && $loeschen_datum_bis < $res_datum_bis)
       {
-
+        // neues von ist gleich loeschen bis (auf 7 gestreched wenn noetig)
         $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `von` = ? WHERE `reservationen`.`id` = ?;";
-        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_bis, $reservierung));
+        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_bis_vor_7, $reservierung));
 
         $datum = mysql2chtimef ($loeschen_datum_von, $loeschen_datum_bis, FALSE);
         write_status_message($mysqli, "[Reservation]", $_SESSION['user_id'], "Teilgelöscht: {$datum}");
 
-        reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
+        reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von, $loeschen_datum_bis);
       }
-      // Ende kuerzen
+      // Ende wegschneiden
       else if ($loeschen_datum_von > $res_datum_von && $loeschen_datum_bis == $res_datum_bis)
       {
+        // neues bis ist gleich loeschen von (auf 21 zurueckgeschraubt wenn noetig)
         $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
-        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von, $reservierung));
+        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von_back_21, $reservierung));
 
         $datum = mysql2chtimef ($loeschen_datum_von, $loeschen_datum_bis, FALSE);
         write_status_message($mysqli, "[Reservation]", $_SESSION['user_id'], "Teilgelöscht: {$datum}");
 
-        reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
+        reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von, $loeschen_datum_bis);
       }
       else // liegt wo dazwischen
       {
@@ -196,13 +199,13 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
         `id` , `timestamp` , `user_id` , `flugzeug_id` , `von` , `bis`)
         VALUES (NULL ,? ,? ,? ,? ,?);";
 
-        mysqli_prepare_execute($mysqli, $query, 'siiss', array ($obj->timestamp, $obj->user_id, $obj->flugzeug_id, $loeschen_datum_bis, $obj->bis));
+        mysqli_prepare_execute($mysqli, $query, 'siiss', array ($obj->timestamp, $obj->user_id, $obj->flugzeug_id, $loeschen_datum_bis_vor_7, $res_datum_bis));
 
         // update the initial one (bis ... to loeschen_von..)
         $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
-        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von, $reservierung));
+        mysqli_prepare_execute($mysqli, $query, 'si', array ($loeschen_datum_von_back_21, $reservierung));
 
-        reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von_orig, $loeschen_datum_bis_orig);
+        reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $loeschen_datum_von, $loeschen_datum_bis);
 
         $datum = mysql2chtimef ($loeschen_datum_von, $loeschen_datum_bis, FALSE);
         write_status_message($mysqli, "[Reservation]", $_SESSION['user_id'], "Teilgelöscht: {$datum}");

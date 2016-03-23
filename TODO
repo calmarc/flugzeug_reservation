@@ -4,8 +4,6 @@
 
 * zu kontrollieren.  die includes...
      "includes/monats_ansicht.php"  line 56
-     "includes/reservations_functions.php" line 13
-     "includes/tages_ansicht.php"   line 306
 
 == MINOR ==
 
@@ -29,5 +27,8 @@
   flieger. (oder in diverses)
 
 * header charts = sonst etc.
+
+* viel gemeinsamer code.. 
+  reservations-funktionen und auch tagesansicht grrr.
 
 // vim: nospell :

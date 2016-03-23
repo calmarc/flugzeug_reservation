@@ -8,15 +8,25 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
 
   $yoffset = -$planeoffset;
 
+  //============================================================================
+  // Iterate over flieger
+
   while($obj_f = $res_f->fetch_object())
   {
+
+    //============================================================================
+    // SERVICE informationen $in ist das resultat
+
+    // flieger zaehler_minute  ($min) 
     $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `zaehler_eintraege` WHERE `flugzeug_id` = '{$obj_f->id}';");
     $obj_x = $res_x->fetch_object();
     $min = $obj_x->zaehler_minute;
+    // letzer Service zaehler_minute  ($service_min) 
     $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `service_eintraege` WHERE `flugzeug_id` = '{$obj_f->id}';");
     $obj_x = $res_x->fetch_object();
     $service_min = $obj_x->zaehler_minute;
 
+    // intervall
     $res_x = $mysqli->query("SELECT `service_interval_min`  FROM `flugzeug` WHERE `id` = '{$obj_f->id}';");
     $obj_x = $res_x->fetch_object();
     $service_interval_min = $obj_x->service_interval_min;
@@ -28,15 +38,21 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
     else
       $s_color = "#999999";
 
+    // formatieren die Minuten in xx:00h
     $in = intval($countdown / 60);
     if ($countdown < 0 && $in == 0)
       $in = "-$in";
     $in .= ":".str_pad(abs($countdown % 60), 2, "0", STR_PAD_LEFT)."h";
 
+    //-----------------------------------------------------------------------------
+
     $yoffset += $planeoffset;
     echo '<text x="97.6%" y="'.($yoffset-28).'px" text-anchor="end" style="fill: #000000; font-size: 120%; font-weight: bold;">'.$obj_f->flugzeug.'</text>'."\n";
     echo '<text x="97.6%" y="'.($yoffset-28-26).'px" text-anchor="end" style="fill: '.$s_color.'; font-size: 90%; font-weight: bold;">[Service in '.$in.']</text>'."\n";
 
+    //--
+ 
+    // flieger buch, eintrag nach landung
     echo '<a xlink:href="res_neu.php?flugzeug_id='.$obj_f->id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$tag.'">';
     echo '<text x="3.6%" y="'.($yoffset-28).'px" style=" fill: #000099; font-size: 100%; font-weight: bold;">'.$obj_f->kurzname.' buchen</text>'."\n";
     echo '</a>';
@@ -44,6 +60,7 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
     echo '<a xlink:href="landungs_eintrag.php?flugzeug_id='.$obj_f->id.'">';
     echo '<text x="14.8em" y="'.($yoffset-28).'px" style="fill: #000099; font-size: 100%; font-weight: bold;">Eintrag nach Landung</text>'."\n";
     echo '</a>';
+    // if admin service_liste
     if ($admin_bol)
     {
       echo '<a xlink:href="/reservationen/service_edit.php?flugzeug_id='.$obj_f->id.'">';
@@ -51,15 +68,25 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
       echo '</a>';
     }
 
+    // die bloecke
+    // TODO wieso? sollte doch UTC sein nicht?? $nowstamp ist auch neutral (utc)
+    // TODO wieso? sollte doch UTC sein nicht?? $nowstamp ist auch neutral (utc)
+    // TODO wieso? sollte doch UTC sein nicht?? $nowstamp ist auch neutral (utc)
+    // TODO wieso? sollte doch UTC sein nicht?? $nowstamp ist auch neutral (utc)
+    // TODO wieso? sollte doch UTC sein nicht?? $nowstamp ist auch neutral (utc)
+    // TODO wieso? sollte doch UTC sein nicht?? $nowstamp ist auch neutral (utc)
+    date_default_timezone_set("Europe/Zurich");
+    $stamp7 = strtotime($date." 00:00:00") + (7*60*60); // 30min*..x + 7h to print..
+    date_default_timezone_set("UTC");
+
     for ($i = 0; $i < 28; $i++)
     {
       //////////////////////////// GRUEN (default)
 
       $color = "gruen";
       // 7*60*60 (7 stunden) + 30*60 (halbe stunde) * i -> startzeit block in
-      date_default_timezone_set("Europe/Zurich");
-      $print_stamp = strtotime($date." 00:00:00") + 30*60*$i + (7*60*60); // 30min*..x + 7h to print..
-      date_default_timezone_set("UTC");
+      // die jetzt Zeit... um zwischen gruen und grau unterscheiden zu koennen.
+      $print_stamp = $stamp7 + 1800 * $i; // 30min*..x + 7h to print..
 
       if ($now_tstamp > $print_stamp)
         $color = "grey";
@@ -67,31 +94,36 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
       $minute = ($i % 2 ? 30 : 0);
       $stunde = intval(7 + ($i / 2));
 
+      // nur jedes 2te mal ne hohle linie und ne zeit
       if ($i % 2 == 0)
       {
+        // mit link
         if ($color == 'gruen')
           echo "<a xlink:href='res_neu.php?flugzeug_id={$obj_f->id}&amp;jahr={$jahr}&amp;monat={$monat}&amp;tag={$tag}&amp;stunde={$stunde}&amp;minute={$minute}'>";
 
         echo "<rect x='{$tabs[$i]}%' y='{$yoffset}' width='{$w}%' height='20' style='fill:url(#{$color}1); stroke: #000000; stroke-width: 1px;'></rect>\n";
 
+        // link fertig
         if ($color == 'gruen')
           echo "</a>";
 
-        //////////////////////////// H-LINIE
+        // H-LINIE
         echo '<line x1="'.$tabs[$i].'%" y1="'.($yoffset-20).'" x2="'.$tabs[$i].'%" y2="'.($yoffset+20).'" style="stroke:#000000; stroke-width: 3px;" />'."\n";
 
-        //////////////////////////// ZEITEN
+        // ZEITEN
         $tmp = (string) number_format(($tabs[$i]+0.5), 3, '.', '');
 
         echo '<text x="'.$tmp.'%" y="'.($yoffset-4).'" style="fill: #666666; font-size: 80%;"><tspan>'.($i/2+7).'</tspan><tspan class="hide">:00</tspan></text>'."\n";
       }
       else
       {
+        // mit link
         if ($color == 'gruen')
           echo "<a xlink:href='res_neu.php?flugzeug_id={$obj_f->id}&amp;jahr={$jahr}&amp;monat={$monat}&amp;tag={$tag}&amp;stunde={$stunde}&amp;minute={$minute}'>";
 
         echo "<rect x='{$tabs[$i]}%' y='{$yoffset}' width='{$w}%' height='20' style='fill:url(#{$color}2); stroke: #000000; stroke-width: 1px;'></rect>\n";
 
+        // link fertig
         if ($color == 'gruen')
           echo "</a>";
       }
@@ -111,7 +143,7 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
 
   // habes jahr zureuck
   date_default_timezone_set("Europe/Zurich");
-  $date_xmonth_back = date("Y-m-d H:i:s", time()-20736000);
+  $date_xmonth_back = date("Y-m-d H:i:s", time()-5456800); // 62 tage in sekunden
   date_default_timezone_set('UTC');
 
   $today_stamp_seven = strtotime($date.' 07:00:00');
@@ -126,49 +158,26 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
   while($obj_f = $res_f->fetch_object())
   {
 
-    // NUR ein halbes jahr zurueck gucken. hats ueberhaupt reservationen?
-    // sonst Zeit markieren als $von_extrem
-    $query = "SELECT `von` FROM `reservationen` WHERE `flugzeug_id` = '{$obj_f->id}' AND `von` > '{$date_xmonth_back}'  ORDER BY `von` ASC LIMIT 1;";
-    if ($res = $mysqli->query($query))
-    {
-      if ($res->num_rows > 0)
-      {
-        $obj = $res->fetch_object();
-        $von_extrem = $obj->von;
-      }
-      else
-        continue; // neuer flugzeug
-    }
+    list($von_extrem, $bis_extrem) = get_range_of_reservation($mysqli, $obj_f->id, $date_xmonth_back);
+    if ($von_extrem == 0 || $bis_extrem == 0)
+      continue;
 
-    // die max-zukunfstigste (bis)-datum gucken
-    // zeit markieren ($bis_extrem)
-    $query = "SELECT `bis` FROM `reservationen` WHERE `flugzeug_id` = '{$obj_f->id}' ORDER BY `bis` DESC LIMIT 1;";
-    if ($res = $mysqli->query($query))
-    {
-      if ($res->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
-      {
-        $obj = $res->fetch_object();
-        $bis_extrem = $obj->bis;
-      }
-      else
-        continue;
-    }
-
-    // halbe stunde blocks ganz links nach ganz rechts.
+    //============================================================================
+    // $bookings initialisieren
+    //
+    // halb stunden bloecke differenz unserer reservierngen zur initalisierung
     $min_stamp = strtotime($von_extrem);
-    $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 60 / 60 * 2)+1;
+    $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 1800);
+
+    // it.: if booking[level][hour]=TRUE <- reserved
+    $bookings = array(array(), array(), array(), array(), array());
+    for ($x = 0; $x < 5; $x++) // initialise with FALSE = free.
+      for ($i = 0; $i < $half_hour_tot; $i++)
+        $bookings[$x][$i] = FALSE;
+    //----------------------------------------------------------------------------
 
     // today's 7h
-    $shift_7hour_block =  intval(($today_stamp_seven - $min_stamp) / 60 / 60 * 2);
-
-    // should be enough of standby-levels.. else.. well. shit happens
-    // TODO: only 3 or 4 allowed
-    // it.: if booking[level][hour]=TRUE <- reserved
-    $bookings = array(array(), array(), array(), array(), array(), array());
-
-    for ($x = 0; $x < 6; $x++) // initialise with FALSE = free.
-      for ($i = 0; $i < $half_hour_tot+1; $i++)
-        $bookings[$x][$i] = FALSE;
+    $shift_7hour_block =  intval(($today_stamp_seven - $min_stamp) / 1800);
 
     // alle hohlen
     $query = "SELECT * FROM `reservationen` WHERE `flugzeug_id` = '{$obj_f->id}' AND `von` >= '{$von_extrem}'  ORDER BY `timestamp` ASC;";
@@ -186,14 +195,14 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
 
       #transfer time to blocks (1800=30min) of current booking
       $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800);
-      $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800)-1;
+      $block_last = intval((strtotime($obj_tang->bis) - $min_stamp) / 1800);
 
       // look vor level where it can fit
       $level = 0;
       while(TRUE)
       {
         $flag = FALSE;
-        for($i = $block_first; $i <= $block_last; $i++)
+        for($i = $block_first; $i < $block_last; $i++)
         {
           if ($bookings[$level][$i] == TRUE)
           {
@@ -208,35 +217,43 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
       }
 
       //book into according level
-      for($i = $block_first; $i <= $block_last; $i++)
+      for($i = $block_first; $i < $block_last; $i++)
         $bookings[$level][$i] = TRUE;
 
+      //----------------------------------------------------------------------------
+      // die buchungen sind da
+      // jetzt gucken ob die bloecke gedruckt werden muessen
+      // z.B >= heute 7uhr block und maximal 7uhr block + 28 oder so aehnlich
 
       $print_first = $block_first - $shift_7hour_block;
-      $print_last = $block_last - $shift_7hour_block;
+      $print_last = $block_last - $shift_7hour_block - 1;
 
-      // trim according not printable data...
+      // liegt komplett auserhalb
       if ($print_first > 27 || $print_last < 0)
         continue; // a booking that does not need to get printed.
 
+      // trim according not printable data...
       if ($print_first < 0) $print_first = 0; // trip the begin
       if ($print_last > 27) $print_last = 27; // trim the end
 
 
+      // fuer die pilot-nummer
       $center = ($tabs[$print_first] + $tabs[$print_last+1]) / 2;
       $center = number_format ($center, 3, '.', '');
 
+      // plane offset + standby offset
       $yoffset = $planeoffset * ($obj_f->id - 1) + $level * 20;
 
+      // breite des blockes...
       $width = number_format ($tabs[$print_last+1]-$tabs[$print_first], 3, '.', '');
 
       echo "<rect x='{$tabs[$print_first]}%' y='{$yoffset}' width='{$width}%' height='20' style='fill: {$boxcol[$level]}; stroke: #000000; stroke-width: 1px;'></rect>\n";
 
-
+      // piloten nummer ergatten und padden auf 3
       $query = "SELECT * from `piloten` where `id` = '{$obj_tang->user_id}';";
       if ($res_id = $mysqli->query($query))
       {
-        if ($res_id->num_rows > 0) // eigentilch immer.. oben wurde schon geguckt
+        if ($res_id->num_rows > 0) //  koennte geloescht worden sein..
         {
           $obj_id = $res_id->fetch_object();
           $t_id = str_pad($obj_id->pilot_nr, 3, "0", STR_PAD_LEFT);
@@ -245,17 +262,19 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
           continue;
       }
 
+      // TODO auch mehrfacher code..
       $rounded_stamp = time();
       // round up cur_time to half hour blocks
       $rounded_stamp = (intval($rounded_stamp / 1800) + 1) * 1800;
 
+      $txtcolor = $textcol[$level];
+
       $showlink = FALSE;
+      // link zeigen wenn vom user..und groessern jetzt
       if (strtotime($obj_tang->bis) > $rounded_stamp && $obj_tang->user_id == $_SESSION['user_id'])
         $showlink = TRUE;
 
-      $txtcolor = $textcol[$level];
-
-      // always show for admins
+      // immer zeigen wenn admin
       if (check_admin($mysqli))
       {
         $showlink = TRUE;
@@ -263,6 +282,8 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
       }
 
 
+      // loeschen zeit freigeben tooltop wenn von einme selber - sonst mit allem
+      // drum und dran
       $tmptxt = "";
       if ($obj_tang->user_id == $_SESSION['user_id']) // user
       {
@@ -277,12 +298,10 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
         $tmptxt = 'onmousemove="ShowTooltip(evt, \''.addslashes(htmlspecialchars($obj_id->name)).'\', \''.addslashes(htmlspecialchars($obj_id->natel)).'\',  \''.addslashes(htmlspecialchars($obj_id->telefon)).'\', \''.addslashes(htmlspecialchars($obj_id->email)).'\')" onmouseout="HideTooltip(evt)"';
       }
 
+
       if ($showlink)
         echo "<a xlink:href='res_loeschen.php?to=ueberblick&amp;action=del&amp;reservierung={$obj_tang->id}&amp;tag={$tag}&amp;monat={$monat}&amp;jahr={$jahr}'>";
-
-
       echo '<text '.$tmptxt.' x="'.$center.'%" y="'.($yoffset+16).'" text-anchor="middle" style="fill: '.$txtcolor.'; font-size: 95%; font-weight: bold;">'.$t_id.'</text>'."\n";
-
       if ($showlink)
         echo '</a>';
     }
@@ -394,16 +413,14 @@ function tagesansicht($mysqli, $w, $tabs, $boxcol, $textcol, $planeoffset, $tag,
   // print GREEN etc (lowest layer) stuff
 
   print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $tabs, $w, $admin_bol);
-
   remove_zombies($mysqli);
-
-  // TODO colors etc into defines? konstats etc?
   print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol, $tag, $monat, $jahr);
 
   echo "</g></svg>";
 
   legende_print($boxcol);
-  tooltip_print();
+  
+  tooltip_print(); // entsprechender javascript..  siehe oben
 
 }
 ?>
