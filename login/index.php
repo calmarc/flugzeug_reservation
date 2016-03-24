@@ -26,11 +26,11 @@ include_once('../includes/usermenu.php');
 
 if (isset($_GET['error']))
 {
-  $err= "Pilot-ID / Passwort Kombination stimmen nicht!";
+  $err= "Pilot-Nr / Passwort Kombination stimmen nicht!";
   if ($_GET['error'] == 2)
     $err= "Captcha stimmt nicht überein!";
   else
-    $err= "Pilot-ID / Passwort Kombination stimmen nicht!";
+    $err= "Pilot-Nr / Passwort Kombination stimmen nicht!";
 
   echo "<div class='center'>
           <h3 class='error'>$err</h3>
@@ -44,7 +44,7 @@ if (isset($_GET['error']))
           <form action="process_login.php" method="post" name="login_form" class="login_form"> 			
             <table class="formular_eingabe">
               <tr>
-                <td><b>Pilot-ID:</b></td>
+                <td><b>Pilot-Nr:</b></td>
                 <td ><input required="required" type="number"  min="1" max="999" name="pilot_nr" /></td>
               </tr>
               <tr>

@@ -1,5 +1,61 @@
 <?php
 
+function tagesplan_navigation($mysqli, $date, $wochentag, $tag, $monat_txt, $jahr)
+{
+  DATE_DEFAult_timezone_set("Europe/Zurich");
+  $date_td = new DateTime($date);
+  $date_td->modify('-1 day');
+  $z_tag =  $date_td->format('d');
+  $z_monat =  $date_td->format('m');
+  $z_jahr =  $date_td->format('Y');
+  $date_td->modify('+2 day');
+  $v_tag =  $date_td->format('d');
+  $v_monat =  $date_td->format('m');
+  $v_jahr =  $date_td->format('Y');
+
+  $date_td = new DateTime($date);
+  $date_td->modify('-1 month');
+  $z_tag_m =  $date_td->format('d');
+  $z_monat_m =  $date_td->format('m');
+  $z_jahr_m =  $date_td->format('Y');
+  $date_td->modify('+2 month');
+  $v_tag_m =  $date_td->format('d');
+  $v_monat_m =  $date_td->format('m');
+  $v_jahr_m =  $date_td->format('Y');
+
+  $date_td = new DateTime($date);
+  $date_td->modify('-1 week');
+  $z_tag_w =  $date_td->format('d');
+  $z_monat_w =  $date_td->format('m');
+  $z_jahr_w =  $date_td->format('Y');
+  $date_td->modify('+2 week');
+  $v_tag_w =  $date_td->format('d');
+  $v_monat_w =  $date_td->format('m');
+  $v_jahr_w =  $date_td->format('Y');
+  date_default_timezone_set("UTC");
+
+  echo "<table id='monat_title'><tr>
+<td style='white-space: nowrap; font-weight: bold; font-size: 260%; margin: 0px; padding: 0px 0.4em 0.1em 0px;'>
+<a title='Monat zurück' href='/reservationen/index.php?show=tag&amp;monat={$z_monat_m}&amp;jahr={$z_jahr_m}&amp;tag={$z_tag_m}'
+><img style='display: inline;' src='bilder/arr_monat_left.png' alt='Jahr zurück' /></a
+><a title='Woche zurück' href='/reservationen/index.php?show=tag&amp;monat={$z_monat_w}&amp;jahr={$z_jahr_w}&amp;tag={$z_tag_w}'
+><img style='display: inline;' src='bilder/arr_woche_left.png' alt='Woche zurück' /></a
+><a title='Tag zurück' href='/reservationen/index.php?show=tag&amp;monat={$z_monat}&amp;jahr={$z_jahr}&amp;tag={$z_tag}'
+><img style='display: inline;' src='bilder/arr_tag_left.png' alt='Tag zurück' /></a>
+</td>
+<td><h1>{$wochentag}, {$tag}.&nbsp;{$monat_txt}&nbsp;{$jahr}</h1></td>
+<td>
+</td><td style='white-space: nowrap; font-weight: bold; font-size: 260%; padding: 0px 0px 0.1em 0.4em;'>
+<a title='Tag vor' href='/reservationen/index.php?show=tag&amp;monat={$v_monat}&amp;jahr={$v_jahr}&amp;tag={$v_tag}'
+><img style='display: inline;' src='bilder/arr_tag_right.png' alt='Tag vor' /></a
+><a title='Woche vor' href='/reservationen/index.php?show=tag&amp;monat={$v_monat_w}&amp;jahr={$v_jahr_w}&amp;tag={$v_tag_w}'
+><img style='display: inline;' src='bilder/arr_woche_right.png' alt='Woche vor' /></a
+><a title='Monat vor' href='/reservationen/index.php?show=tag&amp;monat={$v_monat_m}&amp;jahr={$v_jahr_m}&amp;tag={$v_tag_m}'
+><img style='display: inline;' src='bilder/arr_monat_right.png' alt='Jahr vor' /></a>
+</td>
+</tr></table>";
+}
+
 function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $tabs, $w, $admin_bol)
 {
   $now_tstamp = time();

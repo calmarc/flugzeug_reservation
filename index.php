@@ -31,9 +31,9 @@ print_html_to_body('Motorfluggruppe Chur Reservierungssystem',
 include ('includes/usermenu.php');
 echo '<main>';
 
-$monate = array ("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September",
+$monate_arr = array ("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September",
 "Oktober", "November", "Dezember");
-$tage = array ("Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag");
+$tage_arr = array ("Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag");
 
 // heutiges Datum - oder das vom kalender etc.
 list( $tag, $monat, $jahr) = get_date();
@@ -44,7 +44,7 @@ $t = str_pad($tag, 2, "0", STR_PAD_LEFT);
 
 $date = "$j-$m-$t";
 
-date_default_timezone_set("Europe/Berlin");
+date_default_timezone_set("Europe/Zurich");
 $wochentag_i = date("w", strtotime($date));
 date_default_timezone_set("UTC");
 
@@ -56,11 +56,8 @@ if ($_SESSION['show'] == 'tag')
   echo "<div id='calendar' class='hide_on_print'>";
   echo draw_calendar($tag, $monat, $jahr);
   echo '</div>';
-  echo '<div class="center">';
-  echo '<table id="monat_title"><tr>';
-  echo "<td style='padding: 10px;'>{$tage[$wochentag_i]}, {$tag}.&nbsp;{$monate[$monat-1]} {$jahr}</td>";
-  echo '</tr></table>';
-  echo '</div>';
+
+  tagesplan_navigation($mysqli, $date, $tage_arr[$wochentag_i], $tag, $monate_arr[$monat-1], $jahr);
 }
 
 //============================================================================
@@ -78,7 +75,7 @@ else
   else if (isset($_SESSION['flugzeug_id']))
     $flugzeug_id = $_SESSION['flugzeug_id'];
 
-  monatsplan_navigation($mysqli, $flugzeug_id, $jahr, $monat, $jahr, $monate, $tag);
+  monatsplan_navigation($mysqli, $flugzeug_id, $jahr, $monat, $monate_arr, $tag);
 
 }
 

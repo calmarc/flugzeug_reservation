@@ -24,7 +24,7 @@ include_once('../includes/usermenu.php');
           <form action="passwort_vergessen.php" method="post" class="login_form"> 			
             <table class="formular_eingabe" style="width: 100%;">
               <tr>
-                <td><b>Pilot-ID:</b></td>
+                <td><b>Pilot-Nr:</b></td>
                 <td><input type="number" min="1" max="999" required="required" name="pilot_nr" /></td>
               </tr>
               <tr>

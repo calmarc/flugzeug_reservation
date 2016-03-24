@@ -4,23 +4,18 @@
 
 == MINOR ==
 
-* ueberall pfeile beim sortierne tabelle oben (rauf runter asc/desc)
-
-* die res_anzeige dinger.. ausgliedern noetig etc.
-
-* loeschen combobox einheitlich  mit > < etc. (auch filter)
+=== user stuff
 
 * service nicht rot.. nur zahl (tspan...)
- 
-* wie beim monatsplan auch pfeile fuer tag-wechsel
 
-* pfeile im calender weiter auseinander
-
-* armin.beck@dsl.li,amathis@deep.ch, (bei diverses.beigeloescht reintun)
+=== admin stuff
 
 * flieger managen wie user_edit und user_admin.. einfach
   flieger. (oder in diverses)
 
-* header charts = sonst etc.
+* res_anzeigen
+  - die res_anzeige dinger.. ausgliedern noetig etc.
+  - loeschen combobox einheitlich  mit > < etc. (auch filter)
+  - ueberall pfeile beim sortierne tabelle oben (rauf runter asc/desc)
 
 // vim: nospell :

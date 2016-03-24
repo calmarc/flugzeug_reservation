@@ -36,7 +36,7 @@ $res = $mysqli->query($query);
           <table class='vertical_table'>
             <tr>
               <th class="formular_zelle"></th>
-              <th><b>Pilot-ID</b></th>
+              <th><b>Pilot-Nr</b></th>
               <th><b>Name</b></th>
               <th><b>Natel</b></th>
               <th><b>Telefon</b></th>

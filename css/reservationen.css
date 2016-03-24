@@ -35,29 +35,53 @@ nav {
   display: none;
 }
 
-h1 { font-size: 180%; padding: 0.3em 1em 0.5em 1em; margin: 0 0 0 0; text-shadow: 2px 2px 1px #cccccc, 3px 3px 2px #eeeeee; }
+h1 { 
+  font-size: 180%; 
+  padding: 0.3em 1em 0.5em 1em; 
+  margin: 0 0 0 0; 
+  text-shadow: 2px 2px 1px #eeeeee, 2px 2px 2px #9999ff; 
+}
 
 h1#h1tag { margin: 0px; padding: 0px; line-height: 40%; }
 h1#h1monat { margin: 0px; padding: 0px; line-height: 40%; }
 
-table#monat_title td
-{
-  font-size: 160%;
-  font-weight: bold;
+/* titel vom der monatsansicht + tagesansicht */
+table#monat_title {
+  padding: 0px;
+  margin: 0px auto 0px auto;
+  border-collapse: collapse;
+}
+table#monat_title td {
   vertical-align: middle;
   padding: 8px;
+}
+table#monat_title h1 {
+  padding: 0px;
+  margin: 0px;
+  margin-top: 0px;
+  /*white-space: nowrap;*/
+}
+table#monat_title img, table#monat_title a, table#monat_title td {
+  padding: 0px;
+  margin: 0px;
+}
+
+table#monat_title select {
+  font-size: 180%;
+  padding: 0px 0px 0px 0px;
+  margin-bottom: 0px;
 }
 
 a, a:visited {
     color: #111199;
-    text-decoration:none;
+    text-decoration: none;
     background-color: transparent;
     border-width: 0px;
 }
 
 a:hover, a:active {
     color:#000099;
-    text-decoration:underline;
+    text-decoration: underline;
     background-color: transparent;
     border-width: 0px;
 }
@@ -256,7 +280,7 @@ table.vertical_table tr:nth-child(odd) { background-color: #eeeeee; }
 table.vertical_table th { color: white; background-color: #959492; padding: 3px;} 
 
 table.vertical_table th a { color: white; text-decoration: underline; } 
-table.vertical_table td a { color: #000099; text-decoration: underline; } 
+table.vertical_table td a { color: #000099; text-decoration: none; } 
 
 table.vtable { border-style: none; border-width: 0; border-collapse: collapse; }
 table.vtable th { padding: 10px;}
@@ -287,7 +311,7 @@ a#printer {
 }
 a#printer img {
   display: inline-block; 
-  height: 1em; 
+  height: 1.0em; 
   margin:0px; 
   padding: 0px;
 }

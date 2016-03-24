@@ -36,7 +36,7 @@ if (!empty($error_msg)) {
             <div class="center">
               <table class="vtable">
                 <tr>
-                   <td><b>Pilot-ID:</b></td> <td><input style="text-align: center;" required="required"
+                   <td><b>Pilot-Nr:</b></td> <td><input style="text-align: center;" required="required"
                   <?php if (isset($_SESSION['regpilot_nr'])) echo "value='".$_SESSION['regpilot_nr']."'"; ?>
                                    type='number' min="1" max="9999" name='pilot_nr' id='pilot_nr' /></td>
                 </tr>
