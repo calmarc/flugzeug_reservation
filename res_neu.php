@@ -32,11 +32,7 @@ include_once('includes/usermenu.php'); ?>
 if (isset($error_msg) && $error_msg != "")
   echo "<p><b style='color: red;'>$error_msg</b></p>";
 
-// TODO: get_flugzeug_from_id(0
-$query = "SELECT * FROM `flugzeug` WHERE `id` = '{$flugzeug_id}' LIMIT 1;";
-$res = $mysqli->query($query);
-$obj = $res->fetch_object();
-$flugzeugtxt = $obj->flugzeug;
+$flugzeug = get_flugzeug_from_id($mysqli, $flugzeug_id);
 
 ?>
   <form action='res_neu.php' method='post'>
@@ -62,7 +58,7 @@ else
         </tr>
         <tr class="trblank">
           <td><b>Flugzeug:</b></td>
-          <td><b><?php echo $flugzeugtxt; ?></b></td>
+          <td><b><?php echo $flugzeug; ?></b></td>
         </tr>
         <tr>
           <td><b>Datum von:</b></td>
@@ -118,66 +114,6 @@ else
     <input class='submit_button' type='submit' name='submit' value='Reservierung abschicken' />
     </div>
   </form>
-    <br />
-    <div class='center'>
-      <h2 class="hide_on_print">Reservationen <a id="printer" href="javascript:window.print()"><img alt="Ausdrucken" src="/reservationen/bilder/print-out.png" /></a></h2>
-      <h2 class="only_on_print">Kommende MFGC Reservationen<br />von: <?php echo "[".str_pad($_SESSION['pilot_nr'], 3, "0", STR_PAD_LEFT)."] ".$_SESSION['name']; ?><br />&nbsp; &nbsp;</h2>
-    </div>
-
-    <div class='center'>
-    <table class='vertical_table'>
-  <?php
-
-// jetzt Zeit
-date_default_timezone_set("Europe/Zurich");
-$date = date("Y-m-d H:i:s", time());
-date_default_timezone_set('UTC');
-
-
-// TODO: clean up and combine with res_momentan somehow?
-remove_zombies($mysqli);
-// get all valid reservation
-// later: see if there is an entry.. if not.. yellow (standby)
-// array(array(flugi1) array (flugi2)...
-$valid_res = get_all_list_active_reserv($mysqli);
-
-$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flugzeug`.`flugzeug`, `reservationen`.`flugzeug_id` FROM `reservationen` LEFT OUTER JOIN `flugzeug` ON `flugzeug`.`id` = `reservationen`.`flugzeug_id` WHERE `user_id` = {$user_id} AND `bis` >= '{$date}' ORDER BY `von` DESC;";
-$res = $mysqli->query($query);
-
-while ($obj = $res->fetch_object())
-{
-  $yellow = '';
-  if ( ! in_array(strval($obj->id), $valid_res[$obj->flugzeug_id - 1]))
-    $yellow = 'style="background-color: #ffff99; color: #ff6600 !important;"';
-
-  $datum = mysql2chtimef($obj->von, $obj->bis, FALSE);
-  list( $g_datum, $zeit) = explode(" ", $obj->von);
-  list( $g_jahr, $g_monat, $g_tag) = explode("-", $g_datum);
-  $g_jahr = intval($g_jahr);
-  $g_monat = intval($g_monat);
-  $g_tag = intval($g_tag);
-
-  echo " <tr><td><a href='index.php?show=tag&amp;tag={$g_tag}&amp;monat={$g_monat}&amp;jahr={$g_jahr}'>[Tagesplan]</a></td>
-          <td {$yellow}>{$datum}</td><td {$yellow}>{$obj->flugzeug}</td>
-        </tr>";
-}
-
-$query = "SELECT `reservationen`.`id`, `reservationen`.`von`, `reservationen`.`bis`, `flugzeug`.`flugzeug`, `reservationen`.`flugzeug_id` FROM `reservationen` LEFT OUTER JOIN `flugzeug` ON `flugzeug`.`id` = `reservationen`.`flugzeug_id` WHERE `user_id` = {$user_id} AND `bis` < '{$date}' ORDER BY `von` DESC LIMIT 5;";
-$res = $mysqli->query($query);
-
-echo '<tr><td class="formular_zelle"></td><td class="formular_zelle" style="text-align: left;" colspan="2">Vergangene:</td></tr>';
-while ($obj = $res->fetch_object())
-{
-  $datum = mysql2chtimef($obj->von, $obj->bis, FALSE);
-  echo " <tr><td></td>
-          <td style='color: grey;'>{$datum}</td>
-          <td style='color: grey;'>{$obj->flugzeug}</td>
-        </tr>";
-}
-
-?>
-      </table>
-    </div>
   </div>
 </main>
 </body>

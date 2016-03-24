@@ -16,7 +16,6 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 
 //============================================================================
 // alle 'gueltigen' ermitteln (der rest dann yellow (standby markieren)
-// TODO: identisch wie in res_neu .. auslagern
 
 $valid_res = get_all_list_active_reserv($mysqli);
 
@@ -94,7 +93,6 @@ else if ($_SESSION['res_sort_bereich_res'] == "-12-~")
   $where_bereich = "`reservationen`.`bis` >= '{$von_datetime}'";
 }
 
-
 $where_txt = '';
 if ($where_bereich != '' && $where_pilot != '')
   $where_txt = " WHERE {$where_bereich} AND {$where_pilot} ";
@@ -122,7 +120,7 @@ include_once('includes/usermenu.php');
       <div class="center">
 
           <form style="display: inline-block;" action="res_momentan.php" method='get'>
-              <select size="1" onchange='this.form.submit()' style="width: 19em;" name = "pilot_nr">
+              <select size="1" onchange='this.form.submit()' style="width: 18em;" name = "pilot_nr">
 <?php
 $res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_nr`;");
 
@@ -141,7 +139,7 @@ while ($obj = $res->fetch_object())
               </select>
           </form>
           <form style="display: inline-block;" action="res_momentan.php" method='get'>
-              <select size="1" onchange='this.form.submit()' style="width: 12em;" name = "z_bereich">
+              <select size="1" onchange='this.form.submit()' style="width: 10em;" name = "z_bereich">
                 <option <?php if ($_SESSION['res_sort_bereich_res'] == '$-~') echo 'selected="selected"'; ?> value="$-~">&gt; jetzt</option>
                 <option <?php if ($_SESSION['res_sort_bereich_res'] == '-12-$') echo 'selected="selected"'; ?> value="-12-$">&lt; jetzt</option>
                 <option <?php if ($_SESSION['res_sort_bereich_res'] == '$-+3') echo 'selected="selected"'; ?> value="$-+3">jetzt bis +3 Mt.</option>
@@ -154,9 +152,9 @@ while ($obj = $res->fetch_object())
           <!--<th class="hide_on_print formular_zelle"></th>-->
           <th class='formular_zelle'></th>
           <!--<th><a href="res_momentan.php?sort=timestamp"><b>Eingegeben</b></a></th>-->
-            <th><a href="res_momentan.php?sort=pilot_nr"><b>Pilot</b><?php echo $pilot_img; ?></a></th>
-            <th><a href="res_momentan.php?sort=flugzeug"><b>Flugzeug</b><?php echo $flugzeug_img; ?></a></th>
-            <th><a href="res_momentan.php?sort=von"><b>Datum</b><?php echo $datum_img; ?></a></th>
+            <th style='min-width: 16em;'><a href="res_momentan.php?sort=pilot_nr"><b>Pilot</b><?php echo $pilot_img; ?></a></th>
+            <th style='min-width: 13em;'><a href="res_momentan.php?sort=flugzeug"><b>Flugzeug</b><?php echo $flugzeug_img; ?></a></th>
+            <th style='min-width: 12em;'><a href="res_momentan.php?sort=von"><b>Datum</b><?php echo $datum_img; ?></a></th>
           </tr>
 <?php
 

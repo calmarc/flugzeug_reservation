@@ -13,7 +13,7 @@ if (isset($_POST['loeschen']))
   mysqli_prepare_execute ($mysqli, $query, 'i', array ($user_id));
 
   list($pilot_nr_pad2, $name2) = get_pilot_from_user_id($mysqli, $user_id);
-  write_status_message ($mysqli, "[Pilot gelöscht]", $_SESSION['user_id'], "[{$pilot_nr_pad2}] $name2");
+  write_status_message ($mysqli, "[Pilot edit]", $_SESSION['user_id'], "[{$pilot_nr_pad2}] $name2 wurde gelöscht");
 
   // man hat sich selber geloesch.. delete $_SESSION (ausloggen)
 
@@ -75,22 +75,18 @@ if (isset($_POST['updaten']))
 
   // email scharf wenn noetig (weil wieder gut ist jetzt)
   if ($obj->email_gesch == TRUE && ($checkflug > $date_t || $checkflug == "0000-00-00"))
+  {
     mysqli_prepare_execute($mysqli, "UPDATE `mfgcadmin_reservationen`.`piloten` SET `email_gesch` = '0' WHERE `piloten`.`id` = ?;", 'i', array ($user_id));
-    // TODO status message ausgeben - pilot nicht mehr gesperrt oder so
+    list($pilot_nr_pad, $name) = get_pilot_from_user_id($mysqli, $user_id);
+    write_status_message ($mysqli, "[Pilot edit]", $_SESSION['user_id'] , "[{$pilot_nr_pad}] $name wurde entsperrt");
+  }
 
-  // passwort mit salt.. generieren.. und seperat eintragen
-  // TODO: evt function schreiben fuer das passwort gezinkel.
   if ($password != "")
   {
-    $query= "SELECT `salt` FROM `piloten` WHERE `id` = {$user_id} LIMIT 1;";
-    $res = $mysqli->query($query);
-    $obj = $res->fetch_object();
-
-    $password = hash('sha512', $password);
-    $password = hash('sha512', $password . $obj->salt);
+    $pass_encrypted = pass_encrypt($mysqli, $user_id, $password);
 
     $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ?; ";
-    mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $user_id));
+    mysqli_prepare_execute($mysqli, $query, 'si', array ($pass_encrypted, $user_id));
   }
 
   // UPDATE user data

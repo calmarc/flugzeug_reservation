@@ -122,7 +122,6 @@ function tooltip_print()
 <?php
 }
 
-// TODO $special_meta wird nicht gebraucht glaube ich
 function print_html_to_body ($title, $special_meta)
 { ?>
 

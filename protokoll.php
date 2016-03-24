@@ -32,7 +32,7 @@ include_once('includes/send_sms.php');
 
         <form action='protokoll.php' method='get'>
           Löschen: <select style="width: 15em;" onchange='this.form.submit()' name='loeschen' size="1" id='loeschen'>
-            <option value="9876543210">                </option>
+            <option value="9876543210">&nbsp;</option>
             <option value="loggings">Ein/Aus-geloggt</option>
             <option value="365">älter als ein Jahr</option>
             <option value="182">älter als ein halbes Jahr</option>
@@ -59,9 +59,6 @@ $res = $mysqli->query($query);
 
 while ($obj = $res->fetch_object())
 {
-  // to LOKAL zeit..
-  // TODO funktion machen von dem - wo noch?
-
   $lokal_datum = mysql_stamp_to_ch($mysqli, $obj->timestamp);
 
   $action = $obj->aktion;

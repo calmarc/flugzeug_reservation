@@ -49,7 +49,6 @@ if (isset($_POST['submit']))
   $local_datetime = date("Y-m-d H:i:s", time());
   date_default_timezone_set("UTC");
 
-  // TODO mit teilloeschung check kombinieren?
   $error_msg = "";
   if ($bis_date <= $von_date)
     $error_msg .= "'Von' Zeit nicht grösser als 'bis' Zeit.<br />";
@@ -57,17 +56,17 @@ if (isset($_POST['submit']))
   if ($von_stunde == "21" && $von_minuten == "30" || $bis_stunde == "21" && $bis_minuten == "30")
     $error_msg .= "21:30 liegt ausserhalb der Grenzen.<br />";
 
-  if ($von_date <= $local_datetime)
-    $error_msg .= "Die Reservierung liegt in der Vergangenheit.<br />";
-
-  if (intval($von_stunde) == "21")
+  if ($von_stunde == "21")
     $error_msg .= "Ab 21:{$von_minuten} Uhr kann man nicht reservieren.<br />Bitte stattdessen den nächsten Tag verwenden!<br />";
 
-  if (intval($bis_stunde) == "07" && intval($bis_minuten) == "00")
+  if ($bis_stunde == "07" && $bis_minuten == "00")
     $error_msg .= "Auf 7:00 Uhr kann man nicht reservieren.<br />Bitte stattdessen auf den Vortag 21:00 Uhr buchen!<br />";
 
   if (strtotime($bis_date) - strtotime($von_date) > 60 * 60 * 24 * 31)
     $error_msg .= "Eine Reservation darf nicht länger als 31 Tage dauern.<br />";
+
+  if ($von_date <= $local_datetime)
+    $error_msg .= "Die Reservierung liegt in der Vergangenheit.<br />";
 
 
   // CHECK LEVEL of standby

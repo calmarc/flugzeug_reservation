@@ -88,7 +88,6 @@ else
 
 //$tab_width = number_format (98/28.0, 3, '.', ''); // WIDTH of tabs
 
-// TODO: if calender.. must be less than 98%
 $tab_width = number_format (94/28.0, 3, '.', ''); // WIDTH of tabs
 $perplus = 3.6; //(shift to right in percent)
 

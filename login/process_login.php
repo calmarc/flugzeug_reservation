@@ -63,10 +63,10 @@ if (isset($_POST['pilot_nr'], $_POST['password']))
         if (mail($to, $subject, $txt, implode("\r\n",$headers)))
         {
           mysqli_prepare_execute($mysqli, "UPDATE `mfgcadmin_reservationen`.`piloten` SET `email_gesch` = '1' WHERE `piloten`.`id` = ?;", 'i', array ($obj->id));
-          write_status_message($mysqli, "[Check-Flug Email]", "System", "An [{$to}] <span style='color: green;'>gesendet</span>: {$subject}");
+          write_status_message($mysqli, "[Check-Flug]", "System", "Email an [{$to}] <span style='color: green;'>gesendet</span>: {$subject}");
         }
         else
-          write_status_message($mysqli, "[Check-Flug Email]", "System", "Es konnte <span style='color: red'>keine</span> Email an <{$to}> geschickt werden!");
+          write_status_message($mysqli, "[Check-Flug]", "System", "Email an <{$to}> konnte <span style='color: red'>nicht</span> geschickt werden!");
 
       }
     }

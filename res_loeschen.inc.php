@@ -94,17 +94,14 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
     if ($loeschen_datum_bis <= $loeschen_datum_von)
       $error_msg .= "Bis-Zeit muss später Von-Zeit sein.<br />";
 
-    if ($von_stunde == "21" && $von_minute != "00")
-      $error_msg .= "21:30 liegt ausserhalb des Bereiches.<br />";
-
-    if ($bis_stunde == "21" && $bis_minute != "00")
-      $error_msg .= "21:30 liegt ausserhalb des Bereiches.<br />";
+    if ($von_stunde == "21" && $von_minuten == "30" || $bis_stunde == "21" && $bis_minuten == "30")
+      $error_msg .= "21:30 liegt ausserhalb der Grenzen.<br />";
 
     if ($von_stunde == "21")
-      $error_msg .= "Ab 21 Uhr kann man keine Reservierung machen. Nächster Tag verwenden.<br />";
+      $error_msg .= "Ab 21:{$von_minuten} Uhr kann man nicht reservieren.<br />Bitte stattdessen den nächsten Tag verwenden!<br />";
 
     if ($bis_stunde == "07" && $bis_minute == "00")
-      $error_msg .= "Bis 7 Uhr kann man keine Reservierung machen. Vorheriger Tag verwenden.<br />";
+      $error_msg .= "Auf 7:00 Uhr kann man nicht reservieren.<br />Bitte stattdessen auf den Vortag 21:00 Uhr buchen!<br />";
 
     if ($loeschen_datum_von < $res_datum_von)
       $error_msg .= "Neue Von-Zeit darf nicht vor der ursprüngliche Von-Zeit liegen.<br />";
@@ -241,7 +238,6 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
 
       //  wenn ZEIT nach >21 <7 ----> 7 nachster tag 'von'
       //  sollte nicht passieren, aber orig bis muss > sein als neues von
-      //  TODO function? validate_22_7_time or so?
       $tmp_hour_min = date("H:i", strtotime($rounded_datetime));
 
       if ($tmp_hour_min < "07:00")
@@ -309,10 +305,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
           $res_datum_raw = mysql2chtimef($obj3->von, $obj3->bis, TRUE);
           $res_datum = mysql2chtimef($obj3->von, $obj3->bis, FALSE);
 
-          // TODO get_flugzeug_from_id() ?
-          $res4 = $mysqli->query("SELECT * FROM `flugzeug` WHERE `id` = {$obj3->flugzeug_id} ;");
-          $obj4 = $res4->fetch_object();
-          $flugzeug = $obj4->flugzeug;
+          $flugzeug = get_flugzeug_from_id($mysqli, $obj3->flugzeug_id);
 
           $headers   = array();
           $headers[] = "MIME-Version: 1.0";

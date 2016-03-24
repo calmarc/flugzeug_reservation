@@ -77,11 +77,7 @@ $query = "SELECT * FROM `reservationen`
 $res = $mysqli->query($query);
 $obj = $res->fetch_object();
 
-// todo: get_flugzeug_from_id
-$flugzeug = $obj->flugzeug_id;
-$res2 = $mysqli->query("SELECT `flugzeug` FROM `flugzeug` where `id` = {$flugzeug};");
-$obj2 = $res2->fetch_object();
-$flugzeug = $obj2->flugzeug;
+$flugzeug = get_flugzeug_from_id($mysqli, $obj->flugzeug_id);
 
 // infos ueber die buchung ausgeben:
 ?>
@@ -139,11 +135,11 @@ if (!$trimmen)
 <h2>Teillöschung</h2>
 
 <?php
-// TODO kontrollieren was das unten macht
 
 if (isset($error_msg) && $error_msg != "")
   echo "<p><b style='color: red;'>$error_msg</b></p>";
 
+// get von bis von der Reservation
 $res = $mysqli->query("SELECT * FROM `reservationen` WHERE `id` = {$reservierung};");
 $obj = $res->fetch_object();
 $von = $obj->von;

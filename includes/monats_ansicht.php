@@ -99,6 +99,8 @@ function print_buchungen_monat($mysqli, $flugzeug_id, $boxcol, $textcol, $jahr, 
   $anzahl_tage = date("t", strtotime("$jahr-$monat_2-01"));
   date_default_timezone_set('UTC');
 
+  $admin_bol = check_admin($mysqli);
+
   // ganzer monats bereich.. 01 - anzahlt_tage
   $stamp_print_minimum = strtotime("$jahr-$monat_2-01 07:00:00");
   $stamp_print_maximum = strtotime("$jahr-$monat_2-$anzahl_tage 20:59:59");
@@ -119,17 +121,15 @@ function print_buchungen_monat($mysqli, $flugzeug_id, $boxcol, $textcol, $jahr, 
   $min_stamp = strtotime($von_extrem);
   $half_hour_tot = intval((strtotime($bis_extrem) - $min_stamp) / 1800);
 
+  $shift_1ster_monat_block =  intval(($stamp_print_minimum - $min_stamp) / 1800);
+  $print_number_txt = ""; // at the end for highest z-index
+
   // it.: if booking[level][hour]=TRUE <- reserved
   $bookings = array(array_fill(0, $half_hour_tot, FALSE),
                     array_fill(0, $half_hour_tot, FALSE),
                     array_fill(0, $half_hour_tot, FALSE),
                     array_fill(0, $half_hour_tot, FALSE),
                     array_fill(0, $half_hour_tot, FALSE));
-
-  //----------------------------------------------------------------------------
-
-  $shift_1ster_monat_block =  intval(($stamp_print_minimum - $min_stamp) / 1800);
-  $print_number_txt = ""; // at the end for highest z-index
 
   // alle hohlen
   $query = "SELECT * FROM `reservationen` WHERE `flugzeug_id` = '$flugzeug_id' AND `von` >= '$von_extrem'  ORDER BY `timestamp` ASC;";
@@ -255,9 +255,7 @@ function print_buchungen_monat($mysqli, $flugzeug_id, $boxcol, $textcol, $jahr, 
         // print pilotennummer mit tooltips etc. wenn tag ($x) kommt
         if ($print_nr_on == $x)
         {
-          // always show for admins
-          // TODO: too expensive?
-          if (check_admin($mysqli))
+          if ($admin_bol)
           {
             $showlink = TRUE;
             $txtcolor = '#3333ff;';
@@ -279,8 +277,6 @@ function print_buchungen_monat($mysqli, $flugzeug_id, $boxcol, $textcol, $jahr, 
 
           if ($showlink)
             $print_number_txt .= '<a xlink:href="res_loeschen.php?to=ueberblick&amp;action=del&amp;reservierung='.$obj_tang->id.'&amp;monat='.$monat.'&amp;jahr='.$jahr.'">';
-          // TODO: tag geloescht hiere...
-
 
           $print_number_txt .=  '<text '.$tmptxt.' x="'.$center.'%" y="'.($yoffset+16).'" text-anchor="middle" style="fill: '.$txtcolor.'; font-size: 95%; font-weight: bold;">'.$t_id.'</text>'."\n";
 
@@ -526,7 +522,6 @@ function monatsansicht($mysqli, $w, $tabs, $boxcol, $textcol, $monat, $jahr, $fl
 
   $tag_v_offset = print_main_bands_monat($mysqli, $jahr, $monat, $tabs, $w, $flugzeug_id);
 
-  // TODO colors etc into defines? konstats etc?
   print_buchungen_monat($mysqli, $flugzeug_id, $boxcol, $textcol, $jahr, $monat, $tabs, $w, $tag_v_offset);
 
   echo '</g></svg>';

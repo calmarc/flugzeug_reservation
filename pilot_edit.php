@@ -49,7 +49,6 @@ $query = "SELECT * FROM `piloten` WHERE `piloten`.`id` = '{$user_id}'";
 $res = $mysqli->query($query);
 $obj = $res->fetch_object();
 
-// TODO function?
 if ($obj->admin == 1)
   $admin_txt = "ja";
 else

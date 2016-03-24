@@ -206,4 +206,42 @@ function get_pilot_from_user_id($mysqli, $user_id)
     return array("unkown", "unknown");
 } 
 
+function get_flugzeug_from_id($mysqli, $flugzeug_id)
+{
+  $res = $mysqli->query("SELECT * FROM `flugzeug` WHERE `id` = {$flugzeug_id} ;");
+  $obj = $res->fetch_object();
+  return $obj->flugzeug;
+}
+
+function validate_new_password($password, $changepwd)
+{
+  $error_msg = "";
+
+  if ($password == "")
+    $error_msg .= "<p>Bitte ein Passwort eingeben</p>";
+
+  if (strlen($password) < 4)
+    $error_msg .= "<p>Muss mind. 4 Zeichen lang sein</p>";
+
+  if ($changepwd == "")
+    $error_msg .= "<p>Bitte das Passwort bestätigen</p>";
+  else if ($password != $changepwd)
+    $error_msg .= "<p>Passwörter stimmen nicht überrein</p>";
+
+  return $error_msg;
+}
+
+function pass_encrypt($mysqli, $user_id, $password)
+{
+  $query= "SELECT `salt` FROM `piloten` WHERE `id` = {$user_id} LIMIT 1;";
+  $res = $mysqli->query($query);
+  $obj = $res->fetch_object();
+
+  $password = hash('sha512', $password);
+  $password = hash('sha512', $password . $obj->salt);
+  return $password;
+}
+
+
+
 ?>

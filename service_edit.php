@@ -14,11 +14,10 @@ sec_session_start();
 //============================================================================
 // um die formular starteintrage und so.
 
-// TODO evt andere default werte namen nehme: tag_combo etc.
 date_default_timezone_set("Europe/Zurich");
-if (!isset($_SESSION['tag'])) $_SESSION['tag'] = date('d', time());
-if (!isset($_SESSION['monat'])) $_SESSION['monat'] = date('m', time());
-if (!isset($_SESSION['jahr'])) $_SESSION['jahr'] = date('Y', time());
+if (!isset($_SESSION['tag_se'])) $_SESSION['tag_se'] = date('d', time());
+if (!isset($_SESSION['monat_se'])) $_SESSION['monat_se'] = date('m', time());
+if (!isset($_SESSION['jahr_se'])) $_SESSION['jahr_se'] = date('Y', time());
 date_default_timezone_set('UTC');
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
@@ -29,14 +28,11 @@ include_once('service_edit.inc.php');
 print_html_to_body('Service Eintrag', '');
 include_once('includes/usermenu.php');
 
-// TODO: get_flugzeug_from_id() function?
-$query = "SELECT * FROM `flugzeug` WHERE `id` = '{$flugzeug_id}' LIMIT 1;";
-$res = $mysqli->query($query);
-$flugzeug_name = $res->fetch_object()->flugzeug;
+$flugzeug = get_flugzeug_from_id($mysqli, $flugzeug_id);
 
 ?>
 <main>
-  <h1>Service Liste - <span style="color: #cc3300;"><?php echo $flugzeug_name; ?></span></h1>
+  <h1>Service Liste - <?php echo $flugzeug; ?></h1>
   <div id="formular_innen">
 
 <?php
@@ -54,13 +50,13 @@ $hidden = "<input type='hidden' name='flugzeug_id' value='{$flugzeug_id}' />";
           <td><b>Datum:</b></td>
           <td>
             <select size="1" name="tag" style="width: 46px;">
-              <?php combobox_tag($_SESSION['tag']); ?>
+              <?php combobox_tag($_SESSION['tag_se']); ?>
             </select> <b>.</b>
             <select size="1" name="monat" style="width: 46px;">
-              <?php combobox_monat($_SESSION['monat']); ?>
+              <?php combobox_monat($_SESSION['monat_se']); ?>
             </select> <b>.</b>
             <select size="1" name="jahr" style="width: 86px;">
-              <?php combobox_jahr($_SESSION['jahr']); ?>
+              <?php combobox_jahr($_SESSION['jahr_se']); ?>
             </select>
           </td>
         </tr>
@@ -96,7 +92,7 @@ echo '</select>';
     <br />
     <hr />
     <br />
-    <h3><span style="color: #cc0000;"><?php echo $flugzeug_name; ?></span> Service-Einträge</h3>
+    <h3><span style="color: #cc0000;"><?php echo $flugzeug; ?></span> Service-Einträge</h3>
 
   <div class='center'>
     <table class='vertical_table'>

@@ -6,7 +6,6 @@ if (isset($_GET['flugzeug_id']) && $_GET['flugzeug_id'] > 0)
 {
   $flugzeug_id = $_GET['flugzeug_id'];
 
-  // todo: eventuell flugzeugcheck. function
   $query = "SELECT * FROM `flugzeug` WHERE `id` = '$flugzeug_id' LIMIT 1;";
   $res = $mysqli->query($query);
 
@@ -33,12 +32,10 @@ else if (isset($_POST['submit']))
   $zaehlerstand = $_POST['zaehlerstand'];
   $verantwortlich = intval($_POST['verantwortlich']);
 
-  // TODO werden fuer die defautls gebraucht. Besser andere woerter nehmen da
-  // das eher nach return values fuer chart toenen
-  $_SESSION['flugzeug_id']  = $flugzeug_id;
-  $_SESSION['tag']  = $tag;
-  $_SESSION['monat']  = $monat;
-  $_SESSION['jahr']  = $jahr;
+  $_SESSION['flugzeug_id_se']  = $flugzeug_id;
+  $_SESSION['tag_se']  = $tag;
+  $_SESSION['monat_se']  = $monat;
+  $_SESSION['jahr_se']  = $jahr;
 
   list($zaehler_minute,$digit_minute) = compute_minute_from_zaehlerstand($zaehlerstand);
 

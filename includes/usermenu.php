@@ -60,8 +60,7 @@ if (isset($_SESSION['pilot_nr']))
       <a href='/reservationen/diverses.php'><img {$diverses} src='/reservationen/bilder/diverses.png' alt='Diverses' /></a> ]
 </span>";
 
-  // TODO needed? and if yes.. also needed elsewhere (admin-edit etc)
-  $_SESSION['name'] = htmlentities($obj->name);
+  $_SESSION['name'] = $obj->name;
 
   $gesperrt = "";
   if ($obj->gesperrt == TRUE)

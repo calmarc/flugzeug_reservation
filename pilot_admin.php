@@ -47,7 +47,6 @@ $res = $mysqli->query($query);
             </tr>
 <?php
 
-// TODO diese ja/nein..  function basteln?
 while ($obj = $res->fetch_object())
 {
   if ($obj->admin == 1)

@@ -130,7 +130,7 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
 
     }
   }
-  $res_f->close(); // TODO or re-interate?
+  $res_f->close();
 }
 
 
@@ -263,7 +263,6 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
           continue;
       }
 
-      // TODO auch mehrfacher code..
       $rounded_stamp = time();
       // round up cur_time to half hour blocks
       $rounded_stamp = (intval($rounded_stamp / 1800) + 1) * 1800;
