@@ -192,7 +192,7 @@ while ($obj = $res->fetch_object())
   $g_tag = intval($g_tag);
 
   echo "\n<tr>
-           <td class='trblank hide_on_print'><a href='index.php?show=tag&amp;tag={$g_tag}&amp;monat={$g_monat}&amp;jahr={$g_jahr}'>[zeigen]</a></td>
+           <td class='trblank hide_on_print'><a href='index.php?show=tag&amp;tag={$g_tag}&amp;monat={$g_monat}&amp;jahr={$g_jahr}'>[zeig]</a></td>
            <!--<td style='text-align: left; background-color: transparent; color: #333333;'>{$stamp_datum}</td>-->
            <td {$yellow}>[".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
            <td {$yellow}>{$obj->flugzeug}</td>

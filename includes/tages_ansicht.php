@@ -68,13 +68,8 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
       echo '</a>';
     }
 
-    // die bloecke
-    // TODO wieso? sollte doch UTC sein nicht?? $nowstamp ist auch neutral (utc)
-    // TODO wieso? sollte doch UTC sein nicht?? $nowstamp ist auch neutral (utc)
-    // TODO wieso? sollte doch UTC sein nicht?? $nowstamp ist auch neutral (utc)
-    // TODO wieso? sollte doch UTC sein nicht?? $nowstamp ist auch neutral (utc)
-    // TODO wieso? sollte doch UTC sein nicht?? $nowstamp ist auch neutral (utc)
-    // TODO wieso? sollte doch UTC sein nicht?? $nowstamp ist auch neutral (utc)
+    // z.B hier ist jetzt 13:00. stamp muss lokal ermittelt werden.
+    
     date_default_timezone_set("Europe/Zurich");
     $stamp7 = strtotime($date." 00:00:00") + (7*60*60); // 30min*..x + 7h to print..
     date_default_timezone_set("UTC");

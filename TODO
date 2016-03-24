@@ -4,8 +4,6 @@
 
 == MINOR ==
 
-. TODO in den texten (wobei sind alles harmlose)
-
 * ueberall pfeile beim sortierne tabelle oben (rauf runter asc/desc)
 
 * die res_anzeige dinger.. ausgliedern noetig etc.
@@ -24,8 +22,5 @@
   flieger. (oder in diverses)
 
 * header charts = sonst etc.
-
-* viel gemeinsamer code.. 
-  reservations-funktionen und auch tagesansicht grrr.
 
 // vim: nospell :

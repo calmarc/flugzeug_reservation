@@ -7,6 +7,12 @@ $user_id = $_SESSION['user_id'];
 if (isset($_POST['user_id']))
   $user_id = $_POST['user_id'];
 
+// wird auch unten gebraucht bei der Reservations-Ausgabe
+date_default_timezone_set("Europe/Zurich");
+$local_datetime = date("Y-m-d H:i:s", time());
+date_default_timezone_set("UTC");
+
+
 if (isset($_POST['submit']))
 {
   $flugzeug_id = $_POST['flugzeug_id'];
@@ -44,10 +50,6 @@ if (isset($_POST['submit']))
 
   $von_date = "$von_jahr-$von_monat-$von_tag $von_stunde:$von_minuten:00";
   $bis_date = "$bis_jahr-$bis_monat-$bis_tag $bis_stunde:$bis_minuten:00";
-
-  date_default_timezone_set("Europe/Zurich");
-  $local_datetime = date("Y-m-d H:i:s", time());
-  date_default_timezone_set("UTC");
 
   $error_msg = "";
   if ($bis_date <= $von_date)

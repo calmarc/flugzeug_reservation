@@ -2,10 +2,10 @@
 body {
   color: #333333;
   /*background-color: #aaddff; */
-  /*background-color: #74c4ee; */
+  background-color: #74c4ee; 
   /*background-color: #7dc8f0; */
   /* THEME_COLOR */
-  background-color: #E5E4E2; 
+  /*background-color: #E5E4E2; */
 
   font-family: sans-serif;
   margin: 0px;
@@ -95,13 +95,21 @@ nav img:hover {
   -ms-filter: brightness(150%);
 }
 
-nav img.img_mfgc {
+nav img#mfgc_nav_logo {
   background-color: transparent; border: 2px transparent solid;
   filter: brightness(100%);
   -webkit-filter: brightness(100%);
   -moz-filter: brightness(100%);
   -o-filter: brightness(100%);
   -ms-filter: brightness(100%);
+}
+nav img:hover#mfgc_nav_logo {
+  background-color: transparent; border: 2px transparent solid;
+  filter: brightness(130%);
+  -webkit-filter: brightness(130%);
+  -moz-filter: brightness(130%);
+  -o-filter: brightness(130%);
+  -ms-filter: brightness(130%);
 }
 
 nav a.menu_text_selected {

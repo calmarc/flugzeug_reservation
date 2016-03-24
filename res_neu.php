@@ -113,6 +113,70 @@ else
       </table>
     <input class='submit_button' type='submit' name='submit' value='Reservierung abschicken' />
     </div>
+<br />
+<br />
+<hr />
+<br />
+<h3>Deine kommenden Reservationen</h3>
+          <table class='vertical_table th_filter'>
+          <tr>
+          <!--<th class="hide_on_print formular_zelle"></th>-->
+          <th class='formular_zelle'></th>
+          <!--<th><a href="res_momentan.php?sort=timestamp"><b>Eingegeben</b></a></th>-->
+            <th style='min-width: 10em;'><b>Pilot</b></th>
+            <th style='min-width: 10em;'><b>Flugzeug</b></th>
+            <th style='min-width: 10em;'><b>Datum</b></th>
+          </tr>
+<?php
+
+$valid_res = get_all_list_active_reserv($mysqli);
+
+$where_txt = "WHERE `user_id` = {$_SESSION['user_id']} AND `bis` > '{$local_datetime}'";
+$order_by_txt = "ORDER BY `von` ASC";
+$query = " SELECT
+  `reservationen`.`id` AS 'id',
+  `reservationen`.`timestamp` AS 'timestamp',
+  `mem1`.`name` AS 'pilot',
+  `mem1`.`pilot_nr` AS 'pilot_nr',
+  `mem1`.`id` AS 'user_id',
+  `flugzeug`.`flugzeug` AS 'flugzeug',
+  `flugzeug`.`id` AS 'flugzeug_id',
+  `reservationen`.`von` AS 'von',
+  `reservationen`.`bis` AS 'bis'
+      FROM `reservationen`
+          LEFT OUTER JOIN `piloten` AS `mem1` ON `reservationen`.`user_id` = `mem1`.`id`
+          LEFT OUTER JOIN `flugzeug` AS `flugzeug` ON `reservationen`.`flugzeug_id` = `flugzeug`.`id`
+      {$where_txt} {$order_by_txt} LIMIT 15;";
+
+$res = $mysqli->query($query);
+
+while ($obj = $res->fetch_object())
+{
+  $yellow = '';
+  if (! in_array(strval($obj->id), $valid_res[$obj->flugzeug_id - 1]))
+    $yellow = 'style="background-color: #ffff99; color: #ff6600 !important;"';
+
+  $stamp_datum = $obj->timestamp;
+  list( $tag, $zeit) = explode(" ", $obj->timestamp);
+  $tmp = explode("-", $tag);
+  $stamp_datum = $tmp[2].'.'.$tmp[1].'.'.$tmp[0];
+
+  list( $g_datum, $zeit) = explode(" ", $obj->von);
+  list( $g_jahr, $g_monat, $g_tag) = explode("-", $g_datum);
+  $g_jahr = intval($g_jahr);
+  $g_monat = intval($g_monat);
+  $g_tag = intval($g_tag);
+
+  echo "\n<tr>
+           <td class='trblank hide_on_print'><a href='index.php?show=tag&amp;tag={$g_tag}&amp;monat={$g_monat}&amp;jahr={$g_jahr}'>[zeig]</a></td>
+           <!--<td style='text-align: left; background-color: transparent; color: #333333;'>{$stamp_datum}</td>-->
+           <td {$yellow}>[".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
+           <td {$yellow}>{$obj->flugzeug}</td>
+           <td {$yellow}>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>
+        </tr>";
+}
+?>
+          </table>
   </form>
   </div>
 </main>

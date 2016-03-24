@@ -70,7 +70,7 @@ if (isset($_POST['submit']))
     if (mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $id)))
       $msg = "<p style='color: green;'>Das Passwort wurde geändert</p>";
     list ($pilot_nr_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $id); 
-    write_status_message($mysqli, "[Passwort recovery]", "System", "Erfolgreich: [{$pilot_nr_pad}] {$pilot_name}");
+    write_status_message($mysqli, "[Passwort]", "System", "Recovery erfolgreich: [{$pilot_nr_pad}] {$pilot_name}");
   }
 }
 
