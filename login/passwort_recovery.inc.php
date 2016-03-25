@@ -11,7 +11,7 @@ if (isset($_GET['secret_string'], $_GET['email']))
   $verifiziert = FALSE;
   $pilot_nr = intval($_GET['pilot_nr']);
   $query = "SELECT * FROM `password_recovery` WHERE `email` = '{$_GET['email']}' AND `secret_string` = '{$_GET['secret_string']}' AND `pilot_nr` = {$pilot_nr} LIMIT 1;";
-  $res = $mysqli->query($query); 
+  $res = $mysqli->query($query);
   if ($res->num_rows == 1)
     $verifiziert = TRUE;
 
@@ -19,7 +19,7 @@ if (isset($_GET['secret_string'], $_GET['email']))
   if ($verifiziert)
   {
     $query = "SELECT `id` FROM `piloten` WHERE `email` = '{$_GET['email']}' AND `pilot_nr` = {$pilot_nr} LIMIT 1;";
-    $res = $mysqli->query($query); 
+    $res = $mysqli->query($query);
     if ($res->num_rows != 1)
       $verifiziert = FALSE;
   }
@@ -69,7 +69,7 @@ if (isset($_POST['submit']))
     $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `password` = ? WHERE `piloten`.`id` = ? ;";
     if (mysqli_prepare_execute($mysqli, $query, 'si', array ($password, $id)))
       $msg = "<p style='color: green;'>Das Passwort wurde geändert</p>";
-    list ($pilot_nr_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $id); 
+    list ($pilot_nr_pad, $pilot_name) = get_pilot_from_user_id($mysqli, $id);
     write_status_message($mysqli, "[Passwort]", "System", "Recovery erfolgreich: [{$pilot_nr_pad}] {$pilot_name}");
   }
 }

@@ -128,7 +128,7 @@ function remove_zombies($mysqli)
       // $block_first = 3600 - 3600 = 0;
       // block_last = 5400 (8:30) - 3600 = 1800 -> 1
       // ergibt eine iteration.. wo gebucht wird
-      // 
+
 
 
       $block_first = intval((strtotime($obj_tang->von) - $min_stamp) / 1800);  // 1800 halbe stunde

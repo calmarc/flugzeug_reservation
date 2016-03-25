@@ -37,19 +37,19 @@ if (isset($_POST['pilot_nr'], $_POST['password'])) {
   $prep_stmt = "SELECT `id` FROM `piloten` WHERE `pilot_nr` = ? LIMIT 1";
   $stmt = $mysqli->prepare($prep_stmt);
 
-  if ($stmt) 
+  if ($stmt)
   {
     $stmt->bind_param('i', $pilot_nr);
     $stmt->execute();
     $stmt->store_result();
 
-    if ($stmt->num_rows == 1) 
+    if ($stmt->num_rows == 1)
     {
         // A user with this email address already exists
         $error_msg .= '<p class="error">Ein Pilot mit dieser Nummer existiert bereits.</p>';
     }
-  } 
-  else 
+  }
+  else
   {
       $error_msg .= '<p class="error">Datenbank Fehler</p>';
   }

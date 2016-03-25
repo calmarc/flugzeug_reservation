@@ -13,7 +13,7 @@ if (isset($_GET['loeschen']) && $_GET['loeschen'] != 9876543210)
   $now_string = date("Y-m-d H:i:s", $time_stamp);
   date_default_timezone_set('UTC');
 
-  $query = "DELETE FROM `reser_geloescht`  WHERE `reser_geloescht`.`timestamp` < ?";
+  $query = "DELETE FROM `reser_geloescht` WHERE `reser_geloescht`.`timestamp` < ?";
   mysqli_prepare_execute($mysqli, $query, 's', array($now_string));
 }
 ?>

@@ -73,11 +73,11 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
     //============================================================================
     // SERVICE informationen $in ist das resultat
 
-    // flieger zaehler_minute  ($min) 
+    // flieger zaehler_minute  ($min)
     $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `zaehler_eintraege` WHERE `flugzeug_id` = '{$obj_f->id}';");
     $obj_x = $res_x->fetch_object();
     $min = $obj_x->zaehler_minute;
-    // letzer Service zaehler_minute  ($service_min) 
+    // letzer Service zaehler_minute  ($service_min)
     $res_x = $mysqli->query("SELECT MAX(`zaehler_minute`) AS `zaehler_minute` FROM `service_eintraege` WHERE `flugzeug_id` = '{$obj_f->id}';");
     $obj_x = $res_x->fetch_object();
     $service_min = $obj_x->zaehler_minute;
@@ -107,7 +107,7 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
     echo '<text x="97.6%" y="'.($yoffset-28-26).'px" text-anchor="end" style="fill: '.$s_color.'; font-size: 90%; font-weight: bold;">[Service in '.$in.']</text>'."\n";
 
     //--
- 
+
     // flieger buch, eintrag nach landung
     echo '<a xlink:href="res_neu.php?flugzeug_id='.$obj_f->id.'&amp;jahr='.$jahr.'&amp;monat='.$monat.'&amp;tag='.$tag.'">';
     echo '<text x="3.6%" y="'.($yoffset-28).'px" style=" fill: #000099; font-size: 100%; font-weight: bold;">'.$obj_f->kurzname.' buchen</text>'."\n";
@@ -125,7 +125,7 @@ function print_main_bands($mysqli, $planeoffset, $jahr, $monat, $tag, $date, $ta
     }
 
     // z.B hier ist jetzt 13:00. stamp muss lokal ermittelt werden.
-    
+
     date_default_timezone_set("Europe/Zurich");
     $stamp7 = strtotime($date." 00:00:00") + (7*60*60); // 30min*..x + 7h to print..
     date_default_timezone_set("UTC");
@@ -470,7 +470,7 @@ function tagesansicht($mysqli, $w, $tabs, $boxcol, $textcol, $planeoffset, $tag,
   echo "</g></svg>";
 
   legende_print($boxcol);
-  
+
   tooltip_print(); // entsprechender javascript..  siehe oben
 
 }

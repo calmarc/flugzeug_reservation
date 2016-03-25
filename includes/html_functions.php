@@ -62,7 +62,7 @@ function combobox_piloten($mysqli, $default)
   $query = "SELECT * FROM `piloten` ORDER BY `pilot_nr` ASC;";
   $res = $mysqli->query($query);
   $t_array = array();
-  
+
   while ($obj = $res->fetch_object())
   {
     $pilot_nr_pad = str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT);
@@ -143,8 +143,8 @@ function print_html_to_body ($title, $special_meta)
 <?php
 // fuer die madam
 if ( isset($_SESSION['pilot_nr']) && ($_SESSION['pilot_nr'] == "107"))
-{ 
-  echo "<style>body { background-color: #ffebf8; }</style>"; 
+{
+  echo "<style>body { background-color: #ffebf8; }</style>";
 }
 
 ?>

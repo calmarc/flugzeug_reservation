@@ -204,7 +204,7 @@ function get_pilot_from_user_id($mysqli, $user_id)
     return array($pilot_nr_pad, $obj->name);
   }
     return array("unkown", "unknown");
-} 
+}
 
 function get_flugzeug_from_id($mysqli, $flugzeug_id)
 {

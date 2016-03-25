@@ -11,7 +11,7 @@ include_once ('../includes/functions.php');
 
 sec_session_start(); // Our custom secure way of starting a PHP session.
 
-if (isset($_POST['pilot_nr'], $_POST['password'])) 
+if (isset($_POST['pilot_nr'], $_POST['password']))
 {
   $pilot_nr = $_POST['pilot_nr'];
   $password = hash('sha512', $_POST['password']);
@@ -30,7 +30,7 @@ if (isset($_POST['pilot_nr'], $_POST['password']))
     }
   }
 
-  if (login($pilot_nr, $password, $mysqli) == true) 
+  if (login($pilot_nr, $password, $mysqli) == true)
   {
     // Login success
 
@@ -77,7 +77,7 @@ if (isset($_POST['pilot_nr'], $_POST['password']))
     $query= "SELECT `name`, `pilot_nr` FROM `piloten` WHERE `pilot_nr` = {$pilot_nr};";
     $res = $mysqli->query($query);
     $obj = $res->fetch_object();
-    
+
     write_status_message($mysqli, "[Eingeloggt]", $_SESSION['user_id'], "");
 
     //============================================================================
@@ -90,15 +90,15 @@ if (isset($_POST['pilot_nr'], $_POST['password']))
 
     header("Location: ../index.php");
     exit();
-  } 
-  else 
+  }
+  else
   {
     // Login failed
     header('Location: index.php?error=1');
     exit();
   }
-} 
-else 
+}
+else
 {
     // The correct POST variables were not sent to this page.
     header('Location: error.php?err=Could not process login');

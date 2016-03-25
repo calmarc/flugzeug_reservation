@@ -2,7 +2,7 @@
 body {
   color: #333333;
   /*background-color: #aaddff; */
-  background-color: #74c4ee; 
+  background-color: #74c4ee;
   /*background-color: #7dc8f0; */
   /* THEME_COLOR */
   /*background-color: #E5E4E2; */
@@ -35,11 +35,11 @@ nav {
   display: none;
 }
 
-h1 { 
-  font-size: 180%; 
-  padding: 0.3em 1em 0.5em 1em; 
-  margin: 0 0 0 0; 
-  text-shadow: 2px 2px 1px #eeeeee, 2px 2px 2px #9999ff; 
+h1 {
+  font-size: 180%;
+  padding: 0.3em 1em 0.5em 1em;
+  margin: 0 0 0 0;
+  text-shadow: 2px 2px 1px #eeeeee, 2px 2px 2px #9999ff;
 }
 
 h1#h1tag { margin: 0px; padding: 0px; line-height: 40%; }
@@ -93,7 +93,7 @@ nav a:link { color: white; }
 nav a:hover { color: white;}
 nav a:visited { color: white;}
 nav div span {  display: inline-block; }
-nav img { 
+nav img {
   display: inline-block;
   border: 2px transparent solid;
 
@@ -109,7 +109,7 @@ nav img.always {
   -moz-filter: brightness(130%);
   -o-filter: brightness(130%);
   -ms-filter: brightness(130%);
-  filter: hue-rotate(0deg) 
+  filter: hue-rotate(0deg)
 }
 nav img:hover {
   filter: brightness(150%);
@@ -157,28 +157,28 @@ table.formular_eingabe td:nth-child(2) { text-align: left; padding-left: 8px;}
 table.formular_eingabe td:nth-child(2) input { width: 90%;}
 
 main {
-    margin-top: 0px; 
-    margin-left: auto; 
-    margin-right: auto; 
-    text-align: center; 
+    margin-top: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 form.login_form input { width: 80%; }
 
-div#formular_innen { 
-  margin: 0em auto 1em auto; 
-  padding: 2em 2em 2em 2em;  
-  display: inline-block;  
-  text-align: center; 
-  border-radius: 1px; 
+div#formular_innen {
+  margin: 0em auto 1em auto;
+  padding: 2em 2em 2em 2em;
+  display: inline-block;
+  text-align: center;
+  border-radius: 1px;
 
 /* THEME_COLOR */
   /*border: 2px solid #73AD21;  */
-  border: 1px solid #000000;  
+  border: 1px solid #000000;
 
   /*background-color: #99ff99; */
-  background-color: #ffffff; 
-  box-shadow: 2px 2px 2px #bbbbbb; 
+  background-color: #ffffff;
+  box-shadow: 2px 2px 2px #bbbbbb;
 }
 
 /* THEME_COLOR */
@@ -253,12 +253,12 @@ td#datum {
 
 
 table.th_filter th a {
- display: inline; 
+ display: inline;
  vertical-align: middle;
 }
 
 table.th_filter th img{
- display: inline; 
+ display: inline;
  vertical-align: middle;
  margin-left: 5px;
 }
@@ -277,10 +277,10 @@ table.vertical_table tr:nth-child(even) { background-color: #ffffff; }
 table.vertical_table tr:nth-child(odd) { background-color: #eeeeee; }
 
 /* THEME_COLOR*/
-table.vertical_table th { color: white; background-color: #959492; padding: 3px;} 
+table.vertical_table th { color: white; background-color: #959492; padding: 3px;}
 
-table.vertical_table th a { color: white; text-decoration: underline; } 
-table.vertical_table td a { color: #000099; text-decoration: none; } 
+table.vertical_table th a { color: white; text-decoration: underline; }
+table.vertical_table td a { color: #000099; text-decoration: none; }
 
 table.vtable { border-style: none; border-width: 0; border-collapse: collapse; }
 table.vtable th { padding: 10px;}
@@ -291,7 +291,7 @@ table.vtable td:nth-child(2) { text-align: left;}
 
 table.vtable tr:nth-child(even) { background-color: #ffffff; }
 table.vtable tr:nth-child(odd) { background-color: #ffffff; }
-table.vtable th { color: white; background-color: #555555; } 
+table.vtable th { color: white; background-color: #555555; }
 
 
 /*table input[type="text"] { background-color: #eeee00;}*/
@@ -307,12 +307,12 @@ table.vtable th { color: white; background-color: #555555; }
 /*}*/
 
 a#printer {
-  display: inline-block; 
+  display: inline-block;
 }
 a#printer img {
-  display: inline-block; 
-  height: 1.0em; 
-  margin:0px; 
+  display: inline-block;
+  height: 1.0em;
+  margin:0px;
   padding: 0px;
 }
 
@@ -321,11 +321,11 @@ select {
 /* THEME_COLOR */
 
   background: #ddffdd url(../bilder/select-arrow.png) no-repeat 90% center;
-  vertical-align: middle; 
-  font-size: 100%; 
-  border-right: 0px solid #ffff00; 
-  border-left: 0px solid #ffff00; 
-  border-top: 0px solid #ffff00; 
+  vertical-align: middle;
+  font-size: 100%;
+  border-right: 0px solid #ffff00;
+  border-left: 0px solid #ffff00;
+  border-top: 0px solid #ffff00;
   border-bottom: 0px solid #ffff00;
 
   border: 0 !important;
@@ -349,13 +349,13 @@ input {
   background: #ddffdd;
   border-style: none;
   padding: 3px;
-  border: 1px solid black; 
+  border: 1px solid black;
 }
 
 .chart {
-  box-shadow: 3px 3px 3px #aaaaaa;  
+  box-shadow: 3px 3px 3px #aaaaaa;
 
-  background-color: #ffffff; 
+  background-color: #ffffff;
   border: 1px solid black;
   padding: 16px;
   width: 93%;
@@ -364,9 +364,9 @@ input {
   overflow: hidden;
 }
 .chart_monat {
-  box-shadow: 3px 3px 3px #aaaaaa;  
+  box-shadow: 3px 3px 3px #aaaaaa;
 
-  background-color: #ffffff; 
+  background-color: #ffffff;
   border: 1px solid black;
   padding: 16px;
   width: 93%;
@@ -442,10 +442,10 @@ div#tooltip_div {
   nav {position: sticky; font-size: 100%; }
   body { background-image: url("/reservationen/bilder/mfgc-logo.png"); }
   .chart, .chart_monat {width: 97%; }
-  .hide { display: none; visibility: hidden; } 
+  .hide { display: none; visibility: hidden; }
 }
 @media only screen and (max-width: 528px) {
-  
+
   div#calendar { font-size: 94%; width: 100%;}
   div#calendar > table {min-width: 220px; width: 99%; margin-left: auto; margin-right: auto; font-size: 94%;}
   .chart, .chart_monat {width: 98%; }
@@ -458,12 +458,12 @@ div#tooltip_div {
       color: #000000;
       /*background-color: #aaddff; */
       /*background-color: #74c4ee; */
-      background-color: #ffffff; 
+      background-color: #ffffff;
       font-family: serif;
       margin: 14px;
       padding: 14px;
-      -webkit-print-color-adjust: exact; 
-      print-color-adjust: exact; 
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
       font-size: 95%;
   }
 

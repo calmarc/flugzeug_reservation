@@ -41,7 +41,7 @@ include_once('../includes/usermenu.php');
     exit;
   }
   ?>
-    <form action="passwort_recovery.php" method="post" name="login_form"> 			
+    <form action="passwort_recovery.php" method="post" name="login_form">
     <input type="hidden" name="user_id" value="<?php echo $id; ?>">
       <table class="vtable" style="width: 100%;">
           <tr>

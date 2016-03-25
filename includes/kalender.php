@@ -9,18 +9,18 @@ function get_date(){
 
   // default = today month/year else.. $_GET()
   // $_GET is a superglobal - available everywhere
-  
-  if (isset($_GET["tag"])) 
-    $tag = intval($_GET["tag"]); 
-  else 
+
+  if (isset($_GET["tag"]))
+    $tag = intval($_GET["tag"]);
+  else
     $tag = intval(date("j"));
-  if (isset($_GET["monat"])) 
-    $monat = intval($_GET["monat"]); 
-  else 
+  if (isset($_GET["monat"]))
+    $monat = intval($_GET["monat"]);
+  else
     $monat = intval(date("n"));
-  if (isset($_GET["jahr"])) 
-    $jahr = intval($_GET["jahr"]); 
-  else 
+  if (isset($_GET["jahr"]))
+    $jahr = intval($_GET["jahr"]);
+  else
     $jahr = intval(date("Y"));
 
   if ($jahr < 2010 || $jahr > intval(date("Y")+2))

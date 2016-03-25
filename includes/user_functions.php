@@ -8,7 +8,7 @@ include_once 'psl-config.php';
 //============================================================================
 // sicherer Session start
 
-function sec_session_start() 
+function sec_session_start()
 {
   $session_name = 'sec_session_id';   // Set a custom session name
   $secure = SECURE;
@@ -33,10 +33,10 @@ function sec_session_start()
   session_regenerate_id();    // regenerated the session, delete the old one.
 }
 
-function login($pilot_nr, $password, $mysqli) 
+function login($pilot_nr, $password, $mysqli)
 {
   // Using prepared statements means that SQL injection is not possible.
-  if ($stmt = $mysqli->prepare("SELECT id, pilot_nr, password, salt FROM piloten WHERE pilot_nr = ? LIMIT 1")) 
+  if ($stmt = $mysqli->prepare("SELECT id, pilot_nr, password, salt FROM piloten WHERE pilot_nr = ? LIMIT 1"))
   {
     $stmt->bind_param('s', $pilot_nr);  // Bind "$email" to parameter.
     $stmt->execute();    // Execute the prepared query.
@@ -48,14 +48,14 @@ function login($pilot_nr, $password, $mysqli)
 
     $password = hash('sha512', $password . $salt);
 
-    if ($stmt->num_rows == 1) 
+    if ($stmt->num_rows == 1)
     {
       // more than 5 bad logins.. turn on captcha  - else turn off
       checkbrute($mysqli);
 
       // Check if the password in the database matches
       // the password the user submitted.
-      if ($db_password == $password) 
+      if ($db_password == $password)
       {
           // Password is correct!
           // Get the user-agent string of the user.
@@ -73,14 +73,14 @@ function login($pilot_nr, $password, $mysqli)
 
           // Login successful.
           return true;
-      } 
-      else 
+      }
+      else
       {
         // Password is not correct
         // We record this attempt in the database
         $now = time();
         if (!$mysqli->query("INSERT INTO login_attempts(user_id, time)
-                        VALUES ('$user_id', '$now')")) 
+                        VALUES ('$user_id', '$now')"))
         {
           header("Location: /reservationen/login/error.php?err=Database error: login_attempts");
           exit();
@@ -88,14 +88,14 @@ function login($pilot_nr, $password, $mysqli)
 
       return false;
       }
-    } 
-    else 
+    }
+    else
     {
       // No user exists.
       return false;
     }
-  } 
-  else 
+  }
+  else
   {
       // Could not create a prepared statement
       header("Location: /reservationen/login/error.php?err=Database error: cannot prepare statement");
@@ -103,7 +103,7 @@ function login($pilot_nr, $password, $mysqli)
   }
 }
 
-function checkbrute($mysqli) 
+function checkbrute($mysqli)
 {
   // Get timestamp of current time
   $now = time();
@@ -116,26 +116,26 @@ function checkbrute($mysqli)
   // All login attempts are counted from the past 1 minutes
   $valid_attempts = $now - (2 * 60);
 
-  if ($stmt = $mysqli->prepare("SELECT time FROM login_attempts WHERE time > '{$valid_attempts}'")) 
+  if ($stmt = $mysqli->prepare("SELECT time FROM login_attempts WHERE time > '{$valid_attempts}'"))
   {
     // Execute the prepared query.
     $stmt->execute();
     $stmt->store_result();
 
     // If there have been more than 5 failed logins in the last minute
-    if ($stmt->num_rows > 5) 
+    if ($stmt->num_rows > 5)
     {
         $mysqli->query("UPDATE `mfgcadmin_reservationen`.`captcha` SET `show` = '1' WHERE `captcha`.`id` =1;");
         return;
-    } 
-    else 
+    }
+    else
     {
         // no
         $mysqli->query("UPDATE `mfgcadmin_reservationen`.`captcha` SET `show` = '0' WHERE `captcha`.`id` =1;");
         return;
     }
-  } 
-  else 
+  }
+  else
   {
     // Could not create a prepared statement
     header("Location: /reservationen/login/error.php?err=Database error: cannot prepare statement");
@@ -146,10 +146,10 @@ function checkbrute($mysqli)
 //============================================================================
 // ist man immer noch eingeloggt?
 
-function login_check($mysqli) 
+function login_check($mysqli)
 {
   // Check if all session variables are set
-  if (isset($_SESSION['user_id'], $_SESSION['pilot_nr'], $_SESSION['login_string'])) 
+  if (isset($_SESSION['user_id'], $_SESSION['pilot_nr'], $_SESSION['login_string']))
   {
     $user_id = $_SESSION['user_id'];
     $login_string = $_SESSION['login_string'];
@@ -158,45 +158,45 @@ function login_check($mysqli)
     // Get the user-agent string of the user.
     $user_browser = $_SERVER['HTTP_USER_AGENT'];
 
-    if ($stmt = $mysqli->prepare("SELECT password FROM piloten WHERE id = ? LIMIT 1")) 
+    if ($stmt = $mysqli->prepare("SELECT password FROM piloten WHERE id = ? LIMIT 1"))
     {
       // Bind "$user_id" to parameter.
       $stmt->bind_param('i', $user_id);
       $stmt->execute();   // Execute the prepared query.
       $stmt->store_result();
 
-      if ($stmt->num_rows == 1) 
+      if ($stmt->num_rows == 1)
       {
         // If the user exists get variables from result.
         $stmt->bind_result($password);
         $stmt->fetch();
         $login_check = hash('sha512', $password . $user_browser);
 
-        if ($login_check == $login_string) 
+        if ($login_check == $login_string)
         {
             // Logged In!!!!
             return true;
-        } 
-        else 
+        }
+        else
         {
             // Not logged in
             return false;
         }
-      } 
-      else 
+      }
+      else
       {
           // Not logged in
           return false;
       }
-    } 
-    else 
+    }
+    else
     {
       // Could not prepare statement
       header("Location: /reservationen/login/error.php?err=Database error: cannot prepare statement");
       exit();
     }
-  } 
-  else 
+  }
+  else
   {
     // Not logged in
     return false;

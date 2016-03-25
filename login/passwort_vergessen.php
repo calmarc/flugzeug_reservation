@@ -21,7 +21,7 @@ include_once('../includes/usermenu.php');
       <h1>Passwort zurücksetzen</h1>
       <div id="formular_innen">
       <br />
-          <form action="passwort_vergessen.php" method="post" class="login_form"> 			
+          <form action="passwort_vergessen.php" method="post" class="login_form">
             <table class="formular_eingabe" style="width: 100%;">
               <tr>
                 <td><b>Pilot-Nr:</b></td>

@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-if (isset($_SESSION['pilot_nr'])) 
+if (isset($_SESSION['pilot_nr']))
 {
   // highlight... the active links
   $logout =  $index = $index_t = $index_m = $pass_change = $pilot_admin = $res_geloescht = $res_teilgeloescht = $res_moment = $protokoll = $diverses = "";
@@ -68,7 +68,7 @@ if (isset($_SESSION['pilot_nr']))
     $gesperrt = "<span style='color: red; font-weight: bold; background-color: yellow;'>(Gesperrt - Vorstand kontaktieren!)</span>";
   }
 
-  // menu ausgeben: 
+  // menu ausgeben:
 ?>
 <nav>
   <div class="user_menu">
@@ -81,25 +81,25 @@ if (isset($_SESSION['pilot_nr']))
     <span style="white-space: nowrap;">
       [ <a <?php echo $index_t; ?> href="/reservationen/index.php?show=tag">Tagesplan</a>
       | <a <?php echo $index_m; ?> href="/reservationen/index.php?show=monat">Monatsplan</a>
-    </span> 
+    </span>
     <span style='white-space: nowrap;'>
     | <a href='/reservationen/res_momentan.php'><img <?php echo $res_moment; ?> src='/reservationen/bilder/reservation.png' alt='Reservationen' /></a>
       |  <a href="http://www.ics.li/cfdocs/flugplragaz/admin/bewegungen.cfm">Startliste Flugplatz</a> ]
-    </span> 
+    </span>
    <?php echo $admin; ?>
-  </div> 
+  </div>
 </nav>
 <br style="clear: both;" />
 
-<?php 
-} 
-else 
-{ 
-?> 
-<nav> 
+<?php
+}
+else
+{
+?>
+<nav>
   <div>
     Du bist nicht eingeloggt! [<a href="/reservationen/login/index.php">einloggen</a>]
-  </div> 
+  </div>
 </nav>
 <br style="clear: both;" />
 

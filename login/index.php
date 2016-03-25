@@ -41,7 +41,7 @@ if (isset($_GET['error']))
       <div id="formular_innen">
       <br /><br />
 
-          <form action="process_login.php" method="post" name="login_form" class="login_form"> 			
+          <form action="process_login.php" method="post" name="login_form" class="login_form">
             <table class="formular_eingabe">
               <tr>
                 <td><b>Pilot-Nr:</b></td>
