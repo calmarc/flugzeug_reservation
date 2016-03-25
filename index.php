@@ -17,10 +17,7 @@ sec_session_start();
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 
-if (check_admin($mysqli) == TRUE)
-  $admin_bol = TRUE;
-else
-  $admin_bol = FALSE;
+$admin_bol = check_admin($mysqli);
 
 //============================================================================
 // HTML
