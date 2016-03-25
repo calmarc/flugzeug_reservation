@@ -33,14 +33,8 @@ include_once('includes/send_sms.php');
         <form action='protokoll.php' method='get'>
           Löschen: <select style="width: 15em;" onchange='this.form.submit()' name='loeschen' size="1" id='loeschen'>
             <option value="9876543210">&nbsp;</option>
-            <option value="loggings">Ein/Aus-geloggt</option>
-            <option value="365">älter als ein Jahr</option>
-            <option value="182">älter als ein halbes Jahr</option>
-            <option value="90">älter als 3 Monate</option>
-            <option value="30">älter als 1 Monat</option>
-            <option value="7">älter als 1 Woche</option>
-            <option value="1">älter als 1 Tag</option>
-            <option value="0">alle</option>
+            <!--<option value="loggings">Ein/Aus-geloggt</option>-->
+            <option value="547">älter als ein 1.5 Jahre</option>
           </select>
         </form>
 
