@@ -14,6 +14,8 @@ sec_session_start();
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 
+$admin_bol = check_admin($mysqli);
+
 //============================================================================
 // alle 'gueltigen' ermitteln (der rest dann yellow (standby markieren)
 
@@ -70,21 +72,6 @@ else if ($_SESSION['res_sort_bereich_res'] == "-12-$")
   date_default_timezone_set("UTC");
   $where_bereich = "`reservationen`.`bis` > '{$von_datetime}' AND `reservationen`.`von` <= '{$lokal_datetime}'";
 }
-else if ($_SESSION['res_sort_bereich_res'] == "$-+3")
-{
-  date_default_timezone_set("Europe/Zurich");
-  $bis_datetime = date("Y-m-d H:i:s", time() + 60 * 60 * 24 * 93);
-  date_default_timezone_set("UTC");
-  $where_bereich = "`reservationen`.`bis` >= '{$lokal_datetime}' AND `reservationen`.`von` <= '{$bis_datetime}' ";
-}
-else if ($_SESSION['res_sort_bereich_res'] == "-1-+1")
-{
-  date_default_timezone_set("Europe/Zurich");
-  $von_datetime = date("Y-m-d H:i:s", time() - 60 * 60 * 24 * 31);
-  $bis_datetime = date("Y-m-d H:i:s", time() + 60 * 60 * 24 * 31);
-  date_default_timezone_set("UTC");
-  $where_bereich = "`reservationen`.`bis` >= '{$von_datetime}' AND `reservationen`.`von` <= '{$bis_datetime}' ";
-}
 else if ($_SESSION['res_sort_bereich_res'] == "-12-~")
 {
   date_default_timezone_set("Europe/Zurich");
@@ -115,36 +102,38 @@ include_once('includes/usermenu.php');
 
 ?>
   <main>
-    <h1>Reservationen <a id="printer" href="javascript:window.print()"><img alt="Ausdrucken" src="/reservationen/bilder/print-out.png" /></a></h1>
+  <h1><?php if (!$admin_bol) echo "Deine "; ?>Reservationen <a id="printer" href="javascript:window.print()"><img alt="Ausdrucken" src="/reservationen/bilder/print-out.png" /></a></h1>
     <div id="formular_innen">
       <div class="center">
 
-          <form style="display: inline-block;" action="res_momentan.php" method='get'>
-              <select size="1" onchange='this.form.submit()' style="width: 18em;" name = "pilot_nr">
 <?php
-$res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_nr`;");
 
-echo "<option value=''>alle Piloten</option>";
-echo "<option value='{$_SESSION['pilot_nr']}'>Eigene Reservationen</option>";
-
-while ($obj = $res->fetch_object())
+if (check_admin($mysqli))
 {
-  $selected = "";
-  if ($obj->pilot_nr == $_SESSION['res_sort_pilot'])
-    $selected = 'selected="selected"';
-  echo '<option '.$selected.' value="'.$obj->pilot_nr.'">['.str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT).'] '.$obj->name.'</option>';
+   echo "       <form style='display: inline-block;' action='res_momentan.php' method='get'>
+              <select size='1' onchange='this.form.submit()' style='width: 18em;' name = 'pilot_nr'>";
+
+  $res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_nr`;");
+
+  echo "<option value=''>alle Piloten</option>";
+  echo "<option value='{$_SESSION['pilot_nr']}'>Eigene Reservationen</option>";
+
+  while ($obj = $res->fetch_object())
+  {
+    $selected = "";
+    if ($obj->pilot_nr == $_SESSION['res_sort_pilot'])
+      $selected = 'selected="selected"';
+    echo '<option '.$selected.' value="'.$obj->pilot_nr.'">['.str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT).'] '.$obj->name.'</option>';
+  }
+  echo "            </select></form>";
 }
 
 ?>
-              </select>
-          </form>
-          <form style="display: inline-block;" action="res_momentan.php" method='get'>
+          Filter: <form style="display: inline-block;" action="res_momentan.php" method='get'>
               <select size="1" onchange='this.form.submit()' style="width: 10em;" name = "z_bereich">
-                <option <?php if ($_SESSION['res_sort_bereich_res'] == '$-~') echo 'selected="selected"'; ?> value="$-~">&gt; jetzt</option>
-                <option <?php if ($_SESSION['res_sort_bereich_res'] == '-12-$') echo 'selected="selected"'; ?> value="-12-$">&lt; jetzt</option>
-                <option <?php if ($_SESSION['res_sort_bereich_res'] == '$-+3') echo 'selected="selected"'; ?> value="$-+3">jetzt bis +3 Mt.</option>
-                <option <?php if ($_SESSION['res_sort_bereich_res'] == '-1-+1') echo 'selected="selected"'; ?> value="-1-+1">-1 Mt. bis +1 Mt.</option>
-                <option <?php if ($_SESSION['res_sort_bereich_res'] == '-12-~') echo 'selected="selected"'; ?> value="-12-~">alle</option>
+                <option <?php if ($_SESSION['res_sort_bereich_res'] == '$-~') echo 'selected="selected"'; ?> value="$-~">Kommende</option>
+                <option <?php if ($_SESSION['res_sort_bereich_res'] == '-12-$') echo 'selected="selected"'; ?> value="-12-$">Vergangene</option>
+                <option <?php if ($_SESSION['res_sort_bereich_res'] == '-12-~') echo 'selected="selected"'; ?> value="-12-~">Alle</option>
               </select>
           </form>
           <table class='vertical_table th_filter'>
