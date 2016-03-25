@@ -7,13 +7,14 @@ if (isset($_POST['loeschen']))
 {
   $user_id = $_POST['user_id'];
 
+  // muss vor dem loeschen sein... sonst unknown/unknown
+  list($pilot_nr_pad2, $name2) = get_pilot_from_user_id($mysqli, $user_id);
+  write_status_message ($mysqli, "[Pilot edit]", $_SESSION['user_id'], "[{$pilot_nr_pad2}] $name2 wurde gelöscht");
+
   $query = "DELETE FROM `mfgcadmin_reservationen`.`piloten` WHERE `piloten`.`id` = ?;";
   mysqli_prepare_execute($mysqli, $query, 'i', array ($user_id));
   $query = "DELETE FROM `mfgcadmin_reservationen`.`reservationen` WHERE `reservationen`.`user_id` = ?;";
   mysqli_prepare_execute ($mysqli, $query, 'i', array ($user_id));
-
-  list($pilot_nr_pad2, $name2) = get_pilot_from_user_id($mysqli, $user_id);
-  write_status_message ($mysqli, "[Pilot edit]", $_SESSION['user_id'], "[{$pilot_nr_pad2}] $name2 wurde gelöscht");
 
   // man hat sich selber geloesch.. delete $_SESSION (ausloggen)
 
@@ -78,7 +79,7 @@ if (isset($_POST['updaten']))
   {
     mysqli_prepare_execute($mysqli, "UPDATE `mfgcadmin_reservationen`.`piloten` SET `email_gesch` = '0' WHERE `piloten`.`id` = ?;", 'i', array ($user_id));
     list($pilot_nr_pad, $name) = get_pilot_from_user_id($mysqli, $user_id);
-    write_status_message ($mysqli, "[Pilot edit]", $_SESSION['user_id'] , "[{$pilot_nr_pad}] $name wurde entsperrt");
+    write_status_message ($mysqli, "[Pilot edit]", $_SESSION['user_id'] , "[{$pilot_nr_pad}] $name: Checkflug ist wieder OK");
   }
 
   if ($password != "")
