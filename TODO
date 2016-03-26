@@ -2,24 +2,12 @@
 
 == MAYOR ==
 
-* protokoll: sortieren button-loeschen 1.5 jahre
-
 * windoof 11 nicht zentriert.
 
 == MINOR ==
 
-=== user stuff
-
 * service nicht rot.. nur zahl (tspan...)
 
-=== admin stuff
-
-* flieger managen wie user_edit und user_admin.. einfach
-  flieger. (oder in diverses)
-
-* res_anzeigen
-  - die res_anzeige dinger.. ausgliedern noetig etc.
-  - loeschen combobox einheitlich  mit > < etc. (auch filter)
-  - ueberall pfeile beim sortierne tabelle oben (rauf runter asc/desc)
+* flieger managen in diverses
 
 // vim: nospell :
