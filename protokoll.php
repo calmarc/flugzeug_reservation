@@ -83,7 +83,7 @@ echo select_pilot_nr_status_meldungen($mysqli, $_SESSION['where_pilot_nr']);
 // aktion select
 
 if (!isset($_SESSION['where_aktion'])) 
-  $_SESSION['where_aktion'] = "";
+  $_SESSION['where_aktion'] = "ohne_ea";
 
 // set to get if there
 if (isset($_GET['aktion']))
@@ -92,7 +92,14 @@ if (isset($_GET['aktion']))
 // query
 $where_aktion_txt = "";
 if ($_SESSION['where_aktion'] != "")
-  $where_aktion_txt = "`aktion` = '{$_SESSION['where_aktion']}'";
+{
+  if ($_SESSION['where_aktion'] == "ohne_ea")
+  {
+    $where_aktion_txt = "`aktion` NOT IN ('[Eingeloggt]', '[Ausgeloggt]')";
+  }
+  else
+    $where_aktion_txt = "`aktion` = '{$_SESSION['where_aktion']}'";
+}
 
 echo select_aktion_status_meldungen($mysqli, $_SESSION['where_aktion']);
 // ----------------------------------------------------------------------------------
@@ -109,7 +116,7 @@ echo select_aktion_status_meldungen($mysqli, $_SESSION['where_aktion']);
 
 $where_txt = generate_where(array($where_aktion_txt, $where_pilot_nr_txt));
 
-$query = "SELECT * FROM `status_meldungen` {$where_txt} ORDER BY `timestamp` DESC;";
+$query = "SELECT * FROM `status_meldungen` {$where_txt} {$order_by_txt};";
 
 $res = $mysqli->query($query);
 
