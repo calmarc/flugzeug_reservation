@@ -29,11 +29,11 @@ div#logo {
   background-size:cover;
   position: fixed;
   bottom: 0;
-  right: 2em;
   z-index: -10;
   width: 647px;
   height: 90px;
-  margin-bottom: 3em;
+  right: 1.0em;
+  margin-bottom: 1.6em;
 }
 
 nav {
@@ -463,11 +463,11 @@ div#tooltip_div {
     background-size:cover;
     position: fixed;
     bottom: 0;
-    right: 0em;
     z-index: -10;
     width: 374px;
     height: 110px;
-    margin-bottom: 3em;
+    right: 0.1em;
+    margin-bottom: 1.6em;
   }
 }
 @media only screen and (max-width: 698px) {
@@ -494,11 +494,11 @@ div#tooltip_div {
     background-size:cover;
     position: fixed;
     bottom: 0;
-    right: 0;
     z-index: -10;
     width: 274px;
     height: 80px;
-    margin-bottom: 2em;
+    right: 0.1em;
+    margin-bottom: 1em;
   }
 }
 
