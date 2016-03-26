@@ -9,6 +9,7 @@ include_once ('includes/user_functions.php');
 include_once ('includes/html_functions.php');
 include_once ('includes/reservations_functions.php');
 include_once ('includes/functions.php');
+include_once ('includes/sort.php');
 
 sec_session_start();
 
@@ -110,31 +111,55 @@ include_once('includes/usermenu.php');
 
 if (check_admin($mysqli))
 {
-   echo "       <form style='display: inline-block;' action='res_momentan.php' method='get'>
-              <select size='1' onchange='this.form.submit()' style='width: 18em;' name = 'pilot_nr'>";
+ 
+  ////////////////////////////////////////////////////////////////////////////////////
+  // pilot select
 
-  $res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_nr`;");
+  if (!isset($_SESSION['mom_where_pilot_nr'])) 
+    $_SESSION['mom_where_pilot_nr'] = "";
 
-  echo "<option value=''>alle Piloten</option>";
-  echo "<option value='{$_SESSION['pilot_nr']}'>Eigene Reservationen</option>";
+  // set to get if there
+  if (isset($_GET['pilot_nr']))
+    $_SESSION['mom_where_pilot_nr'] = $_GET['pilot_nr'];
 
-  while ($obj = $res->fetch_object())
-  {
-    $selected = "";
-    if ($obj->pilot_nr == $_SESSION['res_sort_pilot'])
-      $selected = 'selected="selected"';
-    echo '<option '.$selected.' value="'.$obj->pilot_nr.'">['.str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT).'] '.$obj->name.'</option>';
-  }
-  echo "            </select></form>";
+  // set when 
+  $where_pilot_nr_txt = "";
+  if ($_SESSION['mom_where_pilot_nr'] != "")
+    $where_pilot_nr_txt = "`mem1`.`pilot_nr` = '{$_SESSION['mom_where_pilot_nr']}'";
+
+  echo select_pilot_nr_momentan($mysqli, $_SESSION['mom_where_pilot_nr'], "res_momentan.php");
 }
 
+////////////////////////////////////////////////////////////////////////////////////
+// von select
+
+if (!isset($_SESSION['z_bereich'])) 
+  $_SESSION['z_bereich'] = "";
+
+// set to get if there
+if (isset($_GET['z_bereich']))
+  $_SESSION['z_bereich'] = $_GET['z_bereich'];
+
+// calculate time back...
+date_default_timezone_set("Europe/Zurich");
+$since_date = date("Y-m-d H:i:s", time());
+date_default_timezone_set("UTC");
+
+// set when 
+$where_z_bereich_txt = "";
+if ($_SESSION['z_bereich'] == "$-~")
+  $where_z_bereich_txt = "`reservationen`.`von` >= '$since_date'";
+else if ($_SESSION['z_bereich'] == "~-$")
+  $where_z_bereich_txt = "`reservationen`.`von` < '$since_date'";
+
 ?>
-          Filter: <form style="display: inline-block;" action="res_momentan.php" method='get'>
-              <select size="1" onchange='this.form.submit()' style="width: 10em;" name = "z_bereich">
-                <option <?php if ($_SESSION['res_sort_bereich_res'] == '$-~') echo 'selected="selected"'; ?> value="$-~">Kommende</option>
-                <option <?php if ($_SESSION['res_sort_bereich_res'] == '-12-$') echo 'selected="selected"'; ?> value="-12-$">Vergangene</option>
-                <option <?php if ($_SESSION['res_sort_bereich_res'] == '-12-~') echo 'selected="selected"'; ?> value="-12-~">Alle</option>
-              </select>
+
+          <form style="display: inline-block;" action="res_momentan.php" method='get'>
+            <select size="1" onchange='this.form.submit()' style="width: 10em;" name = "z_bereich">
+              <option <?php if ($_SESSION['res_sort_bereich_res'] == '$-~') echo 'selected="selected"'; ?> value="$-~">Kommende</option>
+              <option <?php if ($_SESSION['res_sort_bereich_res'] == '~-$') echo 'selected="selected"'; ?> value="~-$">Vergangene</option>
+              <option <?php if ($_SESSION['res_sort_bereich_res'] == '') echo 'selected="selected"'; ?> value="">Alle</option>
+            </select>
           </form>
           <table class='vertical_table th_filter'>
           <tr>
@@ -146,6 +171,8 @@ if (check_admin($mysqli))
             <th style='min-width: 12em;'><a href="res_momentan.php?sort=von"><b>Datum</b><?php echo $datum_img; ?></a></th>
           </tr>
 <?php
+
+$where_txt = generate_where(array($where_pilot_nr_txt, $where_z_bereich_txt));
 
 $query = " SELECT
   `reservationen`.`id` AS 'id',
@@ -160,6 +187,7 @@ $query = " SELECT
           LEFT OUTER JOIN `piloten` AS `mem1` ON `reservationen`.`user_id` = `mem1`.`id`
           LEFT OUTER JOIN `flugzeug` AS `flugzeug` ON `reservationen`.`flugzeug_id` = `flugzeug`.`id`
       {$where_txt} {$order_by_txt} LIMIT 150;";
+echo $query;
 
 $res = $mysqli->query($query);
 

@@ -155,6 +155,7 @@ if ( isset($_SESSION['pilot_nr']) && ($_SESSION['pilot_nr'] == "107"))
 
 </head>
 <body>
+<div id="logo"></div>
 <?php
 }
 

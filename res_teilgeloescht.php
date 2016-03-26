@@ -8,6 +8,7 @@ include_once ('includes/db_connect.php');
 include_once ('includes/user_functions.php');
 include_once ('includes/html_functions.php');
 include_once ('includes/functions.php');
+include_once ('includes/sort.php');
 
 sec_session_start();
 
@@ -72,41 +73,60 @@ include_once('includes/usermenu.php');
     <div id="formular_innen">
       <div class="center">
 
-          <form style="display: inline-block;" action="res_teilgeloescht.php" method='get'>
-              <select size="1"  onchange='this.form.submit()' style="width: 16em;" name = "pilot_nr">
 <?php
-$res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_nr`;");
 
-echo '<option value="">alle Piloten</option>';
-while ($obj = $res->fetch_object())
+////////////////////////////////////////////////////////////////////////////////////
+// pilot select
+
+if (!isset($_SESSION['where_pilot_nr'])) 
+  $_SESSION['where_pilot_nr'] = "";
+
+// set to get if there
+if (isset($_GET['pilot_nr']))
+  $_SESSION['where_pilot_nr'] = $_GET['pilot_nr'];
+
+// set when 
+$where_pilot_nr_txt = "";
+if ($_SESSION['where_pilot_nr'] != "")
 {
-  $selected = "";
-  if ($obj->pilot_nr == $_SESSION['geloescht_default_pilot'])
-    $selected = 'selected="selected"';
-  echo '<option '.$selected.' value="'.$obj->pilot_nr.'">['.str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT).'] '.$obj->name.'</option>';
+  $pilot_nr_pad = str_pad($_SESSION['where_pilot_nr'], 3, "0", STR_PAD_LEFT);
+  $where_pilot_nr_txt = "`durch` LIKE '%{$pilot_nr_pad}%'";
 }
-?>
-              </select>
-          </form>
+echo select_pilot_nr_geloescht($mysqli, $_SESSION['where_pilot_nr'], "res_teilgeloescht.php");
 
-          <form style="display: inline-block;" action="res_teilgeloescht.php" method='get'>
-              <select size="1"  onchange='this.form.submit()' style="width: 10em;" name = "z_bereich">
-                <option <?php if ($_SESSION['res_sort_bereich'] == '0') echo 'selected="selected"'; ?> value="0">alle</option>
-                <option <?php if ($_SESSION['res_sort_bereich'] == '30') echo 'selected="selected"'; ?> value="30">letze 30 Tage</option>
-                <option <?php if ($_SESSION['res_sort_bereich'] == '90') echo 'selected="selected"'; ?>value="90">letze 90 Tage</option>
-                <option <?php if ($_SESSION['res_sort_bereich'] == '365') echo 'selected="selected"'; ?> value="365">letze 365 Tage</option>
+////////////////////////////////////////////////////////////////////////////////////
+// von select
+
+if (!isset($_SESSION['where_von'])) 
+  $_SESSION['where_von'] = "";
+
+// set to get if there
+if (isset($_GET['where_von']))
+  $_SESSION['where_von'] = $_GET['where_von'];
+
+// calculate time back...
+date_default_timezone_set("Europe/Zurich");
+$since_date = date("Y-m-d H:i:s", time()-(intval($_SESSION['where_von'])*24*60*60));
+date_default_timezone_set("UTC");
+$where_bereich = "`reser_getrimmt`.`von` > '$since_date'";
+
+// set when 
+$where_von_txt = "";
+if ($_SESSION['where_von'] != "")
+  $where_von_txt = "`reser_getrimmt`.`von` > '{$since_date}'";
+
+?>
+          <form style="display: inline-block;" action="res_geloescht.php" method='get'>
+              <select size="1"  onchange='this.form.submit()' style="width: 10em;" name="where_von">
+                <option <?php if ($_SESSION['where_von'] == '30') echo 'selected="selected"'; ?> value="30">letze 30 Tage</option>
+                <option <?php if ($_SESSION['where_von'] == '90') echo 'selected="selected"'; ?>value="90">letze 90 Tage</option>
+                <option <?php if ($_SESSION['where_von'] == '365') echo 'selected="selected"'; ?> value="365">letze 365 Tage</option>
+                <option <?php if ($_SESSION['where_von'] == '') echo 'selected="selected"'; ?> value="">alle</option>
               </select>
           </form>
-          <form style="display: inline-block;" action='res_teilgeloescht.php' method='get'>
-            &nbsp; Löschen: <select style="width: 8em;" onchange='this.form.submit()' name='loeschen' size="1" id='loeschen'>
-              <option value="9876543210">&nbsp;</option>
-              <option value="365">&gt; 12 Monate</option>
-              <option value="182">&gt; 6 Monate</option>
-              <option value="90">&gt; 3 Monate</option>
-              <option value="30">&gt; 1 Monat</option>
-              <option value="7">&gt; 1 Woche</option>
-            </select>
-          </form>
+<?php 
+//-------------------------------------------------------------------------------- 
+?>
           <table class='vertical_table'>
           <tr>
           <th><a href="res_teilgeloescht.php?sort=timestamp"><b>Zeit-Stempel</b></a></th>

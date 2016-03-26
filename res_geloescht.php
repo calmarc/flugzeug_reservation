@@ -8,6 +8,7 @@ include_once ('includes/db_connect.php');
 include_once ('includes/user_functions.php');
 include_once ('includes/html_functions.php');
 include_once ('includes/functions.php');
+include_once ('includes/sort.php');
 
 sec_session_start();
 
@@ -76,42 +77,57 @@ include_once('includes/usermenu.php');
     <div id="formular_innen">
       <div class="center">
 
-          <form style="display: inline-block;" action="res_geloescht.php" method='get'>
-              <select size="1"  onchange='this.form.submit()' style="width: 16em;" name = "pilot_nr">
-<?php
-$res = $mysqli->query("SELECT * FROM `piloten` ORDER BY `pilot_nr`;");
+<?php 
+////////////////////////////////////////////////////////////////////////////////////
+// pilot select
 
-echo '<option value="">alle Piloten</option>';
-while ($obj = $res->fetch_object())
-{
-  $selected = "";
-  if ($obj->pilot_nr == $_SESSION['geloescht_default_pilot'])
-    $selected = 'selected="selected"';
-  echo '<option '.$selected.' value="'.$obj->pilot_nr.'">['.str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT).'] '.$obj->name.'</option>';
-}
+if (!isset($_SESSION['where_pilot_nr'])) 
+  $_SESSION['where_pilot_nr'] = "";
+
+// set to get if there
+if (isset($_GET['pilot_nr']))
+  $_SESSION['where_pilot_nr'] = $_GET['pilot_nr'];
+
+// set when 
+$where_pilot_nr_txt = "";
+if ($_SESSION['where_pilot_nr'] != "")
+  $where_pilot_nr_txt = "`mem1`.`pilot_nr` = '{$_SESSION['where_pilot_nr']}'";
+
+echo select_pilot_nr_geloescht($mysqli, $_SESSION['where_pilot_nr'], "res_geloescht.php");
+
+////////////////////////////////////////////////////////////////////////////////////
+// von select
+
+if (!isset($_SESSION['where_von'])) 
+  $_SESSION['where_von'] = "";
+
+// set to get if there
+if (isset($_GET['where_von']))
+  $_SESSION['where_von'] = $_GET['where_von'];
+
+// calculate time back...
+date_default_timezone_set("Europe/Zurich");
+$since_date = date("Y-m-d H:i:s", time()-(intval($_SESSION['where_von'])*24*60*60));
+date_default_timezone_set("UTC");
+$where_bereich = "`reser_geloescht`.`von` > '$since_date'";
+
+// set when 
+$where_von_txt = "";
+if ($_SESSION['where_von'] != "")
+  $where_von_txt = "`reser_geloescht`.`von` > '{$since_date}'";
+
 ?>
-              </select>
-          </form>
-
           <form style="display: inline-block;" action="res_geloescht.php" method='get'>
-              <select size="1" onchange='this.form.submit()' style="width: 10em;" name = "z_bereich">
-                <option <?php if ($_SESSION['res_sort_bereich'] == '0') echo 'selected="selected"'; ?> value="0">alle</option>
-                <option <?php if ($_SESSION['res_sort_bereich'] == '30') echo 'selected="selected"'; ?> value="30">letze 30 Tage</option>
-                <option <?php if ($_SESSION['res_sort_bereich'] == '90') echo 'selected="selected"'; ?>value="90">letze 90 Tage</option>
-                <option <?php if ($_SESSION['res_sort_bereich'] == '365') echo 'selected="selected"'; ?> value="365">letze 365 Tage</option>
+              <select size="1"  onchange='this.form.submit()' style="width: 10em;" name="where_von">
+                <option <?php if ($_SESSION['where_von'] == '30') echo 'selected="selected"'; ?> value="30">letze 30 Tage</option>
+                <option <?php if ($_SESSION['where_von'] == '90') echo 'selected="selected"'; ?>value="90">letze 90 Tage</option>
+                <option <?php if ($_SESSION['where_von'] == '365') echo 'selected="selected"'; ?> value="365">letze 365 Tage</option>
+                <option <?php if ($_SESSION['where_von'] == '') echo 'selected="selected"'; ?> value="">alle</option>
               </select>
           </form>
-
-          <form style="display: inline-block;" action='res_geloescht.php' method='get'>
-            &nbsp; Löschen: <select style="width: 8em;" onchange='this.form.submit()' name='loeschen' size="1" id='loeschen'>
-              <option value="9876543210">&nbsp;</option>
-              <option value="365">&gt; 12 Monate</option>
-              <option value="182">&gt; 6 Monate</option>
-              <option value="90">&gt; 3 Monate</option>
-              <option value="30">&gt; 1 Monat</option>
-              <option value="7">&gt; 1 Woche</option>
-            </select>
-          </form>
+<?php 
+//-------------------------------------------------------------------------------- 
+?>
           <table class='vertical_table'>
           <tr>
           <th><a href="res_geloescht.php?sort=timestamp"><b>Zeit-Stempel</b></a></th>
@@ -121,14 +137,15 @@ while ($obj = $res->fetch_object())
             <th><b>Grund</b></th>
             <th><a href="res_geloescht.php?sort=loescher_id"><b>Gelöscht durch</b></a></th>
           </tr>
-
 <?php
+
+$where_txt = generate_where(array($where_pilot_nr_txt, $where_von_txt));
 
 $query = " SELECT
   `reser_geloescht`.`timestamp` AS 'timestamp',
   `mem1`.`name` AS 'pilot',
   `mem1`.`pilot_nr` AS 'pilot_nr',
-  `mem2`.`name` AS 'loescher_id',
+  `mem2`.`name` AS 'loescher',
   `flugzeug`.`flugzeug` AS 'flugzeug',
   `reser_geloescht`.`von` AS 'von',
   `reser_geloescht`.`bis` AS 'bis',
@@ -137,7 +154,7 @@ $query = " SELECT
           LEFT OUTER JOIN `piloten` AS `mem1` ON `reser_geloescht`.`user_id` = `mem1`.`id`
           LEFT OUTER JOIN `piloten` AS `mem2` ON `reser_geloescht`.`loescher_id` = `mem2`.`id`
           LEFT OUTER JOIN `flugzeug` AS `flugzeug` ON `reser_geloescht`.`flugzeug_id` = `flugzeug`.`id`
-   $where_txt $order_by_txt LIMIT 600;";
+   $where_txt $order_by_txt;";
 
 $res = $mysqli->query($query);
 
@@ -145,10 +162,10 @@ while ($obj = $res->fetch_object())
 {
   $gel_datum = mysql_stamp_to_ch($mysqli, $obj->timestamp);
 
-  if ($obj->loescher_id == $obj->pilot)
-    $loescher_id = "<span style='color: #999999'>".$obj->loescher_id."</span>";
+  if ($obj->loescher == $obj->pilot)
+    $loescher = "<span style='color: #999999'>".$obj->loescher."</span>";
   else
-    $loescher_id = $obj->loescher_id;
+    $loescher = $obj->loescher;
 
   echo "\n<tr>
            <td style='text-align: left; background-color: transparent; color: #333333;'>{$gel_datum}</td>
@@ -156,7 +173,7 @@ while ($obj = $res->fetch_object())
            <td>{$obj->flugzeug}</td>
            <td>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>
            <td style='font-weight: bold; color #333333;'>".nl2br($obj->grund)."</td>
-           <td>{$loescher_id}</td>
+           <td>{$loescher}</td>
         </tr>";
 }
 ?>

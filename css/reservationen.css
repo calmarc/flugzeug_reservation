@@ -10,10 +10,30 @@ body {
   font-family: sans-serif;
   margin: 0px;
   padding: 0px;
-  background-image: url("../bilder/mfgc.png");
+  /*background-image: url("../bilder/mfgc.png");*/
+  /*background-repeat: no-repeat;*/
+  /*background-position: right bottom;*/
+  /*background-attachment: fixed;*/
+
+  background-image: url("../bilder/cloud.jpg");
+  background-size:cover;
   background-repeat: no-repeat;
   background-position: right bottom;
   background-attachment: fixed;
+
+}
+
+div#logo {
+  background-image: url("/reservationen/bilder/mfgc.png");
+  background-repeat: no-repeat;
+  background-size:cover;
+  position: fixed;
+  bottom: 0;
+  right: 2em;
+  z-index: -10;
+  width: 647px;
+  height: 90px;
+  margin-bottom: 3em;
 }
 
 nav {
@@ -28,7 +48,18 @@ nav {
   margin: 0px;
   color: #ffff00;
   font-size: 105%;
+  z-index: 3;
 }
+
+main {
+  margin-top: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  z-index: 5;
+  text-align: center; /* for i.e <=11 */
+}
+
 
 .only_on_print {
   visibility: none;
@@ -36,6 +67,7 @@ nav {
 }
 
 h1 {
+  color: #000000;
   font-size: 180%;
   padding: 0.3em 1em 0.5em 1em;
   margin: 0 0 0 0;
@@ -155,13 +187,6 @@ div.user_menu { float: right; margin-top: 0px;  }
 table.formular_eingabe td:nth-child(1) { text-align: right;}
 table.formular_eingabe td:nth-child(2) { text-align: left; padding-left: 8px;}
 table.formular_eingabe td:nth-child(2) input { width: 90%;}
-
-main {
-    margin-top: 0px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-}
 
 form.login_form input { width: 80%; }
 
@@ -422,7 +447,7 @@ div#tooltip_div {
 }
 
 @media only screen and (max-width: 1000px) {
-  body { background-image: url("/reservationen/bilder/mfgc-short.png"); }
+  /*body { background-image: url("/reservationen/bilder/mfgc-short.png"); }*/
   nav {position: sticky; font-size: 108%; }
   main { margin-left: auto; margin-right: auto; width: 100%; overflow-x: scroll; }
   .chart, .chart_monat {width: 94%; }
@@ -431,6 +456,19 @@ div#tooltip_div {
   div#calendar { width: 100%; font-size: 90%; position: static; margin: 0px; padding: 0px;}
   div#calendar > table { margin-left: auto; margin-right: auto; width: 90%;  max-width: 500px;}
   table.calendar td { line-height: 100%;}
+
+  div#logo {
+    background-image: url("/reservationen/bilder/mfgc-short.png");
+    background-repeat: no-repeat;
+    background-size:cover;
+    position: fixed;
+    bottom: 0;
+    right: 0em;
+    z-index: -10;
+    width: 374px;
+    height: 110px;
+    margin-bottom: 3em;
+  }
 }
 @media only screen and (max-width: 698px) {
 
@@ -440,7 +478,7 @@ div#tooltip_div {
 
   main { margin-left: auto; margin-right: auto; width: 100%; overflow-x: scroll; }
   nav {position: sticky; font-size: 100%; }
-  body { background-image: url("/reservationen/bilder/mfgc-logo.png"); }
+  /*body { background-image: url("/reservationen/bilder/mfgc-logo.png"); }*/
   .chart, .chart_monat {width: 97%; }
   .hide { display: none; visibility: hidden; }
 }
@@ -449,6 +487,19 @@ div#tooltip_div {
   div#calendar { font-size: 94%; width: 100%;}
   div#calendar > table {min-width: 220px; width: 99%; margin-left: auto; margin-right: auto; font-size: 94%;}
   .chart, .chart_monat {width: 98%; }
+
+  div#logo {
+    background-image: url("/reservationen/bilder/mfgc-short.png");
+    background-repeat: no-repeat;
+    background-size:cover;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: -10;
+    width: 274px;
+    height: 80px;
+    margin-bottom: 2em;
+  }
 }
 
 /* ----------- START printer ------------------- */

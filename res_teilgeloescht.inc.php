@@ -3,11 +3,11 @@
 //============================================================================
 // Protokoll sachen aufrauemen/leoschen
 
-if (isset($_GET['loeschen']) && $_GET['loeschen'] != 9876543210)
+if (isset($_GET['res_teil_geloescht']) && intval($_GET['teil_loeschen_val']) > 60)
 {
   // get the date x days before now and delete before that.
   $time_stamp = time();
-  $time_stamp = $time_stamp - intval($_GET['loeschen']) * 60 * 60 * 24; // tage
+  $time_stamp = $time_stamp - intval($_GET['teil_loeschen_val']) * 60 * 60 * 24; // tage
 
   // timestamp in der datenbank ist auch lokal
   date_default_timezone_set("Europe/Zurich");

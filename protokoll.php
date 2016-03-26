@@ -23,21 +23,54 @@ include_once ('protokoll.inc.php');
 print_html_to_body('Log Daten', '');
 include_once('includes/usermenu.php');
 include_once('includes/send_sms.php');
+include_once('includes/sort.php');
 
 ?>
   <main>
     <h1>Protokoll</h1>
     <div id="formular_innen">
       <div class="center">
+<?php
 
-        <form action='protokoll.php' method='get'>
-          Löschen: <select style="width: 15em;" onchange='this.form.submit()' name='loeschen' size="1" id='loeschen'>
-            <option value="9876543210">&nbsp;</option>
-            <!--<option value="loggings">Ein/Aus-geloggt</option>-->
-            <option value="547">älter als ein 1.5 Jahre</option>
-          </select>
-        </form>
+////////////////////////////////////////////////////////////////////////////////////
+// pilot select
 
+if (!isset($_SESSION['where_pilot_nr'])) 
+  $_SESSION['where_pilot_nr'] = "";
+
+// set to get if there
+if (isset($_GET['pilot_nr']))
+  $_SESSION['where_pilot_nr'] = $_GET['pilot_nr'];
+
+// set when 
+$where_pilot_nr_txt = "";
+if ($_SESSION['where_pilot_nr'] != "")
+{
+  $pilot_nr_pad = str_pad($_SESSION['where_pilot_nr'], 3, "0", STR_PAD_LEFT);
+  $where_pilot_nr_txt = "`durch` LIKE '%{$pilot_nr_pad}%'";
+}
+
+echo select_pilot_nr_status_meldungen($mysqli, $_SESSION['where_pilot_nr']);
+
+////////////////////////////////////////////////////////////////////////////////////
+// aktion select
+
+if (!isset($_SESSION['where_aktion'])) 
+  $_SESSION['where_aktion'] = "";
+
+// set to get if there
+if (isset($_GET['aktion']))
+  $_SESSION['where_aktion'] = $_GET['aktion'];
+
+// query
+$where_aktion_txt = "";
+if ($_SESSION['where_aktion'] != "")
+  $where_aktion_txt = "`aktion` = '{$_SESSION['where_aktion']}'";
+
+echo select_aktion_status_meldungen($mysqli, $_SESSION['where_aktion']);
+// ----------------------------------------------------------------------------------
+
+?>
           <table class='vertical_table'>
           <tr>
           <th><b>Zeit-Stempel</b></th>
@@ -47,7 +80,9 @@ include_once('includes/send_sms.php');
           </tr>
 <?php
 
-$query = "SELECT * FROM `status_meldungen` ORDER BY `timestamp` DESC;";
+$where_txt = generate_where(array($where_aktion_txt, $where_pilot_nr_txt));
+
+$query = "SELECT * FROM `status_meldungen` {$where_txt} ORDER BY `timestamp` DESC;";
 
 $res = $mysqli->query($query);
 
@@ -55,7 +90,7 @@ while ($obj = $res->fetch_object())
 {
   $lokal_datum = mysql_stamp_to_ch($mysqli, $obj->timestamp);
 
-  $action = $obj->aktion;
+  $aktion = $obj->aktion;
   $durch = $obj->durch;
   $data = $obj->data;
 
@@ -63,43 +98,12 @@ while ($obj = $res->fetch_object())
   // nach @@...@@ string gucken (die trackingnummer)
   // entsprechend dem resultat, ausgeben oder string ersetzen (UPDATE...)
 
-  if ($action == "[Standby SMS]")
-  {
-    $t_arr = explode("@@", $data);
-    if (count($t_arr) == 3)
-    {
-      // Daten von der tracking nummer
-      $t_arr2 = sms_delivery_status($mysqli, $t_arr[1]);
-
-      if (count($t_arr2) == 2) // eine Exception wurde ausgeloest (falsche tracking . normalerweise)
-      {
-        $data = "{$t_arr[0]} <span style='color: red;'>{$t_arr2[0]}</span>: {$t_arr2[1]}";
-      }
-      else
-      {
-        if ($t_arr2['deliveryStatusBool'])
-        {
-          $data = "{$t_arr[0]} <span style='color: green;'>{$t_arr2['deliveryStatus']}</span>{$t_arr[2]}";
-          mysqli_prepare_execute ($mysqli, "UPDATE `status_meldungen` SET `timestamp` = ?, `data` = ? WHERE `status_meldungen`.`id` = ?;", "ssi", array($obj->timestamp, $data, $obj->id));
-        }
-        else if ($t_arr2['deliveryStatus'] == 'Not Delivered')
-        {
-          $data = "{$t_arr[0]} <span style='color: red;'>{$t_arr2['deliveryStatus']}</span>{$t_arr[2]}";
-          mysqli_prepare_execute ($mysqli, "UPDATE `status_meldungen` SET `timestamp` = ?, `data` = ? WHERE `status_meldungen`.`id` = ?;", "ssi", array($obj->timestamp,$data, $obj->id));
-        }
-        else
-        {
-          $data = "{$t_arr[0]} <span style='color: red;'>{$t_arr2['deliveryStatus']}</span>{$t_arr[2]}";
-        }
-      }
-
-    }
-  }
+  replace_sms_tracking ($mysqli, $obj);
 
   echo "\n<tr>
            <td style='text-align: left; background-color: transparent; color: #333333;'>{$lokal_datum}</td>
            <td>{$durch}</td>
-           <td>{$action}</td>
+           <td>{$aktion}</td>
            <td>{$data}</td>
         </tr>";
 }
