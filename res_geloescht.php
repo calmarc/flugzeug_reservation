@@ -17,20 +17,9 @@ if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"
 
 include_once ('res_geloescht.inc.php');
 
-// TODO: diese res_xy haben hier oben alle etwa das gleiche..
-// TODO: mal aussortieren in eins.. und so
 // default
-
 if (!isset($_SESSION['res_sort_dir'])) $_SESSION['res_sort_dir'] = "DESC";
 if (!isset($_SESSION['res_sort_by'])) $_SESSION['res_sort_by'] = "timestamp";
-if (!isset($_SESSION['geloescht_default_pilot'])) $_SESSION['geloescht_default_pilot'] = "";
-
-if (isset($_GET['pilot_nr']))
-  $_SESSION['geloescht_default_pilot'] = $_GET['pilot_nr'];
-
-$where_pilot = "";
-if ($_SESSION['geloescht_default_pilot'] != "")
-  $where_pilot = "`mem1`.`pilot_nr` = ".intval($_SESSION['geloescht_default_pilot']);
 
 $t_old = $_SESSION['res_sort_by'];
 if (isset($_GET['sort']) && $_GET['sort'] != '') $_SESSION['res_sort_by'] = $_GET['sort'];
@@ -41,32 +30,21 @@ if (isset($_GET['sort']) && $t_old == $_GET['sort']) // glieche kolumne gedruckt
   else
       $_SESSION['res_sort_dir'] = "ASC";
 
+// string generieren
 $order_by_txt = "ORDER BY `".$_SESSION['res_sort_by']."` ".$_SESSION['res_sort_dir'];
 
-//default
-if (!isset($_SESSION['res_sort_bereich'])) $_SESSION['res_sort_bereich'] = "0";
-if (isset($_GET['z_bereich']) && $_GET['z_bereich'] != '') $_SESSION['res_sort_bereich'] = $_GET['z_bereich'];
-
-
-if ($_SESSION['res_sort_bereich'] == "0")
-{
-  $where_bereich = '';
-}
-else
-{
-  date_default_timezone_set("Europe/Zurich");
-  $since_date = date("Y-m-d H:i:s", time()-(intval($_SESSION['res_sort_bereich'])*24*60*60));
-  date_default_timezone_set("UTC");
-  $where_bereich = "`reser_geloescht`.`von` > '$since_date'";
-}
-
-$where_txt = '';
-if ($where_bereich != '' && $where_pilot != '')
-  $where_txt = "WHERE $where_bereich AND $where_pilot";
-else if ($where_bereich != '')
-  $where_txt = "WHERE $where_bereich";
-else if ($where_pilot != '')
-  $where_txt = "WHERE $where_pilot";
+// die 3 kolumnen zum ASC/DESC ordnnen - das pfeil-bild generieren
+$von_img = $pilot_img = $flugzeug_img = $timestamp_img = $loescher_id_img = "";
+if ($_SESSION['res_sort_by'] == 'pilot_nr')
+  $pilot_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
+else if ($_SESSION['res_sort_by'] == 'flugzeug')
+  $flugzeug_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
+else if ($_SESSION['res_sort_by'] == 'von')
+  $von_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
+else if ($_SESSION['res_sort_by'] == 'timestamp')
+  $timestamp_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
+else if ($_SESSION['res_sort_by'] == 'loescher_id_img')
+  $loescher_id_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
 
 print_html_to_body('Geloeschte Reservationen', '');
 include_once('includes/usermenu.php');
@@ -128,14 +106,14 @@ if ($_SESSION['where_von'] != "")
 <?php 
 //-------------------------------------------------------------------------------- 
 ?>
-          <table class='vertical_table'>
+          <table class='vertical_table th_filter'>
           <tr>
-          <th><a href="res_geloescht.php?sort=timestamp"><b>Zeit-Stempel</b></a></th>
-            <th><a href="res_geloescht.php?sort=pilot_nr"><b>Pilot</b></a></th>
-            <th><a href="res_geloescht.php?sort=flugzeug"><b>Flugzeug</b></a></th>
-            <th><a href="res_geloescht.php?sort=von"><b>Datum</b></a></th>
+          <th><a href="res_geloescht.php?sort=timestamp"><b>Zeit-Stempel</b><?php echo $timestamp_img; ?></a></th>
+            <th><a href="res_geloescht.php?sort=pilot_nr"><b>Pilot</b><?php echo $pilot_img; ?></a></th>
+            <th><a href="res_geloescht.php?sort=flugzeug"><b>Flugzeug</b><?php echo $flugzeug_img; ?></a></th>
+            <th><a href="res_geloescht.php?sort=von"><b>Datum</b><?php echo $von_img; ?></a></th>
             <th><b>Grund</b></th>
-            <th><a href="res_geloescht.php?sort=loescher_id"><b>Gelöscht durch</b></a></th>
+            <th><a href="res_geloescht.php?sort=loescher_id"><b>Gelöscht durch</b><?php echo $loescher_id_img; ?></a></th>
           </tr>
 <?php
 

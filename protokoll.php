@@ -25,6 +25,33 @@ include_once('includes/usermenu.php');
 include_once('includes/send_sms.php');
 include_once('includes/sort.php');
 
+// default
+if (!isset($_SESSION['proto_sort_dir'])) $_SESSION['proto_sort_dir'] = "DESC";
+if (!isset($_SESSION['proto_sort_by'])) $_SESSION['proto_sort_by'] = "timestamp";
+
+$t_old = $_SESSION['proto_sort_by'];
+if (isset($_GET['sort']) && $_GET['sort'] != '') $_SESSION['proto_sort_by'] = $_GET['sort'];
+
+if (isset($_GET['sort']) && $t_old == $_GET['sort']) // glieche kolumne gedruckt - also dir wechsel
+  if ($_SESSION['proto_sort_dir'] == "ASC")
+      $_SESSION['proto_sort_dir'] = "DESC";
+  else
+      $_SESSION['proto_sort_dir'] = "ASC";
+
+// string generieren
+$order_by_txt = "ORDER BY `".$_SESSION['proto_sort_by']."` ".$_SESSION['proto_sort_dir'];
+
+// die 3 kolumnen zum ASC/DESC ordnnen - das pfeil-bild generieren
+$timestamp_img = $durch_img = $aktion_img = $data_img = "";
+if ($_SESSION['proto_sort_by'] == 'timestamp')
+  $timestamp_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['proto_sort_dir']}.png' />";
+else if ($_SESSION['proto_sort_by'] == 'durch')
+  $durch_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['proto_sort_dir']}.png' />";
+else if ($_SESSION['proto_sort_by'] == 'aktion')
+  $aktion_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['proto_sort_dir']}.png' />";
+else if ($_SESSION['proto_sort_by'] == 'data')
+  $data_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['proto_sort_dir']}.png' />";
+
 ?>
   <main>
     <h1>Protokoll</h1>
@@ -71,12 +98,12 @@ echo select_aktion_status_meldungen($mysqli, $_SESSION['where_aktion']);
 // ----------------------------------------------------------------------------------
 
 ?>
-          <table class='vertical_table'>
+          <table class='vertical_table th_filter'>
           <tr>
-          <th><b>Zeit-Stempel</b></th>
-            <th><b>Durch</b></th>
-            <th><b>Aktion</b></th>
-            <th><b>Data</b></th>
+          <th><a href="protokoll.php?sort=timestamp"><b>Zeit-Stempel</b><?php echo $timestamp_img; ?></a></th>
+            <th><a href="protokoll.php?sort=durch"><b>Durch</b><?php echo $durch_img; ?></a></th>
+            <th><a href="protokoll.php?sort=aktion"><b>Aktion</b><?php echo $aktion_img; ?></a></th>
+            <th><a href="protokoll.php?sort=data"><b>Data</b><?php echo $data_img; ?></a></th>
           </tr>
 <?php
 

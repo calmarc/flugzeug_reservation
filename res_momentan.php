@@ -22,81 +22,38 @@ $admin_bol = check_admin($mysqli);
 
 $valid_res = get_all_list_active_reserv($mysqli);
 
-// default
-if (!isset($_SESSION['pilot_nr']))
-  $pilot_nr = "";
-else
-  $pilot_nr = $_SESSION['pilot_nr'];
 
-if (!isset($_SESSION['res_sort_dir'])) $_SESSION['res_sort_dir'] = "ASC";
-if (!isset($_SESSION['res_sort_by'])) $_SESSION['res_sort_by'] = "von";
+//============================================================================
+// sortieren nach kolumnen
 
-// highlight pilot in combo box
-if (!isset($_SESSION['res_sort_pilot'])) $_SESSION['res_sort_pilot'] = $pilot_nr;
+// defaults
+if (!isset($_SESSION['momentan_sort_dir'])) $_SESSION['momentan_sort_dir'] = "ASC";
+if (!isset($_SESSION['momentan_sort_by'])) $_SESSION['momentan_sort_by'] = "von";
 
-if (isset($_GET['pilot_nr']))
-  $_SESSION['res_sort_pilot'] = $_GET['pilot_nr'];
+// get new sorting GET value
+$t_old = $_SESSION['momentan_sort_by'];
+if (isset($_GET['sort']) && $_GET['sort'] != '') $_SESSION['momentan_sort_by'] = $_GET['sort'];
 
-$where_pilot = "";
-if ($_SESSION['res_sort_pilot'] != "")
-  $where_pilot = "`mem1`.`pilot_nr` = ".intval($_SESSION['res_sort_pilot']);
-
-$t_old = $_SESSION['res_sort_by'];
-if (isset($_GET['sort']) && $_GET['sort'] != '') $_SESSION['res_sort_by'] = $_GET['sort'];
-
-if (isset($_GET['sort']) && $t_old == $_GET['sort']) // glieche kolumne gedruckt - also dir wechsel
-  if ($_SESSION['res_sort_dir'] == "ASC")
-      $_SESSION['res_sort_dir'] = "DESC";
+// glieche kolumne gedruckt - also dir wechsel
+if (isset($_GET['sort']) && $t_old == $_GET['sort'])
+  if ($_SESSION['momentan_sort_dir'] == "ASC")
+      $_SESSION['momentan_sort_dir'] = "DESC";
   else
-      $_SESSION['res_sort_dir'] = "ASC";
+      $_SESSION['momentan_sort_dir'] = "ASC";
 
-$order_by_txt = "ORDER BY `".$_SESSION['res_sort_by']."` ".$_SESSION['res_sort_dir'];
+// string generieren
+$order_by_txt = "ORDER BY `".$_SESSION['momentan_sort_by']."` ".$_SESSION['momentan_sort_dir'];
 
-//default
-if (!isset($_SESSION['res_sort_bereich_res'])) $_SESSION['res_sort_bereich_res'] = "$-~";
-if (isset($_GET['z_bereich']) && $_GET['z_bereich'] != '') $_SESSION['res_sort_bereich_res'] = $_GET['z_bereich'];
-
-date_default_timezone_set("Europe/Zurich");
-$lokal_datetime = date("Y-m-d H:i:s", time());
-date_default_timezone_set("UTC");
-
-$where_bereich = '';
-
-if ($_SESSION['res_sort_bereich_res'] == "$-~")
-{
-  $where_bereich = "`reservationen`.`bis` >= '{$lokal_datetime}'";
-}
-else if ($_SESSION['res_sort_bereich_res'] == "-12-$")
-{
-  date_default_timezone_set("Europe/Zurich");
-  $von_datetime = date("Y-m-d H:i:s", time() - 60 * 60 * 24 * 365);
-  date_default_timezone_set("UTC");
-  $where_bereich = "`reservationen`.`bis` > '{$von_datetime}' AND `reservationen`.`von` <= '{$lokal_datetime}'";
-}
-else if ($_SESSION['res_sort_bereich_res'] == "-12-~")
-{
-  date_default_timezone_set("Europe/Zurich");
-  $von_datetime = date("Y-m-d H:i:s", time() - 60 * 60 * 24 * 365);
-  date_default_timezone_set("UTC");
-  $where_bereich = "`reservationen`.`bis` >= '{$von_datetime}'";
-}
-
-$where_txt = '';
-if ($where_bereich != '' && $where_pilot != '')
-  $where_txt = " WHERE {$where_bereich} AND {$where_pilot} ";
-else if ($where_bereich != '')
-  $where_txt = " WHERE {$where_bereich} ";
-else if ($where_pilot != '')
-  $where_txt = " WHERE {$where_pilot} ";
-
-// set accoridng arrow on what it's sorted
+// die 3 kolumnen zum ASC/DESC ordnnen - das pfeil-bild generieren
 $datum_img = $pilot_img = $flugzeug_img = "";
-if ($_SESSION['res_sort_by'] == 'pilot_nr')
-  $pilot_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
-else if ($_SESSION['res_sort_by'] == 'flugzeug')
-  $flugzeug_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
-else if ($_SESSION['res_sort_by'] == 'von')
-  $datum_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['res_sort_dir']}.png' />";
+if ($_SESSION['momentan_sort_by'] == 'pilot_nr')
+  $pilot_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['momentan_sort_dir']}.png' />";
+else if ($_SESSION['momentan_sort_by'] == 'flugzeug')
+  $flugzeug_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['momentan_sort_dir']}.png' />";
+else if ($_SESSION['momentan_sort_by'] == 'von')
+  $datum_img = "<img alt='asc/desc' src='bilder/arrow-{$_SESSION['momentan_sort_dir']}.png' />";
+
+//---------------------------------------------------------------------------
 
 print_html_to_body('Aktuelle Reservationen', '');
 include_once('includes/usermenu.php');
@@ -115,8 +72,9 @@ if (check_admin($mysqli))
   ////////////////////////////////////////////////////////////////////////////////////
   // pilot select
 
+  //default to yourself
   if (!isset($_SESSION['mom_where_pilot_nr'])) 
-    $_SESSION['mom_where_pilot_nr'] = "";
+    $_SESSION['mom_where_pilot_nr'] = $_SESSION['pilot_nr'];
 
   // set to get if there
   if (isset($_GET['pilot_nr']))
@@ -129,6 +87,8 @@ if (check_admin($mysqli))
 
   echo select_pilot_nr_momentan($mysqli, $_SESSION['mom_where_pilot_nr'], "res_momentan.php");
 }
+else
+  $where_pilot_nr_txt = "`mem1`.`pilot_nr` = '{$_SESSION['pilot_nr']}'";
 
 ////////////////////////////////////////////////////////////////////////////////////
 // von select
@@ -147,25 +107,27 @@ date_default_timezone_set("UTC");
 
 // set when 
 $where_z_bereich_txt = "";
-if ($_SESSION['z_bereich'] == "$-~")
+if ($_SESSION['z_bereich'] == "kommende")
   $where_z_bereich_txt = "`reservationen`.`von` >= '$since_date'";
-else if ($_SESSION['z_bereich'] == "~-$")
+else if ($_SESSION['z_bereich'] == "vergangene")
   $where_z_bereich_txt = "`reservationen`.`von` < '$since_date'";
 
 ?>
 
           <form style="display: inline-block;" action="res_momentan.php" method='get'>
             <select size="1" onchange='this.form.submit()' style="width: 10em;" name = "z_bereich">
-              <option <?php if ($_SESSION['res_sort_bereich_res'] == '$-~') echo 'selected="selected"'; ?> value="$-~">Kommende</option>
-              <option <?php if ($_SESSION['res_sort_bereich_res'] == '~-$') echo 'selected="selected"'; ?> value="~-$">Vergangene</option>
-              <option <?php if ($_SESSION['res_sort_bereich_res'] == '') echo 'selected="selected"'; ?> value="">Alle</option>
+              <option <?php if ($_SESSION['z_bereich'] == 'kommende') echo 'selected="selected"'; ?> value="kommende">Kommende</option>
+              <option <?php if ($_SESSION['z_bereich'] == 'vergangene') echo 'selected="selected"'; ?> value="vergangene">Vergangene</option>
+              <option <?php if ($_SESSION['z_bereich'] == 'alle') echo 'selected="selected"'; ?> value="alle">Alle</option>
             </select>
           </form>
+<?php
+// --------------------------------------------------------------------------------
+?>
           <table class='vertical_table th_filter'>
           <tr>
           <!--<th class="hide_on_print formular_zelle"></th>-->
           <th class='formular_zelle'></th>
-          <!--<th><a href="res_momentan.php?sort=timestamp"><b>Eingegeben</b></a></th>-->
             <th style='min-width: 16em;'><a href="res_momentan.php?sort=pilot_nr"><b>Pilot</b><?php echo $pilot_img; ?></a></th>
             <th style='min-width: 13em;'><a href="res_momentan.php?sort=flugzeug"><b>Flugzeug</b><?php echo $flugzeug_img; ?></a></th>
             <th style='min-width: 12em;'><a href="res_momentan.php?sort=von"><b>Datum</b><?php echo $datum_img; ?></a></th>
@@ -187,7 +149,6 @@ $query = " SELECT
           LEFT OUTER JOIN `piloten` AS `mem1` ON `reservationen`.`user_id` = `mem1`.`id`
           LEFT OUTER JOIN `flugzeug` AS `flugzeug` ON `reservationen`.`flugzeug_id` = `flugzeug`.`id`
       {$where_txt} {$order_by_txt} LIMIT 150;";
-echo $query;
 
 $res = $mysqli->query($query);
 
