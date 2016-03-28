@@ -322,8 +322,10 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
 
       $showlink = FALSE;
       // link zeigen wenn vom user..und groessern jetzt
+      date_default_timezone_set("Europe/Zurich");
       if (strtotime($obj_tang->bis) > $rounded_stamp && $obj_tang->user_id == $_SESSION['user_id'])
         $showlink = TRUE;
+      date_default_timezone_set("UTC");
 
       // immer zeigen wenn admin
       if (check_admin($mysqli))
