@@ -20,48 +20,48 @@ if (isset($_POST['submit']))
   $von_monat = $_POST['von_monat'];
   $von_jahr = $_POST['von_jahr'];
   $von_stunde = $_POST['von_stunde'];
-  $von_minuten = $_POST['von_minuten'];
+  $von_minute = $_POST['von_minute'];
   $bis_tag = $_POST['bis_tag'];
   $bis_monat = $_POST['bis_monat'];
   $bis_jahr = $_POST['bis_jahr'];
   $bis_stunde = $_POST['bis_stunde'];
-  $bis_minuten = $_POST['bis_minuten'];
+  $bis_minute = $_POST['bis_minute'];
 
   $_SESSION['flugzeug_id']  = $flugzeug_id;
   $_SESSION['von_tag']  = $von_tag;
   $_SESSION['von_monat']  = $von_monat;
   $_SESSION['von_jahr']  = $von_jahr;
   $_SESSION['von_stunde']  = $von_stunde;
-  $_SESSION['von_minuten']  = $von_minuten;
+  $_SESSION['von_minute']  = $von_minute;
   $_SESSION['bis_tag']  = $bis_tag;
   $_SESSION['bis_monat']  = $bis_monat;
   $_SESSION['bis_jahr']  = $bis_jahr;
   $_SESSION['bis_stunde']  = $bis_stunde;
-  $_SESSION['bis_minuten']  = $bis_minuten;
+  $_SESSION['bis_minute']  = $bis_minute;
 
   $von_tag = str_pad($von_tag, 2, "0", STR_PAD_LEFT);
   $von_monat = str_pad($von_monat, 2, "0", STR_PAD_LEFT);
   $von_stunde = str_pad($von_stunde, 2, "0", STR_PAD_LEFT);
-  $von_minuten = str_pad($von_minuten, 2, "0", STR_PAD_LEFT);
+  $von_minute = str_pad($von_minute, 2, "0", STR_PAD_LEFT);
   $bis_tag = str_pad($bis_tag, 2, "0", STR_PAD_LEFT);
   $bis_monat = str_pad($bis_monat, 2, "0", STR_PAD_LEFT);
   $bis_stunde = str_pad($bis_stunde, 2, "0", STR_PAD_LEFT);
-  $bis_minuten = str_pad($bis_minuten, 2, "0", STR_PAD_LEFT);
+  $bis_minute = str_pad($bis_minute, 2, "0", STR_PAD_LEFT);
 
-  $von_date = "$von_jahr-$von_monat-$von_tag $von_stunde:$von_minuten:00";
-  $bis_date = "$bis_jahr-$bis_monat-$bis_tag $bis_stunde:$bis_minuten:00";
+  $von_date = "$von_jahr-$von_monat-$von_tag $von_stunde:$von_minute:00";
+  $bis_date = "$bis_jahr-$bis_monat-$bis_tag $bis_stunde:$bis_minute:00";
 
   $error_msg = "";
   if ($bis_date <= $von_date)
     $error_msg .= "'Von' Zeit nicht grösser als 'bis' Zeit.<br />";
 
-  if ($von_stunde == "21" && $von_minuten == "30" || $bis_stunde == "21" && $bis_minuten == "30")
+  if ($von_stunde == "21" && $von_minute == "30" || $bis_stunde == "21" && $bis_minute == "30")
     $error_msg .= "21:30 liegt ausserhalb der Grenzen.<br />";
 
   if ($von_stunde == "21")
-    $error_msg .= "Ab 21:{$von_minuten} Uhr kann man nicht reservieren.<br />Bitte stattdessen den nächsten Tag verwenden!<br />";
+    $error_msg .= "Ab 21:{$von_minute} Uhr kann man nicht reservieren.<br />Bitte stattdessen den nächsten Tag verwenden!<br />";
 
-  if ($bis_stunde == "07" && $bis_minuten == "00")
+  if ($bis_stunde == "07" && $bis_minute == "00")
     $error_msg .= "Auf 7:00 Uhr kann man nicht reservieren.<br />Bitte stattdessen auf den Vortag 21:00 Uhr buchen!<br />";
 
   if (strtotime($bis_date) - strtotime($von_date) > 60 * 60 * 24 * 31)
@@ -101,7 +101,7 @@ else if (isset($_GET['flugzeug_id']) && isset($_GET['tag']) && isset($_GET['mona
 {
 
   $_SESSION['von_stunde'] = ""; if (isset($_GET['stunde'])) $_SESSION['von_stunde'] = $_GET['stunde'];
-  $_SESSION['von_minuten'] = ""; if (isset($_GET['minute'])) $_SESSION['von_minuten'] = $_GET['minute'];
+  $_SESSION['von_minute'] = ""; if (isset($_GET['minute'])) $_SESSION['von_minute'] = $_GET['minute'];
 
   $_SESSION['flugzeug_id']  = $_GET['flugzeug_id'];
   $flugzeug_id = $_SESSION['flugzeug_id'];
@@ -113,7 +113,7 @@ else if (isset($_GET['flugzeug_id']) && isset($_GET['tag']) && isset($_GET['mona
   $_SESSION['bis_monat']  = $_SESSION['von_monat'];
   $_SESSION['bis_jahr']  = $_SESSION['von_jahr'];
   $_SESSION['bis_stunde']  = $_SESSION['von_stunde'];
-  $_SESSION['bis_minuten']  = $_SESSION['von_minuten'];
+  $_SESSION['bis_minute']  = $_SESSION['von_minute'];
 }
 else
 {

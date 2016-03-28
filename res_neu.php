@@ -80,8 +80,8 @@ else
             <select size="1" name="von_stunde" style="width: 46px;">
               <?php combobox_stunde($_SESSION['von_stunde']); ?>
             </select> <b>:</b>
-            <select size="1" name="von_minuten" style="width: 46px;">
-              <?php combobox_minute($_SESSION['von_minuten']); ?>
+            <select size="1" name="von_minute" style="width: 46px;">
+              <?php combobox_minute($_SESSION['von_minute']); ?>
             </select> <b>Uhr</b>
           </td>
         </tr>
@@ -105,8 +105,8 @@ else
             <select size="1" name="bis_stunde" style="width: 46px;">
               <?php combobox_stunde($_SESSION['bis_stunde']); ?>
             </select> <b>:</b>
-            <select size="1" name="bis_minuten" style="width: 46px;">
-              <?php combobox_minute($_SESSION['bis_minuten']); ?>
+            <select size="1" name="bis_minute" style="width: 46px;">
+              <?php combobox_minute($_SESSION['bis_minute']); ?>
             </select> <b>Uhr</b>
           </td>
         </tr>
