@@ -15,6 +15,8 @@ sec_session_start();
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 
+include_once ('res_momentan.inc.php');
+
 $admin_bol = check_admin($mysqli);
 
 //============================================================================

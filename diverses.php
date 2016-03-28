@@ -80,8 +80,15 @@ while ($obj = $res->fetch_object())
           </form>
       </td>
       </tr>
-        </table>
-        </div>
+      <tr>
+        <td colspan="4" style="text-align: left;">
+          <form style="display: inline-block;" action='res_momentan.php' method='post'>
+          <input class="submit_button_small" type="submit" name="reservationen" value="löschen" /> &nbsp; &nbsp; <b>Reservationen</b> älter als 2 Jahre
+          </form>
+        </td>
+      </tr>
+    </table>
+    </div>
     </div>
   </main>
 </body>
