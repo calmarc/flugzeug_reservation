@@ -48,8 +48,8 @@ if (isset($_POST['submit']))
   $bis_stunde = str_pad($bis_stunde, 2, "0", STR_PAD_LEFT);
   $bis_minute = str_pad($bis_minute, 2, "0", STR_PAD_LEFT);
 
-  $von_date = "$von_jahr-$von_monat-$von_tag $von_stunde:$von_minute:00";
-  $bis_date = "$bis_jahr-$bis_monat-$bis_tag $bis_stunde:$bis_minute:00";
+  $von_date = "{$von_jahr}-{$von_monat}-{$von_tag} {$von_stunde}:{$von_minute}:00";
+  $bis_date = "{$bis_jahr}-{$bis_monat}-{$bis_tag} {$bis_stunde}:{$bis_minute}:00";
 
   $error_msg = "";
   if ($bis_date <= $von_date)
