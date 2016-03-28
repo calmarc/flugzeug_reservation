@@ -230,7 +230,8 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
 
     //============================================================================
     // aufs 'JETZT' trimmen
-
+    // wenn die zeitspanne ueber das 'jetzt' rangiert.. darum oben geguckt ob
+    // einer innerhalt dieser Range ist.
     else
     {
       //  braucht keine Zurich.. reine H:i Hohlung.. auf 'neutralem' string
