@@ -258,9 +258,6 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
         $new_end_date = $rounded_datetime;
       }
 
-      $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
-      mysqli_prepare_execute($mysqli, $query, 'si', array ($new_end_date, $reservierung));
-
       // fuer den eintrag . muss alles auf  21:00 zurueck.. falls "07:00" freigegeben
       // loeschen bis ende abend.. quasi..
 
@@ -270,6 +267,9 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
       {
         $new_end_date = date("Y-m-d H:i:s", strtotime($new_end_date) - 10 * 60 * 60);
       }
+
+      $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
+      mysqli_prepare_execute($mysqli, $query, 'si', array ($new_end_date, $reservierung));
 
       $datum = mysql2chtimef ($obj->von, $new_end_date, FALSE);
       write_status_message($mysqli, "[Reservation]", $_SESSION['user_id'], "Freigegeben: {$datum}");

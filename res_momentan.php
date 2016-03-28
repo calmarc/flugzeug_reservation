@@ -94,7 +94,7 @@ else
 // von select
 
 if (!isset($_SESSION['z_bereich'])) 
-  $_SESSION['z_bereich'] = "";
+  $_SESSION['z_bereich'] = "kommende";
 
 // set to get if there
 if (isset($_GET['z_bereich']))
