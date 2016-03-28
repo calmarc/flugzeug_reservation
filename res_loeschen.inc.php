@@ -94,7 +94,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
     if ($loeschen_datum_bis <= $loeschen_datum_von)
       $error_msg .= "Bis-Zeit muss später Von-Zeit sein.<br />";
 
-    if ($von_stunde == "21" && $von_minuten == "30" || $bis_stunde == "21" && $bis_minuten == "30")
+    if ($von_stunde == "21" && $von_minuten == "30" || $bis_stunde == "21" && $bis_minute == "30")
       $error_msg .= "21:30 liegt ausserhalb der Grenzen.<br />";
 
     if ($von_stunde == "21")
