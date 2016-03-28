@@ -269,8 +269,27 @@ if ($show_2_datum)
           </td>
         </tr>
       </table>
-<h3><?php echo $h3; ?></h3>
-<textarea id="texta2" title="3 characters minimum" style="width: 80%" <?php echo $required; ?> name="begruendung"></textarea>
+<?php
+
+echo "<h3>{$h3}</h3>";
+
+$texta = "texta2";
+
+if (strtotime($rounded_datetime) >= strtotime($obj->bis) - (60*60*2))
+  $texta = $required = "";
+
+//echo strtotime($rounded_datetime);
+//echo "<br />";
+//echo date("Y-m-d H:i", strtotime($rounded_datetime));
+//echo "<br />";
+//echo strtotime($obj->bis);
+//echo "<br />";
+//echo date("Y-m-d H:i", strtotime($obj->bis) - (60*60*2));
+//echo "<br />";
+//echo $texta;
+
+?>
+<textarea id="<?php echo $texta; ?>" title="3 characters minimum" style="width: 80%" <?php echo $required; ?> name="begruendung"></textarea>
 <input class="submit_button" style="margin-top: 20px;" type='submit' name='submit' value="Teillöschung"  />
 </div>
 
