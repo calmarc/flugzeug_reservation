@@ -47,20 +47,20 @@ while ($obj = $res->fetch_object())
 }
 ?>
           <tr>
-            <td colspan="3">&nbsp;</td>
+            <td colspan="4">&nbsp;</td>
           </tr>
           <tr>
-            <td colspan="3" style="text-align: left;">
+            <td colspan="4" style="text-align: left;">
               <form style="display: inline-block;" action='protokoll.php' method='post'>
-              <input type="submit" name="cleanup" value="löschen" /> &nbsp; &nbsp; Protokoll-Einträge älter als 1.5 Jahre
+              <input class="submit_button_small" type="submit" name="cleanup" value="löschen" /> &nbsp; &nbsp; Protokoll-Einträge älter als 1.5 Jahre
               </form>
             </td>
           </tr>
       <tr>
-      <td colspan="3" style="text-align: left;">
+      <td colspan="4" style="text-align: left;">
           <form action='res_geloescht.php' method='post'>
-            <input type="submit" name="res_geloescht" value="löschen" /> &nbsp; &nbsp; <b>Gelöschte</b> Reservationen älter als
-             <select style="width: 8em;" name='loeschen_val' size="1" id='loeschen'>
+            <input class="submit_button_small" type="submit" name="res_geloescht" value="löschen" /> &nbsp; &nbsp; <b>Gelöschte</b> Reservationen älter als
+             <select style="width: 8em;" name='loeschen_val' size="1">
               <option value="">&nbsp;</option>
               <option value="365">12 Monate</option>
               <option value="90">&nbsp;3 Monate</option>
@@ -69,10 +69,10 @@ while ($obj = $res->fetch_object())
       </td>
       </tr>
       <tr>
-      <td colspan="3" style="text-align: left;">
+      <td colspan="4" style="text-align: left;">
           <form action='res_teilgeloescht.php' method='post'>
-            <input type="submit" name="res_teil_geloescht" value="löschen" /> &nbsp; &nbsp; <b>Teil</b>-Gelöschte Reservationen älter als
-             <select style="width: 8em;" name='teil_loeschen_val' size="1" id='loeschen'>
+            <input class="submit_button_small" type="submit" name="res_teil_geloescht" value="löschen" /> &nbsp; &nbsp; <b>Teil</b>-Gelöschte Reservationen älter als
+             <select style="width: 8em;" name='teil_loeschen_val' size="1">
               <option value="">&nbsp;</option>
               <option value="365">12 Monate</option>
               <option value="90">&nbsp;3 Monate</option>

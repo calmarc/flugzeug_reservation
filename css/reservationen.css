@@ -122,7 +122,7 @@ nav div { display: inline-block;  vertical-align: middle; margin: 0px; padding: 
 nav div img { display: inline; vertical-align: middle; margin: 0px; padding: 0px; }
 nav a:link { color: white; }
 nav a:link { color: white; }
-nav a:hover { color: white;}
+nav a:hover { color: white; cursor: pointer; }
 nav a:visited { color: white;}
 nav div span {  display: inline-block; }
 nav img {
@@ -144,6 +144,7 @@ nav img.always {
   filter: hue-rotate(0deg)
 }
 nav img:hover {
+  cursor: pointer;
   filter: brightness(150%);
   -webkit-filter: brightness(150%);
   -moz-filter: brightness(150%);
@@ -160,6 +161,7 @@ nav img#mfgc_nav_logo {
   -ms-filter: brightness(100%);
 }
 nav img:hover#mfgc_nav_logo {
+  cursor: pointer;
   background-color: transparent; border: 2px transparent solid;
   filter: brightness(130%);
   -webkit-filter: brightness(130%);
@@ -238,7 +240,7 @@ tr.trblank td:nth-child(2) { background-color: #eeeeee;}
 div#calendar { font-size: 115%; position: fixed; left: 2%; bottom: 0px; margin: 8px; opacity: 0.9; filter: alpha(opacity=96);}
 div#calendar table { min-width: 460px; max-width: 500px; border: 1px solid #999; background-color: yellow; box-shadow: 4px 4px 8px #666699; }
 td.calendar-day-head { background: #ccc; font-weight:bold; text-align:center; padding:1px; border-bottom:1px solid #999; border-top:1px solid #999; border-right:1px solid #999; }
-td.calendar-day:hover { background: #ccccff; }
+td.calendar-day:hover { cursor: pointer; background: #ccccff; }
 td.calendar-day-np	{ background: transparent; }
 table.calendar div { text-align: center ;}
 table.calendar a { text-decoration: none;}
@@ -257,18 +259,18 @@ table.calendar a.vorzurueck img { margin: 0px; padding: 0px; display: inline;}
 #aktiv a:link { color: black; }
 #aktiv a:link { color: black; }
 #aktiv a:visited { color: black;}
-#aktiv a:hover { color: black;}
+#aktiv a:hover { cursor: pointer; color: black;}
 
 .vergangenheit a { background-color: #0000cc; color: #cccccc;  }
 .vergangenheit a:link { background-color: #ffff99; color: #cccccc;   }
 .vergangenheit a:visited { background-color: #ffff99; color: #cccccc;   }
-.vergangenheit a:hover { background: #ccccff; color: #aaaaaa;   }
+.vergangenheit a:hover { cursor: pointer; background: #ccccff; color: #aaaaaa;   }
 /* hover muss nach visited kommen.. um es durchzusetzen in firefox */
 
 .heute a { font-weight: bold; }
 .heute a:link { font-weight: bold; }
 .heute a:visited { font-weight: bold; }
-.heute a:hover { font-weight: bold; }
+.heute a:hover { cursor: pointer; font-weight: bold; }
 
 td#datum {
   text-align: center;
@@ -321,10 +323,13 @@ table.vtable th { color: white; background-color: #555555; }
 
 /*table input[type="text"] { background-color: #eeee00;}*/
 .submit_button { padding: 5px; border: 2px solid #339933; margin-top: 20px; font-weight: bold; font-size: 110%; background-color: #009900; color: white; }
-.submit_button:hover { border: 2px solid #ee3300; background-color: #ee3300;}
+.submit_button:hover {cursor: pointer;  border: 2px solid #ee3300; background-color: #ee3300;}
+
+.submit_button_small { padding: 0px; border: 1px solid #339933; margin: 1px; font-weight: bold; font-size: 100%; background-color: #009900; color: white; }
+.submit_button_small:hover { cursor: pointer;  border: 1px solid #ee3300; background-color: #ee3300;}
 
 .sub_loeschen { border: 2px solid #000000; margin-top: 20px; font-size: 110%; font-weight: bold; background-color: #aa0000; color: white; }
-.sub_loeschen:hover { border: 2px solid #ee3300; background-color: #ee3300;}
+.sub_loeschen:hover {cursor: pointer;  border: 2px solid #ee3300; background-color: #ee3300;}
 
 /* THEME_COLOR */
 /*select#flugzeug_select {*/
@@ -409,6 +414,7 @@ svg a text {
   opacity: 0.8;
 }
 svg a text:hover {
+  cursor: pointer; 
   opacity: 1.0;
 }
 
