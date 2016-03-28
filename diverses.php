@@ -49,16 +49,9 @@ while ($obj = $res->fetch_object())
           <tr>
             <td colspan="4">&nbsp;</td>
           </tr>
-          <tr>
-            <td colspan="4" style="text-align: left;">
-              <form style="display: inline-block;" action='protokoll.php' method='post'>
-              <input class="submit_button_small" type="submit" name="cleanup" value="löschen" /> &nbsp; &nbsp; Protokoll-Einträge älter als 1.5 Jahre
-              </form>
-            </td>
-          </tr>
       <tr>
       <td colspan="4" style="text-align: left;">
-          <form action='res_geloescht.php' method='post'>
+          <form action='includes/cleanup_database.php' method='post'>
             <input class="submit_button_small" type="submit" name="res_geloescht" value="löschen" /> &nbsp; &nbsp; <b>Gelöschte</b> Reservationen älter als
              <select style="width: 8em;" name='loeschen_val' size="1">
               <option value="">&nbsp;</option>
@@ -70,8 +63,8 @@ while ($obj = $res->fetch_object())
       </tr>
       <tr>
       <td colspan="4" style="text-align: left;">
-          <form action='res_teilgeloescht.php' method='post'>
-            <input class="submit_button_small" type="submit" name="res_teil_geloescht" value="löschen" /> &nbsp; &nbsp; <b>Teil</b>-Gelöschte Reservationen älter als
+          <form action='includes/cleanup_database.php' method='post'>
+            <input class="submit_button_small" type="submit" name="res_teilgeloescht" value="löschen" /> &nbsp; &nbsp; <b>Teil</b>-Gelöschte Reservationen älter als
              <select style="width: 8em;" name='teil_loeschen_val' size="1">
               <option value="">&nbsp;</option>
               <option value="365">12 Monate</option>
@@ -82,8 +75,15 @@ while ($obj = $res->fetch_object())
       </tr>
       <tr>
         <td colspan="4" style="text-align: left;">
-          <form style="display: inline-block;" action='res_momentan.php' method='post'>
+          <form style="display: inline-block;" action='includes/cleanup_database.php' method='post'>
           <input class="submit_button_small" type="submit" name="reservationen" value="löschen" /> &nbsp; &nbsp; <b>Reservationen</b> älter als 2 Jahre
+          </form>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="4" style="text-align: left;">
+          <form style="display: inline-block;" action='includes/cleanup_database.php' method='post'>
+          <input class="submit_button_small" type="submit" name="protokoll" value="löschen" /> &nbsp; &nbsp; Protokoll-Einträge älter als 1.5 Jahre
           </form>
         </td>
       </tr>

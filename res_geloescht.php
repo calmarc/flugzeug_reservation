@@ -15,8 +15,6 @@ sec_session_start();
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
 if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
 
-include_once ('res_geloescht.inc.php');
-
 // default
 if (!isset($_SESSION['res_sort_dir'])) $_SESSION['res_sort_dir'] = "DESC";
 if (!isset($_SESSION['res_sort_by'])) $_SESSION['res_sort_by'] = "timestamp";

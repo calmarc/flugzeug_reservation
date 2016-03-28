@@ -18,8 +18,6 @@ if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/in
 ///////////////////////////////////////////////////////////////////////////
 //  GET loeschen machen
 
-include_once ('protokoll.inc.php');
-
 print_html_to_body('Log Daten', '');
 include_once('includes/usermenu.php');
 include_once('includes/send_sms.php');
