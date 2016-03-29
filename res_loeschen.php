@@ -24,8 +24,8 @@ include_once('includes/usermenu.php');
 // html stuff
 
 $required = 'required="required"';
-$chars_java = "onsubmit=\"var text = document.getElementById('texta').value; if(text.length < 7) { alert('Ausführlichere Begruendung bitte!'); return false; } return true;\"";
-$chars_java2 = "onsubmit=\"var text = document.getElementById('texta2').value; if(text.length < 7) { alert('Ausführlichere Begruendung bitte!'); return false; } return true;\"";
+$chars_java = "onsubmit=\"var text = document.getElementById('texta').value; if(text.length < 4) { alert('Ausführlichere Begruendung bitte!'); return false; } return true;\"";
+$chars_java2 = "onsubmit=\"var text = document.getElementById('texta2').value; if(text.length < 4) { alert('Ausführlichere Begruendung bitte!'); return false; } return true;\"";
 $optional = "";
 
 // no begruendung required for admins.
@@ -54,14 +54,19 @@ if (!($obj->von >= $rounded_datetime || $obj->bis <= $rounded_datetime))
 {
 	$trimmen = TRUE;
 	$h1 = "Reservation freigeben";
-    $h3 = "";
+    //$h3 = "";
     $button = "Ab ".date("H:i", strtotime($rounded_datetime))."h freigeben";
+
+    // nur 2 stunden - keine kommentarbox;
+    $trimmen_required = FALSE;
+    if (strtotime($rounded_datetime) < strtotime($obj->bis) - (60*60*2))
+      $trimmen_required = TRUE;
 }
 else
 {
 	$trimmen = FALSE;
 	$h1 = "Reservation löschen";
-    $h3 = "Begründung{$optional}";
+    //$h3 = "Begründung{$optional}";
     $button = "Reservation löschen";
 }
 
@@ -114,7 +119,6 @@ $flugzeug = get_flugzeug_from_id($mysqli, $obj->flugzeug_id);
 
 <!-- <p>Hinweis: Es ist nicht möglich Reservierungen für bereits vergangene Tage zu löschen.</p> -->
 
-<h3><?php echo $h3; ?></h3>
       <form <?php echo $chars_java; ?> action="res_loeschen.php" method="post">
         <input type="hidden" name="reservierung" value='<?php echo $reservierung; ?>' />
         <input type="hidden" name="backto" value='<?php echo $backto; ?>' />
@@ -123,9 +127,10 @@ $flugzeug = get_flugzeug_from_id($mysqli, $obj->flugzeug_id);
         <input type="hidden" name="jahr" value='<?php echo $jahr; ?>' />
 <?php
 
-if (!$trimmen)
+if (!$trimmen || $trimmen_required)
 { ?>
-<textarea id="texta" title="3 characters minimum" style="width: 80%" <?php echo $required; ?> name="begruendung"></textarea>
+  <br />
+  <textarea placeholder="Kurze Begründung" id="texta" title="3 characters minimum" style="width: 80%" <?php echo $required; ?> name="begruendung"></textarea>
 <?php } ?>
 <input class="submit_button" style="margin-top: 20px;" type='submit' name='submit' value='<?php echo $button; ?>' />
 </form>
@@ -269,27 +274,8 @@ if ($show_2_datum)
           </td>
         </tr>
       </table>
-<?php
-
-echo "<h3>{$h3}</h3>";
-
-$texta = "texta2";
-
-if (strtotime($rounded_datetime) >= strtotime($obj->bis) - (60*60*2))
-  $texta = $required = "";
-
-//echo strtotime($rounded_datetime);
-//echo "<br />";
-//echo date("Y-m-d H:i", strtotime($rounded_datetime));
-//echo "<br />";
-//echo strtotime($obj->bis);
-//echo "<br />";
-//echo date("Y-m-d H:i", strtotime($obj->bis) - (60*60*2));
-//echo "<br />";
-//echo $texta;
-
-?>
-<textarea id="<?php echo $texta; ?>" title="3 characters minimum" style="width: 80%" <?php echo $required; ?> name="begruendung"></textarea>
+  <br />
+  <textarea placeholder="Kurze Begründung" id="texta2" title="3 characters minimum" style="width: 80%" <?php echo $required; ?> name="begruendung"></textarea>
 <input class="submit_button" style="margin-top: 20px;" type='submit' name='submit' value="Teillöschung"  />
 </div>
 

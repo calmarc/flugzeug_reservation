@@ -163,7 +163,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
         write_status_message($mysqli, "[Reservation]", $_SESSION['user_id'], "Gelöscht: {$datum}");
 
         bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flugzeug_id,
-                            mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
+                            mysql2chtimef($obj->von, $obj->bis, TRUE), $begruendung);
       }
       // Anfang wegschneiden
       else if ($loeschen_datum_von == $res_datum_von && $loeschen_datum_bis < $res_datum_bis)
@@ -218,14 +218,13 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
 
     else if ($obj->von >= $rounded_datetime || $obj->bis <= $rounded_datetime)
     {
-      $begruendung = ""; if (isset($_POST['begruendung'])) $begruendung = $_POST['begruendung'];
       delete_reservation($mysqli, $reservierung, $begruendung, $_SESSION['user_id']);
 
       $datum = mysql2chtimef ($obj->von, $obj->bis, FALSE);
       write_status_message($mysqli, "[Reservation]", $_SESSION['user_id'], "Gelöscht: {$datum}");
 
       bei_geloescht_email($mysqli, "gelöscht", $obj->user_id, $obj->flugzeug_id,
-                          mysql2chtimef($obj->von, $obj->bis, TRUE), $_POST['begruendung']);
+                          mysql2chtimef($obj->von, $obj->bis, TRUE), $begruendung);
     }
 
     //============================================================================

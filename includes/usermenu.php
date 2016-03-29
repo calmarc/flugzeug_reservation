@@ -69,7 +69,7 @@ if (isset($_SESSION['pilot_nr']))
 
   list ($tag, $monat, $jahr, $tag_single, $monat_single) = explode (".", $heute);
 
-  $heute_link = "<a href='/reservationen/index.php?tag={$tag_single}&monat={$monat_single}&jahr={$jahr}'>{$tag}.{$monat}.{$jahr}</a>";
+  $heute_link = "<a href='/reservationen/index.php?tag={$tag_single}&monat={$monat_single}&jahr={$jahr}'>{$tag}.{$monat}.{$jahr}<img src='/reservationen/bilder/today.png' alt='heute' /></a>";
 
   $gesperrt = "";
   if ($obj->gesperrt == TRUE)
