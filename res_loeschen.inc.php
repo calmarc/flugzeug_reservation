@@ -274,7 +274,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
       $datum = mysql2chtimef ($obj->von, $new_end_date, FALSE);
       write_status_message($mysqli, "[Reservation]", $_SESSION['user_id'], "Freigegeben: {$datum}");
 
-      reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $obj->von, $new_end_date);
+      reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $new_end_date, $obj->bis);
     }
 
     //============================================================================
