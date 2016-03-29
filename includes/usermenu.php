@@ -62,6 +62,15 @@ if (isset($_SESSION['pilot_nr']))
 
   $_SESSION['name'] = $obj->name;
 
+  // todo evt immer von hier nehmen?
+  date_default_timezone_set("Europe/Zurich");
+  $heute = date("d.m.Y.j.n", time());
+  date_default_timezone_set('UTC');
+
+  list ($tag, $monat, $jahr, $tag_single, $monat_single) = explode (".", $heute);
+
+  $heute_link = "<a href='/reservationen/index.php?tag={$tag_single}&monat={$monat_single}&jahr={$jahr}'>{$tag}.{$monat}.{$jahr}</a>";
+
   $gesperrt = "";
   if ($obj->gesperrt == TRUE)
   {
@@ -71,7 +80,7 @@ if (isset($_SESSION['pilot_nr']))
   // menu ausgeben:
 ?>
 <nav>
-  <div class="user_menu">
+  <div class="user_menu">[<?php echo $heute_link; ?>]
     <a title="mfgc.ch" href="http://www.mfgc.ch/"><img id="mfgc_nav_logo" src="/reservationen/bilder/mfgc_icon.png" alt="mfgc.ch" /></a>
     <?php echo '['.str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT).'] <b>'.htmlentities($obj->name).'</b>'; ?><?php echo $gesperrt; ?>
     <a title="Passwort ändern" href="/reservationen/pass_change.php"><img <?php echo $pass_change; ?> src="/reservationen/bilder/key.png" alt="Passwort ändern" /></a>
