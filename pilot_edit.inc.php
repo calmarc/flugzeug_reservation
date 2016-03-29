@@ -92,8 +92,11 @@ if (isset($_POST['updaten']))
 
   // UPDATE user data
   $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `pilot_nr` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ?, `checkflug` = ?, `gesperrt` = ? WHERE `piloten`.`id` = ?; ";
-  $_SESSION['pilot_nr'] = $pilot_nr;
   mysqli_prepare_execute($mysqli, $query, 'isissssii', array ($pilot_nr, $email, $admin_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $user_id));
+
+  // man hat die eigene piloten nummber gewechselt - _SESSION anpassen.
+  if ($user_id == $_SESSION['user_id'])
+    $_SESSION['pilot_nr'] = $pilot_nr;
 
   header("Location: pilot_admin.php");
   exit;
