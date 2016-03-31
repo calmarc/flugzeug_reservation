@@ -271,7 +271,7 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
       $query = "UPDATE `mfgcadmin_reservationen`.`reservationen` SET `bis` = ? WHERE `reservationen`.`id` = ?;";
       mysqli_prepare_execute($mysqli, $query, 'si', array ($new_end_date, $reservierung));
 
-      $datum = mysql2chtimef ($obj->von, $new_end_date, FALSE);
+      $datum = mysql2chtimef ($new_end_date, $obj->bis, FALSE);
       write_status_message($mysqli, "[Reservation]", $_SESSION['user_id'], "Freigegeben: {$datum}");
 
       reser_getrimmt_eintrag($mysqli, $obj, $_SESSION['user_id'], $begruendung, $new_end_date, $obj->bis);

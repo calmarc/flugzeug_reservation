@@ -21,6 +21,7 @@ body {
   background-position: right bottom;
   background-attachment: fixed;
 
+  text-align: center; /* for i.e <=11 */
 }
 
 div#logo {
@@ -55,11 +56,27 @@ main {
   margin-top: 0px;
   margin-left: auto;
   margin-right: auto;
-  text-align: center;
   z-index: 5;
+
   text-align: center; /* for i.e <=11 */
 }
 
+div#formular_innen {
+
+  margin: 0em auto 1em auto;
+  padding: 2em 2em 2em 2em;
+  display: inline-block;
+  text-align: center;
+  border-radius: 1px;
+
+/* THEME_COLOR */
+  /*border: 2px solid #73AD21;  */
+  border: 1px solid #000000;
+
+  /*background-color: #99ff99; */
+  background-color: #ffffff;
+  box-shadow: 2px 2px 2px #bbbbbb;
+}
 
 .only_on_print {
   visibility: none;
@@ -191,22 +208,6 @@ table.formular_eingabe td:nth-child(2) { text-align: left; padding-left: 8px;}
 table.formular_eingabe td:nth-child(2) input { width: 90%;}
 
 form.login_form input { width: 80%; }
-
-div#formular_innen {
-  margin: 0em auto 1em auto;
-  padding: 2em 2em 2em 2em;
-  display: inline-block;
-  text-align: center;
-  border-radius: 1px;
-
-/* THEME_COLOR */
-  /*border: 2px solid #73AD21;  */
-  border: 1px solid #000000;
-
-  /*background-color: #99ff99; */
-  background-color: #ffffff;
-  box-shadow: 2px 2px 2px #bbbbbb;
-}
 
 /* THEME_COLOR */
 

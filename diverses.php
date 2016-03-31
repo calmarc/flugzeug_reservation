@@ -51,39 +51,50 @@ while ($obj = $res->fetch_object())
           </tr>
       <tr>
       <td colspan="4" style="text-align: left;">
-          <form action='includes/cleanup_database.php' method='post'>
+          <form style="display: inline-block;" action='process_cleanup_database.php' method='post'>
             <input class="submit_button_small" type="submit" name="res_geloescht" value="löschen" /> &nbsp; &nbsp; <b>Gelöschte</b> Reservationen älter als
-             <select style="width: 8em;" name='loeschen_val' size="1">
+             <select style="width: 8em;" name='geloescht_val' size="1">
               <option value="">&nbsp;</option>
-              <option value="365">12 Monate</option>
-              <option value="90">&nbsp;3 Monate</option>
+              <option value="1825">5 Jahre</option>
+              <option value="730">2 Jahre</option>
             </select>
           </form>
       </td>
       </tr>
       <tr>
       <td colspan="4" style="text-align: left;">
-          <form action='includes/cleanup_database.php' method='post'>
-            <input class="submit_button_small" type="submit" name="res_teilgeloescht" value="löschen" /> &nbsp; &nbsp; <b>Teil</b>-Gelöschte Reservationen älter als
-             <select style="width: 8em;" name='teil_loeschen_val' size="1">
+          <form style="display: inline-block;" action='process_cleanup_database.php' method='post'>
+            <input class="submit_button_small" type="submit" name="res_teilgeloescht" value="löschen" /> &nbsp; &nbsp; <b>Teil-gelöschte</b> Reservationen älter als
+             <select style="width: 8em;" name='teil_geloescht_val' size="1">
               <option value="">&nbsp;</option>
-              <option value="365">12 Monate</option>
-              <option value="90">&nbsp;3 Monate</option>
+              <option value="1825">5 Jahre</option>
+              <option value="730">2 Jahre</option>
             </select>
           </form>
       </td>
       </tr>
       <tr>
         <td colspan="4" style="text-align: left;">
-          <form style="display: inline-block;" action='includes/cleanup_database.php' method='post'>
-          <input class="submit_button_small" type="submit" name="reservationen" value="löschen" /> &nbsp; &nbsp; <b>Reservationen</b> älter als 2 Jahre
+          <form style="display: inline-block;" action='process_cleanup_database.php' method='post'>
+          <input class="submit_button_small" type="submit" name="reservationen" value="löschen" /> &nbsp; &nbsp; <b>Reservationen</b> älter als
+             <select style="width: 8em;" name='reservationen_val' size="1">
+              <option value="">&nbsp;</option>
+              <option value="1825">5 Jahre</option>
+              <option value="730">2 Jahre</option>
+            </select>
           </form>
         </td>
       </tr>
       <tr>
         <td colspan="4" style="text-align: left;">
-          <form style="display: inline-block;" action='includes/cleanup_database.php' method='post'>
-          <input class="submit_button_small" type="submit" name="protokoll" value="löschen" /> &nbsp; &nbsp; Protokoll-Einträge älter als 1.5 Jahre
+          <form style="display: inline-block;" action='process_cleanup_database.php' method='post'>
+          <input class="submit_button_small" type="submit" name="protokoll" value="löschen" /> &nbsp; &nbsp; <b>Protokoll-Einträge</b> älter als
+             <select style="width: 8em;" name='protokoll_val' size="1">
+              <option value="">&nbsp;</option>
+              <option value="1825">5 Jahre</option>
+              <option value="730">2 Jahre</option>
+              <option value="547">1.5 Jahre</option>
+            </select>
           </form>
         </td>
       </tr>
