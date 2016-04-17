@@ -50,6 +50,7 @@ nav {
   color: #ffff00;
   font-size: 105%;
   z-index: 3;
+  text-align: left;
 }
 
 main {

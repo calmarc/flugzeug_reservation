@@ -268,7 +268,8 @@ function print_buchungen_monat($mysqli, $flugzeug_id, $boxcol, $textcol, $jahr, 
             if ($showlink)
             {
               $txtcolor = '#3333ff;';
-              $tmptxt = 'onmousemove="ShowTooltip(evt, \'Löschen / Zeit freigeben\', \'\', \'\', \'\')" onmouseout="HideTooltip(evt)"';
+              //$tmptxt = 'onmousemove="ShowTooltip(evt, \'Löschen / Zeit freigeben\', \'\', \'\', \'\')" onmouseout="HideTooltip(evt)"';
+              $tmptxt = '';
             }
           }
           else

@@ -343,7 +343,8 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
         if ($showlink)
         {
           $txtcolor = '#3333ff;';
-          $tmptxt = 'onmousemove="ShowTooltip(evt, \'Löschen / Zeit freigeben\', \'\', \'\', \'\')" onmouseout="HideTooltip(evt)"';
+          //$tmptxt = 'onmousemove="ShowTooltip(evt, \'Löschen / Zeit freigeben\', \'\', \'\', \'\')" onmouseout="HideTooltip(evt)"';
+          $tmptxt = '';
         }
       }
       else
