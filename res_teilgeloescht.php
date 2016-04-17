@@ -154,7 +154,7 @@ while ($obj = $res->fetch_object())
            <td>{$obj->flugzeug}</td>
            <td>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>
            <td>".mysql2chtimef($obj->getrimmt_von, $obj->getrimmt_bis, FALSE)."</td>
-           <td style='font-weight: bold; color #333333;'>".nl2br($obj->grund)."</td>
+           <td style='font-weight: bold; color #333333; max-width: 20em;'>".nl2br($obj->grund)."</td>
            <td>{$loescher_id}</td>
         </tr>";
 }

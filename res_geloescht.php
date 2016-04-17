@@ -148,7 +148,7 @@ while ($obj = $res->fetch_object())
            <td>[".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."] {$obj->pilot}</td>
            <td>{$obj->flugzeug}</td>
            <td>".mysql2chtimef($obj->von, $obj->bis, FALSE)."</td>
-           <td style='font-weight: bold; color #333333; width: 20em;'>".nl2br($obj->grund)."</td>
+           <td style='font-weight: bold; color #333333; max-width: 20em;'>".nl2br($obj->grund)."</td>
            <td>{$loescher}</td>
         </tr>";
 }
