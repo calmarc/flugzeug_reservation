@@ -157,17 +157,22 @@ function remove_zombies($mysqli)
 
     // sodali.. jetzt haben wir bookings welche nicht auf gruen sind...
     // von diesen jene loeschen welche 'vor' dem jetzt sind.
-    // wobei solche vom flugverbot (998) ebenfalls beibelassen
 
-    // get 998 id
-    $res = $mysqli->query("SELECT `id` from `piloten` where `pilot_nr` = '998' LIMIT 1;");
-    $obj = $res->fetch_object();
-    $flugverbot_id = $obj->id;
 
     foreach($delete_id as $di)
     {
+      // das ist hier drinnen, weil quasi fast nie aufgerufen.. viel billiger als
+      // draussen.... selbst wenn es xmal aufgerufen werden koennte sinnlos hier
+      //
+      // wobei solche vom flugverbot (998) ebenfalls beibelassen
+      // get 998 id
+      $res = $mysqli->query("SELECT `id` from `piloten` where `pilot_nr` = '998' LIMIT 1;");
+      $obj = $res->fetch_object();
+      $flugverbot_id = $obj->id;
+      // get reservations user_id
       $res = $mysqli->query("SELECT `user_id` from `reservationen` WHERE `id` = $di;");
       $obj = $res->fetch_object();
+
       if ($flugverbot_id != $obj->user_id)
       {
         // make copy into reser_zombies
