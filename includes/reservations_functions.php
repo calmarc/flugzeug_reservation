@@ -157,16 +157,27 @@ function remove_zombies($mysqli)
 
     // sodali.. jetzt haben wir bookings welche nicht auf gruen sind...
     // von diesen jene loeschen welche 'vor' dem jetzt sind.
+    // wobei solche vom flugverbot (998) ebenfalls beibelassen
+
+    // get 998 id
+    $res = $mysqli->query("SELECT `id` from `piloten` where `pilot_nr` = '998' LIMIT 1;");
+    $obj = $res->fetch_object();
+    $flugverbot_id = $obj->id;
 
     foreach($delete_id as $di)
     {
-      // make copy into reser_zombies
-      $query = "INSERT INTO `reser_zombies` (`timestamp`, `user_id`, `flugzeug_id`, `von`, `bis`)
-        SELECT `timestamp`, `user_id`, `flugzeug_id`, `von`, `bis` FROM `reservationen` WHERE `id` = ? AND `von` < ?;";
-      mysqli_prepare_execute($mysqli, $query, 'is', array ($di, $now_string));
+      $res = $mysqli->query("SELECT `user_id` from `reservationen` WHERE `id` = $di;");
+      $obj = $res->fetch_object();
+      if ($flugverbot_id != $obj->user_id)
+      {
+        // make copy into reser_zombies
+        $query = "INSERT INTO `reser_zombies` (`timestamp`, `user_id`, `flugzeug_id`, `von`, `bis`)
+          SELECT `timestamp`, `user_id`, `flugzeug_id`, `von`, `bis` FROM `reservationen` WHERE `id` = ? AND `von` < ?;";
+        mysqli_prepare_execute($mysqli, $query, 'is', array ($di, $now_string));
 
-      $query = "DELETE FROM `mfgcadmin_reservationen`.`reservationen` WHERE `reservationen`.`id` = ? AND `von` < ?;";
-      mysqli_prepare_execute($mysqli, $query, 'is', array ($di, $now_string));
+        $query = "DELETE FROM `mfgcadmin_reservationen`.`reservationen` WHERE `reservationen`.`id` = ? AND `von` < ?;";
+        mysqli_prepare_execute($mysqli, $query, 'is', array ($di, $now_string));
+      }
     }
   }
 }
