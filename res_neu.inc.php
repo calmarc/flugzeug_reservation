@@ -12,7 +12,6 @@ date_default_timezone_set("Europe/Zurich");
 $local_datetime = date("Y-m-d H:i:s", time());
 date_default_timezone_set("UTC");
 
-
 if (isset($_POST['submit']))
 {
   $flugzeug_id = $_POST['flugzeug_id'];
@@ -70,6 +69,22 @@ if (isset($_POST['submit']))
   if ($von_date <= $local_datetime)
     $error_msg .= "Die Reservierung liegt in der Vergangenheit.<br />";
 
+  // check if it goes into a flugverbot (998)
+  $res = $mysqli->query("SELECT `id` from `piloten` where `pilot_nr` = '998' LIMIT 1;");
+  $obj = $res->fetch_object();
+  $flugverbot_id = $obj->id;
+
+  $query = "SELECT * FROM `reservationen`
+    WHERE   `user_id` = '{$flugverbot_id}'
+    AND     `flugzeug_id` = '{$flugzeug_id}'
+    AND     (
+                ('{$von_date}' >= `von` AND '{$von_date}' <= `bis` )
+                OR ('{$bis_date}' >= `von` AND '{$bis_date}' <= `bis` )
+            ) LIMIT 1;";
+
+  $res = $mysqli->query($query);
+  if ($res->num_rows > 0)
+    $error_msg .= "Die Reservation geht in ein Flugverbot rein. Bitte ändern.";
 
   // CHECK LEVEL of standby
   remove_zombies($mysqli);
