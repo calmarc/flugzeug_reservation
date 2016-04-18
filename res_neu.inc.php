@@ -93,6 +93,7 @@ if (isset($_POST['submit']))
   if ($level >= 3)
     $error_msg .= "Es hat bereits zuviele Standby's [$level] in diesem Zeitraum.<br /><br />Es wurde keine Reservierung gebucht!<br />";
 
+
   if ($error_msg == "")
   {
     // CURRENT_TIMESTAMP =  Zurich = server-local seems to
@@ -100,6 +101,16 @@ if (isset($_POST['submit']))
       ( `id` , `timestamp` , `user_id` , `flugzeug_id` , `von` , `bis`) VALUES
       ( NULL , CURRENT_TIMESTAMP , ?, ?, ?, ?);";
     mysqli_prepare_execute ($mysqli, $query, 'iiss', array ($user_id, $flugzeug_id,$von_date, $bis_date));
+
+    // wenn flugverbot, timestamp = + 10 jahre = neu, kleine prioritaet
+    if ($user_id == $flugverbot_id)
+    {
+      $last_id = $mysqli->insert_id;
+      $query = "UPDATE `reservationen` SET `timestamp` = DATE_ADD(`timestamp`, INTERVAL 10 YEAR) WHERE `reservationen`.`id` = {$last_id};";
+      $mysqli->query($query);
+    }
+
+
     $datum = mysql2chtimef ($von_date, $bis_date, FALSE);
     write_status_message($mysqli, "[Reservation]", $_SESSION['user_id'], "Neu: $datum ");
 
