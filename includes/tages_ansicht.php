@@ -299,7 +299,16 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
       // breite des blockes...
       $width = number_format ($tabs[$print_last+1]-$tabs[$print_first], 3, '.', '');
 
-      echo "<rect x='{$tabs[$print_first]}%' y='{$yoffset}' width='{$width}%' height='20' style='fill: {$boxcol[$level]}; stroke: #000000; stroke-width: 1px;'></rect>\n";
+      // TODO: in funktion tun: get_id_from_pilot_nr()
+      $res = $mysqli->query("SELECT `id` from `piloten` where `pilot_nr` = '998' LIMIT 1;");
+      $obj = $res->fetch_object();
+      $flugverbot_id = $obj->id;
+
+      $back_color = $boxcol[$level];
+      if ($flugverbot_id == $obj_tang->user_id)
+        $back_color = "#ff0000;";
+
+      echo "<rect x='{$tabs[$print_first]}%' y='{$yoffset}' width='{$width}%' height='20' style='fill: {$back_color}; stroke: #000000; stroke-width: 1px;'></rect>\n";
 
       // piloten nummer ergatten und padden auf 3
       $query = "SELECT * from `piloten` where `id` = '{$obj_tang->user_id}';";

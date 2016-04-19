@@ -220,18 +220,27 @@ function print_buchungen_monat($mysqli, $flugzeug_id, $boxcol, $textcol, $jahr, 
 
       $yoffset = $tag_v_offset[$x];
 
+      // TODO: in funktion tun: get_id_from_pilot_nr()
+      $res = $mysqli->query("SELECT `id` from `piloten` where `pilot_nr` = '998' LIMIT 1;");
+      $obj = $res->fetch_object();
+      $flugverbot_id = $obj->id;
+
+      $back_color = $boxcol[$level];
+      if ($flugverbot_id == $obj_tang->user_id)
+        $back_color = "#ff0000;";
+
       // yellow little line.. to show there are some standby's
       if ($level > 0)
       {
 
         $line_length = number_format ($tabs[$print_first]+$width, 3, '.', '');
-        echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+16).'" x2="'.$line_length.'%" y2="'.($yoffset+16).'" style="stroke: '.$boxcol[$level].'; stroke-width: 7px;"></line>'."\n";
+        echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+16).'" x2="'.$line_length.'%" y2="'.($yoffset+16).'" style="stroke: '.$back_color.'; stroke-width: 7px;"></line>'."\n";
         echo '<line x1="'.$tabs[$print_first].'%" y1="'.($yoffset+13).'" x2="'.$line_length.'%" y2="'.($yoffset+13).'" style="stroke: #333333; stroke-width: 1px;"></line>'."\n";
       }
       // normal blue booking
       else
       {
-        echo '<rect x="'.$tabs[$print_first].'%" y="'.$yoffset.'" width="'.$width.'%" height="20" style="fill: '.$boxcol[$level].'; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
+        echo '<rect x="'.$tabs[$print_first].'%" y="'.$yoffset.'" width="'.$width.'%" height="20" style="fill: '.$back_color.'; stroke: #000000; stroke-width: 1px;"></rect>'."\n";
 
 
         $query = "SELECT * from `piloten` where `id` = '".$obj_tang->user_id."';";
