@@ -70,20 +70,9 @@ if (isset($_POST['submit']))
     $error_msg .= "Die Reservierung liegt in der Vergangenheit.<br />";
 
   // check if it goes into a flugverbot (998)
-  $res = $mysqli->query("SELECT `id` from `piloten` where `pilot_nr` = '998' LIMIT 1;");
-  $obj = $res->fetch_object();
-  $flugverbot_id = $obj->id;
+  $flugverbot_id = get_user_id_from_pilot_nr($mysqli, "998");
 
-  $query = "SELECT * FROM `reservationen`
-    WHERE   `user_id` = '{$flugverbot_id}'
-    AND     `flugzeug_id` = '{$flugzeug_id}'
-    AND     (
-                ('{$von_date}' >= `von` AND '{$von_date}' < `bis` )
-                OR ('{$bis_date}' > `von` AND '{$bis_date}' <= `bis` )
-            ) LIMIT 1;";
-
-  $res = $mysqli->query($query);
-  if ($res->num_rows > 0)
+  if (check_inside_flugverbot($mysqli, $von_date, $bis_date, $flugzeug_id))
     $error_msg .= "Die Reservation geht in ein Flugverbot rein. Bitte ändern.";
 
   // CHECK LEVEL of standby

@@ -389,4 +389,23 @@ function get_all_list_active_reserv($mysqli)
   return $valid_res;
 }
 
+function check_inside_flugverbot($mysqli, $von_date, $bis_date, $flugzeug_id)
+{
+  $flugverbot_id = get_user_id_from_pilot_nr($mysqli, "998");
+
+  $query = "SELECT * FROM `reservationen`
+    WHERE   `user_id` = '{$flugverbot_id}'
+    AND     `flugzeug_id` = '{$flugzeug_id}'
+    AND     (
+                ('{$von_date}' >= `von` AND '{$von_date}' < `bis` )
+                OR ('{$bis_date}' > `von` AND '{$bis_date}' <= `bis` )
+            ) LIMIT 1;";
+
+  $res = $mysqli->query($query);
+  if($res->num_rows > 0)
+    return TRUE;
+  else
+    return FALSE;
+}
+
 ?>

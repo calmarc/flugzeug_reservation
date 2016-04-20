@@ -69,7 +69,6 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
   $res = $mysqli->query($query);
   $obj = $res->fetch_object();
 
-
   $error_msg = "";
   if ($_POST['submit'] == "Teillöschung")
   {
@@ -111,6 +110,31 @@ if (isset($_POST['submit'], $_POST['reservierung']) && intval($_POST['reservieru
 
     if ($loeschen_datum_von < $rounded_datetime)
       $error_msg .= "Neue Von-Zeit darf nicht in der Vergangenheit liegen.<br />";
+
+    // in ein flugverbot darf es keine reservierungen ergeben
+    // |=======================|
+    // |xxxxxxxx| (1)
+    //         |xxxxxxxx| (2,3)
+    //               |xxxxxxxx| (4)
+
+    $flugverbot_bol = FALSE;
+
+    // (1)
+    if ($loeschen_datum_von <= $res_datum_von && $loeschen_datum_bis < $res_datum_bis)
+      $flugverbot_bol = check_inside_flugverbot($mysqli, $loeschen_datum_bis, $res_datum_bis, $flugzeug_id);
+    // (2,3)
+    else if ($loeschen_datum_von > $res_datum_von && $loeschen_datum_bis < $res_datum_bis )
+    {
+        if (check_inside_flugverbot($mysqli, $res_datum_von, $loeschen_datum_von, $flugzeug_id) ||
+            check_inside_flugverbot($mysqli, $loeschen_datum_bis, $res_datum_bis, $flugzeug_id))
+          $flugverbot_bol = TRUE;
+    }
+    // (4)
+    else if ($loeschen_datum_von > $res_datum_von && $loeschen_datum_bis >= $res_datum_bis)
+      $flugverbot_bol = check_inside_flugverbot($mysqli, $res_datum_von, $loeschen_datum_von, $flugzeug_id);
+
+    if ($flugverbot_bol)
+        $error_msg .= "Eine resultierende Reservationen geht in ein Flugverbot rein. Bitte ändern.";
   }
 
   // nur wenn: nicht (teilloeschung aber mit error)
