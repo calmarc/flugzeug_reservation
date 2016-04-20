@@ -401,6 +401,15 @@ function check_inside_flugverbot($mysqli, $von_date, $bis_date, $flugzeug_id)
                 OR ('{$bis_date}' > `von` AND '{$bis_date}' <= `bis` )
             ) LIMIT 1;";
 
+  // ---------[xxxx]------------
+  // [--------] (false, 2nd, > instead of >=)
+  //    [--------] (true 2nd)
+  //      [--------] (true 2nd)
+  //        [--------] (false)
+  //          [--------] (true, 1st)
+  //             [--------] (true)
+  //               [--------] (false 1st, < instead of <=)
+
   $res = $mysqli->query($query);
   if($res->num_rows > 0)
     return TRUE;
