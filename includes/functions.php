@@ -194,6 +194,13 @@ function write_status_message($mysqli, $subjekt, $user_id, $data)
   mysqli_prepare_execute($mysqli, "INSERT INTO `status_meldungen` (`id`, `timestamp`, `aktion`, `durch`, `data`) VALUES (NULL, CURRENT_TIMESTAMP, ?, ?, ?);", 'sss', array ($subjekt, $durch_txt, $data));
 }
 
+function get_user_id_from_pilot_nr($mysqli, $pilot_nr)
+{
+  $res = $mysqli->query("SELECT `id` from `piloten` where `pilot_nr` = '{$pilot_nr}' LIMIT 1;");
+  $obj = $res->fetch_object();
+  return $obj->id;
+}
+
 function get_pilot_from_user_id($mysqli, $user_id)
 {
   $res = $mysqli->query("SELECT `pilot_nr`, `name` FROM `piloten` WHERE `id` = $user_id LIMIT 1;");

@@ -162,13 +162,11 @@ function remove_zombies($mysqli)
     foreach($delete_id as $di)
     {
       // das ist hier drinnen, weil quasi fast nie aufgerufen.. viel billiger als
-      // draussen.... selbst wenn es xmal aufgerufen werden koennte sinnlos hier
+      // draussen.... selbst wenn es xmal aufgerufen werden koennte 1 mal in 10 Jahren
       //
-      // wobei solche vom flugverbot (998) ebenfalls beibelassen
-      // get 998 id
-      $res = $mysqli->query("SELECT `id` from `piloten` where `pilot_nr` = '998' LIMIT 1;");
-      $obj = $res->fetch_object();
-      $flugverbot_id = $obj->id;
+      // flugverbot (998) ebenfalls
+      $flugverbot_id = get_user_id_from_pilot_nr($mysqli, "998");
+
       // get reservations user_id
       $res = $mysqli->query("SELECT `user_id` from `reservationen` WHERE `id` = $di;");
       $obj = $res->fetch_object();

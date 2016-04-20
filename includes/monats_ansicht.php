@@ -102,6 +102,10 @@ function print_buchungen_monat($mysqli, $flugzeug_id, $boxcol, $textcol, $jahr, 
 
   $admin_bol = check_admin($mysqli);
 
+  // spezialbehandlung flugverbot
+  $flugverbot_id = get_user_id_from_pilot_nr($mysqli, "998");
+
+
   // ganzer monats bereich.. 01 - anzahlt_tage
   $stamp_print_minimum = strtotime("$jahr-$monat_2-01 07:00:00");
   $stamp_print_maximum = strtotime("$jahr-$monat_2-$anzahl_tage 20:59:59");
@@ -219,11 +223,6 @@ function print_buchungen_monat($mysqli, $flugzeug_id, $boxcol, $textcol, $jahr, 
       $width = number_format ($tabs[$print_last+1]-$tabs[$print_first], 3, '.', '');
 
       $yoffset = $tag_v_offset[$x];
-
-      // TODO: in funktion tun: get_id_from_pilot_nr()
-      $res = $mysqli->query("SELECT `id` from `piloten` where `pilot_nr` = '998' LIMIT 1;");
-      $obj = $res->fetch_object();
-      $flugverbot_id = $obj->id;
 
       $back_color = $boxcol[$level];
       if ($flugverbot_id == $obj_tang->user_id)

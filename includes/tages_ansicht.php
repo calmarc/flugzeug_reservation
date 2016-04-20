@@ -199,6 +199,9 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
 
   $today_stamp_seven = strtotime($date.' 07:00:00');
 
+  // specialbehandlung flugverbot
+  $flugverbot_id = get_user_id_from_pilot_nr($mysqli, "998");
+
   $query = "SELECT * FROM `flugzeug`;";
   $res_f = $mysqli->query($query);
 
@@ -298,11 +301,6 @@ function print_buchungen($mysqli, $planeoffset, $tabs, $date, $boxcol, $textcol,
 
       // breite des blockes...
       $width = number_format ($tabs[$print_last+1]-$tabs[$print_first], 3, '.', '');
-
-      // TODO: in funktion tun: get_id_from_pilot_nr()
-      $res = $mysqli->query("SELECT `id` from `piloten` where `pilot_nr` = '998' LIMIT 1;");
-      $obj = $res->fetch_object();
-      $flugverbot_id = $obj->id;
 
       $back_color = $boxcol[$level];
       if ($flugverbot_id == $obj_tang->user_id)
