@@ -68,9 +68,9 @@ else
   $fluglehrer_txt = "nein";
 
 if ($obj->gesperrt == 1)
-  $gesperrt = "ja";
+  $gesperrt_txt = "ja";
 else
-  $gesperrt = "nein";
+  $gesperrt_txt = "nein";
 
 echo "<form action='pilot_edit.php' method='post'>";
 
@@ -79,7 +79,8 @@ if ($disabled != "")
 {
   echo "
   <input type='hidden' name='admin' value='{$admin_txt}' />
-  <input type='hidden' name='fluglehrer' value='{$fluglehrer_txt}' />";
+  <input type='hidden' name='fluglehrer' value='{$fluglehrer_txt}' />
+  <input type='hidden' name='gesperrt' value='{$gesperrt_txt}' />";
 }
 
 echo "
@@ -137,12 +138,12 @@ echo "  </select>
         </td>
       </tr>
       <tr>
-        <td><b>Checkflug:</b></td><td><input pattern='[0-3]?[0-9]\.[0-1]?[0-9]\.20[1-9][0-9]' type='text' name='checkflug' value='{$checkflug_ch}'></td>
+        <td><b>Nächster&nbsp;Checkflug&nbsp;am:</b></td><td><input pattern='[0-3]?[0-9]\.[0-1]?[0-9]\.20[1-9][0-9]' type='text' name='checkflug' value='{$checkflug_ch}'></td>
       </tr>
       <tr>
-        <td><b>Gesperrt:</b></td><td><select style='width: 4em;' size='1' name='gesperrt'>";
+        <td><b>Gesperrt:</b></td><td><select ${disabled} style='width: 4em;' size='1' name='gesperrt'>";
 
-if ($gesperrt == "nein")
+if ($gesperrt_txt == "nein")
 {
   echo "<option selected='selected'>nein</option>";
   echo "<option>ja</option>";

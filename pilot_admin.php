@@ -43,7 +43,7 @@ $res = $mysqli->query($query);
               <th><b>Email</b></th>
               <th><b>Admin</b></th>
               <th><b>Lehrer</b></th>
-              <th><b>Checkflug</b></th>
+              <th><b>Nächster<br />Checkflug</b></th>
               <th><b>gesperrt</b></th>
             </tr>
 <?php
