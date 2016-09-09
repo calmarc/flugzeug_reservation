@@ -23,6 +23,14 @@ if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/in
 
 include_once ('pilot_edit.inc.php');
 
+$read_only = "";
+$disabled = "";
+if (check_admin($mysqli) == FALSE && check_fluglehrer($mysqli) == TRUE)
+{
+  $read_only = "readonly='readonly'";
+  $disabled = "disabled='disabled'";
+}
+
 //============================================================================
 // HTML
 
@@ -64,27 +72,36 @@ if ($obj->gesperrt == 1)
 else
   $gesperrt = "nein";
 
+echo "<form action='pilot_edit.php' method='post'>";
+
+// select boxes are disabled - provide hidden values instead
+if ($disabled != "")
+{
+  echo "
+  <input type='hidden' name='admin' value='{$admin_txt}' />
+  <input type='hidden' name='fluglehrer' value='{$fluglehrer_txt}' />";
+}
+
 echo "
-<form action='pilot_edit.php' method='post'>
   <input type='hidden' name='user_id' value='{$obj->id}' />
     <div class='center'>
     <table class='vtable'>
       <tr>
-        <td><b>Pilot-Nr:</b></td><td><input type='text' name='pilot_nr' value='".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."'></td></tr>
+        <td><b>Pilot-Nr:</b></td><td><input ${read_only} type='text' name='pilot_nr' value='".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."'></td></tr>
       <tr>
-        <td><b>Name:</b></td><td><input type='text' name='name' value='{$obj->name}'></td>
+        <td><b>Name:</b></td><td><input ${read_only} type='text' name='name' value='{$obj->name}'></td>
       </tr>
       <tr>
-        <td><b>Natel:</b></td><td><input pattern='\+{0,1}[0-9 ]+' type='text' name='natel' value='{$obj->natel}'></td>
+        <td><b>Natel:</b></td><td><input ${read_only} pattern='\+{0,1}[0-9 ]+' type='text' name='natel' value='{$obj->natel}'></td>
       </tr>
       <tr>
-        <td><b>Telefon:</b></td><td><input pattern='\+{0,1}[0-9 ]+' type='text' name='telefon' value='{$obj->telefon}'></td>
+        <td><b>Telefon:</b></td><td><input ${read_only} pattern='\+{0,1}[0-9 ]+' type='text' name='telefon' value='{$obj->telefon}'></td>
       </tr>
       <tr>
-        <td><b>Email:</b></td><td><input type='email' name='email' value='{$obj->email}'></td>
+        <td><b>Email:</b></td><td><input ${read_only} type='email' name='email' value='{$obj->email}'></td>
       </tr>
       <tr>
-        <td><b>Admin:</b></td><td><select style='width: 4em;' size='1' name='admin'>";
+        <td><b>Admin:</b></td><td><select ${disabled} style='width: 4em;' size='1' name='admin'>";
 
 if ($admin_txt == "nein")
 {
@@ -101,7 +118,7 @@ echo "  </select>
         </td>
       </tr>
       <tr>
-        <td><b>Fluglehrer:</b></td><td><select style='width: 4em;' size='1' name='fluglehrer'>";
+        <td><b>Fluglehrer:</b></td><td><select ${disabled} style='width: 4em;' size='1' name='fluglehrer'>";
 
 if ($fluglehrer_txt == "nein")
 {
@@ -140,29 +157,36 @@ echo "  </select>
         </td>
       </tr>
       <tr>
-        <td><b>Passwort</b></td><td><input placeholder='****' type='text' name='password' value=''></td>
+        <td><b>Passwort</b></td><td><input ${read_only} placeholder='****' type='text' name='password' value=''></td>
       </tr>
     </table>
     <input class='submit_button' type='submit' name='updaten' value='Aenderungen abschicken' />
   </div>
 </form>";
 
+
+
 //============================================================================
-// pilot loeschen button unten
+// pilot loeschen button unten // fluglerer nicht anzeigen
 
-$pilot_nr_pad = str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT);
+if (check_admin($mysqli))
+{
+  $pilot_nr_pad = str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT);
+  ?>
 
+        <hr style="margin: 52px 10px 84px 10px;" />
+
+        <form action='pilot_edit.php' method='post' onsubmit="return confirm('Wirklich Pilot-Nr <?php echo "[{$pilot_nr_pad}] {$obj->name}"; ?> löschen?\nAlle verbundenen Reservierungen\nwerden ebenfalls gelöscht!');">
+        <input type="hidden" name="user_id" value="<?php echo $obj->id; ?>" />
+          <div class="center">
+            <p><b>Pilot: <?php echo "[{$pilot_nr_pad}] {$obj->name}"; ?></b></p>
+            <p><input class="sub_loeschen" type='submit' name='loeschen' value='LÖSCHEN' /></p>
+          </div>
+        </form>
+  <?php
+}
 ?>
 
-      <hr style="margin: 52px 10px 84px 10px;" />
-
-      <form action='pilot_edit.php' method='post' onsubmit="return confirm('Wirklich Pilot-Nr <?php echo "[{$pilot_nr_pad}] {$obj->name}"; ?> löschen?\nAlle verbundenen Reservierungen\nwerden ebenfalls gelöscht!');">
-      <input type="hidden" name="user_id" value="<?php echo $obj->id; ?>" />
-        <div class="center">
-          <p><b>Pilot: <?php echo "[{$pilot_nr_pad}] {$obj->name}"; ?></b></p>
-          <p><input class="sub_loeschen" type='submit' name='loeschen' value='LÖSCHEN' /></p>
-        </div>
-      </form>
     </div>
   </main>
 </body>

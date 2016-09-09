@@ -208,6 +208,12 @@ table.formular_eingabe td:nth-child(1) { text-align: right;}
 table.formular_eingabe td:nth-child(2) { text-align: left; padding-left: 8px;}
 table.formular_eingabe td:nth-child(2) input { width: 90%;}
 
+input[readonly], select[disabled]
+{
+  background-color:#eeeeee;
+  color:#666666;
+}
+
 form.login_form input { width: 80%; }
 
 /* THEME_COLOR */

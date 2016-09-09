@@ -64,7 +64,7 @@ if (isset($_SESSION['pilot_nr']))
   if ($obj->admin == FALSE && $fluglehrer_bol == TRUE)
   $admin = "
 <span style='white-space: nowrap;'>[
-    <a href='/reservationen/pilot_admin.php'><img {$pilot_admin} src='/reservationen/bilder/pilot.png' alt='Piloten' /></a>
+    <a href='/reservationen/pilot_admin.php'><img {$pilot_admin} src='/reservationen/bilder/pilot.png' alt='Piloten' /></a>&nbsp;]
 </span>";
 
   $_SESSION['name'] = $obj->name;
