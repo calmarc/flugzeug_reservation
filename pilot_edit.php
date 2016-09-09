@@ -15,7 +15,7 @@ sec_session_start();
 // Berechtigungen checken
 
 if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/index.php"); exit; }
-if (check_admin($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
+if (check_admin($mysqli) == FALSE && check_fluglehrer($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
 if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
 //============================================================================

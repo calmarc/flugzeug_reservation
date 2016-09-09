@@ -60,6 +60,13 @@ if (isset($_SESSION['pilot_nr']))
       <a href='/reservationen/diverses.php'><img {$diverses} src='/reservationen/bilder/diverses.png' alt='Diverses' /></a> ]
 </span>";
 
+  $fluglehrer_bol = check_fluglehrer($mysqli);
+  if ($obj->admin == FALSE && $fluglehrer_bol == TRUE)
+  $admin = "
+<span style='white-space: nowrap;'>[
+    <a href='/reservationen/pilot_admin.php'><img {$pilot_admin} src='/reservationen/bilder/pilot.png' alt='Piloten' /></a>
+</span>";
+
   $_SESSION['name'] = $obj->name;
 
   // todo evt immer von hier nehmen?

@@ -210,6 +210,15 @@ function check_admin($mysqli)
   $obj = $res->fetch_object();
   return $obj->admin;
 }
+
+function check_fluglehrer($mysqli)
+{
+  $query = "SELECT `fluglehrer` from `piloten` where `id` = {$_SESSION['user_id']} LIMIT 1;";
+  $res = $mysqli->query($query);
+  $obj = $res->fetch_object();
+  return $obj->fluglehrer;
+}
+
 function check_gesperrt($mysqli)
 {
   $query = "SELECT `gesperrt` from `piloten` where `id` = {$_SESSION['user_id']} LIMIT 1;";
