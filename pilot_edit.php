@@ -54,6 +54,11 @@ if ($obj->admin == 1)
 else
   $admin_txt = "nein";
 
+if ($obj->fluglehrer == 1)
+  $fluglehrer_txt = "ja";
+else
+  $fluglehrer_txt = "nein";
+
 if ($obj->gesperrt == 1)
   $gesperrt = "ja";
 else
@@ -82,6 +87,23 @@ echo "
         <td><b>Admin:</b></td><td><select style='width: 4em;' size='1' name='admin'>";
 
 if ($admin_txt == "nein")
+{
+  echo "<option selected='selected'>nein</option>";
+  echo "<option>ja</option>";
+}
+else
+{
+  echo "<option>nein</option>";
+  echo "<option selected='selected'>ja</option>";
+}
+
+echo "  </select>
+        </td>
+      </tr>
+      <tr>
+        <td><b>Fluglehrer:</b></td><td><select style='width: 4em;' size='1' name='fluglehrer'>";
+
+if ($fluglehrer_txt == "nein")
 {
   echo "<option selected='selected'>nein</option>";
   echo "<option>ja</option>";

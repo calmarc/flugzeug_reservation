@@ -39,6 +39,7 @@ if (isset($_POST['updaten']))
   $telefon = trim($_POST['telefon']);
   $email = trim($_POST['email']);
   $admin = $_POST['admin'];
+  $fluglehrer = $_POST['fluglehrer'];
   $checkflug = trim($_POST['checkflug']);
   $gesperrt = trim($_POST['gesperrt']);
   $password = trim($_POST['password']);
@@ -47,6 +48,11 @@ if (isset($_POST['updaten']))
     $admin_nr = 1;
   else
     $admin_nr = 0;
+
+  if ($fluglehrer == "ja")
+    $fluglehrer_nr = 1;
+  else
+    $fluglehrer_nr = 0;
 
   if ($gesperrt == "ja")
     $gesperrt_bol = TRUE;
@@ -91,8 +97,8 @@ if (isset($_POST['updaten']))
   }
 
   // UPDATE user data
-  $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `pilot_nr` = ?, `email` = ?, `admin` = ?, `name` = ?, `telefon` = ?, `natel` = ?, `checkflug` = ?, `gesperrt` = ? WHERE `piloten`.`id` = ?; ";
-  mysqli_prepare_execute($mysqli, $query, 'isissssii', array ($pilot_nr, $email, $admin_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $user_id));
+  $query = "UPDATE `mfgcadmin_reservationen`.`piloten` SET `pilot_nr` = ?, `email` = ?, `admin` = ?, `fluglehrer` = ?, `name` = ?, `telefon` = ?, `natel` = ?, `checkflug` = ?, `gesperrt` = ? WHERE `piloten`.`id` = ?; ";
+  mysqli_prepare_execute($mysqli, $query, 'isiissssii', array ($pilot_nr, $email, $admin_nr, $fluglehrer_nr, $name, $telefon, $natel, $checkflug, $gesperrt_bol, $user_id));
 
   // man hat die eigene piloten nummber gewechselt - _SESSION anpassen.
   if ($user_id == $_SESSION['user_id'])

@@ -42,6 +42,7 @@ $res = $mysqli->query($query);
               <th><b>Telefon</b></th>
               <th><b>Email</b></th>
               <th><b>Admin</b></th>
+              <th><b>Lehrer</b></th>
               <th><b>Checkflug</b></th>
               <th><b>gesperrt</b></th>
             </tr>
@@ -53,6 +54,11 @@ while ($obj = $res->fetch_object())
     $admin_txt = "ja";
   else
     $admin_txt = "nein";
+
+  if ($obj->fluglehrer == 1)
+    $fluglehrer_txt = "ja";
+  else
+    $fluglehrer_txt = "nein";
 
   if ($obj->gesperrt == 1)
     $gesperrt_txt = "ja";
@@ -77,7 +83,7 @@ while ($obj = $res->fetch_object())
            <td>{$obj->name}</td>
            <td><span style='white-space: nowrap;'>{$obj->natel}</span></td>
            <td><span style='white-space: nowrap;'>{$obj->telefon}</span></td>
-           <td>{$obj->email}</td><td>{$admin_txt}</td>
+           <td>{$obj->email}</td><td>{$admin_txt}</td><td>{$fluglehrer_txt}</td>
            <td style='$check_style'>{$checkflug_ch}</td><td>{$gesperrt_txt}</td>";
   echo "</tr>";
 }
