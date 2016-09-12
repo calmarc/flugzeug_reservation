@@ -100,25 +100,30 @@ echo "
       </tr>
       <tr>
         <td><b>Email:</b></td><td><input ${read_only} type='email' name='email' value='{$obj->email}'></td>
-      </tr>
-      <tr>
-        <td><b>Admin:</b></td><td><select ${disabled} style='width: 4em;' size='1' name='admin'>";
+      </tr>";
 
-if ($admin_txt == "nein")
+if ($disabled == "")
 {
-  echo "<option selected='selected'>nein</option>";
-  echo "<option>ja</option>";
-}
-else
-{
-  echo "<option>nein</option>";
-  echo "<option selected='selected'>ja</option>";
+  echo "<tr>
+        <td><b>Admin:</b></td><td><select style='width: 4em;' size='1' name='admin'>";
+
+  if ($admin_txt == "nein")
+  {
+    echo "<option selected='selected'>nein</option>";
+    echo "<option>ja</option>";
+  }
+  else
+  {
+    echo "<option>nein</option>";
+    echo "<option selected='selected'>ja</option>";
+  }
+
+  echo "  </select>
+          </td>
+        </tr>";
 }
 
-echo "  </select>
-        </td>
-      </tr>
-      <tr>
+echo " <tr>
         <td><b>Fluglehrer:</b></td><td><select ${disabled} style='width: 4em;' size='1' name='fluglehrer'>";
 
 if ($fluglehrer_txt == "nein")
@@ -139,25 +144,30 @@ echo "  </select>
       </tr>
       <tr>
         <td><b>Nächster&nbsp;Checkflug&nbsp;am:</b></td><td><input pattern='[0-3]?[0-9]\.[0-1]?[0-9]\.20[1-9][0-9]' type='text' name='checkflug' value='{$checkflug_ch}'></td>
-      </tr>
-      <tr>
-        <td><b>Gesperrt:</b></td><td><select ${disabled} style='width: 4em;' size='1' name='gesperrt'>";
+      </tr>";
 
-if ($gesperrt_txt == "nein")
+if ($disabled == "")
 {
-  echo "<option selected='selected'>nein</option>";
-  echo "<option>ja</option>";
-}
-else
-{
-  echo "<option>nein</option>";
-  echo "<option selected='selected'>ja</option>";
-}
 
-echo "  </select>
-        </td>
-      </tr>
-      <tr>
+   echo  "<tr>
+        <td><b>Gesperrt:</b></td><td><select style='width: 4em;' size='1' name='gesperrt'>";
+
+  if ($gesperrt_txt == "nein")
+  {
+    echo "<option selected='selected'>nein</option>";
+    echo "<option>ja</option>";
+  }
+  else
+  {
+    echo "<option>nein</option>";
+    echo "<option selected='selected'>ja</option>";
+  }
+
+  echo "  </select>
+          </td>
+        </tr>";
+}
+  echo "<tr>
         <td><b>Passwort</b></td><td><input ${read_only} placeholder='****' type='text' name='password' value=''></td>
       </tr>
     </table>
