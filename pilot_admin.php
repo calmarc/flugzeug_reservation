@@ -18,6 +18,12 @@ if (login_check($mysqli) == FALSE) { header("Location: /reservationen/login/inde
 if (check_admin($mysqli) == FALSE && check_fluglehrer($mysqli) == FALSE) { header("Location: /reservationen/index.php"); exit; }
 if (check_gesperrt($mysqli) == TRUE) { header("Location: /reservationen/login/index.php"); exit; }
 
+$is_fluglehrer = FALSE;
+if (check_fluglehrer($mysqli) == TRUE && check_admin($mysqli) == FALSE )
+{
+  $is_fluglehrer = TRUE;
+}
+
 //============================================================================
 // HTML
 
@@ -41,10 +47,14 @@ $res = $mysqli->query($query);
               <th><b>Natel</b></th>
               <th><b>Telefon</b></th>
               <th><b>Email</b></th>
+<?php if (!$is_fluglehrer) { ?>
               <th><b>Admin</b></th>
+<?php } ?>
               <th><b>Lehrer</b></th>
               <th><b>Nächster<br />Checkflug</b></th>
+<?php if (!$is_fluglehrer) { ?>
               <th><b>gesperrt</b></th>
+<?php } ?>
             </tr>
 <?php
 
@@ -77,14 +87,24 @@ while ($obj = $res->fetch_object())
 
   $checkflug_ch = shortsql2ch_date($obj->checkflug);
 
+  // supress admin und gesperrt column if only fluglehrer
+  $admin_tab = "<td>{$admin_txt}</td>";
+  $gesperrt_tab = "<td>{$gesperrt_txt}</td>";
+
+  if ($is_fluglehrer)
+  {
+    $admin_tab = "";
+    $gesperrt_tab = "";
+  }
+
   echo "\n<tr>
            <td><a href='pilot_edit.php?id={$obj->id}'>[edit]</a></td>
            <td style='text-align: center;'>".str_pad($obj->pilot_nr, 3, "0", STR_PAD_LEFT)."</td>
            <td>{$obj->name}</td>
            <td><span style='white-space: nowrap;'>{$obj->natel}</span></td>
            <td><span style='white-space: nowrap;'>{$obj->telefon}</span></td>
-           <td>{$obj->email}</td><td>{$admin_txt}</td><td>{$fluglehrer_txt}</td>
-           <td style='$check_style'>{$checkflug_ch}</td><td>{$gesperrt_txt}</td>";
+           <td>{$obj->email}</td>{$admin_tab}<td>{$fluglehrer_txt}</td>
+           <td style='$check_style'>{$checkflug_ch}</td>{$gesperrt_tab}";
   echo "</tr>";
 }
 ?>
