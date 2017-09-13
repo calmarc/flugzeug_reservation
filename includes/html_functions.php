@@ -44,7 +44,17 @@ function combobox_jahr($default)
   for ($item = intval($jahr); $item < intval($jahr) + 2; $item++)
     array_push($t_array, "$item");
   print_options($default, $t_array);
+}
+function combobox_jahr_wide($default)
+{
+  date_default_timezone_set("Europe/Zurich");
+  $jahr = date("Y", time());
+  date_default_timezone_set("UTC");
 
+  $t_array = array();
+  for ($item = intval($jahr) - 3; $item < intval($jahr) + 2; $item++)
+    array_push($t_array, "$item");
+  print_options($default, $t_array);
 }
 function combobox_stunde($default)
 {

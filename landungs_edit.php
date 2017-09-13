@@ -76,7 +76,7 @@ $zaehler_umdrehungen = $obj->zaehler_umdrehungen;
                   <?php combobox_monat($monat); ?>
                 </select> <b>.</b>
                 <select size="1" name="jahr" style="width: 86px;">
-                  <?php combobox_jahr($jahr); ?>
+                  <?php combobox_jahr_wide($jahr); ?>
                 </select>
               </td>
             </tr>

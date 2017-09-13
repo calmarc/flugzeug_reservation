@@ -137,7 +137,7 @@ $query = "SELECT `zaehler_eintraege`.`id`,
                  `zaehler_eintraege`.`zaehler_umdrehungen`,
                  `zaehler_eintraege`.`datum`
          FROM `zaehler_eintraege` LEFT OUTER JOIN `piloten` ON `piloten`.`id` = `zaehler_eintraege`.`user_id`
-         WHERE `flugzeug_id` = '{$flugzeug_id}'  ORDER BY `zaehler_minute` DESC, `id` DESC LIMIT 30;";
+         WHERE `flugzeug_id` = '{$flugzeug_id}'  ORDER BY `datum` DESC, `zaehler_minute` DESC, `id` DESC LIMIT 500;";
 
 if ($res = $mysqli->query($query))
 {
